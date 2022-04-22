@@ -12,25 +12,23 @@ public class UserController : Controller
     {
         return Ok("usunieto");
     }
-
-
-
+    
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
     {
-        return Ok("Wszystko super");
+        return Ok("pokazało");
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int id)
     {
-        return Ok("usunieto");
+        return Ok("zmieniono");
     }
 
     [HttpPost("{idUser:int}")]
     public async Task<IActionResult> GetPost([FromRoute] int idUser)
     {
-        return Ok("Dodano");
+        return Ok("dodano");
     }
 
 }
