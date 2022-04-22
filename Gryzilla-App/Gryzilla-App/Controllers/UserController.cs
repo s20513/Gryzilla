@@ -16,21 +16,28 @@ public class UserController : Controller
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteUser([FromRoute] int id)
     {
-        // var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
-        // var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
-        //
-        //
-        // user.IdUserFriends.Add(user1);
-        // user.IdUsers.Add(user);
-        // user1.IdUserFriends.Add(user);
-        // user1.IdUsers.Add(user1);
-        // await _context.SaveChangesAsync();
+        var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
+        var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
+        
+        
+        user.IdUserFriends.Add(user1);
+        user.IdUsers.Add(user);
+        user1.IdUserFriends.Add(user);
+        user1.IdUsers.Add(user1);
+        await _context.SaveChangesAsync();
         return Ok("dodano");
     }
     
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
-    {
+    {   
+        var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
+        var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
+        user.IdUserFriends.Add(user1);
+        user.IdUsers.Add(user);
+        user1.IdUserFriends.Add(user);
+        user1.IdUsers.Add(user1);
+        await _context.SaveChangesAsync();
         return Ok("pokazało");
     }
 
@@ -47,9 +54,5 @@ public class UserController : Controller
         return Ok("dodano");
     }
     
-    public async Task<IActionResult> GetArticle([FromRoute] int idUser)
-    {
-        return Ok("dodano");
-    }
 
 }
