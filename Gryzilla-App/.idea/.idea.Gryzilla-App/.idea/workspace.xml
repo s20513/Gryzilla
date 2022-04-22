@@ -7,27 +7,9 @@
 <<<<<<< Updated upstream
     <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Achievement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Achievement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/AchievementUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/AchievementUser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Article.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Article.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Blocked.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Blocked.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/CommentArticle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/CommentArticle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/CommentPost.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/CommentPost.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Group.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Group.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Notification.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Notification.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Post.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Post.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/ProfileComment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/ProfileComment.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Rank.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Rank.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Reason.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Reason.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/ReportCommentArticle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/ReportCommentArticle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/ReportCommentPost.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/ReportCommentPost.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/ReportPost.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/ReportPost.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/Tag.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/Tag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/UserDatum.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Models/UserDatum.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/UserDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/UserDbRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Repositories/Interfaces/IUserDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Interfaces/IUserDbRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/DTO/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/DTO/Responses/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/.gitkeep" beforeDir="false" />
     </list>
 =======
     <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="" />

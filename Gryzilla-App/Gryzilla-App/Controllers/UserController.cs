@@ -32,9 +32,8 @@ public class UserController : Controller
     }
 
     [HttpPost("{idUser:int}")]
-    public async Task<IActionResult> PostNewUser([FromRoute] int idUser)
-    {
-        return Ok("add-pppppppp");
+    public async Task<IActionResult> PostNewUser([FromRoute] int idUser){
+        return Ok("add new user");
     }
     
     [HttpDelete("{id:int}")]
