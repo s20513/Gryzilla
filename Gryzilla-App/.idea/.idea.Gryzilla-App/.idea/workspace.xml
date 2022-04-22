@@ -5,11 +5,21 @@
     <projectFile profileName="IIS Express">Gryzilla-App/Gryzilla-App.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="" />
+    <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/UserDbRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Interfaces/IUserDbRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Gryzilla-App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Gryzilla-App.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Program.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="289Rh6KeBgyLD1Rt0HDZwFOuzWq" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -63,7 +73,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650626935456</updated>
-      <workItem from="1650626960532" duration="292000" />
+      <workItem from="1650626960532" duration="911000" />
     </task>
     <servers />
   </component>
