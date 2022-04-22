@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/DTO/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/DTO/Responses/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Models/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Controllers/FriendsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Controllers/FriendsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/FriendsDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/FriendsDbRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
