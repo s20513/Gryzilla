@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
 
@@ -13,7 +13,7 @@ public class UserController : Controller
         return Ok("usunieto");
     }
 
-<<<<<<< Updated upstream
+
 
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
@@ -21,12 +21,16 @@ public class UserController : Controller
         return Ok("Wszystko super");
     }
 
-=======
-    
     [HttpPut("{id:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int id)
     {
         return Ok("usunieto");
     }
->>>>>>> Stashed changes
+
+    [HttpPost("{idUser:int}")]
+    public async Task<IActionResult> GetPost([FromRoute] int idUser)
+    {
+        return Ok("Dodano");
+    }
+
 }
