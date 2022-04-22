@@ -22,7 +22,7 @@ public class UserController : Controller
     [HttpPut("{id:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int id)
     {
-        return Ok("zmieniono");
+        return Ok("dasdadad");
     }
 
     [HttpPost("{idUser:int}")]
