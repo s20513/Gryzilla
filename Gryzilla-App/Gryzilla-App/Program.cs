@@ -11,6 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
 builder.Services.AddControllers();
 
+//connectionString
 var connectionString = builder.Configuration.GetConnectionString("MssqlDbConnString");
 
 
