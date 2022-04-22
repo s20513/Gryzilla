@@ -9,7 +9,9 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
+builder.Services.AddControllers();
 
+var connectionString = builder.Configuration.GetConnectionString("MssqlDbConnString");
 
 
 // Configure the HTTP request pipeline.
@@ -20,9 +22,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();
