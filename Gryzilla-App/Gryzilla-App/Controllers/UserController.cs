@@ -20,4 +20,9 @@ public class UserController : Controller
         return Ok("Wszystko super");
     }
 
+    [HttpPost("{idUser:int}")]
+    public async Task<IActionResult> GetPost([FromRoute] int idUser)
+    {
+        return Ok("Dodano");
+    }
 }
