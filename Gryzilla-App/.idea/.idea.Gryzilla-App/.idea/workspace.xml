@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Gryzilla-App.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Gryzilla-App.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
