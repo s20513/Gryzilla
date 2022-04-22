@@ -13,6 +13,7 @@ public class UserController : Controller
         return Ok("usunieto");
     }
 
+<<<<<<< Updated upstream
 
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
