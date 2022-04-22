@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gryzilla_App
+﻿namespace Gryzilla_App.Models
 {
-    public partial class UserDatum
+    public sealed partial class UserDatum
     {
         public UserDatum()
         {
@@ -37,27 +34,27 @@ namespace Gryzilla_App
         public string? PhoneNumber { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public virtual Rank IdRankNavigation { get; set; } = null!;
-        public virtual ICollection<AchievementUser> AchievementUsers { get; set; }
-        public virtual ICollection<Article> Articles { get; set; }
-        public virtual ICollection<Blocked> Blockeds { get; set; }
-        public virtual ICollection<CommentArticle> CommentArticles { get; set; }
-        public virtual ICollection<CommentPost> CommentPosts { get; set; }
-        public virtual ICollection<Group> Groups { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
-        public virtual ICollection<Post> Posts { get; set; }
-        public virtual ICollection<ProfileComment> ProfileCommentIdUserCommentNavigations { get; set; }
-        public virtual ICollection<ProfileComment> ProfileCommentIdUserNavigations { get; set; }
-        public virtual ICollection<ReportCommentArticle> ReportCommentArticles { get; set; }
-        public virtual ICollection<ReportCommentPost> ReportCommentPosts { get; set; }
-        public virtual ICollection<ReportPost> ReportPosts { get; set; }
+        public Rank IdRankNavigation { get; set; } = null!;
+        public ICollection<AchievementUser> AchievementUsers { get; set; }
+        public ICollection<Article> Articles { get; set; }
+        public ICollection<Blocked> Blockeds { get; set; }
+        public ICollection<CommentArticle> CommentArticles { get; set; }
+        public ICollection<CommentPost> CommentPosts { get; set; }
+        public ICollection<Group> Groups { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<Post> Posts { get; set; }
+        public ICollection<ProfileComment> ProfileCommentIdUserCommentNavigations { get; set; }
+        public ICollection<ProfileComment> ProfileCommentIdUserNavigations { get; set; }
+        public ICollection<ReportCommentArticle> ReportCommentArticles { get; set; }
+        public ICollection<ReportCommentPost> ReportCommentPosts { get; set; }
+        public ICollection<ReportPost> ReportPosts { get; set; }
 
-        public virtual ICollection<Article> IdArticles { get; set; }
-        public virtual ICollection<Group> IdGroups { get; set; }
-        public virtual ICollection<Post> IdPosts { get; set; }
-        public virtual ICollection<UserDatum> IdUserBlockeds { get; set; }
-        public virtual ICollection<UserDatum> IdUserFriends { get; set; }
-        public virtual ICollection<UserDatum> IdUsers { get; set; }
-        public virtual ICollection<UserDatum> IdUsersNavigation { get; set; }
+        public ICollection<Article> IdArticles { get; set; }
+        public ICollection<Group> IdGroups { get; set; }
+        public ICollection<Post> IdPosts { get; set; }
+        public ICollection<UserDatum> IdUserBlockeds { get; set; }
+        public ICollection<UserDatum> IdUserFriends { get; set; }
+        public ICollection<UserDatum> IdUsers { get; set; }
+        public ICollection<UserDatum> IdUsersNavigation { get; set; }
     }
 }
