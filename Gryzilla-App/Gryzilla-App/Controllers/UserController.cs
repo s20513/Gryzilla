@@ -30,5 +30,10 @@ public class UserController : Controller
     {
         return Ok("dodano");
     }
+    
+    public async Task<IActionResult> GetArticle([FromRoute] int idUser)
+    {
+        return Ok("dodano");
+    }
 
 }
