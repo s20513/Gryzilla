@@ -5,9 +5,7 @@
     <projectFile profileName="IIS Express">Gryzilla-App/Gryzilla-App.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" afterDir="false" />
-    </list>
+    <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
