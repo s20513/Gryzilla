@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
 
@@ -14,10 +14,17 @@ public class UserController : Controller
     }
 
 
+
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
     {
         return Ok("Wszystko super");
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> ModifyUser([FromRoute] int id)
+    {
+        return Ok("usunieto");
     }
 
     [HttpPost("{idUser:int}")]
@@ -25,4 +32,5 @@ public class UserController : Controller
     {
         return Ok("Dodano");
     }
+
 }
