@@ -4,6 +4,7 @@
     <projectFile>Gryzilla-App/Gryzilla-App.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Gryzilla-App/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Controllers/UserController.cs" afterDir="false" />
@@ -28,6 +29,9 @@
       <change beforePath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/UserDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Implementations/UserDbRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gryzilla-App/Repositories/Interfaces/IUserDbRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Gryzilla-App/Repositories/Interfaces/IUserDbRepository.cs" afterDir="false" />
     </list>
+=======
+    <list default="true" id="9acae6fd-9ed0-480d-a04e-f462b92a630b" name="Changes" comment="" />
+>>>>>>> Stashed changes
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,7 +97,7 @@
       <option name="presentableId" value="Default" />
       <updated>1650626935456</updated>
       <workItem from="1650626960532" duration="3015000" />
-      <workItem from="1650638555559" duration="3008000" />
+      <workItem from="1650638555559" duration="3308000" />
     </task>
     <servers />
   </component>
