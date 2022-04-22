@@ -13,46 +13,39 @@ public class UserController : Controller
     {
         _context = context;
     }
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteUser([FromRoute] int id)
-    {
-        var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
-        var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
-        
-        
-        user.IdUserFriends.Add(user1);
-        user.IdUsers.Add(user);
-        user1.IdUserFriends.Add(user);
-        user1.IdUsers.Add(user1);
-        await _context.SaveChangesAsync();
-        return Ok("dodano");
-    }
     
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
     {   
-        var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
-        var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
-        user.IdUserFriends.Add(user1);
-        user.IdUsers.Add(user);
-        user1.IdUserFriends.Add(user);
-        user1.IdUsers.Add(user1);
-        await _context.SaveChangesAsync();
+        
+        // var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
+        // var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
+        // user.IdUserFriends.Add(user1);
+        // user.IdUsers.Add(user);
+        // user1.IdUserFriends.Add(user);
+        // user1.IdUsers.Add(user1);
+        // await _context.SaveChangesAsync();
         return Ok("pokazało");
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int id)
     {
-        return Ok("wspolna");
+        return Ok("modify");
     }
 
     [HttpPost("{idUser:int}")]
-    public async Task<IActionResult> GetPost([FromRoute] int idUser)
+    public async Task<IActionResult> PostNewUser([FromRoute] int idUser)
     {
         
-        return Ok("dodano");
+        return Ok("add");
     }
     
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteUser([FromRoute] int id)
+    {
+       
+        return Ok("delete");
+    }
 
 }
