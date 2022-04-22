@@ -20,4 +20,12 @@ public class UserController : Controller
         return Ok("Wszystko super");
     }
 
+=======
+    
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> ModifyUser([FromRoute] int id)
+    {
+        return Ok("usunieto");
+    }
+>>>>>>> Stashed changes
 }
