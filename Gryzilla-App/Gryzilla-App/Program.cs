@@ -7,20 +7,23 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gryzilla", Version = "v1" });
 });
-
+//AddScoped
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
+
+//DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("MssqlDbConnString")));
+
 //connectionString
 var connectionString = builder.Configuration.GetConnectionString("MssqlDbConnString");
     
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

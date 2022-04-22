@@ -1,4 +1,5 @@
 using Gryzilla_App.Models;
+using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,24 +9,20 @@ namespace Gryzilla_App.Controllers;
 [Route("api/users")]
 public class UserController : Controller
 {
-    private readonly GryzillaContext _context;
-    public UserController(GryzillaContext context)
+    private readonly IUserDbRepository _userDbRepository;
+    public UserController(IUserDbRepository userDbRepository)
     {
-        _context = context;
+        _userDbRepository = userDbRepository;
     }
     
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUser([FromRoute] int idUser)
-    {   
+    {
+        var user = await _userDbRepository.GetUserFromDb(idUser);
+        if (user is null)
+          return NotFound(null);
         
-        // var user = await _context.UserData.Where(x => x.IdUser == 1).SingleOrDefaultAsync();
-        // var user1 = await _context.UserData.Where(x => x.IdUser == 2).SingleOrDefaultAsync();
-        // user.IdUserFriends.Add(user1);
-        // user.IdUsers.Add(user);
-        // user1.IdUserFriends.Add(user);
-        // user1.IdUsers.Add(user1);
-        // await _context.SaveChangesAsync();
-        return Ok("pokazało");
+        return Ok(user);
     }
 
     [HttpPut("{id:int}")]
