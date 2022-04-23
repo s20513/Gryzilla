@@ -16,6 +16,12 @@ public class FriendsController : Controller
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetFriends([FromRoute] int idUser)
     {
-        return Ok("dodano");
+        
+        var friends = await _friendsDbRepository.GetFriendsFromDb(idUser);
+        if (friends.Count()==0)
+        {
+            return NotFound("Nie znaleziono znajomych");
+        }
+        return Ok(friends);
     }
 }

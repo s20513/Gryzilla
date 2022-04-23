@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 //AddScoped
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
+builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
