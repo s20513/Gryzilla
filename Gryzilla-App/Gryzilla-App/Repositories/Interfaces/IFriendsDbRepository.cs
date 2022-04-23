@@ -1,6 +1,9 @@
-﻿namespace Gryzilla_App.Repositories.Interfaces;
+﻿using Gryzilla_App.DTO.Responses;
+using Gryzilla_App.DTO.Responses.Friends;
 
-public class IFriendsDbRepository
+namespace Gryzilla_App.Repositories.Interfaces;
+
+public interface IFriendsDbRepository
 {
-    
+    public Task<IEnumerable<FriendDto>> GetFriendsFromDb(int idUser);
 }
