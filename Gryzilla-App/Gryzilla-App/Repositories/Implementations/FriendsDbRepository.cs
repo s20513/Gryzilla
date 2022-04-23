@@ -16,13 +16,15 @@ public class FriendsDbRepository : IFriendsDbRepository
     
     public async Task<IEnumerable<FriendDto>> GetFriendsFromDb(int idUser)
     {
-      
-        var user = await _context.UserData.Where(x => x.IdUser == idUser).SingleOrDefaultAsync();
-        var friends = user.IdUserFriends.Select(x=>new FriendDto
-        {
-            IdUser =x.IdUser,
-            Nick = x.Nick
-        });
-        return friends;
+
+        var users = await _context.UserData.Where(x => x.IdUser == idUser)
+            .SelectMany(c => c.IdUserFriends)
+            .Select(x => new FriendDto
+            {
+                IdUser = x.IdUser,
+                Nick = x.Nick
+            }).ToArrayAsync();
+        
+        return users;
     }
 }
