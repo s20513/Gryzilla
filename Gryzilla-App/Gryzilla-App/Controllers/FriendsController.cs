@@ -47,14 +47,12 @@ public class FriendsController : Controller
             return NotFound("IdUser or IdUserFriend is null");
         }
         var friends = await _friendsDbRepository.AddNewFriendFromDb(idUser, idUserFriend);
-        if (friends is null)
+
+        return friends switch
         {
-            return NotFound("Cannot added friend");
-        }
-        else if (friends == "is friend")
-        {
-            return Ok("The user is already your friend");
-        }
-        return Ok(friends);
+            null => NotFound("Cannot added friend"),
+            "is friend" => Ok("The user is already your friend"),
+            _ => Ok(friends)
+        };
     }
 }
