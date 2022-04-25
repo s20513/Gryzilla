@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Gryzilla_App.Models;
-
-namespace Gryzilla_App
+﻿namespace Gryzilla_App.Models
 {
     public partial class Reason
     {
