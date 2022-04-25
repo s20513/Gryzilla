@@ -51,6 +51,10 @@ public class FriendsController : Controller
         {
             return NotFound("Cannot added friend");
         }
+        else if (friends == "is friend")
+        {
+            return Ok("The user is already your friend");
+        }
         return Ok(friends);
     }
 }

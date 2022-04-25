@@ -67,7 +67,7 @@ public class FriendsDbRepository : IFriendsDbRepository
         //sprawdzamy czy nie są przypadkiem nullem - są w naszej bazie
         if (user is null || userFriend is null) return null;
         //sprawdzamy czy są już znajomymi
-        if (user.IdUserFriends.Contains(userFriend)) return "User is your friend";
+        if (user.IdUserFriends.Contains(userFriend)) return "is friend";
         //dodajemy po stronie naszego użytkownika
         user.IdUserFriends.Add(userFriend);
         //dodajemy po stronie naszego znajomego
