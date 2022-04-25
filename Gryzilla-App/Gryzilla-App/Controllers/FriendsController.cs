@@ -14,13 +14,27 @@ public class FriendsController : Controller
     }
 
     [HttpGet("{idUser:int}")]
-    public async Task<IActionResult> GetFriends([FromRoute] int idUser)
+    public async Task<IActionResult> DeleteFriend([FromRoute] int idUser)
     {
         
         var friends = await _friendsDbRepository.GetFriendsFromDb(idUser);
-        if (friends.Count()==0)
+        if (friends is null)
         {
-            return NotFound("Nie znaleziono znajomych");
+            return NotFound("No friends found");
+        }
+        return Ok(friends);
+    }
+    [HttpDelete("{idUser:int}")]
+    public async Task<IActionResult> GetFriends([FromRoute] int idUser, int idUserFriend)
+    {
+        if (idUser == null || idUserFriend == null)
+        {
+            return NotFound("IdUser or IdUserFriend is null");
+        }
+        var friends = await _friendsDbRepository.DeleteFriendFromDb(idUser, idUserFriend);
+        if (friends is null)
+        {
+            return NotFound("Cannot removed friend");
         }
         return Ok(friends);
     }
