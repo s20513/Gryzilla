@@ -53,4 +53,28 @@ public class FriendsDbRepository : IFriendsDbRepository
         await _context.SaveChangesAsync();
         return "friend deleted";
     }
+
+    public async Task<string?> AddNewFriendFromDb(int idUser, int idUserFriend)
+    {
+        //wyszukanie użytkownika wraz z jego listą znajomych
+        var user = await _context.UserData.Include(x => x.IdUserFriends)
+            .Where(a => a.IdUser== idUser )
+            .SingleOrDefaultAsync();
+        //wyszukanie znajomego wraz z jego listą znajomych
+        var userFriend = await _context.UserData.Include(x => x.IdUserFriends)
+            .Where(a => a.IdUser== idUserFriend )
+            .SingleOrDefaultAsync();
+        //sprawdzamy czy nie są przypadkiem nullem - są w naszej bazie
+        if (user is null || userFriend is null) return null;
+        //sprawdzamy czy są już znajomymi
+        if (user.IdUserFriends.Contains(userFriend)) return "User is your friend";
+        //dodajemy po stronie naszego użytkownika
+        user.IdUserFriends.Add(userFriend);
+        //dodajemy po stronie naszego znajomego
+        userFriend.IdUserFriends.Add(user);
+        //zatwierdzamy
+        await _context.SaveChangesAsync();
+        
+        return "added new friend";
+    }
 }

@@ -7,4 +7,5 @@ public interface IFriendsDbRepository
 {
     public Task<IEnumerable<FriendDto>?> GetFriendsFromDb(int idUser);
     public Task<string?> DeleteFriendFromDb(int idUser, int idUserFriend);
+    public Task<string?> AddNewFriendFromDb(int idUser, int idUserFriend);
 }
