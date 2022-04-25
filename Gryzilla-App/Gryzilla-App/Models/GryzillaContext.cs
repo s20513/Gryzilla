@@ -333,7 +333,7 @@ namespace Gryzilla_App.Models
                 entity.ToTable("Post");
 
                 entity.Property(e => e.IdPost)
-                    .ValueGeneratedNever()
+                    .UseIdentityColumn()
                     .HasColumnName("idPost");
 
                 entity.Property(e => e.Content)
