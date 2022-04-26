@@ -14,14 +14,10 @@ public class PostDbRepository : IPostDbRepository
     {
         _context = context;
     }
-    
-    public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
+
+    public async Task<IEnumerable<PostDto>?> GetTableSort(Post [] allPosts)
     {
-        var allPosts = await _context.Posts.ToArrayAsync();
         var postDtos = new List<PostDto>();
-        
-        if (allPosts is null) return null;
-        
         foreach (var post in allPosts)
         {
             var newPost = await _context.Posts.Where(x => x.IdPost == post.IdPost)
@@ -37,6 +33,66 @@ public class PostDbRepository : IPostDbRepository
             if (newPost != null) postDtos.Add(newPost);
         }
         return postDtos;
+    }
+    
+    public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
+    {
+        var allPosts = await _context.Posts.ToArrayAsync();
+        if (allPosts is null) return null;
+        var postDtos = await GetTableSort(allPosts);
+        return  postDtos;
+    }
+
+    public async Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb()
+    {
+        var allPosts = await _context.Posts.ToArrayAsync();
+        if (allPosts is null) return null;
+        var postDtos = await GetTableSort(allPosts);
+        if (postDtos != null)
+        {
+            postDtos = postDtos.OrderByDescending(order => order.likes).ToList();
+            return postDtos;
+        }
+        return null;
+    }
+    
+    public async Task<IEnumerable<PostDto>?> GetPostsByLikesLeastFromDb()
+    {
+        var allPosts = await _context.Posts.ToArrayAsync();
+        if (allPosts is null) return null;
+        var postDtos = await GetTableSort(allPosts);
+        if (postDtos != null)
+        {
+            postDtos = postDtos.OrderBy(order => order.likes).ToList();
+            return postDtos;
+        }
+        return null;
+    }
+    
+    public async Task<IEnumerable<PostDto>?> GetPostsByDateFromDb()
+    {
+        var allPosts = await _context.Posts.ToArrayAsync();
+        if (allPosts is null) return null;
+        var postDtos = await GetTableSort(allPosts);
+        if (postDtos != null)
+        {
+            postDtos = postDtos.OrderByDescending(order => order.CreatedAt).ToList();
+            return postDtos;
+        }
+        return null;
+    }
+
+    public async Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb()
+    {
+        var allPosts = await _context.Posts.ToArrayAsync();
+        if (allPosts is null) return null;
+        var postDtos = await GetTableSort(allPosts);
+        if (postDtos != null)
+        {
+            postDtos = postDtos.OrderBy(order => order.CreatedAt).ToList();
+            return postDtos;
+        }
+        return null;
     }
 
     public async Task<string?> AddNewPostFromDb(AddPostDto addPostDto)

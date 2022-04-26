@@ -24,6 +24,47 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
+    [HttpGet("/bylikes/least")]
+    public async Task<IActionResult> GetPostsByLikes()
+    {
+        var posts = await _postsDbRepository.GetPostsByLikesLeastFromDb();
+        if (posts is null)
+        {
+            return NotFound("No posts found");
+        }
+        return Ok(posts);
+    }
+    [HttpGet("/bylikes/most")]
+    public async Task<IActionResult> GetPostsByLikesLeast()
+    {
+        var posts = await _postsDbRepository.GetPostsByLikesFromDb();
+        if (posts is null)
+        {
+            return NotFound("No posts found");
+        }
+        return Ok(posts);
+    }
+    [HttpGet("/dates/lates")]
+    public async Task<IActionResult> GetPostsByDates()
+    {
+        var posts = await _postsDbRepository.GetPostsByDateFromDb();
+        if (posts is null)
+        {
+            return NotFound("No posts found");
+        }
+        return Ok(posts);
+    }
+    
+    [HttpGet("/dates/oldest")]
+    public async Task<IActionResult> GetPostsByDatesOldest()
+    {
+        var posts = await _postsDbRepository.GetPostsByDateOldestFromDb();
+        if (posts is null)
+        {
+            return NotFound("No posts found");
+        }
+        return Ok(posts);
+    }
     
     [HttpPost]
     public async Task<IActionResult> AddPosts([FromBody] AddPostDto addPostDto)
