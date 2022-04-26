@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using System.Xml;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,20 +25,15 @@ public class PostDbRepository : IPostDbRepository
         foreach (var post in allPosts)
         {
             var newPost = await _context.Posts.Where(x => x.IdPost == post.IdPost)
-                .SelectMany(x=> x.IdUsers)
+                .Include(x=>x.IdUserNavigation)
                 .Select(a => new PostDto
                 {
-                    likes = _context.Posts.Where(c=>c.IdPost==post.IdPost).SelectMany(b => b.IdUsers).Count(),
+                    likes =  _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(b => b.IdUsers).Count(),
                     CreatedAt = a.CreatedAt,
-                    Nick = a.Nick,
-                    tags = _context.Posts
-                        .Where(x=>x.IdPost==post.IdPost)
-                        .SelectMany(x => x.IdTags)
-                        .Select(x=> new TagDto
-                        { 
-                          nameTag= x.NameTag
-                        }).ToArray()
+                    Nick = a.IdUserNavigation.Nick,
+                    tags = _context.Posts.Where(x => x.IdPost == post.IdPost).SelectMany(x => x.IdTags).Select(x => new TagDto { nameTag = x.NameTag}).ToArray()
                 }).SingleOrDefaultAsync();
+            
             if (newPost != null) postDtos.Add(newPost);
         }
         return postDtos;
@@ -71,15 +67,34 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<string?> DeletePostFromDb(int idPost)
     {
-        var post = await _context.Posts.Where(x => x.IdPost == idPost).SingleOrDefaultAsync();
+        var post = await _context.Posts.Where(x => x.IdPost == idPost).Include(x=>x.IdTags).Include(x=>x.IdUsers).SingleOrDefaultAsync();
         if (post is null) return null;
-        var tags = await _context.Posts.Include(x => x.IdTags).Where(x => x.IdPost == post.IdPost).Select(x=>new Tag()).ToArrayAsync();
+        var tags = await _context.Posts.Where(x => x.IdPost == idPost).SelectMany(x => x.IdTags).ToArrayAsync();
         foreach (var tag in tags)
         {
             post.IdTags.Remove(tag);
         }
-        //w toku
+
+        var likes = await _context.Posts.Where(c => c.IdPost == idPost).SelectMany(x=>x.IdUsers).ToArrayAsync();
+        foreach (var like in likes)
+        {
+            post.IdUsers.Remove(like);
+        }
+        var comments = await _context.CommentPosts.Where(x => x.IdPost == idPost).ToArrayAsync();
+        foreach (var comment in comments)
+        {
+            _context.CommentPosts.Remove(comment);
+        }
+
+        var reports = await _context.ReportPosts.Where(x => x.IdPost == idPost).ToArrayAsync();
+       
+        foreach (var report in reports)
+        {
+            _context.ReportPosts.Remove(report);
+        }
+        await _context.SaveChangesAsync();
         _context.Posts.Remove(post);
+        
         await _context.SaveChangesAsync();
         return "deleted post";
     }
