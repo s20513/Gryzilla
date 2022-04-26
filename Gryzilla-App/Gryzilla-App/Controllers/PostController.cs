@@ -35,6 +35,7 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
+    
     [HttpDelete("{idPost:int}")]
     public async Task<IActionResult> AddPosts([FromRoute] int idPost)
     {
