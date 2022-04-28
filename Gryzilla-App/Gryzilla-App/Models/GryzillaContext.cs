@@ -17,30 +17,30 @@ namespace Gryzilla_App.Models
         {
         }
 
-        public virtual DbSet<Achievement> Achievements { get; set; } = null!;
-        public virtual DbSet<AchievementUser> AchievementUsers { get; set; } = null!;
-        public virtual DbSet<Article> Articles { get; set; } = null!;
-        public virtual DbSet<Blocked> Blockeds { get; set; } = null!;
-        public virtual DbSet<CommentArticle> CommentArticles { get; set; } = null!;
-        public virtual DbSet<CommentPost> CommentPosts { get; set; } = null!;
-        public virtual DbSet<Group> Groups { get; set; } = null!;
-        public virtual DbSet<Notification> Notifications { get; set; } = null!;
-        public virtual DbSet<Post> Posts { get; set; } = null!;
-        public virtual DbSet<ProfileComment> ProfileComments { get; set; } = null!;
-        public virtual DbSet<Rank> Ranks { get; set; } = null!;
-        public virtual DbSet<Reason> Reasons { get; set; } = null!;
-        public virtual DbSet<ReportCommentArticle> ReportCommentArticles { get; set; } = null!;
-        public virtual DbSet<ReportCommentPost> ReportCommentPosts { get; set; } = null!;
-        public virtual DbSet<ReportPost> ReportPosts { get; set; } = null!;
-        public virtual DbSet<Tag> Tags { get; set; } = null!;
-        public virtual DbSet<UserDatum> UserData { get; set; } = null!;
+        public virtual DbSet<Achievement> Achievements { get; set; }
+        public virtual DbSet<AchievementUser> AchievementUsers { get; set; }
+        public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<Blocked> Blockeds { get; set; }
+        public virtual DbSet<CommentArticle> CommentArticles { get; set; }
+        public virtual DbSet<CommentPost> CommentPosts { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<ProfileComment> ProfileComments { get; set; }
+        public virtual DbSet<Rank> Ranks { get; set; }
+        public virtual DbSet<Reason> Reasons { get; set; }
+        public virtual DbSet<ReportCommentArticle> ReportCommentArticles { get; set; }
+        public virtual DbSet<ReportCommentPost> ReportCommentPosts { get; set; }
+        public virtual DbSet<ReportPost> ReportPosts { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<UserDatum> UserData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-RA75MKF\\GRYZILLASQL;Initial Catalog=Gryzilla;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=gryzilla.ddns.net,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100");
             }
         }
 
@@ -53,16 +53,16 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Achievement");
 
-                entity.Property(e => e.IdAchievement)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idAchievement");
+                entity.Property(e => e.IdAchievement).HasColumnName("idAchievement");
 
                 entity.Property(e => e.AchievementName)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("achievementName");
 
                 entity.Property(e => e.Descripion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("descripion");
@@ -107,11 +107,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Article");
 
-                entity.Property(e => e.IdArticle)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idArticle");
+                entity.Property(e => e.IdArticle).HasColumnName("idArticle");
 
                 entity.Property(e => e.Content)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("content");
@@ -123,6 +122,7 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdUser).HasColumnName("idUser");
 
                 entity.Property(e => e.Title)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("title");
@@ -158,9 +158,7 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Blocked");
 
-                entity.Property(e => e.IdBlocked)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idBlocked");
+                entity.Property(e => e.IdBlocked).HasColumnName("idBlocked");
 
                 entity.Property(e => e.DateEnded)
                     .HasColumnType("datetime")
@@ -186,11 +184,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("CommentArticle");
 
-                entity.Property(e => e.IdCommentArticle)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idCommentArticle");
+                entity.Property(e => e.IdCommentArticle).HasColumnName("idCommentArticle");
 
                 entity.Property(e => e.DescriptionArticle)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("descriptionArticle");
@@ -219,11 +216,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("CommentPost");
 
-                entity.Property(e => e.IdComment)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idComment");
+                entity.Property(e => e.IdComment).HasColumnName("idComment");
 
                 entity.Property(e => e.DescriptionPost)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("descriptionPost");
@@ -252,20 +248,20 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Group");
 
-                entity.Property(e => e.IdGroup)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idGroup");
+                entity.Property(e => e.IdGroup).HasColumnName("idGroup");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("date")
                     .HasColumnName("createdAt");
 
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("description");
 
                 entity.Property(e => e.GroupName)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("groupName");
@@ -303,11 +299,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Notification");
 
-                entity.Property(e => e.IdNotification)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idNotification");
+                entity.Property(e => e.IdNotification).HasColumnName("idNotification");
 
                 entity.Property(e => e.Content)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("content");
@@ -332,11 +327,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Post");
 
-                entity.Property(e => e.IdPost)
-                    .UseIdentityColumn()
-                    .HasColumnName("idPost");
+                entity.Property(e => e.IdPost).HasColumnName("idPost");
 
                 entity.Property(e => e.Content)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("content");
@@ -350,6 +344,7 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdUser).HasColumnName("idUser");
 
                 entity.Property(e => e.Title)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("title");
@@ -368,11 +363,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("ProfileComment");
 
-                entity.Property(e => e.IdProfileComment)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idProfileComment");
+                entity.Property(e => e.IdProfileComment).HasColumnName("idProfileComment");
 
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("description");
@@ -401,11 +395,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Rank");
 
-                entity.Property(e => e.IdRank)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idRank");
+                entity.Property(e => e.IdRank).HasColumnName("idRank");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("name");
@@ -420,11 +413,10 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Reason");
 
-                entity.Property(e => e.IdReason)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idReason");
+                entity.Property(e => e.IdReason).HasColumnName("idReason");
 
                 entity.Property(e => e.ReasonName)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("reasonName");
@@ -444,6 +436,7 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdReason).HasColumnName("idReason");
 
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("description");
@@ -485,6 +478,7 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdComment).HasColumnName("idComment");
 
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("description");
@@ -516,7 +510,7 @@ namespace Gryzilla_App.Models
 
             modelBuilder.Entity<ReportPost>(entity =>
             {
-                entity.HasKey(e => new { e.IdUser, e.IdPost })
+                entity.HasKey(e => new { e.IdUser, e.IdPost, e.IdReason })
                     .HasName("ReportPost_pk");
 
                 entity.ToTable("ReportPost");
@@ -525,12 +519,13 @@ namespace Gryzilla_App.Models
 
                 entity.Property(e => e.IdPost).HasColumnName("idPost");
 
+                entity.Property(e => e.IdReason).HasColumnName("idReason");
+
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("description");
-
-                entity.Property(e => e.IdReason).HasColumnName("idReason");
 
                 entity.Property(e => e.ReportedAt)
                     .HasColumnType("date")
@@ -564,16 +559,16 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("Tag");
 
-                entity.Property(e => e.IdTag)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idTag");
+                entity.Property(e => e.IdTag).HasColumnName("idTag");
 
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("description");
 
                 entity.Property(e => e.NameTag)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("nameTag");
@@ -601,15 +596,14 @@ namespace Gryzilla_App.Models
                 entity.HasKey(e => e.IdUser)
                     .HasName("UserData_pk");
 
-                entity.Property(e => e.IdUser)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idUser");
+                entity.Property(e => e.IdUser).HasColumnName("idUser");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("date")
                     .HasColumnName("createdAt");
 
                 entity.Property(e => e.Email)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("email");
@@ -617,11 +611,13 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdRank).HasColumnName("idRank");
 
                 entity.Property(e => e.Nick)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("nick");
 
                 entity.Property(e => e.Password)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("password");
