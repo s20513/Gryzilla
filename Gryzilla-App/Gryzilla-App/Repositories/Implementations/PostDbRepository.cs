@@ -26,6 +26,7 @@ public class PostDbRepository : IPostDbRepository
                 .Select(a => new PostDto
                 {
                     Likes = _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(b => b.IdUsers).Count(),
+                    Comments = _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(x=>x.CommentPosts).Count(),
                     CreatedAt = a.CreatedAt,
                     Content = a.Content,
                     Title = a.Title,
