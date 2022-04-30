@@ -1,8 +1,6 @@
-﻿using System.Xml;
-using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
@@ -44,7 +42,7 @@ public class PostDbRepository : IPostDbRepository
     public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
     {
         var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts is null) return null;
+        if (allPosts.Length == 0) return null;
         var postDtos = await GetTableSort(allPosts);
         return postDtos;
     }
@@ -52,7 +50,7 @@ public class PostDbRepository : IPostDbRepository
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb()
     {
         var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts is null) return null;
+        if (allPosts.Length ==0) return null;
         var postDtos = await GetTableSort(allPosts);
         if (postDtos != null)
         {
@@ -66,7 +64,7 @@ public class PostDbRepository : IPostDbRepository
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesLeastFromDb()
     {
         var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts is null) return null;
+        if (allPosts.Length==0) return null;
         var postDtos = await GetTableSort(allPosts);
         if (postDtos != null)
         {
@@ -80,7 +78,7 @@ public class PostDbRepository : IPostDbRepository
     public async Task<IEnumerable<PostDto>?> GetPostsByDateFromDb()
     {
         var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts is null) return null;
+        if (allPosts.Length == 0) return null;
         var postDtos = await GetTableSort(allPosts);
         if (postDtos != null)
         {
@@ -94,7 +92,7 @@ public class PostDbRepository : IPostDbRepository
     public async Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb()
     {
         var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts is null) return null;
+        if (allPosts.Length == 0) return null;
         var postDtos = await GetTableSort(allPosts);
         if (postDtos != null)
         {
