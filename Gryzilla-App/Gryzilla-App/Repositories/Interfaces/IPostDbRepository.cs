@@ -11,4 +11,6 @@ public interface IPostDbRepository
     public Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb();
     public Task<string?> AddNewPostFromDb(AddPostDto addPostDto);
     public Task<string?> DeletePostFromDb(int idPost);
+    public Task<string?> DeleteTagFromPost(int idPost, int idTag);
+    public Task<string?> ModifyPostFromDb(PutPostDto putPostDto);
 }
