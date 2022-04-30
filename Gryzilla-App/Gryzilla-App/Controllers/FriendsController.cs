@@ -24,8 +24,8 @@ public class FriendsController : Controller
         }
         return Ok(friends);
     }
-    [HttpDelete("{idUser:int}")]
-    public async Task<IActionResult> DeleteFriend([FromRoute] int idUser, int idUserFriend)
+    [HttpDelete("{idUser:int}/{idUserFriend:int}")]
+    public async Task<IActionResult> DeleteFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
     {
         if (idUser == null || idUserFriend == null)
         {
@@ -39,8 +39,8 @@ public class FriendsController : Controller
         return Ok(friends);
     }
     
-    [HttpPost("{idUser:int}")]
-    public async Task<IActionResult> AddNewFriend([FromRoute] int idUser, int idUserFriend)
+    [HttpPost("{idUser:int}/{idUserFriend:int}")]
+    public async Task<IActionResult> AddNewFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
     {
         if (idUser == null || idUserFriend == null)
         {

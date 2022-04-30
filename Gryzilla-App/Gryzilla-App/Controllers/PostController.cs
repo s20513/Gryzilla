@@ -77,14 +77,36 @@ public class PostController : Controller
         return Ok(posts);
     }
     
-    [HttpDelete("{idPost:int}")]
-    public async Task<IActionResult> AddPosts([FromRoute] int idPost)
+    [HttpPut]
+    public async Task<IActionResult> AddPosts([FromBody] PutPostDto putPostDto)
     {
-        //w toku
+        var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto);
+        if (posts is null)
+        {
+            return NotFound("Cannot modify post");
+        }
+        return Ok(posts);
+    }
+    [HttpDelete("{idPost:int}")]
+    public async Task<IActionResult> DeletePost([FromRoute] int idPost)
+    {
+        
         var posts = await _postsDbRepository.DeletePostFromDb(idPost);
         if (posts is null)
         {
-            return NotFound("Cannot add new post");
+            return NotFound("Cannot delete new post");
+        }
+        return Ok(posts);
+    }
+    
+    [HttpDelete("{idPost:int}/{idTag:int}")]
+    public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
+    {
+        
+        var posts = await _postsDbRepository.DeleteTagFromPost(idPost,idTag);
+        if (posts is null)
+        {
+            return NotFound("Cannot delete tag");
         }
         return Ok(posts);
     }
