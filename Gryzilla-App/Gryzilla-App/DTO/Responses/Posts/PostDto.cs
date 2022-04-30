@@ -10,4 +10,5 @@ public class PostDto
     public DateTime CreatedAt { get; set; }
     public TagDto? [] Tags { get; set; }
     public int? Likes{ get; set; }
+    public int? Comments { get; set; }
 }
