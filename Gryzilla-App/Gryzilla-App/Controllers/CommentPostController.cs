@@ -21,7 +21,7 @@ public class CommentPostController : Controller
         var comment = await _commentPostDbRepository.PostNewCommentToDb(addCommentDto);
         if (comment is null)
         {
-            return NotFound("Cannot added new comment");
+            return NotFound("Cannot add new comment");
         }
         return Ok(comment);
     }
