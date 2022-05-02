@@ -17,6 +17,7 @@ builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
 builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 builder.Services.AddScoped<IPostDbRepository, PostDbRepository>();
 builder.Services.AddScoped<ICommentPostDbRepository, CommentPostDbRepository>();
+builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("MssqlDbConnString")));
