@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App.DTO.Responses;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -105,7 +106,6 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<string?> AddNewPostFromDb(AddPostDto addPostDto)
     {
-        //sprawdzam czy user istnieje
         var user = await _context.UserData.Where(x => x.IdUser == addPostDto.idUser).SingleOrDefaultAsync();
         if (user is null) return null;
 
@@ -182,7 +182,8 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<string?> ModifyPostFromDb(PutPostDto putPostDto)
     {
-        var post = await _context.Posts.Where(x => x.IdPost == putPostDto.idPost).Include(x => x.IdTags)
+        var post = await _context.Posts.Where(x => x.IdPost == putPostDto.idPost)
+            .Include(x => x.IdTags)
             .SingleOrDefaultAsync();
         if (post is null) return null;
         post.Title = putPostDto.title;
@@ -208,6 +209,32 @@ public class PostDbRepository : IPostDbRepository
             await _context.SaveChangesAsync();
             return null;
         }
+    }
+
+    public async Task<OnePostDto?> GetOnePostFromDb(int idPost)
+    {
+        var post = await _context.Posts.Where(x => x.IdPost == idPost).SingleOrDefaultAsync();
+        if (post is null) return null;
+        var newPost = await _context.Posts.Where(x => x.IdPost == idPost)
+            .Include(x => x.IdUserNavigation)
+            .Select(a => new OnePostDto
+            {
+                Likes = _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(b => b.IdUsers).Count(),
+                Comments = _context.CommentPosts.Where(c => c.IdPost == post.IdPost)
+                    .Include(b=>b.IdUserNavigation)
+                    .Select(x=> new CommentDto
+                    {
+                        Nick = x.IdUserNavigation.Nick,
+                        DescriptionPost = x.DescriptionPost
+                    }).ToArray(),
+                CreatedAt = a.CreatedAt,
+                Content = a.Content,
+                Title = a.Title,
+                Nick = a.IdUserNavigation.Nick,
+                Tags = _context.Posts.Where(x => x.IdPost == post.IdPost).SelectMany(x => x.IdTags)
+                    .Select(x => new TagDto {nameTag = x.NameTag}).ToArray()
+            }).SingleOrDefaultAsync();
+        return newPost;
     }
 }
 

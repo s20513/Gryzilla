@@ -24,6 +24,7 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
+    
     [HttpGet("/bylikes/least")]
     public async Task<IActionResult> GetPostsByLikes()
     {
@@ -66,6 +67,16 @@ public class PostController : Controller
         return Ok(posts);
     }
     
+    [HttpGet("{idPost:int}")]
+    public async Task<IActionResult> GetOnePost([FromRoute] int idPost)
+    {
+        var posts = await _postsDbRepository.GetOnePostFromDb(idPost);
+        if (posts is null)
+        {
+            return NotFound("No posts found");
+        }
+        return Ok(posts);
+    }
     [HttpPost]
     public async Task<IActionResult> AddPosts([FromBody] AddPostDto addPostDto)
     {
@@ -99,7 +110,7 @@ public class PostController : Controller
         return Ok(posts);
     }
     
-    [HttpDelete("{idPost:int}/{idTag:int}")]
+    [HttpDelete("/tag/{idPost:int}/{idTag:int}")]
     public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
     {
         
