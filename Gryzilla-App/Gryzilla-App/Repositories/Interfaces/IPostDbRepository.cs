@@ -13,4 +13,5 @@ public interface IPostDbRepository
     public Task<string?> DeletePostFromDb(int idPost);
     public Task<string?> DeleteTagFromPost(int idPost, int idTag);
     public Task<string?> ModifyPostFromDb(PutPostDto putPostDto);
+    public Task<OnePostDto?> GetOnePostFromDb(int idPost);
 }
