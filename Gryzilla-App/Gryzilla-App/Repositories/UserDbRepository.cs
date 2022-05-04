@@ -28,7 +28,13 @@ public class UserDbRepository : IUserDbRepository
         //     }).FirstOrDefaultAsync();
         //
         // return singleUser;
-        var user = await _context.UserData.Where(x => x.IdUser == idUser).Select(x => new UserDto
+        var user = await _context.UserData
+            // .Join(Rank,
+            //     sc => sc.IdRank,
+            //     soc => soc.IdRank,
+            //     (sc,soc) => new {sc, soc})
+            // .Where(x => x.IdUser == idUser)
+            .Select(x => new UserDto
         {
             IdUser = x.IdUser,
             IdRank = x.IdRank,
