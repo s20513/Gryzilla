@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
 
-public class CommentPostDbRepository : ICommentPostDbRepository
+public class  CommentPostDbRepository : ICommentPostDbRepository
 {
     private readonly GryzillaContext _context;
 
