@@ -15,33 +15,21 @@ public class UserDbRepository : IUserDbRepository
 
     public async Task<UserDto?> GetUserFromDb( int idUser)
     {
-        // var singleUser = await (from user in _context.UserData
-        //     where user.IdUser == idUser
-        //     select new UserDto()
-        //     {
-        //         IdUser = user.IdUser,
-        //         IdRank = user.IdRank,
-        //         Nick = user.Nick,
-        //         Email = user.Email,
-        //         PhoneNumber = user.PhoneNumber,
-        //         CreatedAt = user.CreatedAt
-        //     }).FirstOrDefaultAsync();
-        //
-        // return singleUser;
         var user = await _context.UserData
-            // .Join(Rank,
-            //     sc => sc.IdRank,
-            //     soc => soc.IdRank,
-            //     (sc,soc) => new {sc, soc})
-            // .Where(x => x.IdUser == idUser)
-            .Select(x => new UserDto
-        {
-            IdUser = x.IdUser,
-            IdRank = x.IdRank,
-            Nick = x.Nick,
-            Email = x.Email,
-            PhoneNumber = x.PhoneNumber,
-            CreatedAt = x.CreatedAt
+            .Join(_context.Ranks,
+                sc => sc.IdRank,
+                soc => soc.IdRank,
+                (sc,soc) => new {sc, soc})
+            .Where(x => x.sc.IdUser == idUser)
+            .Select(x => new UserDto 
+            {
+                IdUser = x.sc.IdUser,
+                IdRank = x.sc.IdRank,
+                Nick = x.sc.Nick,
+                Email = x.sc.Email,
+                PhoneNumber = x.sc.PhoneNumber,
+                CreatedAt = x.sc.CreatedAt,
+                RankName = x.soc.Name
         }).SingleOrDefaultAsync();
         
         return user;
@@ -49,13 +37,20 @@ public class UserDbRepository : IUserDbRepository
 
     public async Task<IEnumerable<UserDto?>> GetUsersFromDb()
     {
-        var users = await _context.UserData.Select(x => new UserDto() {
-            IdUser = x.IdUser,
-            IdRank = x.IdRank,
-            Nick = x.Nick,
-            Email = x.Email,
-            PhoneNumber = x.PhoneNumber,
-            CreatedAt = x.CreatedAt
+        var users = await _context.UserData
+            .Join(_context.Ranks,
+                sc => sc.IdRank,
+                soc => soc.IdRank,
+                (sc,soc) => new {sc, soc})
+            .Select(x => new UserDto() 
+            {
+                IdUser = x.sc.IdUser,
+                IdRank = x.sc.IdRank,
+                Nick = x.sc.Nick,
+                Email = x.sc.Email,
+                PhoneNumber = x.sc.PhoneNumber,
+                CreatedAt = x.sc.CreatedAt,
+                RankName = x.soc.Name
         }).ToArrayAsync();
 
         return users;
