@@ -18,6 +18,8 @@ builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 builder.Services.AddScoped<IPostDbRepository, PostDbRepository>();
 builder.Services.AddScoped<ICommentPostDbRepository, CommentPostDbRepository>();
 builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
+builder.Services.AddScoped<ITopCommentDbRepository, TopCommentDbRepository>();
+builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("MssqlDbConnString")));

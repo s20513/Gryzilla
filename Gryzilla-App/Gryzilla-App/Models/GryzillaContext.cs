@@ -123,7 +123,7 @@ namespace Gryzilla_App.Models
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasMaxLength(30)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("title");
 
