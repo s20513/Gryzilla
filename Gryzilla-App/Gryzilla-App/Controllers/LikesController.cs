@@ -14,7 +14,7 @@ public class LikesController : Controller
         _likesPostDbRepository= likesPostDbRepository;
     }
 
-    [HttpPost("{idUser:int},{idPost:int}")]
+    [HttpPost("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> AddNewLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
 
@@ -26,7 +26,7 @@ public class LikesController : Controller
 
         return Ok(posts);
     }
-    [HttpDelete("{idUser:int},{idPost:int}")]
+    [HttpDelete("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> DeleteLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
         var posts = await _likesPostDbRepository.DeleteLikeToPost(idUser, idPost);

@@ -26,10 +26,10 @@ public class CommentPostController : Controller
         return Ok(comment);
     }
     
-    [HttpPut]
-    public async Task<IActionResult> ModifyComment([FromBody] PutCommentDto putCommentDto)
+    [HttpPut("{idComment:int}")]
+    public async Task<IActionResult> ModifyComment([FromBody] PutCommentDto putCommentDto, [FromRoute] int idComment)
     {
-        var comment = await _commentPostDbRepository.ModifyCommentToDb(putCommentDto);
+        var comment = await _commentPostDbRepository.ModifyCommentToDb(putCommentDto, idComment);
         if (comment is null)
         {
             return NotFound("Cannot modify comment");
@@ -47,4 +47,5 @@ public class CommentPostController : Controller
         }
         return Ok(comment);
     }
+    
 }

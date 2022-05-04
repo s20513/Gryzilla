@@ -67,7 +67,7 @@ public class PostController : Controller
         return Ok(posts);
     }
     
-    [HttpGet("{idPost:int}")]
+    [HttpGet("one/{idPost:int}")]
     public async Task<IActionResult> GetOnePost([FromRoute] int idPost)
     {
         var posts = await _postsDbRepository.GetOnePostFromDb(idPost);
@@ -78,7 +78,7 @@ public class PostController : Controller
         return Ok(posts);
     }
     [HttpPost]
-    public async Task<IActionResult> AddPosts([FromBody] AddPostDto addPostDto)
+    public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
     {
         var posts = await _postsDbRepository.AddNewPostFromDb(addPostDto);
         if (posts is null)
@@ -89,7 +89,7 @@ public class PostController : Controller
     }
     
     [HttpPut]
-    public async Task<IActionResult> AddPosts([FromBody] PutPostDto putPostDto)
+    public async Task<IActionResult> ModifyPost([FromBody] PutPostDto putPostDto)
     {
         var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto);
         if (posts is null)
