@@ -68,7 +68,7 @@ namespace Gryzilla_App.Models
                     .HasColumnName("descripion");
 
                 entity.Property(e => e.Points)
-                    .HasColumnType("decimal(6, 4)")
+                    .HasColumnType("decimal(5, 2)")
                     .HasColumnName("points");
             });
 

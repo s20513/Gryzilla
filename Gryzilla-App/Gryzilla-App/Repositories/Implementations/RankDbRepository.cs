@@ -20,7 +20,7 @@ public class RankDbRepository : IRankDbRepository
         var rank = await _context.Ranks.Where(x => x.Name == addRankDto.Name).SingleOrDefaultAsync();
         if (rank is not null) return null;
         
-        _context.Ranks.Add(new Rank
+       await _context.Ranks.AddAsync(new Rank
         {
             Name = addRankDto.Name,
             RankLevel = addRankDto.RankLevel
