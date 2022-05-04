@@ -25,6 +25,17 @@ public class UserController : Controller
 
         return Ok(user);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetUsers()
+    {
+        var user = await _userDbRepository.GetUsersFromDb();
+        
+        if(!user.Any())
+            return NotFound();
+
+        return Ok(user);
+    }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int id)

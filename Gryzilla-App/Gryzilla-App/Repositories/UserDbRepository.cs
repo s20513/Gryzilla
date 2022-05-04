@@ -15,30 +15,46 @@ public class UserDbRepository : IUserDbRepository
 
     public async Task<UserDto?> GetUserFromDb( int idUser)
     {
-        var singleUser = await (from user in _context.UserData
-            where user.IdUser == idUser
-            select new UserDto()
-            {
-                IdUser = user.IdUser,
-                IdRank = user.IdRank,
-                Nick = user.Nick,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                CreatedAt = user.CreatedAt
-            }).FirstOrDefaultAsync();
-
-        return singleUser;
-        // var user = await _context.UserData.Where(x => x.IdUser == idUser).Select(x => new UserDto
-        // {
-        //     IdUser = x.IdUser,
-        //     IdRank = x.IdRank,
-        //     Nick = x.Nick,
-        //     Email = x.Email,
-        //     PhoneNumber = x.PhoneNumber,
-        //     CreatedAt = x.CreatedAt
-        // }).SingleOrDefaultAsync();
+        // var singleUser = await (from user in _context.UserData
+        //     where user.IdUser == idUser
+        //     select new UserDto()
+        //     {
+        //         IdUser = user.IdUser,
+        //         IdRank = user.IdRank,
+        //         Nick = user.Nick,
+        //         Email = user.Email,
+        //         PhoneNumber = user.PhoneNumber,
+        //         CreatedAt = user.CreatedAt
+        //     }).FirstOrDefaultAsync();
         //
-        // return user;
+        // return singleUser;
+        var user = await _context.UserData.Where(x => x.IdUser == idUser).Select(x => new UserDto
+        {
+            IdUser = x.IdUser,
+            IdRank = x.IdRank,
+            Nick = x.Nick,
+            Email = x.Email,
+            PhoneNumber = x.PhoneNumber,
+            CreatedAt = x.CreatedAt
+        }).SingleOrDefaultAsync();
+        
+        return user;
     }
+
+    public async Task<IEnumerable<UserDto?>> GetUsersFromDb()
+    {
+        var users = await _context.UserData.Select(x => new UserDto() {
+            IdUser = x.IdUser,
+            IdRank = x.IdRank,
+            Nick = x.Nick,
+            Email = x.Email,
+            PhoneNumber = x.PhoneNumber,
+            CreatedAt = x.CreatedAt
+        }).ToArrayAsync();
+
+        return users;
+
+    }
+    
     
 }
