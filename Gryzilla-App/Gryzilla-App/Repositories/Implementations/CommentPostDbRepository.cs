@@ -29,9 +29,9 @@ public class CommentPostDbRepository : ICommentPostDbRepository
         return "added new comment";
     }
 
-    public async Task<string?> ModifyCommentToDb(PutCommentDto modifyCommentDto)
+    public async Task<string?> ModifyCommentToDb(PutCommentDto modifyCommentDto, int idComment)
     {
-        var commentPost = await _context.CommentPosts.Where(x => x.IdComment == modifyCommentDto.IdComment).SingleOrDefaultAsync();
+        var commentPost = await _context.CommentPosts.Where(x => x.IdComment == idComment).SingleOrDefaultAsync();
         if (commentPost is null ) return null;
         commentPost.DescriptionPost = modifyCommentDto.DescriptionPost;
         await _context.SaveChangesAsync();

@@ -67,7 +67,7 @@ public class PostController : Controller
         return Ok(posts);
     }
     
-    [HttpGet("{idPost:int}")]
+    [HttpGet("one/{idPost:int}")]
     public async Task<IActionResult> GetOnePost([FromRoute] int idPost)
     {
         var posts = await _postsDbRepository.GetOnePostFromDb(idPost);
