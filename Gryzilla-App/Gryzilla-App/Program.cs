@@ -12,19 +12,22 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gryzilla", Version = "v1" });
 });
+
 //AddScoped
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
 builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 builder.Services.AddScoped<IPostDbRepository, PostDbRepository>();
 builder.Services.AddScoped<ICommentPostDbRepository, CommentPostDbRepository>();
 builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
+
+var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
+
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MssqlDbConnString")));
+    options.UseSqlServer(connectionString));
 
 //connectionString
-var connectionString = builder.Configuration.GetConnectionString("MssqlDbConnString");
-    
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

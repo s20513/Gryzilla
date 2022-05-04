@@ -8,13 +8,16 @@ namespace Gryzilla_App.Models
 {
     public partial class GryzillaContext : DbContext
     {
+        private readonly string? _connectionString;
         public GryzillaContext()
         {
+            
         }
 
         public GryzillaContext(DbContextOptions<GryzillaContext> options)
             : base(options)
         {
+            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Local"].ConnectionString;
         }
 
         public virtual DbSet<Achievement> Achievements { get; set; }
@@ -37,11 +40,9 @@ namespace Gryzilla_App.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=gryzilla.ddns.net,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100");
-            }
+             if (!optionsBuilder.IsConfigured){
+                 if (_connectionString != null) optionsBuilder.UseSqlServer(_connectionString);
+             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
