@@ -22,12 +22,11 @@ builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
 builder.Services.AddScoped<ITopCommentDbRepository, TopCommentDbRepository>();
 builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();
 builder.Services.AddScoped<IAchievementDbRepository, AchievementDbRepository>();
+
+var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MssqlDbConnString")));
-
-//connectionString
-var connectionString = builder.Configuration.GetConnectionString("MssqlDbConnString");
+    options.UseSqlServer(connectionString));
     
 var app = builder.Build();
 
