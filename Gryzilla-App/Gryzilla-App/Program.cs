@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -12,16 +14,22 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Gryzilla", Version = "v1" });
 });
-//AddScoped
+
+//Adding controllers in .net 6
+builder.Services.AddControllers();
+
+
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
 builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 builder.Services.AddScoped<IPostDbRepository, PostDbRepository>();
 builder.Services.AddScoped<ICommentPostDbRepository, CommentPostDbRepository>();
 builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
-//trzeba zrobić
+ //trzeba zrobić
 builder.Services.AddScoped<ITopCommentDbRepository, TopCommentDbRepository>();
 builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();
 builder.Services.AddScoped<IAchievementDbRepository, AchievementDbRepository>();
+
+
 
 var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
 //DbContext -> MssqlDbConnString
@@ -45,5 +53,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+app.MapControllers();
 
 app.Run();
