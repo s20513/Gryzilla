@@ -16,21 +16,15 @@ public class UserController : Controller
     }
 
     [HttpGet("{idUser:int}")]
-    public async Task<IActionResult> GetOneUser([FromRoute] int idUser)
-    {
-        return Ok();
-    }
-    
-    [HttpGet("{idUser:int}")]
-    public async Task<IActionResult> GetOneUser([FromRoute] int idUser)
+    public async Task<IActionResult> GetUser([FromRoute] int idUser)
     {
         var user = await _userDbRepository.GetUserFromDb(idUser);
-        if (user is null)
-            return NotFound(null);
         
+        if(user == null)
+            return NotFound();
+
         return Ok(user);
     }
-    
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int id)

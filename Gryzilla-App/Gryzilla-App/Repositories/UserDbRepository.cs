@@ -13,20 +13,32 @@ public class UserDbRepository : IUserDbRepository
         _context = context;
     }
 
-    public async Task<UserDto> GetUserFromDb( int idUser)
+    public async Task<UserDto?> GetUserFromDb( int idUser)
     {
-        var user = await _context.UserData.Where(x => x.IdUser == idUser).Select(x => new UserDto
-        {
-            IdUser = x.IdUser,
-            IdRank = x.IdRank,
-            Nick = x.Nick,
-            Password = x.Password,
-            Email = x.Email,
-            PhoneNumber = x.PhoneNumber,
-            CreatedAt = x.CreatedAt
-        }).SingleOrDefaultAsync();
-        
-        return user;
+        var singleUser = await (from user in _context.UserData
+            where user.IdUser == idUser
+            select new UserDto()
+            {
+                IdUser = user.IdUser,
+                IdRank = user.IdRank,
+                Nick = user.Nick,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                CreatedAt = user.CreatedAt
+            }).FirstOrDefaultAsync();
+
+        return singleUser;
+        // var user = await _context.UserData.Where(x => x.IdUser == idUser).Select(x => new UserDto
+        // {
+        //     IdUser = x.IdUser,
+        //     IdRank = x.IdRank,
+        //     Nick = x.Nick,
+        //     Email = x.Email,
+        //     PhoneNumber = x.PhoneNumber,
+        //     CreatedAt = x.CreatedAt
+        // }).SingleOrDefaultAsync();
+        //
+        // return user;
     }
     
 }
