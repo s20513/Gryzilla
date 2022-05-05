@@ -1,3 +1,4 @@
+using Gryzilla_App.DTO.Requests.User;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +38,14 @@ public class UserController : Controller
         return Ok(user);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> ModifyUser([FromRoute] int id)
+    [HttpPut("{idUser:int}")]
+    public async Task<IActionResult> ModifyUser([FromRoute] int idUser, [FromBody] PutUserDto putUserDto)
     {
-        return Ok("modify");
+       var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);
+       if (user == null)
+           return BadRequest();
+       
+       return Ok(user);
     }
 
     [HttpPost("{idUser:int}")]

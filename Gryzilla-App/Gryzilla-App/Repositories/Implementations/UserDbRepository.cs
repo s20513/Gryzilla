@@ -52,11 +52,28 @@ public class UserDbRepository : IUserDbRepository
         return users;
     }
     
-    // public async Task<string?> ModifyUserFromDb( PutUserDto putUserDto)
-    // {
-    //     _context.UserData
-    //         .Where(x => x.IdUser == putUserDto.IdUser)
-    // }
+    public async Task<UserDto?> ModifyUserFromDb( int idUser, PutUserDto putUserDto)
+    {
+        var user = await _context.UserData
+            .Where(x => x.IdUser == idUser)
+            .Include(x => x.IdRankNavigation)
+            .SingleOrDefaultAsync();
+
+        user.Email = putUserDto.Email;
+        user.Nick = putUserDto.Nick;
+        user.PhoneNumber = putUserDto.PhoneNumber;
+
+        await _context.SaveChangesAsync();
+
+        return new UserDto() {
+            Nick = user.Nick,
+            Email = user.Email,
+            PhoneNumber =user.PhoneNumber,
+            CreatedAt = user.CreatedAt,
+            RankName = user.IdRankNavigation.Name
+        };
+
+    }
     
     
 }

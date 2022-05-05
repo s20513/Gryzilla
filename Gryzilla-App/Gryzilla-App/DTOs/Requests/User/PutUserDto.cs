@@ -5,6 +5,9 @@ namespace Gryzilla_App.DTO.Requests.User;
 public class PutUserDto
 {
     [Required]
+    public int IdUser { get; set; }
+    
+    [Required]
     [MaxLength(30,ErrorMessage = "Max length : 30")]
     public string Nick { get; set; }
 
