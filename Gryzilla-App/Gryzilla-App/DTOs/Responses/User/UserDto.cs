@@ -9,6 +9,5 @@ public class UserDto
     public string Email { get; set; } = null!;
     public string? PhoneNumber { get; set; }
     public DateTime CreatedAt { get; set; }
-    
     public string RankName { get; set; } = null!;
 }
