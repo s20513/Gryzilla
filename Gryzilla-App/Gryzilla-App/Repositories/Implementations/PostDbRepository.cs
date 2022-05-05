@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Responses;
+﻿using System.Xml;
+using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -104,7 +105,7 @@ public class PostDbRepository : IPostDbRepository
         return null;
     }
 
-    public async Task<string?> AddNewPostFromDb(AddPostDto addPostDto)
+    public async Task<NewPostDto?> AddNewPostFromDb(AddPostDto addPostDto)
     {
         var user = await _context.UserData.Where(x => x.IdUser == addPostDto.idUser).SingleOrDefaultAsync();
         if (user is null) return null;
@@ -128,10 +129,24 @@ public class PostDbRepository : IPostDbRepository
         }
 
         await _context.SaveChangesAsync();
-        return "Added new post";
+        var idNewPost = await _context.Posts.Select(x => x.IdPost).OrderByDescending(x => x).FirstAsync();
+        return new NewPostDto()
+        {
+            idPost = idNewPost,
+            Title = post.Title,
+            CreatedAt = post.CreatedAt,
+            Content = post.Content,
+            idUser = post.IdUser,
+            Tags = await _context.Posts.Where(x => x.IdPost == idNewPost)
+                .SelectMany(x => x.IdTags)
+                .Select(x => new TagDto
+                {
+                    nameTag = x.NameTag
+                }).ToArrayAsync()
+        };
     }
 
-    public async Task<string?> DeletePostFromDb(int idPost)
+    public async Task<DeletePostDto?> DeletePostFromDb(int idPost)
     {
         var post = await _context.Posts.Where(x => x.IdPost == idPost).Include(x => x.IdTags).Include(x => x.IdUsers)
             .SingleOrDefaultAsync();
@@ -165,10 +180,17 @@ public class PostDbRepository : IPostDbRepository
         _context.Posts.Remove(post);
 
         await _context.SaveChangesAsync();
-        return "deleted post";
+        return new DeletePostDto
+        {
+            DeletedAt = DateTime.Now,
+            Content = post.Content,
+            idPost = post.IdPost,
+            idUser = post.IdUser,
+            Title = post.Title,
+        };
     }
 
-    public async Task<string?> DeleteTagFromPost(int idPost, int idTag)
+    public async Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag)
     {
         var post = await _context.Posts.Where(x => x.IdPost == idPost).Include(x => x.IdTags).SingleOrDefaultAsync();
         if (post is null) return null;
@@ -177,10 +199,15 @@ public class PostDbRepository : IPostDbRepository
         if (tagFromPost is null) return null;
         post.IdTags.Remove(tagFromPost);
         await _context.SaveChangesAsync();
-        return "removed tag from post";
+        return new DeleteTagDto
+        {
+            idTag = idTag,
+            nameTag = tagFromPost.NameTag
+        };
     }
+    
 
-    public async Task<string?> ModifyPostFromDb(PutPostDto putPostDto)
+    public async Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost)
     {
         var post = await _context.Posts.Where(x => x.IdPost == putPostDto.idPost)
             .Include(x => x.IdTags)
@@ -200,14 +227,31 @@ public class PostDbRepository : IPostDbRepository
                 if(newTag is not null)
                     post.IdTags.Add(newTag);
             }
-
             await _context.SaveChangesAsync();
-            return "modified post";
+            return new ModifyPostDto
+            {
+                CreatedAt = post.CreatedAt,
+                Content = post.Content,
+                idPost = post.IdPost,
+                idUser = post.IdUser,
+                Title = post.Title,
+                Tags = await _context.Posts.Where(x=>x.IdPost==idPost).SelectMany(x=>x.IdTags).Select(x=>new TagDto
+                {
+                    nameTag = x.NameTag
+                }).ToArrayAsync()
+            };
         }
         else
         {
             await _context.SaveChangesAsync();
-            return null;
+            return new ModifyPostDto
+            {
+                CreatedAt = post.CreatedAt,
+                Content = post.Content,
+                idPost = post.IdPost,
+                idUser = post.IdUser,
+                Title = post.Title,
+            };
         }
     }
 

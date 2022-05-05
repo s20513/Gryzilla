@@ -9,9 +9,9 @@ public interface IPostDbRepository
     public Task<IEnumerable<PostDto>?> GetPostsByLikesLeastFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb();
-    public Task<string?> AddNewPostFromDb(AddPostDto addPostDto);
-    public Task<string?> DeletePostFromDb(int idPost);
-    public Task<string?> DeleteTagFromPost(int idPost, int idTag);
-    public Task<string?> ModifyPostFromDb(PutPostDto putPostDto);
+    public Task<NewPostDto?> AddNewPostFromDb(AddPostDto addPostDto);
+    public Task<DeletePostDto?> DeletePostFromDb(int idPost);
+    public Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag);
+    public Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost);
     public Task<OnePostDto?> GetOnePostFromDb(int idPost);
 }

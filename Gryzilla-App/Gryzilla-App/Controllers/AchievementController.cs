@@ -27,6 +27,8 @@ public class AchievementController : Controller
     [HttpPut("{idAchievement:int}")]
     public async Task<IActionResult> ModifyAchievement([FromRoute] int idAchievement, [FromBody] PutAchievementDto putAchievementDto)
     {
+        if (idAchievement != putAchievementDto.idAchievement)
+            return BadRequest();
         var achievementsFrom= await _achievementDbRepository.ModifyAchievement(idAchievement,putAchievementDto);
         if (achievementsFrom is null)
             return NotFound("Cannot modify achievement");

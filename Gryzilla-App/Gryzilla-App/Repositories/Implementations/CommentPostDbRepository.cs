@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -14,36 +15,50 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
     {
         _context = context;
     }
-    public async Task<string?> PostNewCommentToDb(AddCommentDto addCommentDto)
+    public async Task<CommentDto?> PostNewCommentToDb(AddCommentDto addCommentDto)
     {
         var post = await _context.Posts.Where(x => x.IdPost == addCommentDto.IdPost).SingleOrDefaultAsync();
         var user = await _context.UserData.Where(x => x.IdUser == addCommentDto.IdUser).SingleOrDefaultAsync();
         if (user is null || post is null) return null;
-        var newPost = await _context.CommentPosts.AddAsync(new CommentPost
+        var newComment = new CommentPost
         {
             IdUser = addCommentDto.IdUser,
             IdPost = addCommentDto.IdPost,
             DescriptionPost = addCommentDto.DescriptionPost
-        });
+        };
+        await _context.CommentPosts.AddAsync(newComment);
         await _context.SaveChangesAsync();
-        return "added new comment";
+        return new CommentDto
+        {
+            Nick = user.Nick,
+            idComment = await _context.CommentPosts.Select(x => x.IdComment).OrderByDescending(x => x).FirstAsync(),
+            DescriptionPost = newComment.DescriptionPost
+        };
     }
 
-    public async Task<string?> ModifyCommentToDb(PutCommentDto modifyCommentDto, int idComment)
+    public async Task<ModifyCommentDto?> ModifyCommentToDb(PutCommentDto modifyCommentDto, int idComment)
     {
         var commentPost = await _context.CommentPosts.Where(x => x.IdComment == idComment).SingleOrDefaultAsync();
         if (commentPost is null ) return null;
         commentPost.DescriptionPost = modifyCommentDto.DescriptionPost;
         await _context.SaveChangesAsync();
-        return "modified comment";
+        return new ModifyCommentDto
+        {
+            idComment = idComment,
+            DescriptionPost = modifyCommentDto.DescriptionPost,
+        };
     }
 
-    public async Task<string?> DeleteCommentFromDb(int idComment)
+    public async Task<DeleteCommentDto?> DeleteCommentFromDb(int idComment)
     {
         var commentPost = await _context.CommentPosts.Where(x => x.IdComment == idComment).SingleOrDefaultAsync();
         if (commentPost is null) return null;
         _context.CommentPosts.Remove(commentPost);
         await _context.SaveChangesAsync();
-        return "removed comment";
+        return new DeleteCommentDto
+        {
+            idComment = idComment,
+            DescriptionPost = commentPost.DescriptionPost
+        };
     }
 }

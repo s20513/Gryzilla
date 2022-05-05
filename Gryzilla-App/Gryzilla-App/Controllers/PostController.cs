@@ -88,10 +88,12 @@ public class PostController : Controller
         return Ok(posts);
     }
     
-    [HttpPut]
-    public async Task<IActionResult> ModifyPost([FromBody] PutPostDto putPostDto)
+    [HttpPut("{idPost:int}")]
+    public async Task<IActionResult> ModifyPost([FromBody] PutPostDto putPostDto, [FromRoute] int idPost)
     {
-        var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto);
+        if (putPostDto.idPost != idPost)
+            return BadRequest();
+        var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto, idPost);
         if (posts is null)
         {
             return NotFound("Cannot modify post");

@@ -1,8 +1,7 @@
 ﻿namespace Gryzilla_App.DTO.Responses;
 
-public class CommentDto
+public class ModifyCommentDto
 {
     public int idComment { get; set; }
-    public string Nick { get; set; }
     public string DescriptionPost { get; set; }
 }

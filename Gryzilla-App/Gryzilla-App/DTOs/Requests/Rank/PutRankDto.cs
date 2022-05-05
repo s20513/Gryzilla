@@ -5,6 +5,8 @@ namespace Gryzilla_App.DTO.Requests.Rank;
 public class PutRankDto
 {
     [Required]
+    public int idRank { get; set; }
+    [Required]
     [MaxLength(30,ErrorMessage = "Max length : 30")]
     public string Name { get; set; }
     [Required]
