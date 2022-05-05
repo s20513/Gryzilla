@@ -29,6 +29,8 @@ public class CommentPostController : Controller
     [HttpPut("{idComment:int}")]
     public async Task<IActionResult> ModifyComment([FromBody] PutCommentDto putCommentDto, [FromRoute] int idComment)
     {
+        if (idComment != putCommentDto.idComment)
+            return BadRequest();
         var comment = await _commentPostDbRepository.ModifyCommentToDb(putCommentDto, idComment);
         if (comment is null)
         {

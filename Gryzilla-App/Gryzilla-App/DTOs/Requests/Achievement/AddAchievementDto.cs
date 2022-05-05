@@ -5,8 +5,8 @@ namespace Gryzilla_App.DTO.Requests;
 public class AddAchievementDto
 {
     [Required]
-    //od 0 do 10000 punktów
-    [Range(0,1000)]
+    //od 0 do 100.00 punktów
+    [Range(0,100)]
     public decimal points { get; set; }
     [Required]
     [MaxLength(200,ErrorMessage = "Max length : 200")]
