@@ -2,7 +2,7 @@
 
 namespace Gryzilla_App.DTOs.Requests.Group;
 
-public class GroupRequest
+public class GroupRequestDto
 {
     [Required]
     [MaxLength(30, ErrorMessage = "Max length : 30")]

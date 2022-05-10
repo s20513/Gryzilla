@@ -2,7 +2,7 @@
 
 namespace Gryzilla_App.DTOs.Requests.Group;
 
-public class UserToGroup
+public class UserToGroupDto
 {
     [Required]
     public int IdGroup { get; set; }

@@ -48,14 +48,14 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         return group ?? null;
     }
 
-    public async Task<GroupDto?> ModifyGroup(int idGroup, GroupRequest groupRequestDto)
+    public async Task<GroupDto?> ModifyGroup(int idGroup, GroupRequestDto groupRequestDtoDto)
     {
         var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == idGroup);
         if (group is null)
             return null;
 
-        group.GroupName = groupRequestDto.GroupName;
-        group.Description = groupRequestDto.Description;
+        group.GroupName = groupRequestDtoDto.GroupName;
+        group.Description = groupRequestDtoDto.Description;
 
         await _context.SaveChangesAsync();
 
@@ -125,20 +125,23 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         };
     }
 
-    public async Task<GroupDto?> RemoveUserFromGroup(UserToGroup userToGroupDto)
+    public async Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDtoDto)
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDto.IdGroup);
-        if (group is null || group.IdUserCreator == userToGroupDto.IdUser)
+        if (idGroup != userToGroupDtoDto.IdGroup)
             return null;
 
-        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDto.IdUser);
+        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDtoDto.IdGroup);
+        if (group is null || group.IdUserCreator == userToGroupDtoDto.IdUser)
+            return null;
+
+        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDtoDto.IdUser);
         if (user is null)
             return null;
         
         var groupUser = await _context.UserData
-            .Where(e => e.IdUser == userToGroupDto.IdUser)
+            .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
             .SelectMany(e => e.Groups)
-            .Where(e => e.IdGroup == userToGroupDto.IdGroup)
+            .Where(e => e.IdGroup == userToGroupDtoDto.IdGroup)
             .SingleOrDefaultAsync();
 
         if (groupUser is null)
@@ -153,7 +156,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             GroupName = group.GroupName,
             Description = group.Description,
             CreatedAt = group.CreatedAt,
-            Users = await _context.Groups.Where(g => g.IdGroup == userToGroupDto.IdGroup)
+            Users = await _context.Groups.Where(g => g.IdGroup == userToGroupDtoDto.IdGroup)
                 .SelectMany(g => g.IdUsers)
                 .Select(g => new UserDto
                 {
@@ -171,9 +174,9 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         };
     }
     
-    public async Task<GroupDto?> AddNewGroup(int idUser, GroupRequest groupRequestDto)
+    public async Task<GroupDto?> AddNewGroup(int idUser, GroupRequestDto groupRequestDtoDto)
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
+        var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDtoDto.GroupName);
         if (group is not null)
             return null;
 
@@ -183,7 +186,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
 
         await _context.SaveChangesAsync();
         
-        group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
+        group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDtoDto.GroupName);
         group.IdUsers.Add(user);
 
         await _context.SaveChangesAsync();
@@ -212,20 +215,23 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         };
     }
 
-    public async Task<GroupDto?> AddUserToGroup(UserToGroup userToGroupDto)
+    public async Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDtoDto)
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDto.IdGroup);
+        if (idGroup != userToGroupDtoDto.IdGroup)
+            return null;
+
+        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDtoDto.IdGroup);
         if (group is null)
             return null;
 
-        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDto.IdUser);
+        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDtoDto.IdUser);
         if (user is null)
             return null;
 
         var groupUser = await _context.Groups
-            .Where(e => e.IdGroup == userToGroupDto.IdGroup)
+            .Where(e => e.IdGroup == userToGroupDtoDto.IdGroup)
             .SelectMany(e => e.IdUsers)
-            .Where(e => e.IdUser == userToGroupDto.IdUser)
+            .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
             .SingleOrDefaultAsync();
         if (groupUser is not null)
             return null;
