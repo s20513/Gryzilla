@@ -47,7 +47,7 @@ public class GroupsController: Controller
         return Ok(result);
     }
 
-    [HttpDelete("{idGroup:int}")]
+    [HttpDelete("user/{idGroup:int}")]
     public async Task<IActionResult> RemoveUserFromGroup([FromRoute] int idGroup, [FromBody] UserToGroupDto userToGroupDto)
     {
         var result = await _groupDbRepository.RemoveUserFromGroup(idGroup, userToGroupDto);
@@ -58,7 +58,7 @@ public class GroupsController: Controller
         return Ok(result);
     }
 
-    [HttpPut]
+    [HttpPost]
     public async Task<IActionResult> CreateNewGroup([FromBody] NewGroupRequestDto newGroupRequestDto)
     {
         var result =
@@ -70,10 +70,10 @@ public class GroupsController: Controller
         return Ok(result);
     }
 
-    [HttpPut("{idGroup:int}")]
+    [HttpPut("user/{idGroup:int}")]
     public async Task<IActionResult> AddUserToGroup([FromRoute] int idGroup, [FromBody] UserToGroupDto userToGroupDto)
     {
-        var result = _groupDbRepository.AddUserToGroup(idGroup, userToGroupDto);
+        var result = await _groupDbRepository.AddUserToGroup(idGroup, userToGroupDto);
 
         if (result is null)
             return NotFound("User or Group not found or user is already in group");

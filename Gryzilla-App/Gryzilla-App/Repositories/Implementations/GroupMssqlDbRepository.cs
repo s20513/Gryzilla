@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
@@ -16,7 +17,6 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         _context = context;
     }
     
-
     public async Task<GroupDto?> GetGroup(int idGroup)
     {
         var group = await _context.Groups
@@ -93,10 +93,14 @@ public class GroupMssqlDbRepository: IGroupDbRepository
 
         var groupUsers = await _context.Groups
             .Where(e => e.IdGroup == idGroup)
-            .Select(e => e.IdUsers)
+            .SelectMany(e => e.IdUsers)
             .ToListAsync();
         
         _context.RemoveRange(groupUsers);
+        foreach (var groupUser in groupUsers)
+        {
+            group.IdUsers.Remove(groupUser);
+        }
         _context.Groups.Remove(group);
         await _context.SaveChangesAsync();
 
@@ -129,7 +133,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
     {
         if (idGroup != userToGroupDtoDto.IdGroup)
             return null;
-
+        
         var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDtoDto.IdGroup);
         if (group is null || group.IdUserCreator == userToGroupDtoDto.IdUser)
             return null;
@@ -137,17 +141,18 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDtoDto.IdUser);
         if (user is null)
             return null;
-        
-        var groupUser = await _context.UserData
+
+        var groupUser = await _context.Groups
+            .Where(e => e.IdGroup == idGroup)
+            .SelectMany(e => e.IdUsers)
             .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
-            .SelectMany(e => e.Groups)
-            .Where(e => e.IdGroup == userToGroupDtoDto.IdGroup)
             .SingleOrDefaultAsync();
 
         if (groupUser is null)
             return null;
-        
-        _context.Remove(groupUser);
+
+        group.IdUsers.Remove(groupUser);
+        await _context.SaveChangesAsync();
         
         return new GroupDto
         {
@@ -174,9 +179,9 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         };
     }
     
-    public async Task<GroupDto?> AddNewGroup(int idUser, GroupRequestDto groupRequestDtoDto)
+    public async Task<GroupDto?> AddNewGroup(int idUser, GroupRequestDto groupRequestDto)
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDtoDto.GroupName);
+        var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
         if (group is not null)
             return null;
 
@@ -184,12 +189,27 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         if (user is null)
             return null;
 
+        var newGroup = new Group
+        {
+            IdUserCreator = idUser,
+            GroupName = groupRequestDto.GroupName,
+            Description = groupRequestDto.Description,
+            CreatedAt = DateTime.Today.Date
+        };
+        await _context.Groups.AddAsync(newGroup);
+        
         await _context.SaveChangesAsync();
         
-        group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDtoDto.GroupName);
-        group.IdUsers.Add(user);
-
+        group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
+        Console.WriteLine("aieubgabdgbadgb9adbg9a9dg9a");
+        Console.WriteLine(group);
+        Console.WriteLine("aieubgabdgbadgb9adbg9a9dg9a");
+        
         await _context.SaveChangesAsync();
+        group.IdUsers.Add(user);
+        
+        await _context.SaveChangesAsync();
+        
         return new GroupDto
         {
             IdGroup = group.IdGroup,
