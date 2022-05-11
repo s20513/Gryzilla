@@ -96,7 +96,6 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             .SelectMany(e => e.IdUsers)
             .ToListAsync();
         
-        _context.RemoveRange(groupUsers);
         foreach (var groupUser in groupUsers)
         {
             group.IdUsers.Remove(groupUser);
