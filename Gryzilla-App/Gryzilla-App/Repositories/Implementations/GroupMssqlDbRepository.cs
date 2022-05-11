@@ -87,7 +87,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
 
     public async Task<GroupDto?> DeleteGroup(int idGroup)
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == idGroup);
+        var group = await _context.Groups.Where(e => e.IdGroup ==idGroup).Include(x=>x.IdUsers).SingleOrDefaultAsync();
         if (group is null)
             return null;
 
@@ -123,7 +123,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                     RankName = _context.UserData
                         .Where(t => t.IdUser == g.IdUser)
                         .Include(t => t.IdRankNavigation)
-                        .Select(t => t.IdRankNavigation.Name).ToString()
+                        .Select(t => t.IdRankNavigation.Name).SingleOrDefault()
                 }).ToListAsync()
         };
     }
