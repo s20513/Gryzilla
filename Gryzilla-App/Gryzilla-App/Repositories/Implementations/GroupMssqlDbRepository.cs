@@ -200,10 +200,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         await _context.SaveChangesAsync();
         
         group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
-        Console.WriteLine("aieubgabdgbadgb9adbg9a9dg9a");
-        Console.WriteLine(group);
-        Console.WriteLine("aieubgabdgbadgb9adbg9a9dg9a");
-        
+
         await _context.SaveChangesAsync();
         group.IdUsers.Add(user);
         
