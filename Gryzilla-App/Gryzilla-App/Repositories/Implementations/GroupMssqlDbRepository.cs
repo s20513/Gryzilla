@@ -30,6 +30,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                 CreatedAt = e.CreatedAt,
                 Users = _context.Groups.Where(g => g.IdGroup == idGroup)
                     .SelectMany(g => g.IdUsers)
+                    .Include(g => g.IdRankNavigation)
                     .Select(g => new UserDto
                     {
                         IdUser = g.IdUser,
@@ -38,10 +39,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                         Email = g.Email,
                         PhoneNumber = g.PhoneNumber,
                         CreatedAt = g.CreatedAt,
-                        RankName = _context.UserData
-                            .Where(t => t.IdUser == g.IdUser)
-                            .Include(t => t.IdRankNavigation)
-                            .Select(t => t.IdRankNavigation.Name).ToString()
+                        RankName = g.IdRankNavigation.Name
                     }).ToList()
             }).SingleOrDefaultAsync();
 
@@ -59,29 +57,32 @@ public class GroupMssqlDbRepository: IGroupDbRepository
 
         await _context.SaveChangesAsync();
 
-        return new GroupDto
-        {
-            IdGroup = group.IdGroup,
-            IdUserCreator = group.IdGroup,
-            GroupName = group.GroupName,
-            Description = group.Description,
-            CreatedAt = group.CreatedAt,
-            Users = await _context.Groups.Where(g => g.IdGroup == idGroup)
-                .SelectMany(g => g.IdUsers)
-                .Select(g => new UserDto
-                {
-                    IdUser = g.IdUser,
-                    IdRank = g.IdRank,
-                    Nick = g.Nick,
-                    Email = g.Email,
-                    PhoneNumber = g.PhoneNumber,
-                    CreatedAt = g.CreatedAt,
-                    RankName = _context.UserData
-                        .Where(t => t.IdUser == g.IdUser)
-                        .Include(t => t.IdRankNavigation)
-                        .Select(t => t.IdRankNavigation.Name).ToString()
-                }).ToListAsync()
-        };
+        
+        var groupDto = await _context.Groups
+            .Where(e => e.IdGroup == idGroup)
+            .Select(e => new GroupDto
+            {
+                IdGroup = e.IdGroup,
+                IdUserCreator = e.IdUserCreator,
+                GroupName = e.GroupName,
+                Description = e.Description,
+                CreatedAt = e.CreatedAt,
+                Users = _context.Groups.Where(g => g.IdGroup == idGroup)
+                    .SelectMany(g => g.IdUsers)
+                    .Include(g => g.IdRankNavigation)
+                    .Select(g => new UserDto
+                    {
+                        IdUser = g.IdUser,
+                        IdRank = g.IdRank,
+                        Nick = g.Nick,
+                        Email = g.Email,
+                        PhoneNumber = g.PhoneNumber,
+                        CreatedAt = g.CreatedAt,
+                        RankName = g.IdRankNavigation.Name
+                    }).ToList()
+            }).SingleOrDefaultAsync();
+
+        return groupDto;
 
     }
 
@@ -112,6 +113,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             CreatedAt = group.CreatedAt,
             Users = await _context.Groups.Where(g => g.IdGroup == idGroup)
                 .SelectMany(g => g.IdUsers)
+                .Include(g => g.IdRankNavigation)
                 .Select(g => new UserDto
                 {
                     IdUser = g.IdUser,
@@ -120,10 +122,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                     Email = g.Email,
                     PhoneNumber = g.PhoneNumber,
                     CreatedAt = g.CreatedAt,
-                    RankName = _context.UserData
-                        .Where(t => t.IdUser == g.IdUser)
-                        .Include(t => t.IdRankNavigation)
-                        .Select(t => t.IdRankNavigation.Name).SingleOrDefault()
+                    RankName = g.IdRankNavigation.Name
                 }).ToListAsync()
         };
     }
@@ -133,11 +132,16 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         if (idGroup != userToGroupDtoDto.IdGroup)
             return null;
         
-        var group = await _context.Groups.Where(e => e.IdGroup == userToGroupDtoDto.IdGroup).Include(x=>x.IdUsers).SingleOrDefaultAsync();
+        var group = await _context.Groups
+            .Where(e => e.IdGroup == userToGroupDtoDto.IdGroup)
+            .Include(x=>x.IdUsers)
+            .SingleOrDefaultAsync();
         if (group is null || group.IdUserCreator == userToGroupDtoDto.IdUser)
             return null;
 
-        var user = await _context.UserData.Where(e => e.IdUser == userToGroupDtoDto.IdUser).SingleOrDefaultAsync();
+        var user = await _context.UserData
+            .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
+            .SingleOrDefaultAsync();
         if (user is null)
             return null;
 
@@ -146,36 +150,37 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             .SelectMany(e => e.IdUsers)
             .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
             .SingleOrDefaultAsync();
-        
         if (groupUser is null)
             return null;
         
         group.IdUsers.Remove(user);
         await _context.SaveChangesAsync();
         
-        return new GroupDto
-        {
-            IdGroup = group.IdGroup,
-            IdUserCreator = group.IdGroup,
-            GroupName = group.GroupName,
-            Description = group.Description,
-            CreatedAt = group.CreatedAt,
-            Users = await _context.Groups.Where(g => g.IdGroup == userToGroupDtoDto.IdGroup)
-                .SelectMany(g => g.IdUsers)
-                .Select(g => new UserDto
-                {
-                    IdUser = g.IdUser,
-                    IdRank = g.IdRank,
-                    Nick = g.Nick,
-                    Email = g.Email,
-                    PhoneNumber = g.PhoneNumber,
-                    CreatedAt = g.CreatedAt,
-                    RankName = _context.UserData
-                        .Where(t => t.IdUser == g.IdUser)
-                        .Include(t => t.IdRankNavigation)
-                        .Select(t => t.IdRankNavigation.Name).ToString()
-                }).ToListAsync()
-        };
+        var groupDto = await _context.Groups
+            .Where(e => e.IdGroup == idGroup)
+            .Select(e => new GroupDto
+            {
+                IdGroup = e.IdGroup,
+                IdUserCreator = e.IdUserCreator,
+                GroupName = e.GroupName,
+                Description = e.Description,
+                CreatedAt = e.CreatedAt,
+                Users = _context.Groups.Where(g => g.IdGroup == idGroup)
+                    .SelectMany(g => g.IdUsers)
+                    .Include(g => g.IdRankNavigation)
+                    .Select(g => new UserDto
+                    {
+                        IdUser = g.IdUser,
+                        IdRank = g.IdRank,
+                        Nick = g.Nick,
+                        Email = g.Email,
+                        PhoneNumber = g.PhoneNumber,
+                        CreatedAt = g.CreatedAt,
+                        RankName = g.IdRankNavigation.Name
+                    }).ToList()
+            }).SingleOrDefaultAsync();
+
+        return groupDto;
     }
     
     public async Task<GroupDto?> AddNewGroup(int idUser, GroupRequestDto groupRequestDto)
@@ -215,6 +220,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             CreatedAt = group.CreatedAt,
             Users = await _context.Groups.Where(g => g.IdGroup == group.IdGroup)
                 .SelectMany(g => g.IdUsers)
+                .Include(g => g.IdRankNavigation)
                 .Select(g => new UserDto
                 {
                     IdUser = g.IdUser,
@@ -223,10 +229,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                     Email = g.Email,
                     PhoneNumber = g.PhoneNumber,
                     CreatedAt = g.CreatedAt,
-                    RankName = _context.UserData
-                        .Where(t => t.IdUser == g.IdUser)
-                        .Include(t => t.IdRankNavigation)
-                        .Select(t => t.IdRankNavigation.Name).ToString()
+                    RankName = g.IdRankNavigation.Name
                 }).ToListAsync()
         };
     }
@@ -263,6 +266,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             CreatedAt = group.CreatedAt,
             Users = await _context.Groups.Where(g => g.IdGroup == group.IdGroup)
                 .SelectMany(g => g.IdUsers)
+                .Include(g => g.IdRankNavigation)
                 .Select(g => new UserDto
                 {
                     IdUser = g.IdUser,
@@ -271,10 +275,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                     Email = g.Email,
                     PhoneNumber = g.PhoneNumber,
                     CreatedAt = g.CreatedAt,
-                    RankName = _context.UserData
-                        .Where(t => t.IdUser == g.IdUser)
-                        .Include(t => t.IdRankNavigation)
-                        .Select(t => t.IdRankNavigation.Name).ToString()
+                    RankName = g.IdRankNavigation.Name
                 }).ToListAsync()
         };
     }
