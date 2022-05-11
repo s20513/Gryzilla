@@ -134,11 +134,11 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         if (idGroup != userToGroupDtoDto.IdGroup)
             return null;
         
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDtoDto.IdGroup);
+        var group = await _context.Groups.Where(e => e.IdGroup == userToGroupDtoDto.IdGroup).Include(x=>x.IdUsers).SingleOrDefaultAsync();
         if (group is null || group.IdUserCreator == userToGroupDtoDto.IdUser)
             return null;
 
-        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDtoDto.IdUser);
+        var user = await _context.UserData.Where(e => e.IdUser == userToGroupDtoDto.IdUser).SingleOrDefaultAsync();
         if (user is null)
             return null;
 
@@ -147,11 +147,11 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             .SelectMany(e => e.IdUsers)
             .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
             .SingleOrDefaultAsync();
-
+        
         if (groupUser is null)
             return null;
-
-        group.IdUsers.Remove(groupUser);
+        
+        group.IdUsers.Remove(user);
         await _context.SaveChangesAsync();
         
         return new GroupDto

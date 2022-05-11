@@ -59,6 +59,7 @@ public class AchievementController : Controller
     [HttpPost("{idAchievement:int}/{idUser:int}")]
     public async Task<IActionResult> AddNewUserAchievement([FromRoute] int idAchievement, [FromRoute] int idUser ){
         var achievementsFrom= await _achievementDbRepository.AddNewUserAchievement(idAchievement,idUser);
+        
         if (achievementsFrom is null)
             return NotFound("Cannot add achievement to user");
         
