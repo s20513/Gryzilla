@@ -9,7 +9,7 @@ public interface IArticleDbRepository
     public Task<IEnumerable<ArticleDto>?> GetArticlesFromDb();
     public Task<IEnumerable<ArticleDto>?> GetArticlesByMostLikesFromDb();
     public Task<IEnumerable<ArticleDto>?> GetArticlesByLeastLikesFromDb();
-    public Task<IEnumerable<ArticleDto>?> GetArticlesByEarliestDataFromDb();
+    public Task<IEnumerable<ArticleDto>?> GetArticlesByEarliestDateFromDb();
     public Task<IEnumerable<ArticleDto>?> GetArticlesByOldestDateFromDb();
     public Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto);
     public Task<ArticleDto?> DeleteArticleFromDb(int idArticle);

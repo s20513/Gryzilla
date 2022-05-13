@@ -65,7 +65,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         return articles?.OrderBy(order => order.LikesNum);
     }
 
-    public async Task<IEnumerable<ArticleDto>?> GetArticlesByEarliestDataFromDb()
+    public async Task<IEnumerable<ArticleDto>?> GetArticlesByEarliestDateFromDb()
     {
         var articles = await GetAllArticlesFromDb();
         return articles?.OrderByDescending(order => order.CreatedAt);
