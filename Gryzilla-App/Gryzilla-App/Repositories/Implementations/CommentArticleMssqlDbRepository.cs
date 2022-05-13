@@ -46,9 +46,9 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
 
     public async Task<ArticleCommentDto?> ModifyArticleCommentFromDb(PutArticleCommentDto putArticleCommentDto, int idComment)
     {
-        if (putArticleCommentDto.IdArticle != idComment)
+        if (putArticleCommentDto.IdComment != idComment)
             return null;
-
+        
         var comment = await _context.CommentArticles
             .SingleOrDefaultAsync(e => 
                 e.IdCommentArticle == putArticleCommentDto.IdComment && 
