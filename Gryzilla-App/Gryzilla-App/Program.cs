@@ -29,6 +29,7 @@ builder.Services.AddScoped<ITopCommentDbRepository, TopCommentDbRepository>();
 builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();
 builder.Services.AddScoped<IAchievementDbRepository, AchievementDbRepository>();
 builder.Services.AddScoped<IGroupDbRepository, GroupMssqlDbRepository>();
+builder.Services.AddScoped<IArticleDbRepository, ArticleMssqlDbRepository>();
 
 
 
