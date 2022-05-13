@@ -1,4 +1,4 @@
-﻿using Gryzilla_App.DTO.Responses;
+using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.Articles;

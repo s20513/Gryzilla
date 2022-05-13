@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Gryzilla_App.DTO.Responses.Posts;
 
 namespace Gryzilla_App.DTOs.Requests.Article;

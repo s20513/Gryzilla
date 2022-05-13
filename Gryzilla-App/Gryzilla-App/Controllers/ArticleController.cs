@@ -1,4 +1,4 @@
-﻿using Gryzilla_App.DTOs.Requests.Article;
+using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,7 +61,8 @@ public class ArticleController: Controller
     }
 
     [HttpGet("{idArticle:int}")]
-    public async Task<IActionResult> GetArticle([FromRoute]int idArticle)
+    public async Task<IActionResult> GetArticle(int idArticle)
+
     {
         var article = await _articleDbRepository.GetArticleFromDb(idArticle);
         if (article is null)
@@ -96,5 +97,4 @@ public class ArticleController: Controller
             return NotFound("Article not found");
         return Ok(result);
     }
-
 }
