@@ -198,7 +198,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             IdUserCreator = idUser,
             GroupName = groupRequestDto.GroupName,
             Description = groupRequestDto.Description,
-            CreatedAt = DateTime.Today.Date
+            CreatedAt = DateTime.Now
         };
         await _context.Groups.AddAsync(newGroup);
         

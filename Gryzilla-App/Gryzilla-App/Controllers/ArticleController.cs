@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Repositories.Interfaces;
+using Gryzilla_App.DTOs.Requests.Article;
+using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -61,10 +62,39 @@ public class ArticleController: Controller
 
     [HttpGet("{idArticle:int}")]
     public async Task<IActionResult> GetArticle(int idArticle)
+
     {
         var article = await _articleDbRepository.GetArticleFromDb(idArticle);
         if (article is null)
             return NotFound("Article not found");
         return Ok(article);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateNewArticle([FromBody] NewArticleRequestDto newArticleRequestDto)
+    {
+        var result = await _articleDbRepository.AddNewArticleToDb(newArticleRequestDto);
+        if (result is null)
+            return NotFound("User not found");
+        return Ok(result);
+    }
+
+    [HttpPut("{idArticle:int}")]
+    public async Task<IActionResult> ModifyArticle([FromBody] PutArticleRequestDto putArticleRequestDto,
+        [FromRoute] int idArticle)
+    {
+        var result = await _articleDbRepository.ModifyArticleFromDb(putArticleRequestDto, idArticle);
+        if (result is null)
+            return NotFound("Article not found");
+        return Ok(result);
+    }
+
+    [HttpDelete("{idArticle:int}")]
+    public async Task<IActionResult> DeleteArticle([FromRoute] int idArticle)
+    {
+        var result = await _articleDbRepository.DeleteArticleFromDb(idArticle);
+        if (result is null)
+            return NotFound("Article not found");
+        return Ok(result);
     }
 }

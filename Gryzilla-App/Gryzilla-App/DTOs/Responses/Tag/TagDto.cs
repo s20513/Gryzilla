@@ -2,5 +2,5 @@
 
 public class TagDto
 {
-    public string nameTag { get; set; }
+    public string NameTag { get; set; }
 }
