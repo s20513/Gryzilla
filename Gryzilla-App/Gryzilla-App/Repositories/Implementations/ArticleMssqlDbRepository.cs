@@ -14,7 +14,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         _context = context;
     }
     
-    public Task<ArticleDto?> GetPostFromDb(int idPost)
+    public Task<ArticleDto?> GetArticleFromDb(int idArticle)
     {
         throw new NotImplementedException();
     }
@@ -24,37 +24,37 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ArticleDto>> GetPostsByLikesFromDb()
+    public Task<IEnumerable<ArticleDto>> GetArticlesByLikesFromDb()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ArticleDto>?> GetPostsByLeastLikesFromDb()
+    public Task<IEnumerable<ArticleDto>?> GetArticlesByLeastLikesFromDb()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ArticleDto>?> GetPostsByDataFromDb()
+    public Task<IEnumerable<ArticleDto>?> GetArticlesByDataFromDb()
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<ArticleDto>?> GetPostsByOldestDateFromDb()
+    public Task<IEnumerable<ArticleDto>?> GetArticlessByOldestDateFromDb()
     {
         throw new NotImplementedException();
     }
 
-    public Task<ArticleDto?> AddNewPostToDb(NewArticleRequestDto articleDto)
+    public Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ArticleDto?> DeletePostFromDb(int idPost)
+    public Task<ArticleDto?> DeleteArticleFromDb(int idArticle)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ArticleDto?> ModifyPostFromDb(PutArticleRequestDto putArticleRequestDto, int idPost)
+    public Task<ArticleDto?> ModifyArticleFromDb(PutArticleRequestDto putArticleRequestDto, int idArticle)
     {
         throw new NotImplementedException();
     }

@@ -5,13 +5,13 @@ namespace Gryzilla_App.Repositories.Interfaces;
 
 public interface IArticleDbRepository
 {
-    public Task<ArticleDto?> GetPostFromDb(int idPost);
+    public Task<ArticleDto?> GetArticleFromDb(int idArticle);
     public Task<IEnumerable<ArticleDto>?> GetArticlesFromDb();
-    public Task<IEnumerable<ArticleDto>> GetPostsByLikesFromDb();
-    public Task<IEnumerable<ArticleDto>?> GetPostsByLeastLikesFromDb();
-    public Task<IEnumerable<ArticleDto>?> GetPostsByDataFromDb();
-    public Task<IEnumerable<ArticleDto>?> GetPostsByOldestDateFromDb();
-    public Task<ArticleDto?> AddNewPostToDb(NewArticleRequestDto articleDto);
-    public Task<ArticleDto?> DeletePostFromDb(int idPost);
-    public Task<ArticleDto?> ModifyPostFromDb(PutArticleRequestDto putArticleRequestDto, int idPost);
+    public Task<IEnumerable<ArticleDto>> GetArticlesByLikesFromDb();
+    public Task<IEnumerable<ArticleDto>?> GetArticlesByLeastLikesFromDb();
+    public Task<IEnumerable<ArticleDto>?> GetArticlesByDataFromDb();
+    public Task<IEnumerable<ArticleDto>?> GetArticlessByOldestDateFromDb();
+    public Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto);
+    public Task<ArticleDto?> DeleteArticleFromDb(int idArticle);
+    public Task<ArticleDto?> ModifyArticleFromDb(PutArticleRequestDto putArticleRequestDto, int idArticle);
 }
