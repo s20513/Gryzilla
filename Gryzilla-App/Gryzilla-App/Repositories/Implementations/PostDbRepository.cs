@@ -32,7 +32,7 @@ public class PostDbRepository : IPostDbRepository
                     Title = a.Title,
                     Nick = a.IdUserNavigation.Nick,
                     Tags = _context.Posts.Where(x => x.IdPost == post.IdPost).SelectMany(x => x.IdTags)
-                        .Select(x => new TagDto {nameTag = x.NameTag}).ToArray()
+                        .Select(x => new TagDto {NameTag = x.NameTag}).ToArray()
                 }).SingleOrDefaultAsync();
 
             if (newPost != null) postDtos.Add(newPost);
@@ -121,7 +121,7 @@ public class PostDbRepository : IPostDbRepository
         await _context.Posts.AddAsync(post);
         foreach (var tag in addPostDto.tags)
         {
-            var newTag = await _context.Tags.Where(x => x.NameTag == tag.nameTag).SingleOrDefaultAsync();
+            var newTag = await _context.Tags.Where(x => x.NameTag == tag.NameTag).SingleOrDefaultAsync();
             if (newTag is not null)
             {
                 post.IdTags.Add(newTag);
@@ -141,7 +141,7 @@ public class PostDbRepository : IPostDbRepository
                 .SelectMany(x => x.IdTags)
                 .Select(x => new TagDto
                 {
-                    nameTag = x.NameTag
+                    NameTag = x.NameTag
                 }).ToArrayAsync()
         };
     }
@@ -237,22 +237,20 @@ public class PostDbRepository : IPostDbRepository
                 Title = post.Title,
                 Tags = await _context.Posts.Where(x=>x.IdPost==idPost).SelectMany(x=>x.IdTags).Select(x=>new TagDto
                 {
-                    nameTag = x.NameTag
+                    NameTag = x.NameTag
                 }).ToArrayAsync()
             };
         }
-        else
+
+        await _context.SaveChangesAsync();
+        return new ModifyPostDto
         {
-            await _context.SaveChangesAsync();
-            return new ModifyPostDto
-            {
-                CreatedAt = post.CreatedAt,
-                Content = post.Content,
-                idPost = post.IdPost,
-                idUser = post.IdUser,
-                Title = post.Title,
-            };
-        }
+            CreatedAt = post.CreatedAt,
+            Content = post.Content,
+            idPost = post.IdPost,
+            idUser = post.IdUser,
+            Title = post.Title,
+        };
     }
 
     public async Task<OnePostDto?> GetOnePostFromDb(int idPost)
@@ -276,7 +274,7 @@ public class PostDbRepository : IPostDbRepository
                 Title = a.Title,
                 Nick = a.IdUserNavigation.Nick,
                 Tags = _context.Posts.Where(x => x.IdPost == post.IdPost).SelectMany(x => x.IdTags)
-                    .Select(x => new TagDto {nameTag = x.NameTag}).ToArray()
+                    .Select(x => new TagDto {NameTag = x.NameTag}).ToArray()
             }).SingleOrDefaultAsync();
         return newPost;
     }
