@@ -40,7 +40,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     {
                         idComment = c.IdCommentArticle,
                         Nick = c.IdUserNavigation.Nick,
-                        DescriptionPost = c.DescriptionArticle
+                        Description = c.DescriptionArticle
                     }).ToArray()
             }).SingleOrDefaultAsync();
 
@@ -101,9 +101,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             article.IdTags.Add(tag);
         await _context.SaveChangesAsync();
 
-        var id = await _context.Articles.Where(e => e.IdUser == article.IdUser && e.CreatedAt == article.CreatedAt)
-            .Select(e => e.IdArticle)
-            .SingleOrDefaultAsync();
+        var id = _context.Articles.Max(e => e.IdArticle);
 
         return new ArticleDto
         {
@@ -130,6 +128,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             .Include(e => e.IdTags)
             .Include(e => e.IdUsers)
             .SingleOrDefaultAsync();
+        
         if (article is null)
             return null;
 
@@ -156,7 +155,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         await _context.SaveChangesAsync();
         _context.Articles.Remove(article);
-
+        await _context.SaveChangesAsync();
         return new ArticleDto
         {
             IdArticle = article.IdArticle,
@@ -170,9 +169,59 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         };
     }
 
-    public Task<ArticleDto?> ModifyArticleFromDb(PutArticleRequestDto putArticleRequestDto, int idArticle)
+    public async Task<ArticleDto?> ModifyArticleFromDb(PutArticleRequestDto putArticleRequestDto, int idArticle)
     {
-        throw new NotImplementedException();
+        if (putArticleRequestDto.IdArticle != idArticle)
+            return null;
+        var article = await _context.Articles
+            .Where(e => e.IdArticle == idArticle)
+            .Include(e => e.IdTags)
+            .Include(e => e.IdUserNavigation)
+            .SingleOrDefaultAsync();
+        if (article is null)
+            return null;
+        article.Title = putArticleRequestDto.Title;
+        article.Content = putArticleRequestDto.Content;
+
+        var tags = article.IdTags;
+        foreach (var tag in tags)
+            article.IdTags.Remove(tag);
+        
+        var tagList = new List<int>();
+        if (putArticleRequestDto.Tags is not null) 
+            tagList.AddRange(putArticleRequestDto.Tags.Select(tag => tag.idTag));
+        
+        tags = await _context.Tags.Where(e => tagList.Contains(e.IdTag)).ToListAsync();
+        foreach (var tag in tags)
+            article.IdTags.Add(tag);
+
+        await _context.SaveChangesAsync();
+
+        return new ArticleDto
+        {
+            IdArticle = article.IdArticle,
+            Author = new ReducedUserResponseDto
+            {
+                IdUser = article.IdUser,
+                Nick = article.IdUserNavigation.Nick
+            },
+            Title = article.Title,
+            Content = article.Content,
+            CreatedAt = article.CreatedAt,
+            Tags = tags.Select(e => new TagDto
+            {
+                NameTag = e.NameTag
+            }).ToArray(),
+            LikesNum =
+                _context.Articles.Where(e => e.IdArticle == article.IdArticle).SelectMany(e => e.IdUsers).Count(),
+            Comments = _context.CommentArticles.Where(e => e.IdArticle == article.IdArticle)
+                .Include(e => e.IdUserNavigation).Select(e => new CommentDto
+                {
+                    idComment = e.IdCommentArticle,
+                    Nick = e.IdUserNavigation.Nick,
+                    Description = e.DescriptionArticle
+                }).ToArray()
+        };
     }
 
     private async Task<IEnumerable<ArticleDto>?> GetAllArticlesFromDb()
@@ -198,7 +247,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     {
                         idComment = c.IdCommentArticle,
                         Nick = c.IdUserNavigation.Nick,
-                        DescriptionPost = c.DescriptionArticle
+                        Description = c.DescriptionArticle
                     }).ToArray()
             }).ToListAsync();
     }

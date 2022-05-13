@@ -32,7 +32,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         {
             Nick = user.Nick,
             idComment = await _context.CommentPosts.Select(x => x.IdComment).OrderByDescending(x => x).FirstAsync(),
-            DescriptionPost = newComment.DescriptionPost
+            Description = newComment.DescriptionPost
         };
     }
 

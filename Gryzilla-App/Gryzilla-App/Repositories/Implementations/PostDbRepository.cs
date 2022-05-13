@@ -267,7 +267,7 @@ public class PostDbRepository : IPostDbRepository
                     .Select(x=> new CommentDto
                     {
                         Nick = x.IdUserNavigation.Nick,
-                        DescriptionPost = x.DescriptionPost
+                        Description = x.DescriptionPost
                     }).ToArray(),
                 CreatedAt = a.CreatedAt,
                 Content = a.Content,
