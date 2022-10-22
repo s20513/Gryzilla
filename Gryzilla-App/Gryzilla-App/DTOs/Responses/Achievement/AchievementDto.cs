@@ -2,8 +2,8 @@
 
 public class AchievementDto
 {
-    public int idAchievement { get; set; }
-    public decimal points { get; set; }
-    public string description { get; set; }
-    public string achievementName { get; set; }
+    public int IdAchievement { get; set; }
+    public decimal Points { get; set; }
+    public string Description { get; set; }
+    public string AchievementName { get; set; }
 }
