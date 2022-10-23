@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.DTOs.Responses.Group;
+using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
