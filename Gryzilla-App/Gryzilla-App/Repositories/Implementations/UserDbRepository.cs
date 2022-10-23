@@ -84,7 +84,7 @@ public class UserDbRepository : IUserDbRepository
         }
     }
 
-    private Exception? Exception { get; }
+    private Exception? NameTakenException { get; }
     public async Task<UserDto?> AddUserToDb(AddUserDto addUserDto)
     {
         var nick = await _context.UserData
@@ -93,7 +93,7 @@ public class UserDbRepository : IUserDbRepository
         
         if (nick is not null)
         {
-            throw Exception;
+            throw NameTakenException!;
         }
         
         var newUser = new UserDatum
