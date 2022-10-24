@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTO.Responses;
+using Gryzilla_App.DTOs.Responses.User;
 
 namespace Gryzilla_App.DTOs.Responses.Group;
 
