@@ -1,4 +1,4 @@
-﻿namespace Gryzilla_App.DTO.Responses.Rank;
+﻿namespace Gryzilla_App.DTOs.Responses.Achievement;
 
 public class AchievementDto
 {

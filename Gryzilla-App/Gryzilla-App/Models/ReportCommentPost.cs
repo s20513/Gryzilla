@@ -6,7 +6,7 @@
         public int IdUser { get; set; }
         public int IdReason { get; set; }
         public string Description { get; set; } = null!;
-        public int ReportedAt { get; set; }
+        public DateTime ReportedAt { get; set; }
         public bool Viewed { get; set; }
 
         public virtual CommentPost IdCommentNavigation { get; set; } = null!;

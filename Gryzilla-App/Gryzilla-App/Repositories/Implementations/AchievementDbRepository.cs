@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using Gryzilla_App.DTO.Requests;
 using Gryzilla_App.DTO.Requests.Rank;
-using Gryzilla_App.DTO.Responses.Rank;
+using Gryzilla_App.DTOs.Responses.Achievement;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +63,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         };
     }
 
-    public async Task<AchievementDto?> AddNewAchievement(AddAchievementDto addAchievementDto)
+    public async Task<AchievementDto> AddNewAchievement(AddAchievementDto addAchievementDto)
     {
         int idAchievement;
         var sameNameAchievement = 
@@ -73,7 +74,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         if (sameNameAchievement is not null)
         {
-            return null;
+            throw new SameNameException("Achievement with given name already exists!");
         }
         
         var newAchievement = new Achievement
@@ -95,7 +96,6 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return  new AchievementDto
         {
-            //IdAchievement = await _context.Achievements.Select(x=>x.IdAchievement).OrderByDescending(x=>x).FirstAsync(),
             IdAchievement = idAchievement,
             AchievementName = newAchievement.AchievementName,
             Description = newAchievement.Descripion,
@@ -128,14 +128,12 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         if (achievementUsers.Length > 0)
         {
-            //nie usuwać jeżeli jakiś user ma ten achievement???
-            return null;
+            throw new ReferenceException("Cannot delete. Some user have this achievement!");
         }
         
         _context.Achievements.Remove(achievement);
         await _context.SaveChangesAsync();
         
-        //sens zwracania obiektu przy deletcie???
         return new AchievementDto
         {
             IdAchievement = achievement.IdAchievement,
@@ -147,8 +145,9 @@ public class AchievementDbRepository : IAchievementDbRepository
 
     public async Task<AchievementDto?> DeleteUserAchievement(int idAchievement, int idUser)
     {
-        UserDatum?   user;
-        Achievement? achievement;
+        UserDatum?       user;
+        Achievement?     achievement;
+        AchievementUser? userAchievement;
 
         achievement = 
             await _context
@@ -161,21 +160,16 @@ public class AchievementDbRepository : IAchievementDbRepository
                 .UserData
                 .Where(x => x.IdUser == idUser)
                 .SingleOrDefaultAsync();
-
-        if (user is null || achievement is null)
-            //czy to ma sens w usuwaniu? więzy spójności i tak w bazie nie pozwolą na trzymanie referencji do pustych obiektów.
-            //Wystarczy sprawdzenie tylko czy istnieje userAchievement
-        {
-            return null;
-        }
-
-        var userAchievement = 
+        
+        userAchievement = 
             await _context
                 .AchievementUsers
-                .Where(x => x.IdUser == idUser && x.IdAchievement == idAchievement)
+                .Where(x => 
+                    x.IdUser == idUser && 
+                    x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
 
-        if (userAchievement is null)
+        if (user is null || achievement is null || userAchievement is null)
         {
             return null;
         }
@@ -217,12 +211,14 @@ public class AchievementDbRepository : IAchievementDbRepository
         var userAchievement = 
             await _context
                 .AchievementUsers
-                .Where(x => x.IdUser == idUser && x.IdAchievement == idAchievement)
+                .Where(x => 
+                    x.IdUser == idUser && 
+                    x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
 
         if (userAchievement != null)
         {
-            return null;
+            throw new ReferenceException("User already has achievement!");
         }
         
         await _context.AchievementUsers.AddAsync(new AchievementUser
@@ -234,8 +230,6 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         await _context.SaveChangesAsync();
         
-        //czy będzie możliwość edytowania pojedycznego achievka?
-        //wtedy lepiej tu dodać id + w geta z jednym achievkiem
         return  new AchievementDto
         {
             IdAchievement = achievement.IdAchievement,
@@ -243,5 +237,32 @@ public class AchievementDbRepository : IAchievementDbRepository
             Description = achievement.Descripion,
             Points = achievement.Points
         };
+    }
+
+    public async Task<IEnumerable<AchievementDto>?> GetUserAchievements(int idUser)
+    {
+        UserDatum?       user;
+        AchievementDto[] achievements;
+        
+        user = await _context.UserData.SingleOrDefaultAsync(x => x.IdUser == idUser);
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        achievements =
+            await _context.AchievementUsers
+                .Where(x => x.IdUser == idUser)
+                .Include(x => x.IdAchievementNavigation)
+                .Select(x => new AchievementDto
+                {
+                    IdAchievement = x.IdAchievement,
+                    AchievementName = x.IdAchievementNavigation.AchievementName,
+                    Description = x.IdAchievementNavigation.Descripion,
+                    Points = x.IdAchievementNavigation.Points
+                }).ToArrayAsync();
+        
+        return achievements;
     }
 }
