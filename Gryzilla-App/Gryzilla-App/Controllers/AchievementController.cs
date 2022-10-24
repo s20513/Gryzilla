@@ -23,9 +23,7 @@ public class AchievementController : Controller
     [HttpGet]
     public async Task<IActionResult> GetAchievements()
     {
-        var achievements= 
-            await _achievementDbRepository
-                .GetAchievementsFromDb();
+        var achievements= await _achievementDbRepository.GetAchievementsFromDb();
 
         if (achievements is null)
         {
@@ -51,9 +49,7 @@ public class AchievementController : Controller
             return BadRequest("Id from route and Id in body have to be same");
         }
             
-        var modifiedAchievement= 
-            await _achievementDbRepository
-                .ModifyAchievement(idAchievement, putAchievementDto);
+        var modifiedAchievement= await _achievementDbRepository.ModifyAchievement(idAchievement, putAchievementDto);
 
         if (modifiedAchievement is null)
         {
@@ -124,7 +120,7 @@ public class AchievementController : Controller
     {
         try
         {
-            var achievement = await _achievementDbRepository.AddNewUserAchievement(idAchievement,idUser);
+            var achievement = await _achievementDbRepository.AddNewUserAchievement(idAchievement, idUser);
             
             if (achievement is null)
             {
@@ -149,9 +145,7 @@ public class AchievementController : Controller
     [HttpDelete("{idAchievement:int}/{idUser:int}")]
     public async Task<IActionResult> DeleteUserAchievement([FromRoute] int idAchievement, [FromRoute] int idUser )
     {
-        var achievement= 
-            await _achievementDbRepository
-                .DeleteUserAchievement(idAchievement, idUser);
+        var achievement= await _achievementDbRepository.DeleteUserAchievement(idAchievement, idUser);
 
         if (achievement is null)
         {
@@ -168,11 +162,9 @@ public class AchievementController : Controller
     /// <returns> Return Status Ok - Return User Achievements</returns>
     /// <returns>Return status Not Found - Not found User with given id</returns>
     [HttpGet("/user/{idUser:int}")]
-    public async Task<IActionResult> GetUserAchievements([FromRoute] int idUser )
+    public async Task<IActionResult> GetUserAchievements([FromRoute] int idUser)
     {
-        var achievements= 
-            await _achievementDbRepository
-                .GetUserAchievements(idUser);
+        var achievements= await _achievementDbRepository.GetUserAchievements(idUser);
 
         if (achievements is null)
         {
