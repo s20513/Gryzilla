@@ -14,18 +14,32 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
     {
         _context = context;
     }
-
+    
     public async Task<ArticleCommentDto?> AddCommentToArticle(NewArticleCommentDto newArticleCommentDto)
     {
-        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == newArticleCommentDto.IdUser);
+        UserDatum?     user;
+        Article?       article;
+        CommentArticle articleComment;
+        
+        user = await _context
+                .UserData
+                .SingleOrDefaultAsync(e => e.IdUser == newArticleCommentDto.IdUser);
+        
         if (user is null)
+        {
             return null;
+        }
+        
+        article = await _context
+                .Articles
+                .SingleOrDefaultAsync(e => e.IdArticle == newArticleCommentDto.IdArticle);
 
-        var article = await _context.Articles.SingleOrDefaultAsync(e => e.IdArticle == newArticleCommentDto.IdArticle);
         if (article is null)
+        {
             return null;
+        }
 
-        var articleComment = new CommentArticle
+        articleComment = new CommentArticle
         {
             IdUser = newArticleCommentDto.IdUser,
             IdArticle = newArticleCommentDto.IdArticle,
@@ -46,16 +60,17 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
 
     public async Task<ArticleCommentDto?> ModifyArticleCommentFromDb(PutArticleCommentDto putArticleCommentDto, int idComment)
     {
-        if (putArticleCommentDto.IdComment != idComment)
-            return null;
-        
-        var comment = await _context.CommentArticles
+        var comment = await _context
+            .CommentArticles
             .SingleOrDefaultAsync(e => 
                 e.IdCommentArticle == putArticleCommentDto.IdComment && 
                 e.IdUser == putArticleCommentDto.IdUser &&
                 e.IdArticle == putArticleCommentDto.IdArticle);
+
         if (comment is null)
+        {
             return null;
+        }
 
         comment.DescriptionArticle = putArticleCommentDto.Description;
         await _context.SaveChangesAsync();
@@ -70,9 +85,14 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
 
     public async Task<ArticleCommentDto?> DeleteArticleCommentFromDb(int idComment)
     {
-        var comment = await _context.CommentArticles.SingleOrDefaultAsync(e => e.IdCommentArticle == idComment);
+        var comment = await _context
+            .CommentArticles
+            .SingleOrDefaultAsync(e => e.IdCommentArticle == idComment);
+        
         if (comment is null)
+        {
             return null;
+        }
 
         _context.CommentArticles.Remove(comment);
         await _context.SaveChangesAsync();
