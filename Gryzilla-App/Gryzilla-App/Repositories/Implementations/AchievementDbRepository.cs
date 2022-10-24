@@ -25,10 +25,10 @@ public class AchievementDbRepository : IAchievementDbRepository
                 .Achievements
                 .Select(x=>new AchievementDto
                 {
-                    IdAchievement = x.IdAchievement,
-                    Description = x.Descripion,
+                    IdAchievement =   x.IdAchievement,
+                    Description =     x.Descripion,
                     AchievementName = x.AchievementName,
-                    Points = x.Points
+                    Points =          x.Points
                 })
                 .ToArrayAsync();
         
@@ -37,8 +37,7 @@ public class AchievementDbRepository : IAchievementDbRepository
 
     public async Task<AchievementDto?> ModifyAchievement(int idAchievement, PutAchievementDto putAchievementDto)
     {
-        var achievement = 
-            await _context
+        var achievement = await _context
                 .Achievements
                 .Where(x => x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
@@ -48,26 +47,25 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        achievement.Descripion = putAchievementDto.description;
-        achievement.Points = putAchievementDto.Points;
+        achievement.Descripion =      putAchievementDto.description;
+        achievement.Points =          putAchievementDto.Points;
         achievement.AchievementName = putAchievementDto.achievementName;
         
         await _context.SaveChangesAsync();
         
         return new AchievementDto
         {
-            IdAchievement = achievement.IdAchievement,
+            IdAchievement =   achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description = achievement.Descripion,
-            Points = achievement.Points
+            Description =     achievement.Descripion,
+            Points =          achievement.Points
         };
     }
 
     public async Task<AchievementDto> AddNewAchievement(AddAchievementDto addAchievementDto)
     {
         int idAchievement;
-        var sameNameAchievement = 
-            await _context
+        var sameNameAchievement = await _context
                 .Achievements
                 .Where(x => x.AchievementName == addAchievementDto.AchievementName)
                 .SingleOrDefaultAsync();
@@ -79,16 +77,15 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         var newAchievement = new Achievement
         {
-            Descripion = addAchievementDto.Description,
+            Descripion =      addAchievementDto.Description,
             AchievementName = addAchievementDto.AchievementName,
-            Points = addAchievementDto.Points
+            Points =          addAchievementDto.Points
         };
         
         await _context.Achievements.AddAsync(newAchievement);
         await _context.SaveChangesAsync();
 
-        idAchievement = 
-            await _context
+        idAchievement = await _context
                 .Achievements
                 .Where(x => x.AchievementName == addAchievementDto.AchievementName)
                 .Select(x => x.IdAchievement)
@@ -96,10 +93,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return  new AchievementDto
         {
-            IdAchievement = idAchievement,
+            IdAchievement =   idAchievement,
             AchievementName = newAchievement.AchievementName,
-            Description = newAchievement.Descripion,
-            Points = newAchievement.Points
+            Description =     newAchievement.Descripion,
+            Points =          newAchievement.Points
         };
     }
 
@@ -108,8 +105,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         Achievement?      achievement;
         AchievementUser[] achievementUsers;
         
-        achievement = 
-            await _context
+        achievement = await _context
                 .Achievements
                 .Where(x => x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
@@ -119,8 +115,7 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        achievementUsers = 
-            await _context
+        achievementUsers = await _context
                 .UserData
                 .SelectMany(x => x.AchievementUsers)
                 .Where(x => x.IdAchievement == idAchievement)
@@ -136,10 +131,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return new AchievementDto
         {
-            IdAchievement = achievement.IdAchievement,
+            IdAchievement =   achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description = achievement.Descripion,
-            Points = achievement.Points
+            Description =     achievement.Descripion,
+            Points =          achievement.Points
         };
     }
 
@@ -149,20 +144,17 @@ public class AchievementDbRepository : IAchievementDbRepository
         Achievement?     achievement;
         AchievementUser? userAchievement;
 
-        achievement = 
-            await _context
+        achievement = await _context
                 .Achievements
                 .Where(x => x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
         
-        user =
-            await _context
+        user = await _context
                 .UserData
                 .Where(x => x.IdUser == idUser)
                 .SingleOrDefaultAsync();
         
-        userAchievement = 
-            await _context
+        userAchievement = await _context
                 .AchievementUsers
                 .Where(x => 
                     x.IdUser == idUser && 
@@ -179,10 +171,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return  new AchievementDto
         {
-            IdAchievement = userAchievement.IdAchievement,
+            IdAchievement =   userAchievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description = achievement.Descripion,
-            Points = achievement.Points
+            Description =     achievement.Descripion,
+            Points =          achievement.Points
         };
     }
 
@@ -191,14 +183,12 @@ public class AchievementDbRepository : IAchievementDbRepository
         UserDatum?   user;
         Achievement? achievement;
 
-        achievement = 
-            await _context
+        achievement = await _context
                 .Achievements
                 .Where(x => x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
         
-        user =
-            await _context
+        user = await _context
                 .UserData
                 .Where(x => x.IdUser == idUser)
                 .SingleOrDefaultAsync();
@@ -208,11 +198,10 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        var userAchievement = 
-            await _context
+        var userAchievement = await _context
                 .AchievementUsers
                 .Where(x => 
-                    x.IdUser == idUser && 
+                    x.IdUser ==        idUser && 
                     x.IdAchievement == idAchievement)
                 .SingleOrDefaultAsync();
 
@@ -232,10 +221,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return  new AchievementDto
         {
-            IdAchievement = achievement.IdAchievement,
+            IdAchievement =   achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description = achievement.Descripion,
-            Points = achievement.Points
+            Description =     achievement.Descripion,
+            Points =          achievement.Points
         };
     }
 
@@ -251,17 +240,17 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        achievements =
-            await _context.AchievementUsers
-                .Where(x => x.IdUser == idUser)
-                .Include(x => x.IdAchievementNavigation)
-                .Select(x => new AchievementDto
-                {
-                    IdAchievement = x.IdAchievement,
-                    AchievementName = x.IdAchievementNavigation.AchievementName,
-                    Description = x.IdAchievementNavigation.Descripion,
-                    Points = x.IdAchievementNavigation.Points
-                }).ToArrayAsync();
+        achievements = await _context
+            .AchievementUsers
+            .Where(x => x.IdUser == idUser)
+            .Include(x => x.IdAchievementNavigation)
+            .Select(x => new AchievementDto
+            {
+                IdAchievement =   x.IdAchievement,
+                AchievementName = x.IdAchievementNavigation.AchievementName,
+                Description =     x.IdAchievementNavigation.Descripion,
+                Points =          x.IdAchievementNavigation.Points
+            }).ToArrayAsync();
         
         return achievements;
     }
