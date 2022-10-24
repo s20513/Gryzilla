@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,16 @@ public class UserDbRepository : IUserDbRepository
     
     public async Task<UserDto?> ModifyUserFromDb(int idUser, PutUserDto putUserDto)
     {
+        var nick =  _context
+            .UserData
+            .Where(x => x.IdUser != idUser)
+            .Count(x => x.Nick == putUserDto.Nick);
+        
+        if (nick > 0)
+        {
+            throw new SameNameException("Nick with given name already exists!");
+        }
+        
         var user = await _context.UserData
             .Where(x => x.IdUser == idUser)
             .Include(x => x.IdRankNavigation)
@@ -78,13 +89,10 @@ public class UserDbRepository : IUserDbRepository
                 RankName     = user.IdRankNavigation.Name
             };
         }
-        else
-        {
-            return null;
-        }
-    }
 
-    private Exception? NameTakenException { get; }
+        return null;
+    }
+    
     public async Task<UserDto?> AddUserToDb(AddUserDto addUserDto)
     {
         var nick = await _context.UserData
@@ -93,7 +101,7 @@ public class UserDbRepository : IUserDbRepository
         
         if (nick is not null)
         {
-            throw NameTakenException!;
+            throw new SameNameException("Nick with given name already exists!");
         }
         
         var newUser = new UserDatum
@@ -138,19 +146,17 @@ public class UserDbRepository : IUserDbRepository
         {
             return null;
         }
-        else
-        {
-            var deleteUserById = await _context.UserData
-                .Where(x => x.IdUser == idUser)
-                .SingleOrDefaultAsync();
 
-            if (deleteUserById != null)
-            {
-                _context.UserData.Remove(deleteUserById);
-                await _context.SaveChangesAsync();
-            }
-            
-            return user;
+        var deleteUserById = await _context.UserData
+            .Where(x => x.IdUser == idUser)
+            .SingleOrDefaultAsync();
+
+        if (deleteUserById != null)
+        {
+            _context.UserData.Remove(deleteUserById);
+            await _context.SaveChangesAsync();
         }
+            
+        return user;
     }
 }

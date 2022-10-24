@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Gryzilla_App.DTO.Requests;
+﻿using Gryzilla_App.DTO.Requests;
 using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.DTOs.Responses.Achievement;
 using Gryzilla_App.Exceptions;

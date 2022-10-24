@@ -7,6 +7,7 @@ public class AddUserDto
 {
     [Required]
     [MaxLength(30,ErrorMessage = "Max length : 30")]
+    [MinLength(5,ErrorMessage = "Max length : 5")]
     public string Nick { get; set; } = null!;
 
     [Required]
