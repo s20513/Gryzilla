@@ -120,7 +120,7 @@ public class AchievementController : Controller
     {
         try
         {
-            var achievement = await _achievementDbRepository.AddNewUserAchievement(idAchievement,idUser);
+            var achievement = await _achievementDbRepository.AddNewUserAchievement(idAchievement, idUser);
             
             if (achievement is null)
             {
@@ -162,7 +162,7 @@ public class AchievementController : Controller
     /// <returns> Return Status Ok - Return User Achievements</returns>
     /// <returns>Return status Not Found - Not found User with given id</returns>
     [HttpGet("/user/{idUser:int}")]
-    public async Task<IActionResult> GetUserAchievements([FromRoute] int idUser )
+    public async Task<IActionResult> GetUserAchievements([FromRoute] int idUser)
     {
         var achievements= await _achievementDbRepository.GetUserAchievements(idUser);
 
