@@ -5,12 +5,15 @@ namespace Gryzilla_App.DTO.Responses.Posts;
 public class AddPostDto
 {
     [Required]
-    public int idUser { get; set; }
+    public int IdUser { get; set; }
+    
     [Required]
     [MaxLength(30,ErrorMessage = "Max length : 30")]
-    public string title { get; set; }
+    public string Title { get; set; }
+    
     [Required]
     [MaxLength(200,ErrorMessage = "Max length : 200")]
-    public string content { get; set; }
-    public TagDto [] tags { get; set; }
+    public string Content { get; set; }
+    
+    public TagDto [] Tags { get; set; }
 }

@@ -91,7 +91,7 @@ public class PostController : Controller
     [HttpPut("{idPost:int}")]
     public async Task<IActionResult> ModifyPost([FromBody] PutPostDto putPostDto, [FromRoute] int idPost)
     {
-        if (putPostDto.idPost != idPost)
+        if (putPostDto.IdPost != idPost)
             return BadRequest();
         var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto, idPost);
         if (posts is null)

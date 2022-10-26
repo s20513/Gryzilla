@@ -6,6 +6,7 @@ public class PutRankDto
 {
     [Required]
     public int IdRank { get; set; }
+
     [Required]
     [MaxLength(30,ErrorMessage = "Max length : 30")]
     [MinLength(2,ErrorMessage = "Max length : 2")]

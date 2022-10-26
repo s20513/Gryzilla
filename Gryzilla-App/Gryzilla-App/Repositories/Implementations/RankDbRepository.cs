@@ -1,4 +1,4 @@
-﻿using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.DTOs.Responses.Rank;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;

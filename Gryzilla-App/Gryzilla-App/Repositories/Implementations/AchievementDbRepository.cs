@@ -1,4 +1,4 @@
-﻿using Gryzilla_App.DTO.Requests;
+using Gryzilla_App.DTO.Requests;
 using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.DTOs.Responses.Achievement;
 using Gryzilla_App.Exceptions;
@@ -46,9 +46,9 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        achievement.Descripion =      putAchievementDto.description;
+        achievement.Descripion =      putAchievementDto.Description;
         achievement.Points =          putAchievementDto.Points;
-        achievement.AchievementName = putAchievementDto.achievementName;
+        achievement.AchievementName = putAchievementDto.AchievementName;
         
         await _context.SaveChangesAsync();
         
