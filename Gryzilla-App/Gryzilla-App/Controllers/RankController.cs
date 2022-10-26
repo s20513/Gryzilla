@@ -41,7 +41,7 @@ public class RankController : Controller
     [HttpPut("{idRank:int}")]
     public async Task<IActionResult> PostNewRank([FromBody] PutRankDto putRankDto, [FromRoute] int idRank)
     {
-        if (idRank != putRankDto.idRank)
+        if (idRank != putRankDto.IdRank)
             return BadRequest();
         var rank = await _ranksDbRepository.ModifyRank(putRankDto, idRank);
         if (rank is null)

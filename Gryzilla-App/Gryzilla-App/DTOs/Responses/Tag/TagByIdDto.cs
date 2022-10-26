@@ -2,5 +2,5 @@
 
 public class TagByIdDto
 {
-    public int idTag { get; set; }
+    public int IdTag { get; set; }
 }

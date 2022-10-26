@@ -2,6 +2,6 @@
 
 public class DeleteTagDto
 {
-    public int idTag { get; set; }
-    public string nameTag { get; set; }
+    public int IdTag { get; set; }
+    public string NameTag { get; set; }
 }

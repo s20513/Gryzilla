@@ -7,6 +7,7 @@ public class AddRankDto
     [Required]
     [MaxLength(30,ErrorMessage = "Max length : 30")]
     public string Name { get; set; }
+    
     [Required]
     public int RankLevel { get; set; }
 }

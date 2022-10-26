@@ -13,9 +13,9 @@ public class PutAchievementDto
     
     [Required]
     [MaxLength(200,ErrorMessage = "Max length : 200")]
-    public string description { get; set; }
+    public string Description { get; set; }
     
     [Required]
     [MaxLength(50,ErrorMessage = "Max length : 50")]
-    public string achievementName { get; set; }
+    public string AchievementName { get; set; }
 }

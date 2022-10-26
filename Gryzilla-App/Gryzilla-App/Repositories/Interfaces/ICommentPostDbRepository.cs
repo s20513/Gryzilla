@@ -1,11 +1,11 @@
-﻿using Gryzilla_App.DTO.Responses;
-using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTOs.Responses.PostComment;
 
 namespace Gryzilla_App.Repositories.Interfaces;
 
 public interface ICommentPostDbRepository
 {
-    public Task<CommentDto?> PostNewCommentToDb(AddCommentDto addCommentDto);
-    public Task<ModifyCommentDto?> ModifyCommentToDb(PutCommentDto modifyCommentDto, int idComment);
-    public Task<DeleteCommentDto?> DeleteCommentFromDb(int idComment);
+    public Task<PostCommentDto?> AddCommentToPost(NewPostCommentDto newPostCommentDto);
+    public Task<PostCommentDto?> ModifyPostCommentFromDb(PutPostCommentDto modifyPostCommentDto, int idComment);
+    public Task<PostCommentDto?> DeleteCommentFromDb(int idComment);
 }

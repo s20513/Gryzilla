@@ -1,6 +1,7 @@
 using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
+using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -56,10 +57,12 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         .CommentArticles
                         .Where(c => c.IdArticle == x.IdArticle)
                         .Include(c => c.IdUserNavigation)
-                        .Select(c => new CommentDto
+                        .Select(c => new ArticleCommentDto
                         {
-                            idComment = c.IdCommentArticle,
+                            IdArticle = c.IdArticle,
                             Nick = c.IdUserNavigation.Nick,
+                            IdComment = c.IdCommentArticle,
+                            IdUser = c.IdUserNavigation.IdUser,
                             Description = c.DescriptionArticle
                         }).ToArray()
                 })
@@ -240,7 +243,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         var tagList = new List<int>();
         if (putArticleRequestDto.Tags is not null) 
-            tagList.AddRange(putArticleRequestDto.Tags.Select(tag => tag.idTag));
+            tagList.AddRange(putArticleRequestDto.Tags.Select(tag => tag.IdTag));
         
         tags = await _context.Tags.Where(e => tagList.Contains(e.IdTag)).ToListAsync();
         foreach (var tag in tags)
@@ -266,10 +269,12 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             LikesNum =
                 _context.Articles.Where(e => e.IdArticle == article.IdArticle).SelectMany(e => e.IdUsers).Count(),
             Comments = _context.CommentArticles.Where(e => e.IdArticle == article.IdArticle)
-                .Include(e => e.IdUserNavigation).Select(e => new CommentDto
+                .Include(e => e.IdUserNavigation).Select(e => new ArticleCommentDto
                 {
-                    idComment = e.IdCommentArticle,
+                    IdArticle = e.IdArticle,
                     Nick = e.IdUserNavigation.Nick,
+                    IdComment = e.IdCommentArticle,
+                    IdUser = e.IdUserNavigation.IdUser,
                     Description = e.DescriptionArticle
                 }).ToArray()
         };
@@ -309,10 +314,12 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     .CommentArticles
                     .Where(c => c.IdArticle == x.IdArticle)
                     .Include(c => c.IdUserNavigation)
-                    .Select(c => new CommentDto
+                    .Select(c => new ArticleCommentDto
                     {
-                        idComment = c.IdCommentArticle,
+                        IdArticle = c.IdArticle,
                         Nick = c.IdUserNavigation.Nick,
+                        IdComment = c.IdCommentArticle,
+                        IdUser = c.IdUserNavigation.IdUser,
                         Description = c.DescriptionArticle
                     }).ToArray()
             }).ToListAsync();

@@ -16,10 +16,10 @@ public class CommentArticleController: Controller
     }
 
     /// <summary>
-    /// Create article comment
+    /// Create Article Comment
     /// </summary>
     /// <param name="newArticleCommentDto">Dto to store new Comment information</param>
-    /// <returns>Return Status Ok - Article Comment created correctly, returns  ArticleComment body</returns>
+    /// <returns>Return Status Ok - Article Comment created correctly, returns  Article Comment body</returns>
     /// <returns>Return Status Not Found - Comment doesn't exist</returns>
     [HttpPost]
     public async Task<IActionResult> CreateNewArticleComment([FromBody] NewArticleCommentDto newArticleCommentDto)
@@ -39,7 +39,7 @@ public class CommentArticleController: Controller
     /// </summary>
     /// <param name="idComment">Article Comment id</param>
     /// <param name="putArticleCommentDto">Dto to store new Comment information</param>
-    /// <returns>Return Status Ok - Article Comment modified correctly, returns  ArticleComment body</returns>
+    /// <returns>Return Status Ok - Article Comment modified correctly, returns  Article Comment body</returns>
     /// <returns>Return Status Not Found - Comment doesn't exist</returns>
     /// <returns>Return Status Bad Request - Id from route and Id in body are not some</returns>
     [HttpPut("{idComment:int}")]
@@ -62,7 +62,7 @@ public class CommentArticleController: Controller
     }
 
     /// <summary>
-    /// Delete achievement
+    /// Delete Article Comment
     /// </summary>
     /// <param name="idComment">Article Comment Id</param>
     /// <returns> Return Status Ok - Article Comment deleted correctly, returns Article Comment body</returns>
