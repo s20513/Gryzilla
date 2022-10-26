@@ -1,9 +1,8 @@
 ﻿using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 namespace Gryzilla_App.Controllers;
-
 
 [ApiController]
 [Route("api/rank")]
@@ -16,39 +15,93 @@ public class RankController : Controller
         _ranksDbRepository = ranksDbRepository;
     }
     
+    /// <summary>
+    ///  Add new rank
+    /// </summary>
+    /// <param name="addRankDto"> Dto - to store information about new rank </param>
+    /// <returns>
+    ///  Return Status NotFound  - if cannot add new rank or the rank name is taken
+    ///  Return Status Ok        - If the rank was added successfully
+    /// </returns>
     [HttpPost]
     public async Task<IActionResult> PostNewRank([FromBody] AddRankDto addRankDto)
     {
-        var rank = await _ranksDbRepository.AddNewRank(addRankDto);
-        if (rank is null)
+        try
         {
-            return NotFound("Cannot add new rank");
+            var rank = await _ranksDbRepository.AddNewRank(addRankDto);
+
+            if (rank is null)
+            {
+                return NotFound("Cannot add new rank");
+            }
+
+            return Ok(rank);
         }
-        return Ok(rank);
+        catch (SameNameException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
+    /// <summary>
+    ///  Delete rank by IdRank
+    /// </summary>
+    /// <param name="idRank"> Int - Rank Identifier</param>
+    /// <returns>
+    ///  Return Status NotFound    - If cannot find rank.
+    ///  Return Status Ok and body - If the rank was deleted successfully
+    ///  Return Status BadRequest  - If the user is assigned this rank
+    /// </returns>
     [HttpDelete("{idRank:int}")]
-    public async Task<IActionResult> PostNewRank([FromRoute] int idRank)
+    public async Task<IActionResult> DeleteRank([FromRoute] int idRank)
     {
-        var rank = await _ranksDbRepository.DeleteRank(idRank);
-        if (rank is null)
+        try
         {
-            return NotFound("Cannot delete rank");
+            var rank = await _ranksDbRepository.DeleteRank(idRank);
+        
+            if (rank is null)
+            {
+                return NotFound("Cannot delete rank");
+            }
+            return Ok(rank);
         }
-        return Ok(rank);
+        catch (ReferenceException e)
+        {
+            return BadRequest(e.Message);
+        }
+       
     }
     
+    /// <summary>
+    /// Modify rank by idRank
+    /// </summary>
+    /// <param name="putRankDto">Dto - to store new Rank information</param>
+    /// <param name="idRank">Int - Rank Identifier </param>
+    /// <returns>
+    ///  Return Status BadRequest   - If idRank != putRankDto.IdRank or rank name is taken
+    ///  Return Status NotFound     - If cannot find or modify rank
+    ///  Return Status Ok and body  - If the rank was modified successfully
+    /// </returns>
     [HttpPut("{idRank:int}")]
-    public async Task<IActionResult> PostNewRank([FromBody] PutRankDto putRankDto, [FromRoute] int idRank)
+    public async Task<IActionResult> ModifyRank([FromBody] PutRankDto putRankDto, [FromRoute] int idRank)
     {
         if (idRank != putRankDto.IdRank)
-            return BadRequest();
-        var rank = await _ranksDbRepository.ModifyRank(putRankDto, idRank);
-        if (rank is null)
+            return BadRequest("Id from route and Id in body have to be same");
+
+        try
         {
-            return NotFound("Cannot modify rank");
+            var rank = await _ranksDbRepository.ModifyRank(putRankDto, idRank);
+        
+            if (rank is null)
+            {
+                return NotFound("Cannot modify rank");
+            }
+        
+            return Ok(rank);
         }
-        return Ok(rank);
+        catch (SameNameException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
-    
 }

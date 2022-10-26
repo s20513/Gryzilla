@@ -1,4 +1,5 @@
 using Gryzilla_App.DTOs.Requests.User;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,14 +60,26 @@ public class UserController : Controller
     [HttpPut("{idUser:int}")]
     public async Task<IActionResult> ModifyUser([FromRoute] int idUser, [FromBody] PutUserDto putUserDto)
     {
-       var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);
-
-       if (user == null)
-       { 
-           return NotFound("User doesn't exist");
+        if (idUser != putUserDto.IdUser)
+        {
+            return BadRequest("Id from route and Id in body have to be same");
+        }
+        
+       try
+       {
+           var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);
+        
+           if (user == null)
+           { 
+               return NotFound("User doesn't exist");
+           }
+        
+           return Ok(user);
        }
-
-       return Ok(user);
+       catch (SameNameException e)
+       {
+           return BadRequest(e.Message);
+       }
     }
 
     /// <summary>
@@ -88,9 +101,9 @@ public class UserController : Controller
         
             return Ok(user);
         }
-        catch (Exception e)
+        catch (SameNameException e)
         {
-            return BadRequest("This nickname is taken");
+            return BadRequest(e.Message);
         }
     }
     
