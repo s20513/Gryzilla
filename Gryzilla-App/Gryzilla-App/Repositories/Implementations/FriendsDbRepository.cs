@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Friends;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,65 +17,107 @@ public class FriendsDbRepository : IFriendsDbRepository
     
     public async Task<IEnumerable<FriendDto>?> GetFriendsFromDb(int idUser)
     {
-        //sprawdzamy czy użytkownik podany znajduje się w naszej bazie
-        var user = await _context.UserData.Where(x => x.IdUser == idUser).SingleOrDefaultAsync();
-        //jeśli nie ma go zwracamy null
-        if (user is null) return null;
+        var user = await _context
+            .UserData
+            .Where(x => x.IdUser == idUser)
+            .SingleOrDefaultAsync();
+
+        if (user is null)
         {
-            //szukamy listy asocjacyjnej znajomych naszego użytkownika
-            var users = await _context.UserData.Where(x => x.IdUser == idUser)
-                .SelectMany(c => c.IdUserFriends)
-                .Select(x => new FriendDto
-                {
-                    IdUser = x.IdUser,
-                    Nick = x.Nick
-                }).ToArrayAsync();
-            //zwracamy
-            return users;
+            return null;
         }
+        
+        var users = await _context
+            .UserData.Where(x => x.IdUser == idUser)
+            .SelectMany(c => c.IdUserFriends)
+            .Select(x => new FriendDto
+            {
+                IdUser = x.IdUser,
+                Nick = x.Nick
+            }).ToArrayAsync();
+        
+        return users;
     }
-    public async Task<string?> DeleteFriendFromDb (int idUser, int idUserFriend)
+    public async Task<FriendDto?> DeleteFriendFromDb (int idUser, int idUserFriend)
     {
-        //szukamy listy asocjacyjnej friends naszego usera 
-        var user = await _context.UserData.Include(x => x.IdUserFriends)
+        UserDatum? user;
+        UserDatum? userFriend;
+
+        user = await _context
+            .UserData
+            .Include(x => x.IdUserFriends)
             .Where(a => a.IdUser== idUser)
             .SingleOrDefaultAsync();
-        //szukamy listy asocjacyjnej friends naszego przyjaciela 
-        var userFriend = await _context.UserData.Include(c => c.IdUserFriends)
+        
+        if (user is null)
+        {
+            return null;
+        }
+        
+        userFriend = await _context
+            .UserData
+            .Include(c => c.IdUserFriends)
             .Where(a => a.IdUser== idUserFriend)
             .SingleOrDefaultAsync();
-        //sprawdzamy czy nie są przypadkiem nullem
-        if (user is null || userFriend is null) return null;
-        //usuwamy przyjaciela po stronie użytkownika
+
+        if (userFriend is null)
+        {
+            return null;
+        }
+        
         user.IdUserFriends.Remove(userFriend);
-        //usuwamy użytkownika po stronie przyjaciela
         userFriend.IdUserFriends.Remove(user);
-        //zapisujemy zmiany
+        
         await _context.SaveChangesAsync();
-        return "friend deleted";
+
+        return new FriendDto
+        {
+            IdUser = idUserFriend,
+            Nick = userFriend.Nick
+        };
     }
 
-    public async Task<string?> AddNewFriendFromDb(int idUser, int idUserFriend)
+    public async Task<FriendDto?> AddNewFriendToDb(int idUser, int idUserFriend)
     {
-        //wyszukanie użytkownika wraz z jego listą znajomych
-        var user = await _context.UserData.Include(x => x.IdUserFriends)
+        UserDatum? user;
+        UserDatum? userFriend;
+        
+        user = await _context
+            .UserData
+            .Include(x => x.IdUserFriends)
             .Where(a => a.IdUser== idUser )
             .SingleOrDefaultAsync();
-        //wyszukanie znajomego wraz z jego listą znajomych
-        var userFriend = await _context.UserData.Include(x => x.IdUserFriends)
+        
+        if (user is null)
+        {
+            return null;
+        }
+        
+        userFriend = await _context
+            .UserData
+            .Include(x => x.IdUserFriends)
             .Where(a => a.IdUser== idUserFriend )
             .SingleOrDefaultAsync();
-        //sprawdzamy czy nie są przypadkiem nullem - są w naszej bazie
-        if (user is null || userFriend is null) return null;
-        //sprawdzamy czy są już znajomymi
-        if (user.IdUserFriends.Contains(userFriend)) return "is friend";
-        //dodajemy po stronie naszego użytkownika
+
+        if (userFriend is null)
+        {
+            return null;
+        }
+
+        if (user.IdUserFriends.Contains(userFriend))
+        {
+            throw new ReferenceException($"{userFriend.Nick} is already {user.Nick} friend!");
+        }
+        
         user.IdUserFriends.Add(userFriend);
-        //dodajemy po stronie naszego znajomego
         userFriend.IdUserFriends.Add(user);
-        //zatwierdzamy
+        
         await _context.SaveChangesAsync();
         
-        return "added new friend";
+        return new FriendDto
+        {
+            IdUser = idUserFriend,
+            Nick = userFriend.Nick
+        };
     }
 }
