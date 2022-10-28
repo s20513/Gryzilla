@@ -6,6 +6,6 @@ namespace Gryzilla_App.Repositories.Interfaces;
 public interface IFriendsDbRepository
 {
     public Task<IEnumerable<FriendDto>?> GetFriendsFromDb(int idUser);
-    public Task<string?> DeleteFriendFromDb(int idUser, int idUserFriend);
-    public Task<string?> AddNewFriendFromDb(int idUser, int idUserFriend);
+    public Task<FriendDto?> DeleteFriendFromDb(int idUser, int idUserFriend);
+    public Task<FriendDto?> AddNewFriendToDb(int idUser, int idUserFriend);
 }

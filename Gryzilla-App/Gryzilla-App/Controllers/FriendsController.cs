@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Repositories.Interfaces;
+﻿using Gryzilla_App.Exceptions;
+using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -13,38 +14,80 @@ public class FriendsController : Controller
         _friendsDbRepository = friendsDbRepository;
     }
 
+    /// <summary>
+    /// Get user's friends
+    /// </summary>
+    /// <param name="idUser">User id</param>
+    /// <returns>Return Status Ok - Returns list of user's friends</returns>
+    /// <returns>Return Status Not Found - User does not exists</returns>
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetFriends([FromRoute] int idUser)
     {
-        
         var friends = await _friendsDbRepository.GetFriendsFromDb(idUser);
-        if (friends is null)
-        {
-            return NotFound("No friends found");
-        }
-        return Ok(friends);
-    }
-    [HttpDelete("{idUser:int}/{idUserFriend:int}")]
-    public async Task<IActionResult> DeleteFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
-    {
         
-        var friends = await _friendsDbRepository.DeleteFriendFromDb(idUser, idUserFriend);
         if (friends is null)
         {
-            return NotFound("Cannot removed friend");
+            return NotFound("User does not exists!");
         }
+        
         return Ok(friends);
     }
     
+    /// <summary>
+    /// Deletes user's friend
+    /// </summary>
+    /// <param name="idUser">User id</param>
+    /// <param name="idUserFriend">Id of user's friend</param>
+    /// <returns>Return Status Ok - Returns nick and id of ex-friend</returns>
+    /// <returns>Return Status Not Found - One of the users does not exists</returns>
+    /// <returns>Return Bad Request - Given Ids are the same</returns>
+    [HttpDelete("{idUser:int}/{idUserFriend:int}")]
+    public async Task<IActionResult> DeleteFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
+    {
+        if (idUser == idUserFriend)
+        {
+            return BadRequest("Ids must have different values!");
+        }
+        
+        var friend = await _friendsDbRepository.DeleteFriendFromDb(idUser, idUserFriend);
+        
+        if (friend is null)
+        {
+            return NotFound("One of the users does not exists!");
+        }
+        return Ok(friend);
+    }
+    
+    /// <summary>
+    /// Adds user1 to user2 as friend and vice versa
+    /// </summary>
+    /// <param name="idUser">User id</param>
+    /// <param name="idUserFriend">Id of user's friend</param>
+    /// <returns>Return Status Ok - Returns nick and id of friend</returns>
+    /// <returns>Return Status Not Found - One of the users does not exists</returns>
+    /// /// <returns>Return Bad Request - Given Ids are the same or users are already friends</returns>
     [HttpPost("{idUser:int}/{idUserFriend:int}")]
     public async Task<IActionResult> AddNewFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
     {
-        var friends = await _friendsDbRepository.AddNewFriendFromDb(idUser, idUserFriend);
-        return friends switch
+        if (idUser == idUserFriend)
         {
-            null => NotFound("Cannot added friend"),
-            "is friend" => Ok("The user is already your friend"),
-            _ => Ok(friends)
-        };
+            return BadRequest("Ids must have different values!");
+        }
+        
+        try
+        {
+            var friend = await _friendsDbRepository.AddNewFriendToDb(idUser, idUserFriend);
+            
+            if (friend is null)
+            {
+                return NotFound("One of the users does not exists!");
+            }
+
+            return Ok(friend);
+        }
+        catch (ReferenceException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 }
