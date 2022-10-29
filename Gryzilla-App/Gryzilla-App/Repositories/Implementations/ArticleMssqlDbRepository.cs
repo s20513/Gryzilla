@@ -103,12 +103,12 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
     public async Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto)
     {
-        UserDatum?   user;
-        Article?     article;
-        List<string> tagList;
-        List<Tag>?   tags;
         int          articleId;
-        
+        Article?     article;
+        UserDatum?   user;
+        List<Tag>?   tags;
+        List<string> tagList;
+
         user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == articleDto.IdUser);
         
         if (user is null)

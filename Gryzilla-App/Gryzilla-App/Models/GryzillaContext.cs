@@ -562,12 +562,6 @@ namespace Gryzilla_App.Models
 
                 entity.Property(e => e.IdTag).HasColumnName("idTag");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasColumnName("description");
-
                 entity.Property(e => e.NameTag)
                     .IsRequired()
                     .HasMaxLength(30)
