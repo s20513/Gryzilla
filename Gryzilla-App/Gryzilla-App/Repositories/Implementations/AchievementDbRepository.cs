@@ -63,8 +63,11 @@ public class AchievementDbRepository : IAchievementDbRepository
 
     public async Task<AchievementDto> AddNewAchievement(AddAchievementDto addAchievementDto)
     {
-        int idAchievement;
-        var sameNameAchievement = await _context
+        int          idAchievement;
+        Achievement  newAchievement;
+        Achievement? sameNameAchievement; 
+        
+        sameNameAchievement = await _context
                 .Achievements
                 .Where(x => x.AchievementName == addAchievementDto.AchievementName)
                 .SingleOrDefaultAsync();
@@ -74,7 +77,7 @@ public class AchievementDbRepository : IAchievementDbRepository
             throw new SameNameException("Achievement with given name already exists!");
         }
         
-        var newAchievement = new Achievement
+        newAchievement = new Achievement
         {
             Descripion =      addAchievementDto.Description,
             AchievementName = addAchievementDto.AchievementName,
@@ -90,7 +93,7 @@ public class AchievementDbRepository : IAchievementDbRepository
                 .Select(x => x.IdAchievement)
                 .FirstAsync();
         
-        return  new AchievementDto
+        return new AchievementDto
         {
             IdAchievement =   idAchievement,
             AchievementName = newAchievement.AchievementName,
