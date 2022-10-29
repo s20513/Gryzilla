@@ -1,4 +1,4 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Tag;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
