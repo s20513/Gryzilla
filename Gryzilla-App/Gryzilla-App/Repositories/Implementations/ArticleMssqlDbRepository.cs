@@ -1,3 +1,4 @@
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
@@ -103,11 +104,11 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
     public async Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto)
     {
-        int          articleId;
-        Article?     article;
-        UserDatum?   user;
-        List<Tag>?   tags;
-        List<string> tagList;
+        int           articleId;
+        Article?      article;
+        UserDatum?    user;
+        List<Tag>?    articleTags;
+        List<string>  tagList;
 
         user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == articleDto.IdUser);
         
@@ -125,21 +126,38 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         };
         
         await _context.Articles.AddAsync(article);
-        
+        //await _context.SaveChangesAsync();
+
         tagList = new List<string>();
         
-        if (articleDto.Tags is not null)
+        if (articleDto.Tags.Count != 0)
         {
             tagList.AddRange(articleDto.Tags.Select(tag => tag.NameTag));
+
+            var tags = await _context.Tags.ToListAsync();
+            //CreateMissingTags(tagList);
+            var allTagsFromDb = await _context.Tags.Select(x => x.NameTag).ToArrayAsync();
+            var tagsToCreate = tagList.Where(x => !allTagsFromDb.Contains(x)).ToList();
+
+            if (tagsToCreate.Count != 0)
+            {
+                foreach (var tagName in tagsToCreate)
+                {
+                    tags.Add(new Tag
+                    {
+                        NameTag = tagName
+                    });
+                }
+            }
+            
+            articleTags = tags.Where(e => tagList.Contains(e.NameTag)).ToList();
+
+            foreach (var tag in articleTags)
+            {
+                article.IdTags.Add(tag);
+            }
         }
-
-        tags = await _context.Tags.Where(e => tagList.Contains(e.NameTag)).ToListAsync();
-
-        foreach (var tag in tags)
-        {
-            article.IdTags.Add(tag);
-        }
-
+        
         await _context.SaveChangesAsync();
 
         articleId = _context.Articles.Max(e => e.IdArticle);
@@ -161,6 +179,26 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             }).ToArray()
         };
     }
+
+    private async void CreateMissingTags(IEnumerable<string> tagList)
+    {
+        var allTagsFromDb = await _context.Tags.Select(x => x.NameTag).ToArrayAsync();
+        var tagsToCreate = tagList.Where(x => !allTagsFromDb.Contains(x)).ToList();
+
+        if (tagsToCreate.Count != 0)
+        {
+            foreach (var tagName in tagsToCreate)
+            {
+                await _context.Tags.AddAsync(new Tag
+                {
+                    NameTag = tagName
+                });
+            }
+    
+            //await _context.SaveChangesAsync();
+        }
+    }
+    
 
     public async Task<ArticleDto?> DeleteArticleFromDb(int idArticle)
     {
