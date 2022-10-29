@@ -10,8 +10,6 @@
 
         public int IdTag { get; set; }
         public string NameTag { get; set; } = null!;
-        public string Description { get; set; } = null!;
-
         public virtual ICollection<Article> IdArticles { get; set; }
         public virtual ICollection<Post> IdPosts { get; set; }
     }
