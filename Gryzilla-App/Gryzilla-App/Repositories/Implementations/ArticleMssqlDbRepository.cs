@@ -103,11 +103,10 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
     public async Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto)
     {
-        int          articleId;
-        Article?     article;
-        UserDatum?   user;
-        List<Tag>?   tags;
-        List<string> tagList;
+        int        articleId;
+        Article?   article;
+        List<Tag>? tags;
+        UserDatum? user;
 
         user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == articleDto.IdUser);
         
@@ -125,21 +124,13 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         };
         
         await _context.Articles.AddAsync(article);
-        
-        tagList = new List<string>();
-        
-        if (articleDto.Tags is not null)
+
+        if (articleDto.Tags.Count != 0)
         {
-            tagList.AddRange(articleDto.Tags.Select(tag => tag.NameTag));
+            tags = await _context.Tags.ToListAsync();
+            CreateMissingTagsAndBindWithArticle(articleDto.Tags, article, tags);
         }
-
-        tags = await _context.Tags.Where(e => tagList.Contains(e.NameTag)).ToListAsync();
-
-        foreach (var tag in tags)
-        {
-            article.IdTags.Add(tag);
-        }
-
+        
         await _context.SaveChangesAsync();
 
         articleId = _context.Articles.Max(e => e.IdArticle);
@@ -155,16 +146,22 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             Title = article.Title,
             Content = article.Content,
             CreatedAt = article.CreatedAt,
-            Tags = tagList.Select(e => new TagDto
+            Tags = articleDto.Tags.Select(e => new TagDto
             {
-                NameTag = e
+                NameTag = e.NameTag
             }).ToArray()
         };
     }
-
     public async Task<ArticleDto?> DeleteArticleFromDb(int idArticle)
     {
-        var article = await _context.Articles
+        string?               userNick;
+        List<Tag>?            tags;
+        Article?              article;
+        List<UserDatum>?      likes;
+        List<CommentArticle>? comments;
+        
+        article = await _context
+            .Articles
             .Where(e => e.IdArticle == idArticle)
             .Include(e => e.IdTags)
             .Include(e => e.IdUsers)
@@ -175,7 +172,9 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
              return null;
         }
 
-        var likes = await _context.Articles
+        
+        likes = await _context
+            .Articles
             .Where(e => e.IdArticle == idArticle)
             .SelectMany(e => e.IdUsers)
             .ToListAsync();
@@ -185,7 +184,9 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             article.IdUsers.Remove(like);
         }
 
-        var tags = await _context.Articles
+        
+        tags = await _context
+            .Articles
             .Where(e => e.IdArticle == idArticle)
             .SelectMany(e => e.IdTags)
             .ToListAsync();
@@ -195,8 +196,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             article.IdTags.Remove(tag);
         }
         
-        var comments = 
-            await _context
+        
+        comments = await _context
                 .CommentArticles
                 .Where(e => e.IdArticle == idArticle)
                 .ToListAsync();
@@ -206,16 +207,23 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             _context.CommentArticles.Remove(comment);
         }
         
-        await _context.SaveChangesAsync();
+        
         _context.Articles.Remove(article);
         await _context.SaveChangesAsync();
+        
+        userNick = await _context
+            .UserData
+            .Where(x => x.IdUser == article.IdUser)
+            .Select(x => x.Nick)
+            .SingleOrDefaultAsync();
         
         return new ArticleDto
         {
             IdArticle = article.IdArticle,
             Author = new ReducedUserResponseDto
             {
-                IdUser = article.IdUser
+                IdUser = article.IdUser,
+                Nick = userNick
             },
             Title = article.Title,
             Content = article.Content,
@@ -225,29 +233,37 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
     public async Task<ArticleDto?> ModifyArticleFromDb(PutArticleRequestDto putArticleRequestDto, int idArticle)
     {
-        if (putArticleRequestDto.IdArticle != idArticle)
-            return null;
-        var article = await _context.Articles
+        Article?          article;
+        List<Tag>?        dbTags;
+        ICollection<Tag>? articleDbTags;
+
+        article = await _context
+            .Articles
             .Where(e => e.IdArticle == idArticle)
             .Include(e => e.IdTags)
             .Include(e => e.IdUserNavigation)
             .SingleOrDefaultAsync();
+        
         if (article is null)
+        {
             return null;
+        }
+        
         article.Title = putArticleRequestDto.Title;
         article.Content = putArticleRequestDto.Content;
 
-        var tags = article.IdTags;
-        foreach (var tag in tags)
+        articleDbTags = article.IdTags;
+        
+        foreach (var tag in articleDbTags)
+        {
             article.IdTags.Remove(tag);
-        
-        var tagList = new List<int>();
-        if (putArticleRequestDto.Tags is not null) 
-            tagList.AddRange(putArticleRequestDto.Tags.Select(tag => tag.IdTag));
-        
-        tags = await _context.Tags.Where(e => tagList.Contains(e.IdTag)).ToListAsync();
-        foreach (var tag in tags)
-            article.IdTags.Add(tag);
+        }
+
+        if (putArticleRequestDto.Tags is not null)
+        {
+            dbTags = await _context.Tags.ToListAsync();
+            CreateMissingTagsAndBindWithArticle(putArticleRequestDto.Tags, article, dbTags);
+        }
 
         await _context.SaveChangesAsync();
 
@@ -262,14 +278,23 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             Title = article.Title,
             Content = article.Content,
             CreatedAt = article.CreatedAt,
-            Tags = tags.Select(e => new TagDto
+            
+            Tags = articleDbTags.Select(e => new TagDto
             {
                 NameTag = e.NameTag
             }).ToArray(),
-            LikesNum =
-                _context.Articles.Where(e => e.IdArticle == article.IdArticle).SelectMany(e => e.IdUsers).Count(),
-            Comments = _context.CommentArticles.Where(e => e.IdArticle == article.IdArticle)
-                .Include(e => e.IdUserNavigation).Select(e => new ArticleCommentDto
+            
+            LikesNum = _context
+                .Articles
+                .Where(e => e.IdArticle == article.IdArticle)
+                .SelectMany(e => e.IdUsers)
+                .Count(),
+            
+            Comments = _context
+                .CommentArticles
+                .Where(e => e.IdArticle == article.IdArticle)
+                .Include(e => e.IdUserNavigation)
+                .Select(e => new ArticleCommentDto
                 {
                     IdArticle = e.IdArticle,
                     Nick = e.IdUserNavigation.Nick,
@@ -296,6 +321,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 Title = x.Title,
                 Content = x.Content,
                 CreatedAt = x.CreatedAt,
+                
                 Tags = _context
                     .Articles
                     .Where(t => t.IdArticle == x.IdArticle)
@@ -305,11 +331,13 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         NameTag = t.NameTag
                     })
                     .ToArray(),
+                
                 LikesNum = _context
                     .Articles
                     .Where(l => l.IdArticle == x.IdArticle)
                     .SelectMany(l => l.IdUsers)
                     .Count(),
+                
                 Comments = _context
                     .CommentArticles
                     .Where(c => c.IdArticle == x.IdArticle)
@@ -323,5 +351,31 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         Description = c.DescriptionArticle
                     }).ToArray()
             }).ToListAsync();
+    }
+    
+    private void CreateMissingTagsAndBindWithArticle(IEnumerable<TagDto> newArticleTags, Article article, List<Tag> dbTags)
+    {
+        List<Tag>?    articleDbTags;
+        List<string>? articleTagList;
+        List<string>? allTagsFromDb;
+        List<string>? tagsToCreate;
+        
+        articleTagList = new List<string>();
+        articleTagList.AddRange(newArticleTags.Select(tag => tag.NameTag));
+        
+        allTagsFromDb = dbTags.Select(x => x.NameTag).ToList();
+        tagsToCreate = articleTagList.Where(x => !allTagsFromDb.Contains(x)).ToList();
+
+        if (tagsToCreate.Count != 0)
+        {
+            dbTags.AddRange(tagsToCreate.Select(tagName => new Tag { NameTag = tagName }));
+        }
+            
+        articleDbTags = dbTags.Where(e => articleTagList.Contains(e.NameTag)).ToList();
+
+        foreach (var tag in articleDbTags)
+        {
+            article.IdTags.Add(tag);
+        }
     }
 }

@@ -15,86 +15,179 @@ public class ArticleController: Controller
         _articleDbRepository = articleDbRepository;
     }
 
+    /// <summary>
+    /// Find all Articles from db
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
     [HttpGet]
-    public async Task<IActionResult> GetArticles()
+    public async Task<IActionResult> GetAllArticlesFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesFromDb();
+        
         if (articles is null)
+        {
             return NotFound("No articles found");
+        }
+        
         return Ok(articles);
     }
 
-    [HttpGet("/articles/bylikes/most")]
-    public async Task<IActionResult> GetArticlesByMostLikes()
+    /// <summary>
+    /// Find all Articles from db sorted by Likes
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by most Likes</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/byLikes/most")]
+    public async Task<IActionResult> GetAllArticlesByMostLikesFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByMostLikesFromDb();
+        
         if (articles is null)
+        {
             return NotFound("No articles found");
+        }
+        
         return Ok(articles);
     }
     
-    [HttpGet("/articles/bylikes/least")]
-    public async Task<IActionResult> GetArticlesByLeastLikes()
+    /// <summary>
+    /// Find all Articles from db sorted by Likes
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by least Likes</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/byLikes/least")]
+    public async Task<IActionResult> GetAllArticlesByLeastLikesFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByLeastLikesFromDb();
+        
         if (articles is null)
+        {
             return NotFound("No articles found");
+        }
+        
         return Ok(articles);
     }
     
-    [HttpGet("/articles/bydate/least")]
-    public async Task<IActionResult> GetArticlesByEarliestDate()
+    /// <summary>
+    /// Find all Articles from db sorted by date
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by earliest date</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/byDate/earliest")]
+    public async Task<IActionResult> GetAllArticlesByEarliestDateFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByEarliestDateFromDb();
+        
         if (articles is null)
+        {
             return NotFound("No articles found");
+        }
+        
         return Ok(articles);
     }
     
-    [HttpGet("/articles/bydate/oldest")]
-    public async Task<IActionResult> GetArticlesByOldestDate()
+    /// <summary>
+    /// Find all Articles from db sorted by date
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/byDate/oldest")]
+    public async Task<IActionResult> GetAllArticlesByOldestDateFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByOldestDateFromDb();
+        
         if (articles is null)
+        {
             return NotFound("No articles found");
+        }
+        
         return Ok(articles);
     }
 
+    /// <summary>
+    /// Find all Articles from db sorted by date
+    /// </summary>
+    /// <param name="idArticle">Article id</param>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
     [HttpGet("{idArticle:int}")]
-    public async Task<IActionResult> GetArticle(int idArticle)
+    public async Task<IActionResult> GetArticleFromDb(int idArticle)
 
     {
         var article = await _articleDbRepository.GetArticleFromDb(idArticle);
+        
         if (article is null)
+        {
             return NotFound("Article not found");
+        }
+        
         return Ok(article);
     }
 
+    /// <summary>
+    /// Create new Article
+    /// </summary>
+    /// <param name="newArticleRequestDto">Dto with new Article data</param>
+    /// <returns>Return Status OK - Article added to Db</returns>
+    /// <returns>Return Status Not Found - User (creator) not found</returns>
     [HttpPost]
-    public async Task<IActionResult> CreateNewArticle([FromBody] NewArticleRequestDto newArticleRequestDto)
+    public async Task<IActionResult> AddNewArticleToDb([FromBody] NewArticleRequestDto newArticleRequestDto)
     {
         var result = await _articleDbRepository.AddNewArticleToDb(newArticleRequestDto);
+        
         if (result is null)
+        {
             return NotFound("User not found");
+        }
+        
         return Ok(result);
     }
 
+    /// <summary>
+    /// Modify Article
+    /// </summary>
+    /// <param name="putArticleRequestDto">Dto with Article new data</param>
+    /// <param name="idArticle">Article id</param>
+    /// <returns>Return Status OK - Article modified</returns>
+    /// <returns>Return Status Not Found - Article not found</returns>
+    /// <returns>Return Status Bad Request - Id from route and Id in body were not same</returns>
     [HttpPut("{idArticle:int}")]
-    public async Task<IActionResult> ModifyArticle([FromBody] PutArticleRequestDto putArticleRequestDto,
+    public async Task<IActionResult> ModifyArticleFromDb(
+        [FromBody] PutArticleRequestDto putArticleRequestDto, 
         [FromRoute] int idArticle)
     {
+        if (putArticleRequestDto.IdArticle != idArticle)
+        {
+            return BadRequest("Id from route and Id in body have to be same");
+        }
+        
         var result = await _articleDbRepository.ModifyArticleFromDb(putArticleRequestDto, idArticle);
+        
         if (result is null)
+        {
             return NotFound("Article not found");
+        }
+        
         return Ok(result);
     }
 
+    /// <summary>
+    /// Delete Article
+    /// </summary>
+    /// <param name="idArticle">Article id</param>
+    /// <returns>Return Status OK - Article deleted</returns>
+    /// <returns>Return Status Not Found - Article not found</returns>
     [HttpDelete("{idArticle:int}")]
-    public async Task<IActionResult> DeleteArticle([FromRoute] int idArticle)
+    public async Task<IActionResult> DeleteArticleFromDb([FromRoute] int idArticle)
     {
         var result = await _articleDbRepository.DeleteArticleFromDb(idArticle);
+        
         if (result is null)
+        {
             return NotFound("Article not found");
+        }
+        
         return Ok(result);
     }
 }
