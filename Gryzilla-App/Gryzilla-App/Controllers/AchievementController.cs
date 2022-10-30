@@ -16,9 +16,9 @@ public class AchievementController : Controller
     }
     
     /// <summary>
-    /// Find all achievements from db
+    /// Find all Achievements from db
     /// </summary>
-    /// <returns>Return Status OK - if any Achievement exists, return user Achievements</returns>
+    /// <returns>Return Status OK - if any Achievement exists, return Achievements</returns>
     /// <returns>Return Status Not Found - no Achievements in db</returns>
     [HttpGet]
     public async Task<IActionResult> GetAchievements()
