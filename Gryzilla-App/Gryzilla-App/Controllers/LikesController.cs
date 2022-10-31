@@ -14,6 +14,16 @@ public class LikesController : Controller
         _likesPostDbRepository= likesPostDbRepository;
     }
 
+    /// <summary>
+    ///  Add new like
+    /// </summary>
+    /// <param name="idUser">int idUser - User Identifier </param>
+    /// <param name="idPost">int idPost - Post Identifier </param>
+    /// <returns> 
+    /// Status NotFound - If didn't find post or post  
+    /// Status NotFound - If like has been assigned before
+    /// Status Ok - added like successfully
+    /// </returns>
     [HttpPost("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> AddNewLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
@@ -27,6 +37,16 @@ public class LikesController : Controller
         return Ok(likes);
     }
     
+    /// <summary>
+    ///  Delete like
+    /// </summary>
+    /// <param name="idUser">int idUser - User Identifier </param>
+    /// <param name="idPost">int idPost - Post Identifier </param>
+    /// <returns> 
+    /// Status NotFound - If didn't find post or post  
+    /// Status NotFound - If like not been assigned before
+    /// Status Ok - deleted like successfully
+    /// </returns>
     [HttpDelete("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> DeleteLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
@@ -40,6 +60,12 @@ public class LikesController : Controller
         return Ok(likes);
     }
     
+    /// <summary>
+    ///  Exist method
+    /// </summary>
+    /// <param name="idUser">int idUser - User Identifier </param>
+    /// <param name="idPost">int idPost - Post Identifier </param>
+    /// <returns> true if like has been assigned, false - if not </returns>
     [HttpGet("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> GetLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
