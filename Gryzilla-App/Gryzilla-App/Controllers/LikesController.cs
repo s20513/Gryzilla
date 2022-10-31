@@ -17,24 +17,34 @@ public class LikesController : Controller
     [HttpPost("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> AddNewLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
-
-        var posts = await _likesPostDbRepository.AddLikeToPost(idUser, idPost);
-        if (posts is null)
+        var likes = await _likesPostDbRepository.AddLikeToPost(idUser, idPost);
+        
+        if (likes != null && !likes.Equals("Added like"))
         {
-            return NotFound("Cannot add like");
+            return NotFound(likes);
         }
-
-        return Ok(posts);
+        
+        return Ok(likes);
     }
+    
     [HttpDelete("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> DeleteLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
-        var posts = await _likesPostDbRepository.DeleteLikeToPost(idUser, idPost);
-        if (posts is null)
+        var likes = await _likesPostDbRepository.DeleteLikeToPost(idUser, idPost);
+        
+        if (likes != null && !likes.Equals("Deleted like"))
         {
-            return NotFound("Cannot delete like");
+            return NotFound(likes);
         }
 
-        return Ok(posts);
+        return Ok(likes);
+    }
+    
+    [HttpGet("{idUser:int}/{idPost:int}")]
+    public async Task<IActionResult> GetLike([FromRoute] int idUser,[FromRoute] int idPost)
+    {
+        var likes = await _likesPostDbRepository.ExistLike(idUser, idPost);
+        
+        return Ok(likes);
     }
 }

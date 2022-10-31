@@ -122,10 +122,10 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         
         return new PostCommentDto
         {
-            Nick =        nick,
-            IdPost =      commentPost.IdPost,
-            IdUser =      commentPost.IdUser,
-            IdComment =   idComment,
+            Nick        = nick,
+            IdPost      = commentPost.IdPost,
+            IdUser      = commentPost.IdUser,
+            IdComment   = idComment,
             Description = commentPost.DescriptionPost
         };
     }

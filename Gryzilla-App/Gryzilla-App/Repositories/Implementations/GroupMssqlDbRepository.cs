@@ -4,7 +4,6 @@ using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;

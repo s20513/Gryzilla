@@ -4,4 +4,5 @@ public interface ILikesPostDbRepository
 {
     public Task<string?> AddLikeToPost(int idUser, int idPost);
     public Task<string?> DeleteLikeToPost(int idUser, int idPost);
+    public Task<bool> ExistLike(int idUser, int idPost);
 }
