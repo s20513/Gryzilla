@@ -18,6 +18,7 @@ public class LikesPostDbRepository : ILikesPostDbRepository
         var post = await _context
             .Posts
             .Where(x => x.IdPost == idPost)
+            .Include(x=>x.IdUsers)
             .SingleOrDefaultAsync();
 
         return post;
@@ -54,7 +55,7 @@ public class LikesPostDbRepository : ILikesPostDbRepository
             return "Post or user doesn't exist";
         }
         
-        var postLike = await GetPostLike(idUser, idPost);
+        var postLike = await GetPostLike(idPost, idUser);
 
         if (postLike is not null)
         {
@@ -77,13 +78,13 @@ public class LikesPostDbRepository : ILikesPostDbRepository
             return "Post or user doesn't exist";
         }
         
-        var postLike = await GetPostLike(idUser, idPost);
+        var postLike = await GetPostLike(idPost, idUser);
         
         if (postLike is null)
         {
             return "Like has not been assigned";
         }
-        
+
         post.IdUsers.Remove(user);
         await _context.SaveChangesAsync();
         
@@ -92,7 +93,7 @@ public class LikesPostDbRepository : ILikesPostDbRepository
 
     public async Task<bool> ExistLike(int idUser, int idPost)
     {
-        var postLike = await GetPostLike(idUser, idPost);
+        var postLike = await GetPostLike(idPost, idUser);
         
         return postLike is not null;
     }

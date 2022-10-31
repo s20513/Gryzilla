@@ -85,7 +85,7 @@ public class FriendsDbRepository : IFriendsDbRepository
         user = await _context
             .UserData
             .Include(x => x.IdUserFriends)
-            .Where(a => a.IdUser== idUser )
+            .Where(a => a.IdUser== idUser)
             .SingleOrDefaultAsync();
         
         if (user is null)

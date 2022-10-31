@@ -1,7 +1,7 @@
-﻿using Gryzilla_App.DTO.Responses;
-using Gryzilla_App.DTOs.Requests.Group;
+﻿using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.User;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,81 +16,133 @@ public class GroupMssqlDbRepository: IGroupDbRepository
     {
         _context = context;
     }
-    
+
+    private async Task<Group?> GetGroupById(int idGroup)
+    {
+        var group = await _context
+            .Groups
+            .Where(e => e.IdGroup == idGroup)
+            .Include(x=>x.IdUsers)
+            .SingleOrDefaultAsync();
+        
+        return group;
+    }
+    private async Task<UserDatum?> GetUserById(int idUser)
+    {
+        var user = await _context
+            .UserData
+            .SingleOrDefaultAsync(e => e.IdUser == idUser);
+        
+        return user;
+    }
+    private async Task<Group?> GetGroupByName(string groupName)
+    {
+        var group = await _context
+            .Groups
+            .SingleOrDefaultAsync(e => e.GroupName == groupName);
+        
+        return group;
+    }
+   
     public async Task<GroupDto?> GetGroup(int idGroup)
     {
         var group = await _context.Groups
             .Where(e => e.IdGroup == idGroup)
             .Select(e => new GroupDto
             {
-                IdGroup = e.IdGroup,
+                IdGroup       = e.IdGroup,
                 IdUserCreator = e.IdUserCreator,
-                GroupName = e.GroupName,
-                Description = e.Description,
-                CreatedAt = e.CreatedAt,
-                Users = _context.Groups.Where(g => g.IdGroup == idGroup)
+                GroupName     = e.GroupName,
+                Description   = e.Description,
+                CreatedAt     = e.CreatedAt,
+                Users         = _context.Groups
+                    .Where(g => g.IdGroup == idGroup)
                     .SelectMany(g => g.IdUsers)
                     .Include(g => g.IdRankNavigation)
                     .Select(g => new UserDto
                     {
-                        IdUser = g.IdUser,
-                        IdRank = g.IdRank,
-                        Nick = g.Nick,
-                        Email = g.Email,
+                        IdUser      = g.IdUser,
+                        IdRank      = g.IdRank,
+                        Nick        = g.Nick,
+                        Email       = g.Email,
                         PhoneNumber = g.PhoneNumber,
-                        CreatedAt = g.CreatedAt,
-                        RankName = g.IdRankNavigation.Name
+                        CreatedAt   = g.CreatedAt,
+                        RankName    = g.IdRankNavigation.Name
                     }).ToList()
+                
             }).SingleOrDefaultAsync();
 
         return group ?? null;
     }
 
-    public async Task<GroupDto?> ModifyGroup(int idGroup, GroupRequestDto groupRequestDtoDto)
+    public async Task<GroupDto[]> GetGroups()
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == idGroup);
-        if (group is null)
-            return null;
-
-        group.GroupName = groupRequestDtoDto.GroupName;
-        group.Description = groupRequestDtoDto.Description;
-
-        await _context.SaveChangesAsync();
-
-        
-        var groupDto = await _context.Groups
-            .Where(e => e.IdGroup == idGroup)
+        var groups = await _context.Groups
             .Select(e => new GroupDto
             {
-                IdGroup = e.IdGroup,
+                IdGroup       = e.IdGroup,
                 IdUserCreator = e.IdUserCreator,
-                GroupName = e.GroupName,
-                Description = e.Description,
-                CreatedAt = e.CreatedAt,
-                Users = _context.Groups.Where(g => g.IdGroup == idGroup)
+                GroupName     = e.GroupName,
+                Description   = e.Description,
+                CreatedAt     = e.CreatedAt,
+                Users         = _context.Groups
+                    .Where(g => g.IdGroup == e.IdGroup)
                     .SelectMany(g => g.IdUsers)
                     .Include(g => g.IdRankNavigation)
                     .Select(g => new UserDto
                     {
-                        IdUser = g.IdUser,
-                        IdRank = g.IdRank,
-                        Nick = g.Nick,
-                        Email = g.Email,
+                        IdUser      = g.IdUser,
+                        IdRank      = g.IdRank,
+                        Nick        = g.Nick,
+                        Email       = g.Email,
                         PhoneNumber = g.PhoneNumber,
-                        CreatedAt = g.CreatedAt,
-                        RankName = g.IdRankNavigation.Name
+                        CreatedAt   = g.CreatedAt,
+                        RankName    = g.IdRankNavigation.Name
                     }).ToList()
-            }).SingleOrDefaultAsync();
+            }).ToArrayAsync();
+        
+        return groups;
+    }
 
-        return groupDto;
+    public async Task<GroupDto?> ModifyGroup(int idGroup, GroupRequestDto groupRequestDto)
+    {
+        var group = await GetGroupById(idGroup);
 
+        if (group is null)
+        {
+            return null;
+        }
+
+        var groupName =  _context
+            .Groups
+            .Where(x=>x.IdGroup != idGroup)
+            .Count(x=>x.GroupName == groupRequestDto.GroupName);
+        
+        if (groupName > 0)
+        {
+            throw new SameNameException("This name of group is already taken");
+        }
+        
+        group.GroupName   = groupRequestDto.GroupName; 
+        group.Description = groupRequestDto.Description;
+        
+        await _context.SaveChangesAsync();
+
+        return await GetGroup(idGroup);
     }
 
     public async Task<GroupDto?> DeleteGroup(int idGroup)
     {
-        var group = await _context.Groups.Where(e => e.IdGroup ==idGroup).Include(x=>x.IdUsers).SingleOrDefaultAsync();
+        var group = await _context
+            .Groups
+            .Where(e => e.IdGroup == idGroup)
+            .Include(x=>x.IdUsers)
+            .SingleOrDefaultAsync();
+
         if (group is null)
+        {
             return null;
+        }
 
         var groupUsers = await _context.Groups
             .Where(e => e.IdGroup == idGroup)
@@ -101,183 +153,146 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         {
             group.IdUsers.Remove(groupUser);
         }
+
+        var groupDto = await GetGroup(idGroup);;
         _context.Groups.Remove(group);
         await _context.SaveChangesAsync();
 
-        return new GroupDto
-        {
-            IdGroup = group.IdGroup,
-            IdUserCreator = group.IdGroup,
-            GroupName = group.GroupName,
-            Description = group.Description,
-            CreatedAt = group.CreatedAt,
-            Users = await _context.Groups.Where(g => g.IdGroup == idGroup)
-                .SelectMany(g => g.IdUsers)
-                .Include(g => g.IdRankNavigation)
-                .Select(g => new UserDto
-                {
-                    IdUser = g.IdUser,
-                    IdRank = g.IdRank,
-                    Nick = g.Nick,
-                    Email = g.Email,
-                    PhoneNumber = g.PhoneNumber,
-                    CreatedAt = g.CreatedAt,
-                    RankName = g.IdRankNavigation.Name
-                }).ToListAsync()
-        };
+        return groupDto;
     }
 
-    public async Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDtoDto)
+    public async Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDto)
     {
-        if (idGroup != userToGroupDtoDto.IdGroup)
-            return null;
+        var group = await GetGroupById(idGroup);
+        var user = await GetUserById(userToGroupDto.IdUser);
         
-        var group = await _context.Groups
-            .Where(e => e.IdGroup == userToGroupDtoDto.IdGroup)
-            .Include(x=>x.IdUsers)
-            .SingleOrDefaultAsync();
-        if (group is null || group.IdUserCreator == userToGroupDtoDto.IdUser)
+        if (group is null || user is null)
+        {
             return null;
+        }
 
-        var user = await _context.UserData
-            .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
-            .SingleOrDefaultAsync();
-        if (user is null)
-            return null;
-
+        if (group.IdUserCreator == userToGroupDto.IdUser)
+        {
+            throw new UserCreatorException("The creator of the group cannot be removed");
+        }
+        
         var groupUser = await _context.Groups
             .Where(e => e.IdGroup == idGroup)
             .SelectMany(e => e.IdUsers)
-            .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
+            .Where(e => e.IdUser == userToGroupDto.IdUser)
             .SingleOrDefaultAsync();
+
         if (groupUser is null)
+        {
             return null;
+        }
         
         group.IdUsers.Remove(user);
         await _context.SaveChangesAsync();
-        
-        var groupDto = await _context.Groups
-            .Where(e => e.IdGroup == idGroup)
-            .Select(e => new GroupDto
-            {
-                IdGroup = e.IdGroup,
-                IdUserCreator = e.IdUserCreator,
-                GroupName = e.GroupName,
-                Description = e.Description,
-                CreatedAt = e.CreatedAt,
-                Users = _context.Groups.Where(g => g.IdGroup == idGroup)
-                    .SelectMany(g => g.IdUsers)
-                    .Include(g => g.IdRankNavigation)
-                    .Select(g => new UserDto
-                    {
-                        IdUser = g.IdUser,
-                        IdRank = g.IdRank,
-                        Nick = g.Nick,
-                        Email = g.Email,
-                        PhoneNumber = g.PhoneNumber,
-                        CreatedAt = g.CreatedAt,
-                        RankName = g.IdRankNavigation.Name
-                    }).ToList()
-            }).SingleOrDefaultAsync();
 
-        return groupDto;
+        return await GetGroup(idGroup);
     }
     
-    public async Task<GroupDto?> AddNewGroup(int idUser, GroupRequestDto groupRequestDto)
+    public async Task<GroupDto?> AddNewGroup(int idUser, NewGroupRequestDto groupRequestDto)
     {
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
-        if (group is not null)
-            return null;
+        var user = await GetUserById(idUser);
 
-        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == idUser);
         if (user is null)
-            return null;
+        {
+            return null; 
+        }
+
+        var group = await GetGroupByName(groupRequestDto.GroupName);
+
+        if (group is not null)
+        {
+            throw new SameNameException("The name of the group is already taken");
+        }
 
         var newGroup = new Group
         {
             IdUserCreator = idUser,
-            GroupName = groupRequestDto.GroupName,
-            Description = groupRequestDto.Description,
-            CreatedAt = DateTime.Now
+            GroupName     = groupRequestDto.GroupName,
+            Description   = groupRequestDto.Description,
+            CreatedAt     = DateTime.Now
         };
+        
         await _context.Groups.AddAsync(newGroup);
-        
         await _context.SaveChangesAsync();
         
-        group = await _context.Groups.SingleOrDefaultAsync(e => e.GroupName == groupRequestDto.GroupName);
-
-        await _context.SaveChangesAsync();
-        group.IdUsers.Add(user);
+        var addUserToGroup = await GetGroupByName(groupRequestDto.GroupName);
         
-        await _context.SaveChangesAsync();
-        
-        return new GroupDto
+        if (addUserToGroup is null)
         {
-            IdGroup = group.IdGroup,
-            IdUserCreator = group.IdGroup,
-            GroupName = group.GroupName,
-            Description = group.Description,
-            CreatedAt = group.CreatedAt,
-            Users = await _context.Groups.Where(g => g.IdGroup == group.IdGroup)
-                .SelectMany(g => g.IdUsers)
-                .Include(g => g.IdRankNavigation)
-                .Select(g => new UserDto
-                {
-                    IdUser = g.IdUser,
-                    IdRank = g.IdRank,
-                    Nick = g.Nick,
-                    Email = g.Email,
-                    PhoneNumber = g.PhoneNumber,
-                    CreatedAt = g.CreatedAt,
-                    RankName = g.IdRankNavigation.Name
-                }).ToListAsync()
-        };
+            return null;
+        }
+        
+        addUserToGroup.IdUsers.Add(user);
+        await _context.SaveChangesAsync();
+        
+        return await GetGroup(addUserToGroup.IdGroup);
     }
 
-    public async Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDtoDto)
+    public async Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDto)
     {
-        if (idGroup != userToGroupDtoDto.IdGroup)
-            return null;
-
-        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == userToGroupDtoDto.IdGroup);
-        if (group is null)
-            return null;
-
-        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userToGroupDtoDto.IdUser);
-        if (user is null)
-            return null;
+        var group = await GetGroupById(idGroup);
+        var user = await GetUserById(userToGroupDto.IdUser);
+        
+        if (user is null || group is null)
+        {
+            return null; 
+        }
 
         var groupUser = await _context.Groups
-            .Where(e => e.IdGroup == userToGroupDtoDto.IdGroup)
+            .Where(e => e.IdGroup == userToGroupDto.IdGroup)
             .SelectMany(e => e.IdUsers)
-            .Where(e => e.IdUser == userToGroupDtoDto.IdUser)
+            .Where(e => e.IdUser == userToGroupDto.IdUser)
             .SingleOrDefaultAsync();
+
         if (groupUser is not null)
-            return null;
-        
+        {
+            return null; 
+        }
+
         group.IdUsers.Add(user);
         await _context.SaveChangesAsync();
-        return new GroupDto
-        {
-            IdGroup = group.IdGroup,
-            IdUserCreator = group.IdGroup,
-            GroupName = group.GroupName,
-            Description = group.Description,
-            CreatedAt = group.CreatedAt,
-            Users = await _context.Groups.Where(g => g.IdGroup == group.IdGroup)
-                .SelectMany(g => g.IdUsers)
-                .Include(g => g.IdRankNavigation)
-                .Select(g => new UserDto
-                {
-                    IdUser = g.IdUser,
-                    IdRank = g.IdRank,
-                    Nick = g.Nick,
-                    Email = g.Email,
-                    PhoneNumber = g.PhoneNumber,
-                    CreatedAt = g.CreatedAt,
-                    RankName = g.IdRankNavigation.Name
-                }).ToListAsync()
-        };
+
+        return await GetGroup(group.IdGroup);
     }
-    
+
+    public async Task<bool?> ExistUserInTheGroup(int idGroup, int idUser)
+    {
+        var groupUser = await _context.Groups
+            .Where(e => e.IdGroup == idGroup)
+            .SelectMany(e => e.IdUsers)
+            .Where(e => e.IdUser == idUser)
+            .SingleOrDefaultAsync();
+
+        return groupUser is not null;
+    }
+
+    public async Task<UserGroupDto[]?> GetUserGroups(int idUser)
+    {
+        var user = await GetUserById(idUser);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        var groups = await _context
+                     .UserData
+                     .Where(x => x.IdUser == idUser)
+                     .SelectMany(x => x.IdGroups)
+                     .Select(x => new UserGroupDto
+                     { 
+                         IdGroup       = x.IdGroup,
+                         IdUserCreator = x.IdUserCreator,
+                         GroupName     = x.GroupName,
+                         Description   = x.Description,
+                         CreatedAt     = x.CreatedAt
+                     }).ToArrayAsync();
+
+        return groups;
+    }
 }
