@@ -16,6 +16,13 @@ public class TagController: Controller
         _tagDbRepository = tagDbRepository;
     }
     
+    /// <summary>
+    ///  Get all tags
+    /// </summary>
+    /// <returns>
+    /// NotFound if there is no tag
+    /// OK - return list of tags
+    /// </returns>
     [HttpGet]
     public async Task<IActionResult> GetTags()
     {
@@ -29,6 +36,14 @@ public class TagController: Controller
         return Ok(tags);
     }
     
+    /// <summary>
+    /// Get tag by id
+    /// </summary>
+    /// <param name="idTag"> int - Tag Identifier </param>
+    /// <returns>
+    /// NotFound if tag doesn't exist
+    /// Ok - return body Tag
+    /// </returns>
     [HttpGet("{idTag:int}")]
     public async Task<IActionResult> GetTag([FromRoute] int idTag)
     {
@@ -42,8 +57,16 @@ public class TagController: Controller
         return Ok(tag);
     }
     
+    /// <summary>
+    /// Add new Tag
+    /// </summary>
+    /// <param name="newTagDto"> Dto to store Tag information </param>
+    /// <returns>
+    /// BadRequest - if name of the tag is already taken
+    /// Ok - return body Tag
+    /// </returns>
     [HttpPost]
-    public async Task<IActionResult> GetTag([FromBody] NewTagDto newTagDto)
+    public async Task<IActionResult> AddTag([FromBody] NewTagDto newTagDto)
     {
         try
         {
