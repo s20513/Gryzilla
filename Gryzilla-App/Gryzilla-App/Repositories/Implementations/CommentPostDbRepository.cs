@@ -43,8 +43,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         
         newCommentPost = new CommentPost
         {
-            IdUser = newPostCommentDto.IdUser,
-            IdPost = newPostCommentDto.IdPost,
+            IdUser          = newPostCommentDto.IdUser,
+            IdPost          = newPostCommentDto.IdPost,
             DescriptionPost = newPostCommentDto.DescriptionPost
         };
         
@@ -55,10 +55,10 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         
         return new PostCommentDto
         {
-            Nick = user.Nick,
-            IdUser = user.IdUser,
-            IdComment = idComment,
-            IdPost = newPostCommentDto.IdPost,
+            Nick        = user.Nick,
+            IdUser      = user.IdUser,
+            IdComment   = idComment,
+            IdPost      = newPostCommentDto.IdPost,
             Description = newCommentPost.DescriptionPost
         };
     }
@@ -70,8 +70,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             .CommentPosts
             .Where(x => 
                 x.IdComment == idComment &&
-                x.IdUser ==    putPostCommentDto.IdUser &&
-                x.IdPost ==    putPostCommentDto.IdPost)
+                x.IdUser    == putPostCommentDto.IdUser &&
+                x.IdPost    == putPostCommentDto.IdPost)
             .SingleOrDefaultAsync();
         
         if (commentPost is null)
@@ -90,10 +90,10 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         
         return new PostCommentDto
         {
-            Nick = nick,
-            IdComment = idComment,
-            IdPost = putPostCommentDto.IdPost,
-            IdUser = putPostCommentDto.IdUser,
+            Nick        = nick,
+            IdComment   = idComment,
+            IdPost      = putPostCommentDto.IdPost,
+            IdUser      = putPostCommentDto.IdUser,
             Description = putPostCommentDto.DescriptionPost
         };
     }

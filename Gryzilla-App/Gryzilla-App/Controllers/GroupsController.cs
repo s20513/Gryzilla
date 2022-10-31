@@ -156,7 +156,7 @@ public class GroupsController: Controller
     {
         var group = await _groupDbRepository.GetUserGroups(idUser);
 
-        if (group.Length < 1)
+        if (group != null && group.Length < 1)
         {
             return NotFound("There is no groups");
         }

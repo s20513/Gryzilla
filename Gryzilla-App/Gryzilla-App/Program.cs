@@ -24,6 +24,7 @@ builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 builder.Services.AddScoped<IPostDbRepository, PostDbRepository>();
 builder.Services.AddScoped<ICommentPostDbRepository, CommentPostDbRepository>();
 builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
+builder.Services.AddScoped<ILikesArticleDbRepository, LikesArticleDbRepository>();
  //trzeba zrobić
 builder.Services.AddScoped<ITopCommentDbRepository, TopCommentDbRepository>();
 builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();

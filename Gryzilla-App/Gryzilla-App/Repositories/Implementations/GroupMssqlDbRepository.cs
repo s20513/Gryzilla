@@ -154,7 +154,8 @@ public class GroupMssqlDbRepository: IGroupDbRepository
             group.IdUsers.Remove(groupUser);
         }
 
-        var groupDto = await GetGroup(idGroup);;
+        var groupDto = await GetGroup(idGroup);
+        
         _context.Groups.Remove(group);
         await _context.SaveChangesAsync();
 

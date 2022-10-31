@@ -68,7 +68,7 @@ public class LikesPostDbRepository : ILikesPostDbRepository
         return "Added like";
     }
     
-    public async Task<string?> DeleteLikeToPost(int idUser, int idPost)
+    public async Task<string?> DeleteLikeFromPost(int idUser, int idPost)
     {
         var user = await GetUser(idUser);
         var post = await GetPost(idPost);
@@ -91,8 +91,16 @@ public class LikesPostDbRepository : ILikesPostDbRepository
         return "Deleted like";
     }
 
-    public async Task<bool> ExistLike(int idUser, int idPost)
+    public async Task<bool?> ExistLike(int idUser, int idPost)
     {
+        var user = await GetUser(idUser);
+        var post = await GetPost(idPost);
+        
+        if (post is null || user is null)
+        {
+            return null;
+        }
+        
         var postLike = await GetPostLike(idPost, idUser);
         
         return postLike is not null;

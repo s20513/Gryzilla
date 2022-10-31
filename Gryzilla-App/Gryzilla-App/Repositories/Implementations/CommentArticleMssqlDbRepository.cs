@@ -42,8 +42,8 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
 
         articleComment = new CommentArticle
         {
-            IdUser =             newArticleCommentDto.IdUser,
-            IdArticle =          newArticleCommentDto.IdArticle,
+            IdUser             = newArticleCommentDto.IdUser,
+            IdArticle          = newArticleCommentDto.IdArticle,
             DescriptionArticle = newArticleCommentDto.Description
         };
 
@@ -54,10 +54,10 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
 
         return new ArticleCommentDto
         {
-            IdComment =   id,
-            Nick =        user.Nick,
-            IdUser =      user.IdUser,
-            IdArticle =   newArticleCommentDto.IdArticle,
+            IdComment   = id,
+            Nick        = user.Nick,
+            IdUser      = user.IdUser,
+            IdArticle   = newArticleCommentDto.IdArticle,
             Description = newArticleCommentDto.Description
         };
     }
@@ -69,8 +69,8 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             .CommentArticles
             .SingleOrDefaultAsync(e => 
                 e.IdCommentArticle == putArticleCommentDto.IdComment && 
-                e.IdUser ==           putArticleCommentDto.IdUser &&
-                e.IdArticle ==        putArticleCommentDto.IdArticle);
+                e.IdUser           == putArticleCommentDto.IdUser &&
+                e.IdArticle        == putArticleCommentDto.IdArticle);
 
         if (comment is null)
         {
@@ -88,10 +88,10 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
 
         return new ArticleCommentDto
         {
-            Nick =        nick,
-            IdComment =   comment.IdCommentArticle,
-            IdUser =      putArticleCommentDto.IdUser,
-            IdArticle = putArticleCommentDto.IdArticle,
+            Nick        = nick,
+            IdComment   = comment.IdCommentArticle,
+            IdUser      = putArticleCommentDto.IdUser,
+            IdArticle   = putArticleCommentDto.IdArticle,
             Description = putArticleCommentDto.Description
         };
     }
@@ -119,10 +119,10 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
         
         return new ArticleCommentDto
         {
-            Nick = nick,
-            IdComment =   idComment,
-            IdUser =      comment.IdUser,
-            IdArticle = comment.IdArticle,
+            Nick        = nick,
+            IdComment   = idComment,
+            IdUser      = comment.IdUser,
+            IdArticle   = comment.IdArticle,
             Description = comment.DescriptionArticle
         };
     }

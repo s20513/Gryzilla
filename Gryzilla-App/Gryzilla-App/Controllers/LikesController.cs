@@ -50,7 +50,7 @@ public class LikesController : Controller
     [HttpDelete("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> DeleteLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
-        var likes = await _likesPostDbRepository.DeleteLikeToPost(idUser, idPost);
+        var likes = await _likesPostDbRepository.DeleteLikeFromPost(idUser, idPost);
         
         if (likes != null && !likes.Equals("Deleted like"))
         {
@@ -65,12 +65,19 @@ public class LikesController : Controller
     /// </summary>
     /// <param name="idUser">int idUser - User Identifier </param>
     /// <param name="idPost">int idPost - Post Identifier </param>
-    /// <returns> true if like has been assigned, false - if not </returns>
+    /// <returns>
+    /// true if like has been assigned, false - if not
+    /// NotFound if user or post doesn't exist
+    /// </returns>
     [HttpGet("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> GetLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
         var likes = await _likesPostDbRepository.ExistLike(idUser, idPost);
         
+        if (likes is null)
+        {
+            return NotFound("Post or user doesn't exist"); 
+        }
         return Ok(likes);
     }
 }

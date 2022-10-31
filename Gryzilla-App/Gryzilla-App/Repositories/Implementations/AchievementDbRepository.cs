@@ -24,10 +24,10 @@ public class AchievementDbRepository : IAchievementDbRepository
                 .Achievements
                 .Select(x=>new AchievementDto
                 {
-                    IdAchievement =   x.IdAchievement,
-                    Description =     x.Descripion,
+                    IdAchievement   = x.IdAchievement,
+                    Description     = x.Descripion,
                     AchievementName = x.AchievementName,
-                    Points =          x.Points
+                    Points          = x.Points
                 })
                 .ToArrayAsync();
         
@@ -46,18 +46,18 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        achievement.Descripion =      putAchievementDto.Description;
-        achievement.Points =          putAchievementDto.Points;
+        achievement.Descripion      = putAchievementDto.Description;
+        achievement.Points          = putAchievementDto.Points;
         achievement.AchievementName = putAchievementDto.AchievementName;
         
         await _context.SaveChangesAsync();
         
         return new AchievementDto
         {
-            IdAchievement =   achievement.IdAchievement,
+            IdAchievement   = achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description =     achievement.Descripion,
-            Points =          achievement.Points
+            Description     = achievement.Descripion,
+            Points          = achievement.Points
         };
     }
 
@@ -79,9 +79,9 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         newAchievement = new Achievement
         {
-            Descripion =      addAchievementDto.Description,
+            Descripion      = addAchievementDto.Description,
             AchievementName = addAchievementDto.AchievementName,
-            Points =          addAchievementDto.Points
+            Points          = addAchievementDto.Points
         };
         
         await _context.Achievements.AddAsync(newAchievement);
@@ -95,10 +95,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return new AchievementDto
         {
-            IdAchievement =   idAchievement,
+            IdAchievement   = idAchievement,
             AchievementName = newAchievement.AchievementName,
-            Description =     newAchievement.Descripion,
-            Points =          newAchievement.Points
+            Description     = newAchievement.Descripion,
+            Points          = newAchievement.Points
         };
     }
 
@@ -133,10 +133,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return new AchievementDto
         {
-            IdAchievement =   achievement.IdAchievement,
+            IdAchievement   = achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description =     achievement.Descripion,
-            Points =          achievement.Points
+            Description     = achievement.Descripion,
+            Points          = achievement.Points
         };
     }
 
@@ -173,10 +173,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return  new AchievementDto
         {
-            IdAchievement =   userAchievement.IdAchievement,
+            IdAchievement   = userAchievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description =     achievement.Descripion,
-            Points =          achievement.Points
+            Description     = achievement.Descripion,
+            Points          = achievement.Points
         };
     }
 
@@ -223,10 +223,10 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         return  new AchievementDto
         {
-            IdAchievement =   achievement.IdAchievement,
+            IdAchievement   = achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description =     achievement.Descripion,
-            Points =          achievement.Points
+            Description     =  achievement.Descripion,
+            Points          = achievement.Points
         };
     }
 
@@ -248,10 +248,10 @@ public class AchievementDbRepository : IAchievementDbRepository
             .Include(x => x.IdAchievementNavigation)
             .Select(x => new AchievementDto
             {
-                IdAchievement =   x.IdAchievement,
+                IdAchievement   = x.IdAchievement,
                 AchievementName = x.IdAchievementNavigation.AchievementName,
-                Description =     x.IdAchievementNavigation.Descripion,
-                Points =          x.IdAchievementNavigation.Points
+                Description     = x.IdAchievementNavigation.Descripion,
+                Points          = x.IdAchievementNavigation.Points
             }).ToArrayAsync();
         
         return achievements;
