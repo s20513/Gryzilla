@@ -17,6 +17,31 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
     {
         _context = context;
     }
+    private void CreateMissingTagsAndBindWithArticle(IEnumerable<TagDto> newArticleTags, Article article, List<Tag> dbTags)
+    {
+        List<Tag>?    articleDbTags;
+        List<string>? articleTagList;
+        List<string>? allTagsFromDb;
+        List<string>? tagsToCreate;
+        
+        articleTagList = new List<string>();
+        articleTagList.AddRange(newArticleTags.Select(tag => tag.NameTag));
+        
+        allTagsFromDb = dbTags.Select(x => x.NameTag).ToList();
+        tagsToCreate = articleTagList.Where(x => !allTagsFromDb.Contains(x)).ToList();
+
+        if (tagsToCreate.Count != 0)
+        {
+            dbTags.AddRange(tagsToCreate.Select(tagName => new Tag { NameTag = tagName }));
+        }
+            
+        articleDbTags = dbTags.Where(e => articleTagList.Contains(e.NameTag)).ToList();
+
+        foreach (var tag in articleDbTags)
+        {
+            article.IdTags.Add(tag);
+        }
+    }
     
     public async Task<ArticleDto?> GetArticleFromDb(int idArticle)
     {
@@ -353,29 +378,5 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             }).ToListAsync();
     }
     
-    private void CreateMissingTagsAndBindWithArticle(IEnumerable<TagDto> newArticleTags, Article article, List<Tag> dbTags)
-    {
-        List<Tag>?    articleDbTags;
-        List<string>? articleTagList;
-        List<string>? allTagsFromDb;
-        List<string>? tagsToCreate;
-        
-        articleTagList = new List<string>();
-        articleTagList.AddRange(newArticleTags.Select(tag => tag.NameTag));
-        
-        allTagsFromDb = dbTags.Select(x => x.NameTag).ToList();
-        tagsToCreate = articleTagList.Where(x => !allTagsFromDb.Contains(x)).ToList();
-
-        if (tagsToCreate.Count != 0)
-        {
-            dbTags.AddRange(tagsToCreate.Select(tagName => new Tag { NameTag = tagName }));
-        }
-            
-        articleDbTags = dbTags.Where(e => articleTagList.Contains(e.NameTag)).ToList();
-
-        foreach (var tag in articleDbTags)
-        {
-            article.IdTags.Add(tag);
-        }
-    }
+ 
 }

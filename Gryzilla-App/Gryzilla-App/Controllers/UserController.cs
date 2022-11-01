@@ -64,7 +64,6 @@ public class UserController : Controller
         {
             return BadRequest("Id from route and Id in body have to be same");
         }
-        
        try
        {
            var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);

@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTOs.Requests.Post;
 
 namespace Gryzilla_App.Repositories.Interfaces;
 

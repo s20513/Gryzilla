@@ -20,7 +20,7 @@ public class TagController: Controller
     ///  Get all tags
     /// </summary>
     /// <returns>
-    /// NotFound if there is no tag
+    /// NotFound - if there is no tag
     /// OK - return list of tags
     /// </returns>
     [HttpGet]

@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,18 +14,31 @@ public class PostController : Controller
     {
         _postsDbRepository = postsDbRepository;
     }
-    
+    /// <summary>
+    /// Get all posts
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
     [HttpGet]
     public async Task<IActionResult> GetPosts()
     {
         var posts = await _postsDbRepository.GetPostsFromDb();
+        
         if (posts is null)
         {
             return NotFound("No posts found");
         }
+        
         return Ok(posts);
     }
-    
+    /// <summary>
+    /// Return posts with the least likes
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
     [HttpGet("/bylikes/least")]
     public async Task<IActionResult> GetPostsByLikes()
     {
@@ -35,6 +49,13 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
+    /// <summary>
+    /// Return posts with the most likes
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
     [HttpGet("/bylikes/most")]
     public async Task<IActionResult> GetPostsByLikesLeast()
     {
@@ -45,6 +66,13 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
+    /// <summary>
+    /// Return posts from the latest date
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
     [HttpGet("/dates/lates")]
     public async Task<IActionResult> GetPostsByDates()
     {
@@ -55,68 +83,124 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
-    
+    /// <summary>
+    /// Return posts from the oldest date
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
     [HttpGet("/dates/oldest")]
     public async Task<IActionResult> GetPostsByDatesOldest()
     {
         var posts = await _postsDbRepository.GetPostsByDateOldestFromDb();
+        
         if (posts is null)
         {
             return NotFound("No posts found");
         }
         return Ok(posts);
     }
-    
+    /// <summary>
+    /// Get post by Id
+    /// </summary>
+    /// <param name="idPost">int - Post Identifier</param>
+    /// <returns>
+    /// NotFound - if Post doesn't exist
+    /// Ok - return post
+    /// </returns>
     [HttpGet("one/{idPost:int}")]
     public async Task<IActionResult> GetOnePost([FromRoute] int idPost)
     {
         var posts = await _postsDbRepository.GetOnePostFromDb(idPost);
+        
         if (posts is null)
         {
-            return NotFound("No posts found");
+            return NotFound("Post with this Id doesn't exist");
         }
         return Ok(posts);
     }
+    /// <summary>
+    /// Add new Post
+    /// </summary>
+    /// <param name="addPostDto">Body to store information about new post</param>
+    /// <returns>
+    /// NotFound - Cannot add new post
+    /// Ok - return body of post if added successfully
+    /// </returns>
     [HttpPost]
     public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
     {
         var posts = await _postsDbRepository.AddNewPostFromDb(addPostDto);
+        
         if (posts is null)
         {
             return NotFound("Cannot add new post");
         }
         return Ok(posts);
     }
-    
+    /// <summary>
+    /// Modify Post
+    /// </summary>
+    /// <param name="putPostDto">Dto to store new information about post</param>
+    /// <param name="idPost">int - Post Identifier</param>
+    /// <returns>
+    /// BadRequest - if Id from route and Id in body have to be same 
+    /// NotFound - if post doesn't exist
+    /// Ok - Return post if modified successfully
+    /// </returns>
     [HttpPut("{idPost:int}")]
     public async Task<IActionResult> ModifyPost([FromBody] PutPostDto putPostDto, [FromRoute] int idPost)
     {
         if (putPostDto.IdPost != idPost)
-            return BadRequest();
+        {
+            return BadRequest("Id from route and Id in body have to be same"); 
+        }
+        
         var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto, idPost);
+        
         if (posts is null)
         {
             return NotFound("Cannot modify post");
         }
+        
         return Ok(posts);
     }
+    /// <summary>
+    /// Delete post with tags
+    /// </summary>
+    /// <param name="idPost">int - Post Identifier</param>
+    /// <returns>
+    /// NotFound - if post doesn't exist or cannot deleted
+    /// Ok - return Post - if deleted successfully
+    /// </returns>
     [HttpDelete("{idPost:int}")]
     public async Task<IActionResult> DeletePost([FromRoute] int idPost)
     {
-        
         var posts = await _postsDbRepository.DeletePostFromDb(idPost);
+        
         if (posts is null)
         {
             return NotFound("Cannot delete new post");
         }
+        
         return Ok(posts);
     }
     
+    /// <summary>
+    ///  Delete tag from Post
+    /// </summary>
+    /// <param name="idPost">int - Post Identifier</param>
+    /// <param name="idTag">int - Tag Identifier</param>
+    /// <returns>
+    /// NotFound - if tag has not been assigned or cannot delete tag from post
+    /// OK - return Post
+    /// </returns>
     [HttpDelete("/tag/{idPost:int}/{idTag:int}")]
     public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
     {
-        
         var posts = await _postsDbRepository.DeleteTagFromPost(idPost,idTag);
+        
         if (posts is null)
         {
             return NotFound("Cannot delete tag");

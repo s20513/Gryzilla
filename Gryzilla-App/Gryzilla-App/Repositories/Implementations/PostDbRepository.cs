@@ -1,6 +1,5 @@
-﻿using System.Xml;
-using Gryzilla_App.DTO.Responses;
-using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -17,128 +16,219 @@ public class PostDbRepository : IPostDbRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<PostDto>?> GetTableSort(Post[] allPosts)
+    private async Task<Tag> AddNewTag(string tagName)
     {
-        var postDtos = new List<PostDto>();
+        var newTag = new Tag
+        {
+            NameTag = tagName
+        };
+
+        _context.Tags.Add(newTag);
+        await _context.SaveChangesAsync();
+        
+        return newTag;
+    }
+    
+    private async Task<IEnumerable<PostDto>?> GetTableSort(Post[] allPosts)
+    {
+        var postDto = new List<PostDto>();
+        
         foreach (var post in allPosts)
         {
-            var newPost = await _context.Posts.Where(x => x.IdPost == post.IdPost)
+            var newPost = await _context
+                .Posts
+                .Where(x => x.IdPost == post.IdPost)
                 .Include(x => x.IdUserNavigation)
                 .Select(a => new PostDto
                 {
-                    Likes = _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(b => b.IdUsers).Count(),
-                    Comments = _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(x=>x.CommentPosts).Count(),
+                    Likes     = _context
+                        .Posts
+                        .Where(c => c.IdPost == post.IdPost)
+                        .SelectMany(b => b.IdUsers)
+                        .Count(),
+                    Comments  = _context
+                        .Posts
+                        .Where(c => c.IdPost == post.IdPost)
+                        .SelectMany(x=>x.CommentPosts)
+                        .Count(),
                     CreatedAt = a.CreatedAt,
-                    Content = a.Content,
-                    Title = a.Title,
-                    Nick = a.IdUserNavigation.Nick,
-                    Tags = _context.Posts.Where(x => x.IdPost == post.IdPost).SelectMany(x => x.IdTags)
-                        .Select(x => new TagDto {NameTag = x.NameTag}).ToArray()
+                    Content   = a.Content,
+                    Title     = a.Title,
+                    Nick      = a.IdUserNavigation.Nick,
+                    Tags      = _context
+                        .Posts
+                        .Where(x => x.IdPost == post.IdPost)
+                        .SelectMany(x => x.IdTags)
+                        .Select(x => new TagDto {NameTag = x.NameTag})
+                        .ToArray()
                 }).SingleOrDefaultAsync();
 
-            if (newPost != null) postDtos.Add(newPost);
+            if (newPost != null) postDto.Add(newPost);
         }
 
-        return postDtos;
+        return postDto;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
     {
-        var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts.Length == 0) return null;
-        var postDtos = await GetTableSort(allPosts);
-        return postDtos;
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
+
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+        
+        var postDto = await GetTableSort(allPosts);
+        
+        return postDto;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb()
     {
-        var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts.Length ==0) return null;
-        var postDtos = await GetTableSort(allPosts);
-        if (postDtos != null)
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
+
+        if (allPosts.Length == 0)
         {
-            postDtos = postDtos.OrderByDescending(order => order.Likes).ToList();
-            return postDtos;
+            return null;
         }
 
-        return null;
+        var postDtos = await GetTableSort(allPosts);
+
+        if (postDtos is null)
+        {
+            return null;
+        }
+        
+        postDtos = postDtos.OrderByDescending(order => order.Likes).ToList();
+        return postDtos;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesLeastFromDb()
     {
-        var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts.Length==0) return null;
-        var postDtos = await GetTableSort(allPosts);
-        if (postDtos != null)
-        {
-            postDtos = postDtos.OrderBy(order => order.Likes).ToList();
-            return postDtos;
-        }
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
 
-        return null;
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+       
+        var postDto = await GetTableSort(allPosts);
+        
+        if (postDto is null)
+        {
+            return null;
+        }
+        
+        postDto = postDto.OrderBy(order => order.Likes).ToList();
+        return postDto;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByDateFromDb()
     {
-        var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts.Length == 0) return null;
-        var postDtos = await GetTableSort(allPosts);
-        if (postDtos != null)
-        {
-            postDtos = postDtos.OrderByDescending(order => order.CreatedAt).ToList();
-            return postDtos;
-        }
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
 
-        return null;
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+        
+        var postDto = await GetTableSort(allPosts);
+        
+        if (postDto is null)
+        {
+            return null;
+        }
+        
+        postDto = postDto.OrderByDescending(order => order.CreatedAt).ToList();
+        return postDto;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb()
     {
         var allPosts = await _context.Posts.ToArrayAsync();
-        if (allPosts.Length == 0) return null;
-        var postDtos = await GetTableSort(allPosts);
-        if (postDtos != null)
+
+        if (allPosts.Length == 0)
         {
-            postDtos = postDtos.OrderBy(order => order.CreatedAt).ToList();
-            return postDtos;
+            return null;
+        }
+        
+        var postDto = await GetTableSort(allPosts);
+        
+        if (postDto is null)
+        {
+            return null;
         }
 
-        return null;
+        postDto = postDto.OrderBy(order => order.CreatedAt).ToList();
+        return postDto;
     }
 
     public async Task<NewPostDto?> AddNewPostFromDb(AddPostDto addPostDto)
     {
-        var user = await _context.UserData.Where(x => x.IdUser == addPostDto.IdUser).SingleOrDefaultAsync();
-        if (user is null) return null;
+        var user = await _context
+            .UserData
+            .Where(x => x.IdUser == addPostDto.IdUser)
+            .SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
 
         var post = new Post
         {
-            IdUser = addPostDto.IdUser,
-            Title = addPostDto.Title,
+            IdUser    = addPostDto.IdUser,
+            Title     = addPostDto.Title,
             CreatedAt = DateTime.Now,
-            Content = addPostDto.Content,
+            Content   = addPostDto.Content,
             HighLight = false
         };
+        
         await _context.Posts.AddAsync(post);
+        
         foreach (var tag in addPostDto.Tags)
         {
-            var newTag = await _context.Tags.Where(x => x.NameTag == tag.NameTag).SingleOrDefaultAsync();
+            var newTag = await _context
+                .Tags
+                .Where(x => x.NameTag == tag.NameTag)
+                .SingleOrDefaultAsync();
+            
             if (newTag is not null)
             {
                 post.IdTags.Add(newTag);
             }
+            else
+            {
+                post.IdTags.Add(await AddNewTag(tag.NameTag));
+            }
         }
 
         await _context.SaveChangesAsync();
-        var idNewPost = await _context.Posts.Select(x => x.IdPost).OrderByDescending(x => x).FirstAsync();
+        
+        var idNewPost = await _context
+            .Posts
+            .Select(x => x.IdPost)
+            .OrderByDescending(x => x)
+            .FirstAsync();
+        
         return new NewPostDto()
         {
-            IdPost = idNewPost,
-            Title = post.Title,
+            IdPost    = idNewPost,
+            Title     = post.Title,
             CreatedAt = post.CreatedAt,
-            Content = post.Content,
-            IdUser = post.IdUser,
-            Tags = await _context.Posts.Where(x => x.IdPost == idNewPost)
+            Content   = post.Content,
+            IdUser    = post.IdUser,
+            Tags      = await _context
+                .Posts
+                .Where(x => x.IdPost == idNewPost)
                 .SelectMany(x => x.IdTags)
                 .Select(x => new TagDto
                 {
@@ -149,60 +239,105 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<DeletePostDto?> DeletePostFromDb(int idPost)
     {
-        var post = await _context.Posts.Where(x => x.IdPost == idPost).Include(x => x.IdTags).Include(x => x.IdUsers)
+        var post = await _context
+            .Posts
+            .Where(x => x.IdPost == idPost)
+            .Include(x => x.IdTags)
+            .Include(x => x.IdUsers)
             .SingleOrDefaultAsync();
-        if (post is null) return null;
-        var tags = await _context.Posts.Where(x => x.IdPost == idPost).SelectMany(x => x.IdTags).ToArrayAsync();
+
+        if (post is null)
+        {
+            return null;
+        }
+        
+        var tags = await _context
+            .Posts
+            .Where(x => x.IdPost == idPost)
+            .SelectMany(x => x.IdTags)
+            .ToArrayAsync();
+        
         foreach (var tag in tags)
         {
             post.IdTags.Remove(tag);
         }
 
-        var likes = await _context.Posts.Where(c => c.IdPost == idPost).SelectMany(x => x.IdUsers).ToArrayAsync();
+        var likes = await _context
+            .Posts
+            .Where(c => c.IdPost == idPost)
+            .SelectMany(x => x.IdUsers)
+            .ToArrayAsync();
+        
         foreach (var like in likes)
         {
             post.IdUsers.Remove(like);
         }
 
-        var comments = await _context.CommentPosts.Where(x => x.IdPost == idPost).ToArrayAsync();
+        var comments = await _context
+            .CommentPosts
+            .Where(x => x.IdPost == idPost)
+            .ToArrayAsync();
+        
         foreach (var comment in comments)
         {
             _context.CommentPosts.Remove(comment);
         }
 
-        var reports = await _context.ReportPosts.Where(x => x.IdPost == idPost).ToArrayAsync();
+        var reports = await _context
+            .ReportPosts
+            .Where(x => x.IdPost == idPost)
+            .ToArrayAsync();
 
         foreach (var report in reports)
         {
             _context.ReportPosts.Remove(report);
+            await _context.SaveChangesAsync();
         }
 
-        await _context.SaveChangesAsync();
         _context.Posts.Remove(post);
-
         await _context.SaveChangesAsync();
+        
         return new DeletePostDto
         {
             DeletedAt = DateTime.Now,
-            Content = post.Content,
-            IdPost = post.IdPost,
-            IdUser = post.IdUser,
-            Title = post.Title,
+            Content   = post.Content,
+            IdPost    = post.IdPost,
+            IdUser    = post.IdUser,
+            Title     = post.Title,
         };
     }
 
     public async Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag)
     {
-        var post = await _context.Posts.Where(x => x.IdPost == idPost).Include(x => x.IdTags).SingleOrDefaultAsync();
-        if (post is null) return null;
-        var tagFromPost = await _context.Posts.Where(x => x.IdPost == idPost).SelectMany(x => x.IdTags)
-            .Where(x => x.IdTag == idTag).SingleOrDefaultAsync();
-        if (tagFromPost is null) return null;
+        var post = await _context
+            .Posts
+            .Where(x => x.IdPost == idPost)
+            .Include(x => x.IdTags)
+            .SingleOrDefaultAsync();
+
+        if (post is null)
+        {
+            return null;
+        }
+        
+        var tagFromPost = await _context
+            .Posts
+            .Where(x => x.IdPost == idPost)
+            .SelectMany(x => x.IdTags)
+            .Where(x => x.IdTag == idTag)
+            .SingleOrDefaultAsync();
+
+        if (tagFromPost is null)
+        {
+            return null;
+        }
+        
         post.IdTags.Remove(tagFromPost);
         await _context.SaveChangesAsync();
+        
         return new DeleteTagDto
         {
-            IdTag = idTag,
+            IdTag   = idTag,
             NameTag = tagFromPost.NameTag
         };
     }
@@ -210,36 +345,57 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost)
     {
-        var post = await _context.Posts.Where(x => x.IdPost == putPostDto.IdPost)
+        var post = await _context
+            .Posts
+            .Where(x => x.IdPost == putPostDto.IdPost)
             .Include(x => x.IdTags)
             .SingleOrDefaultAsync();
-        if (post is null) return null;
-        post.Title = putPostDto.Title;
+
+        if (post is null)
+        {
+            return null;
+        }
+        
+        post.Title   = putPostDto.Title;
         post.Content = putPostDto.Content;
+        
         if (putPostDto.Tags.Length > 0)
         {
             foreach (var tag in post.IdTags)
             {
                 post.IdTags.Remove(tag);
             }
+            
             foreach (var tag in putPostDto.Tags)
             {
-                var newTag = await _context.Tags.Where(x => x.IdTag == tag.IdTag).SingleOrDefaultAsync();
-                if(newTag is not null)
-                    post.IdTags.Add(newTag);
+                var newTag = await _context
+                    .Tags
+                    .Where(x => x.IdTag == tag.IdTag)
+                    .SingleOrDefaultAsync();
+
+                if (newTag is not null)
+                {
+                    post.IdTags.Add(newTag);  
+                }
             }
+            
             await _context.SaveChangesAsync();
+            
             return new ModifyPostDto
             {
                 CreatedAt = post.CreatedAt,
-                Content = post.Content,
-                IdPost = post.IdPost,
-                IdUser = post.IdUser,
-                Title = post.Title,
-                Tags = await _context.Posts.Where(x=>x.IdPost==idPost).SelectMany(x=>x.IdTags).Select(x=>new TagDto
-                {
-                    NameTag = x.NameTag
-                }).ToArrayAsync()
+                Content   = post.Content,
+                IdPost    = post.IdPost,
+                IdUser    = post.IdUser,
+                Title     = post.Title,
+                Tags      = await _context
+                    .Posts
+                    .Where(x=>x.IdPost==idPost)
+                    .SelectMany(x=>x.IdTags)
+                    .Select(x=>new TagDto
+                    {
+                        NameTag = x.NameTag
+                    }).ToArrayAsync()
             };
         }
 
@@ -256,26 +412,46 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<OnePostDto?> GetOnePostFromDb(int idPost)
     {
-        var post = await _context.Posts.Where(x => x.IdPost == idPost).SingleOrDefaultAsync();
-        if (post is null) return null;
-        var newPost = await _context.Posts.Where(x => x.IdPost == idPost)
+        var post = await _context
+            .Posts
+            .Where(x => x.IdPost == idPost)
+            .SingleOrDefaultAsync();
+
+        if (post is null)
+        {
+            return null;
+        }
+        
+        var newPost = await _context
+            .Posts
+            .Where(x => x.IdPost == idPost)
             .Include(x => x.IdUserNavigation)
             .Select(a => new OnePostDto
             {
-                Likes = _context.Posts.Where(c => c.IdPost == post.IdPost).SelectMany(b => b.IdUsers).Count(),
-                Comments = _context.CommentPosts.Where(c => c.IdPost == post.IdPost)
+                Likes = _context
+                    .Posts
+                    .Where(c => c.IdPost == post.IdPost)
+                    .SelectMany(b => b.IdUsers)
+                    .Count(),
+                Comments = _context
+                    .CommentPosts
+                    .Where(c => c.IdPost == post.IdPost)
                     .Include(b=>b.IdUserNavigation)
                     .Select(x=> new PostCommentDto
                     {
-                        Nick = x.IdUserNavigation.Nick,
+                        Nick        = x.IdUserNavigation.Nick,
                         Description = x.DescriptionPost
                     }).ToArray(),
                 CreatedAt = a.CreatedAt,
-                Content = a.Content,
-                Title = a.Title,
-                Nick = a.IdUserNavigation.Nick,
-                Tags = _context.Posts.Where(x => x.IdPost == post.IdPost).SelectMany(x => x.IdTags)
-                    .Select(x => new TagDto {NameTag = x.NameTag}).ToArray()
+                Content   = a.Content,
+                Title     = a.Title,
+                Nick      = a.IdUserNavigation.Nick,
+                Tags      = _context
+                    .Posts
+                    .Where(x => x.IdPost == post.IdPost)
+                    .SelectMany(x => x.IdTags)
+                    .Select(x => new TagDto {NameTag = x.NameTag})
+                    .ToArray()
             }).SingleOrDefaultAsync();
         return newPost;
     }

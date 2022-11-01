@@ -1,5 +1,4 @@
 ﻿using Gryzilla_App.DTOs.Requests.Group;
-using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,14 @@ public class GroupsController: Controller
     {
         _groupDbRepository = groupDbRepository;
     }
-
+    /// <summary>
+    /// Get group by id
+    /// </summary>
+    /// <param name="idGroup">int - Group Identifier </param>
+    /// <returns>
+    /// NotFound - There is no group with given id
+    /// Ok - return group with this id
+    /// </returns>
     [HttpGet("{idGroup:int}")]
     public async Task<IActionResult> GetGroup([FromRoute] int idGroup)
     {
@@ -29,7 +35,13 @@ public class GroupsController: Controller
 
         return Ok(group);
     }
-    
+    /// <summary>
+    /// Get list of groups
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any group doesn't exist
+    /// Ok - List of group
+    /// </returns>
     [HttpGet]
     public async Task<IActionResult> GetGroups()
     {
@@ -41,7 +53,16 @@ public class GroupsController: Controller
         }
         return Ok(group);
     }
-
+    /// <summary>
+    /// Modify group
+    /// </summary>
+    /// <param name="idGroup"></param>
+    /// <param name="groupRequestDto"></param>
+    /// <returns>
+    /// BadRequest - Id from route and Id in body have to be same or group with this name exist
+    /// NotFound - There is no group with given id
+    /// Ok - return modified group
+    /// </returns>
     [HttpPut("{idGroup:int}")]
     public async Task<IActionResult> ModifyGroup([FromRoute] int idGroup, [FromBody] GroupRequestDto groupRequestDto)
     {
@@ -67,7 +88,14 @@ public class GroupsController: Controller
             return BadRequest(e.Message);
         }
     }
-
+    /// <summary>
+    /// Delete group
+    /// </summary>
+    /// <param name="idGroup">int - Group Identifier</param>
+    /// <returns>
+    /// NotFound - There is no group with given id
+    /// Ok - return body of group
+    /// </returns>
     [HttpDelete("{idGroup:int}")]
     public async Task<IActionResult> DeleteGroup([FromRoute] int idGroup)
     {
@@ -80,7 +108,15 @@ public class GroupsController: Controller
 
         return Ok(result);
     }
-    
+    /// <summary>
+    /// Create new group
+    /// </summary>
+    /// <param name="newGroupRequestDto">Dto - to store information about new group</param>
+    /// <returns>
+    /// BadRequest - if group with this name exist
+    /// NotFound - Cannot add group or wrong userId
+    /// Ok - return new post
+    /// </returns>
     [HttpPost]
     public async Task<IActionResult> CreateNewGroup([FromBody] NewGroupRequestDto newGroupRequestDto)
     {
@@ -99,7 +135,16 @@ public class GroupsController: Controller
             return BadRequest(e.Message);
         }
     }
-
+    /// <summary>
+    /// Delete user from group
+    /// </summary>
+    /// <param name="idGroup">int - Group Identifier</param>
+    /// <param name="userToGroupDto">Body - to store information</param>
+    /// <returns>
+    /// BadRequest - Id from route and Id in body have to be same
+    /// NotFound - User or Group not found
+    /// Ok - Return group
+    /// </returns>
     [HttpDelete("user/{idGroup:int}")]
     public async Task<IActionResult> RemoveUserFromGroup([FromRoute] int idGroup, [FromBody] UserToGroupDto userToGroupDto)
     {
@@ -124,7 +169,16 @@ public class GroupsController: Controller
             return BadRequest(e.Message);
         }
     }
-
+    /// <summary>
+    /// Add user to group
+    /// </summary>
+    /// <param name="idGroup">int - Group Identifier</param>
+    /// <param name="userToGroupDto">Body - to store information</param>
+    /// <returns>
+    /// BadRequest - Id from route and Id in body have to be same
+    /// NotFound - User or Group not found
+    /// Ok - Return group
+    /// </returns>
     [HttpPost("user/{idGroup:int}")]
     public async Task<IActionResult> AddUserToGroup([FromRoute] int idGroup, [FromBody] UserToGroupDto userToGroupDto)
     {
@@ -142,7 +196,14 @@ public class GroupsController: Controller
 
         return Ok(result);
     }
-
+    /// <summary>
+    /// method to check if there is a user in the group
+    /// </summary>
+    /// <param name="idGroup">int - Group Identifier </param>
+    /// <param name="idUser">int - User Identifier</param>
+    /// <returns>
+    /// return true - if exist
+    /// </returns>
     [HttpGet("{idUser:int}/{idGroup:int}")]
     public async Task<IActionResult>ExistUserInTheGroup([FromRoute] int idGroup, [FromRoute] int idUser)
     {
@@ -151,6 +212,14 @@ public class GroupsController: Controller
         return Ok(result);
     }
 
+    /// <summary>
+    /// Return user groups
+    /// </summary>
+    /// <param name="idUser">int - User Identifier</param>
+    /// <returns>
+    /// NotFound - if user don't have any groups
+    /// Ok - list of groups
+    /// </returns>
     [HttpGet("user/{idUser:int}")]
     public async Task<IActionResult> GetUserGroups([FromRoute] int idUser)
     {
