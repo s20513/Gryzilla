@@ -52,14 +52,14 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 .Include(x => x.IdUserNavigation)
                 .Select(x => new ArticleDto
                 {
-                    IdArticle = x.IdArticle,
-                    Author = new ReducedUserResponseDto
+                    IdArticle  = x.IdArticle,
+                    Author     = new ReducedUserResponseDto
                     {
                         IdUser = x.IdUser,
-                        Nick = x.IdUserNavigation.Nick
+                        Nick   = x.IdUserNavigation.Nick
                     },
-                    Title = x.Title,
-                    Content = x.Content,
+                    Title     = x.Title,
+                    Content   = x.Content,
                     CreatedAt = x.CreatedAt,
                     
                     Tags = _context
@@ -84,10 +84,10 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         .Include(c => c.IdUserNavigation)
                         .Select(c => new ArticleCommentDto
                         {
-                            IdArticle = c.IdArticle,
-                            Nick = c.IdUserNavigation.Nick,
-                            IdComment = c.IdCommentArticle,
-                            IdUser = c.IdUserNavigation.IdUser,
+                            IdArticle   = c.IdArticle,
+                            Nick        = c.IdUserNavigation.Nick,
+                            IdComment   = c.IdCommentArticle,
+                            IdUser      = c.IdUserNavigation.IdUser,
                             Description = c.DescriptionArticle
                         }).ToArray()
                 })
@@ -162,19 +162,22 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         return new ArticleDto
         {
-            IdArticle = articleId,
-            Author = new ReducedUserResponseDto
+            IdArticle  = articleId,
+            Author     = new ReducedUserResponseDto
             {
                 IdUser = article.IdUser,
-                Nick = user.Nick
+                Nick   = user.Nick
             },
-            Title = article.Title,
-            Content = article.Content,
-            CreatedAt = article.CreatedAt,
-            Tags = articleDto.Tags.Select(e => new TagDto
-            {
-                NameTag = e.NameTag
-            }).ToArray()
+            Title      = article.Title,
+            Content    = article.Content,
+            CreatedAt  = article.CreatedAt,
+            Tags       = articleDto
+                .Tags
+                .Select(e => new TagDto
+                {
+                    NameTag = e.NameTag
+                }
+                ).ToArray()
         };
     }
     public async Task<ArticleDto?> DeleteArticleFromDb(int idArticle)
@@ -244,15 +247,15 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         return new ArticleDto
         {
-            IdArticle = article.IdArticle,
-            Author = new ReducedUserResponseDto
+            IdArticle  = article.IdArticle,
+            Author     = new ReducedUserResponseDto
             {
                 IdUser = article.IdUser,
-                Nick = userNick
+                Nick   = userNick
             },
-            Title = article.Title,
-            Content = article.Content,
-            CreatedAt = article.CreatedAt
+            Title      = article.Title,
+            Content    = article.Content,
+            CreatedAt  = article.CreatedAt
         };
     }
 
@@ -274,7 +277,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             return null;
         }
         
-        article.Title = putArticleRequestDto.Title;
+        article.Title   = putArticleRequestDto.Title;
         article.Content = putArticleRequestDto.Content;
 
         articleDbTags = article.IdTags;
@@ -294,17 +297,16 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         return new ArticleDto
         {
-            IdArticle = article.IdArticle,
-            Author = new ReducedUserResponseDto
+            IdArticle   = article.IdArticle,
+            Author      = new ReducedUserResponseDto
             {
-                IdUser = article.IdUser,
-                Nick = article.IdUserNavigation.Nick
+                IdUser  = article.IdUser,
+                Nick    = article.IdUserNavigation.Nick
             },
-            Title = article.Title,
-            Content = article.Content,
-            CreatedAt = article.CreatedAt,
-            
-            Tags = articleDbTags.Select(e => new TagDto
+            Title       = article.Title,
+            Content     = article.Content,
+            CreatedAt   = article.CreatedAt,
+            Tags        = articleDbTags.Select(e => new TagDto
             {
                 NameTag = e.NameTag
             }).ToArray(),
@@ -321,10 +323,10 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 .Include(e => e.IdUserNavigation)
                 .Select(e => new ArticleCommentDto
                 {
-                    IdArticle = e.IdArticle,
-                    Nick = e.IdUserNavigation.Nick,
-                    IdComment = e.IdCommentArticle,
-                    IdUser = e.IdUserNavigation.IdUser,
+                    IdArticle   = e.IdArticle,
+                    Nick        = e.IdUserNavigation.Nick,
+                    IdComment   = e.IdCommentArticle,
+                    IdUser      = e.IdUserNavigation.IdUser,
                     Description = e.DescriptionArticle
                 }).ToArray()
         };
@@ -337,14 +339,14 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             .Include(x => x.IdUserNavigation)
             .Select(x => new ArticleDto
             {
-                IdArticle = x.IdArticle,
-                Author = new ReducedUserResponseDto
+                IdArticle  = x.IdArticle,
+                Author     = new ReducedUserResponseDto
                 {
                     IdUser = x.IdUser,
-                    Nick = x.IdUserNavigation.Nick
+                    Nick   = x.IdUserNavigation.Nick
                 },
-                Title = x.Title,
-                Content = x.Content,
+                Title     = x.Title,
+                Content   = x.Content,
                 CreatedAt = x.CreatedAt,
                 
                 Tags = _context
@@ -369,10 +371,10 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     .Include(c => c.IdUserNavigation)
                     .Select(c => new ArticleCommentDto
                     {
-                        IdArticle = c.IdArticle,
-                        Nick = c.IdUserNavigation.Nick,
-                        IdComment = c.IdCommentArticle,
-                        IdUser = c.IdUserNavigation.IdUser,
+                        IdArticle   = c.IdArticle,
+                        Nick        = c.IdUserNavigation.Nick,
+                        IdComment   = c.IdCommentArticle,
+                        IdUser      = c.IdUserNavigation.IdUser,
                         Description = c.DescriptionArticle
                     }).ToArray()
             }).ToListAsync();

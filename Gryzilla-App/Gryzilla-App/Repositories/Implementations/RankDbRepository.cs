@@ -39,8 +39,8 @@ public class RankDbRepository : IRankDbRepository
         
         return new RankDto
         {
-            idRank = await _context.Ranks.Select(x => x.IdRank).OrderByDescending(x => x).FirstAsync(),
-            Name = newRank.Name,
+            idRank    = await _context.Ranks.Select(x => x.IdRank).OrderByDescending(x => x).FirstAsync(),
+            Name      = newRank.Name,
             RankLevel = newRank.RankLevel
         };
         

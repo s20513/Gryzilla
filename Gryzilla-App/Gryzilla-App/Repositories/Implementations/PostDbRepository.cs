@@ -403,10 +403,10 @@ public class PostDbRepository : IPostDbRepository
         return new ModifyPostDto
         {
             CreatedAt = post.CreatedAt,
-            Content = post.Content,
-            IdPost = post.IdPost,
-            IdUser = post.IdUser,
-            Title = post.Title,
+            Content   = post.Content,
+            IdPost    = post.IdPost,
+            IdUser    = post.IdUser,
+            Title     = post.Title,
         };
     }
 
@@ -433,6 +433,7 @@ public class PostDbRepository : IPostDbRepository
                     .Where(c => c.IdPost == post.IdPost)
                     .SelectMany(b => b.IdUsers)
                     .Count(),
+                
                 Comments = _context
                     .CommentPosts
                     .Where(c => c.IdPost == post.IdPost)
@@ -442,6 +443,7 @@ public class PostDbRepository : IPostDbRepository
                         Nick        = x.IdUserNavigation.Nick,
                         Description = x.DescriptionPost
                     }).ToArray(),
+                
                 CreatedAt = a.CreatedAt,
                 Content   = a.Content,
                 Title     = a.Title,
@@ -452,6 +454,7 @@ public class PostDbRepository : IPostDbRepository
                     .SelectMany(x => x.IdTags)
                     .Select(x => new TagDto {NameTag = x.NameTag})
                     .ToArray()
+                
             }).SingleOrDefaultAsync();
         return newPost;
     }
