@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gryzilla-App", "Gryzilla-App\Gryzilla-App.csproj", "{50DB785C-2603-459A-9891-B1ACEA9A9E79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{0E14AE7F-7AD8-4EFF-BA6A-ED136565C40D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{50DB785C-2603-459A-9891-B1ACEA9A9E79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50DB785C-2603-459A-9891-B1ACEA9A9E79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50DB785C-2603-459A-9891-B1ACEA9A9E79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E14AE7F-7AD8-4EFF-BA6A-ED136565C40D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E14AE7F-7AD8-4EFF-BA6A-ED136565C40D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E14AE7F-7AD8-4EFF-BA6A-ED136565C40D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E14AE7F-7AD8-4EFF-BA6A-ED136565C40D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
