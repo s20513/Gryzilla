@@ -29,4 +29,24 @@ public class AchievementControllerTests
         Assert.Equal(count, returnAchievements.Count());
 
     }
+    
+    [Fact]
+    public void GetAchievements_Returns_Null()
+    {
+        //Arrange
+        var repository = A.Fake<IAchievementDbRepository>();
+        A.CallTo(() => repository.GetAchievementsFromDb()).Returns(Task.FromResult<IEnumerable<AchievementDto>?>(null));
+        var controller = new AchievementController(repository);
+        
+        //Act
+        var actionResult = controller.GetAchievements();
+        
+        //Assert
+        var result = actionResult.Result as NotFoundObjectResult;
+        var returnAchievements = result.Value as string;
+        
+        
+        Assert.Equal("Not found any achievements", returnAchievements);
+
+    }
 }
