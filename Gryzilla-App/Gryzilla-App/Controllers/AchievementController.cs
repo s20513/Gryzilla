@@ -66,7 +66,7 @@ public class AchievementController : Controller
     /// <returns> Return Status Ok - New Achievement added correctly, returns Achievement body</returns>
     /// <returns>Return status Bad Request - Achievement with same name exists in db</returns>
     [HttpPost]
-    public async Task<IActionResult> AddNewAchievement([FromBody] AddAchievementDto addAchievementDto )
+    public async Task<IActionResult> AddNewAchievement([FromBody] AddAchievementDto addAchievementDto)
     {
         try
         {
@@ -145,7 +145,7 @@ public class AchievementController : Controller
     [HttpDelete("{idAchievement:int}/{idUser:int}")]
     public async Task<IActionResult> DeleteUserAchievement([FromRoute] int idAchievement, [FromRoute] int idUser )
     {
-        var achievement= await _achievementDbRepository.DeleteUserAchievement(idAchievement, idUser);
+        var achievement = await _achievementDbRepository.DeleteUserAchievement(idAchievement, idUser);
 
         if (achievement is null)
         {

@@ -5,11 +5,11 @@ namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/likesPost")]
-public class LikesController : Controller
+public class LikesPostController : Controller
 {
     private readonly ILikesPostDbRepository _likesPostDbRepository;
 
-    public LikesController(ILikesPostDbRepository likesPostDbRepository)
+    public LikesPostController(ILikesPostDbRepository likesPostDbRepository)
     {
         _likesPostDbRepository= likesPostDbRepository;
     }

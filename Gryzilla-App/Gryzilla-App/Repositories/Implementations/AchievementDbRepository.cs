@@ -209,7 +209,7 @@ public class AchievementDbRepository : IAchievementDbRepository
 
         if (userAchievement != null)
         {
-            throw new ReferenceException("User already has achievement!");
+            throw new ReferenceException("User already has the achievement!");
         }
         
         await _context.AchievementUsers.AddAsync(new AchievementUser

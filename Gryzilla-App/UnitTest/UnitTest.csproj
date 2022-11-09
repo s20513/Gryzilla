@@ -26,4 +26,19 @@
       <ProjectReference Include="..\Gryzilla-App\Gryzilla-App.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Article" />
+      <Folder Include="CommentArticle" />
+      <Folder Include="CommentPost" />
+      <Folder Include="Friends" />
+      <Folder Include="Groups" />
+      <Folder Include="LikesArticle" />
+      <Folder Include="LikesPost" />
+      <Folder Include="Post" />
+      <Folder Include="Rank" />
+      <Folder Include="Tag" />
+      <Folder Include="TopComment" />
+      <Folder Include="User" />
+    </ItemGroup>
+
 </Project>
