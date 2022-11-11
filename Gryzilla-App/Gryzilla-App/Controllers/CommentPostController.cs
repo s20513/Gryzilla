@@ -29,7 +29,7 @@ public class CommentPostController : Controller
         
         if (comment is null)
         {
-            return NotFound("Cannot add new comment");
+            return NotFound("User or post not found");
         }
         
         return Ok(comment);

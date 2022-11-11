@@ -18,7 +18,7 @@ public class CommentArticleControllerTests
     }
     
     [Fact]
-    public async void GetAllArticlesFromDb_Returns_Ok()
+    public async void CreateNewArticleComment_Returns_Ok()
     {
         //Arrange
         var newArticleCommentDto = new NewArticleCommentDto();
@@ -44,7 +44,7 @@ public class CommentArticleControllerTests
     }
     
     [Fact]
-    public async void GetAllArticlesFromDb_Returns_Not_Found()
+    public async void CreateNewArticleComment_Returns_Not_Found()
     {
         //Arrange
         var newArticleCommentDto = new NewArticleCommentDto();
