@@ -8,11 +8,11 @@ namespace Gryzilla_App.Controllers;
 [Route("api/articles/comments")]
 public class CommentArticleController: Controller
 {
-    private readonly ICommentArticleDbRepository _articleDbRepository;
+    private readonly ICommentArticleDbRepository _commentArticleDbRepository;
     
-    public CommentArticleController(ICommentArticleDbRepository articleDbRepository)
+    public CommentArticleController(ICommentArticleDbRepository commentArticleDbRepository)
     {
-        _articleDbRepository = articleDbRepository;
+        _commentArticleDbRepository = commentArticleDbRepository;
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class CommentArticleController: Controller
     [HttpPost]
     public async Task<IActionResult> CreateNewArticleComment([FromBody] NewArticleCommentDto newArticleCommentDto)
     {
-        var result = await _articleDbRepository.AddCommentToArticle(newArticleCommentDto);
+        var result = await _commentArticleDbRepository.AddCommentToArticle(newArticleCommentDto);
         
         if (result is null)
         {
@@ -50,7 +50,7 @@ public class CommentArticleController: Controller
             return BadRequest("Id from route and Id in body have to be same");
         }
         
-        var result = await _articleDbRepository
+        var result = await _commentArticleDbRepository
             .ModifyArticleCommentFromDb(putArticleCommentDto, idComment);
 
         if (result is null)
@@ -70,7 +70,7 @@ public class CommentArticleController: Controller
     [HttpDelete("{idComment:int}")]
     public async Task<IActionResult> DeleteArticleComment(int idComment)
     {
-        var result = await _articleDbRepository.DeleteArticleCommentFromDb(idComment);
+        var result = await _commentArticleDbRepository.DeleteArticleCommentFromDb(idComment);
 
         if (result is null)
         {

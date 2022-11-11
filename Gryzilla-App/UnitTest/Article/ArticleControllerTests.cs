@@ -55,14 +55,12 @@ public class ArticleControllerTests
             LikesNum = 3
         }
     };
-
-
+    
     public ArticleControllerTests()
     {
         _articleController = new ArticleController(_articleRepositoryMock.Object);
     }
-
-
+    
     [Fact]
     public async void GetAllArticlesFromDb_Returns_Ok()
     {

@@ -28,7 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CommentArticle" />
       <Folder Include="CommentPost" />
       <Folder Include="Friends" />
       <Folder Include="Groups" />
