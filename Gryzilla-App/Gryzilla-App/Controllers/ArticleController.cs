@@ -113,7 +113,6 @@ public class ArticleController: Controller
     /// <returns>Return Status Not Found - no Articles in db</returns>
     [HttpGet("{idArticle:int}")]
     public async Task<IActionResult> GetArticleFromDb(int idArticle)
-
     {
         var article = await _articleDbRepository.GetArticleFromDb(idArticle);
         

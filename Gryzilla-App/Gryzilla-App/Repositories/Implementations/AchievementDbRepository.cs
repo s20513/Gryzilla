@@ -19,8 +19,7 @@ public class AchievementDbRepository : IAchievementDbRepository
 
     public async Task<IEnumerable<AchievementDto>?> GetAchievementsFromDb()
     {
-        var achievements = 
-            await _context
+        var achievements = await _context
                 .Achievements
                 .Select(x=>new AchievementDto
                 {

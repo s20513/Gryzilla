@@ -21,10 +21,10 @@ public class AchievementControllerTests
                                                         .AsEnumerable()
                                                         .ToList();
         
-        var repository = A.Fake<IAchievementDbRepository>();
-        A.CallTo(() => repository.GetAchievementsFromDb())!.Returns(Task.FromResult(fakeAchievements));
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        A.CallTo(() => fakeRepository.GetAchievementsFromDb())!.Returns(Task.FromResult(fakeAchievements));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.GetAchievements();
@@ -45,12 +45,12 @@ public class AchievementControllerTests
     public void GetAchievements_Returns_Not_found()
     {
         //Arrange
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
         
-        A.CallTo(() => repository.GetAchievementsFromDb())
+        A.CallTo(() => fakeRepository.GetAchievementsFromDb())
             .Returns(Task.FromResult<IEnumerable<AchievementDto>?>(null));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.GetAchievements();
@@ -77,12 +77,12 @@ public class AchievementControllerTests
         var modifiedAchievement = A.Dummy<AchievementDto>();
         modifiedAchievement.Description = "test";
         
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
         
-        A.CallTo(() => repository.ModifyAchievement(id, achievement))!
+        A.CallTo(() => fakeRepository.ModifyAchievement(id, achievement))!
             .Returns(Task.FromResult(modifiedAchievement));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.ModifyAchievement(id, achievement);
@@ -107,14 +107,14 @@ public class AchievementControllerTests
         var achievement = A.Dummy<PutAchievementDto>();
         achievement.IdAchievement = 6;
         
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
         var modifiedAchievement = A.Dummy<AchievementDto>();
         modifiedAchievement.Description = "test";
         
-        A.CallTo(() => repository.ModifyAchievement(id, achievement))!
+        A.CallTo(() => fakeRepository.ModifyAchievement(id, achievement))!
             .Returns(Task.FromResult(modifiedAchievement));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.ModifyAchievement(id, achievement);
@@ -137,12 +137,12 @@ public class AchievementControllerTests
         var achievement = A.Dummy<PutAchievementDto>();
         achievement.IdAchievement = id;
         
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.ModifyAchievement(id, achievement))
+        A.CallTo(() => fakeRepository.ModifyAchievement(id, achievement))
             .Returns(Task.FromResult<AchievementDto?>(null));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.ModifyAchievement(id, achievement);
@@ -164,12 +164,12 @@ public class AchievementControllerTests
         var newAchievement = A.Dummy<AddAchievementDto>();
         var returnAchievement = A.Dummy<AchievementDto>();
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.AddNewAchievement(newAchievement))
+        A.CallTo(() => fakeRepository.AddNewAchievement(newAchievement))
             .Returns(Task.FromResult(returnAchievement));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.AddNewAchievement(newAchievement);
@@ -191,12 +191,12 @@ public class AchievementControllerTests
         var exceptionMessage = "Achievement with given name already exists!";
         var newAchievement = A.Dummy<AddAchievementDto>();
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.AddNewAchievement(newAchievement))
+        A.CallTo(() => fakeRepository.AddNewAchievement(newAchievement))
             .Throws(new SameNameException(exceptionMessage));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.AddNewAchievement(newAchievement);
@@ -218,12 +218,12 @@ public class AchievementControllerTests
         var id = 5;
         var deletedAchievement = A.Dummy<AchievementDto>();
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.DeleteAchievement(id))!
+        A.CallTo(() => fakeRepository.DeleteAchievement(id))!
             .Returns(Task.FromResult(deletedAchievement));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.DeleteAchievement(id);
@@ -244,12 +244,12 @@ public class AchievementControllerTests
         //Arrange
         var id = 5;
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.DeleteAchievement(id))
+        A.CallTo(() => fakeRepository.DeleteAchievement(id))
             .Returns(Task.FromResult<AchievementDto?>(null));
         
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.DeleteAchievement(id);
@@ -271,12 +271,12 @@ public class AchievementControllerTests
         var id = 5;
         var exceptionMessage = "Cannot delete. Some user have this achievement!";
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.DeleteAchievement(id))
+        A.CallTo(() => fakeRepository.DeleteAchievement(id))
             .Throws(new ReferenceException(exceptionMessage));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.DeleteAchievement(id);
@@ -300,12 +300,12 @@ public class AchievementControllerTests
         
         var achievement = A.Dummy<AchievementDto>();
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.AddNewUserAchievement(idAchievement, idUser))!
+        A.CallTo(() => fakeRepository.AddNewUserAchievement(idAchievement, idUser))!
             .Returns(Task.FromResult(achievement));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.AddNewUserAchievement(idAchievement, idUser);
@@ -327,12 +327,12 @@ public class AchievementControllerTests
         var idAchievement = 1;
         var idUser = 1;
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.AddNewUserAchievement(idAchievement, idUser))
+        A.CallTo(() => fakeRepository.AddNewUserAchievement(idAchievement, idUser))
             .Returns(Task.FromResult<AchievementDto?>(null));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.AddNewUserAchievement(idAchievement, idUser);
@@ -355,12 +355,12 @@ public class AchievementControllerTests
         var idUser = 1;
         var exceptionMessage = "User already has the achievement!";
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.AddNewUserAchievement(idAchievement, idUser))
+        A.CallTo(() => fakeRepository.AddNewUserAchievement(idAchievement, idUser))
             .Throws(new ReferenceException(exceptionMessage));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.AddNewUserAchievement(idAchievement, idUser);
@@ -384,12 +384,12 @@ public class AchievementControllerTests
         
         var achievement = A.Dummy<AchievementDto>();
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.DeleteUserAchievement(idAchievement, idUser))!
+        A.CallTo(() => fakeRepository.DeleteUserAchievement(idAchievement, idUser))!
             .Returns(Task.FromResult(achievement));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.DeleteUserAchievement(idAchievement, idUser);
@@ -411,12 +411,12 @@ public class AchievementControllerTests
         var idAchievement = 1;
         var idUser = 1;
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.DeleteUserAchievement(idAchievement, idUser))
+        A.CallTo(() => fakeRepository.DeleteUserAchievement(idAchievement, idUser))
             .Returns(Task.FromResult<AchievementDto?>(null));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.DeleteUserAchievement(idAchievement, idUser);
@@ -442,12 +442,12 @@ public class AchievementControllerTests
                                                         .AsEnumerable()
                                                         .ToList();
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
         
-        A.CallTo(() => repository.GetUserAchievements(idUser))!
+        A.CallTo(() => fakeRepository.GetUserAchievements(idUser))!
             .Returns(Task.FromResult(fakeAchievements));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.GetUserAchievements(idUser);
@@ -468,12 +468,12 @@ public class AchievementControllerTests
         //Arrange
         var idUser = 1;
 
-        var repository = A.Fake<IAchievementDbRepository>();
+        var fakeRepository = A.Fake<IAchievementDbRepository>();
 
-        A.CallTo(() => repository.GetUserAchievements(idUser))
+        A.CallTo(() => fakeRepository.GetUserAchievements(idUser))
             .Returns(Task.FromResult<IEnumerable<AchievementDto>?>(null));
 
-        var controller = new AchievementController(repository);
+        var controller = new AchievementController(fakeRepository);
         
         //Act
         var actionResult = controller.GetUserAchievements(idUser);
