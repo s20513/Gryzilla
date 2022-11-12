@@ -28,7 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Groups" />
       <Folder Include="LikesArticle" />
       <Folder Include="LikesPost" />
       <Folder Include="Post" />
