@@ -1,9 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
-using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Tag;
-using Gryzilla_App.DTOs.Responses.Group;
-using Gryzilla_App.DTOs.Responses.Rank;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;

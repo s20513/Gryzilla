@@ -44,7 +44,7 @@ public class UserController : Controller
         var user = 
             await _userDbRepository.GetUsersFromDb();
 
-        if (!user.Any())
+        if (user is null)
         {
             return NotFound("Users don't exist");
         }
