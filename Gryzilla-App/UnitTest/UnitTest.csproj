@@ -28,9 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Post" />
-      <Folder Include="Rank" />
-      <Folder Include="Tag" />
       <Folder Include="TopComment" />
       <Folder Include="User" />
     </ItemGroup>
