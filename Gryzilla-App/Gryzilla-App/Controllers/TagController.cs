@@ -51,7 +51,7 @@ public class TagController: Controller
         
         if (tag is null)
         {
-            return NotFound("No tags found");
+            return NotFound("There is no tag with given id");
         }
 
         return Ok(tag);
@@ -71,7 +71,10 @@ public class TagController: Controller
         try
         {
             var tag = await _tagDbRepository.AddTagToDb(newTagDto);
-
+            if (tag is null)
+            {
+                return NotFound("Cannot add new tag");
+            }
             return Ok(tag);
         }
         catch (SameNameException e)
