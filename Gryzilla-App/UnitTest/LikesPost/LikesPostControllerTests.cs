@@ -3,43 +3,43 @@ using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace UnitTest.LikesArticle;
+namespace UnitTest.LikesPost;
 
-public class LikesArticleControllerTests
+public class LikesPostControllerTests
 {
-    private readonly LikesArticleController _likesArticleController;
-    private readonly Mock<ILikesArticleDbRepository> _likesArticleDbRepositoryMock = new();
+    private readonly LikesPostController _likesPostController;
+    private readonly Mock<ILikesPostDbRepository> _likesPostDbRepositoryMock = new();
 
-    public LikesArticleControllerTests()
+    public LikesPostControllerTests()
     {
-        _likesArticleController = new LikesArticleController(_likesArticleDbRepositoryMock.Object);
+        _likesPostController = new LikesPostController(_likesPostDbRepositoryMock.Object);
     }
-
+    
     [Fact]
     public async void AddNewLike_Returns_Ok()
     {
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Added like";
+        var stringResult = "Added like";
         
-        _likesArticleDbRepositoryMock
-            .Setup(x => x.AddLikeToArticle(idUser, idArticle))
-            .ReturnsAsync(objectResult);
+        _likesPostDbRepositoryMock
+            .Setup(x => x.AddLikeToPost(idUser, idArticle))
+            .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesArticleController.AddNewLike(idUser, idArticle);
+        var actionResult = await _likesPostController.AddNewLike(idUser, idArticle);
         
         //Assert
         var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as string;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(stringResult, resultValue);
     }
     
     [Fact]
@@ -48,25 +48,25 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Article or user doesn't exist";
+        var stringResult = "Post or user doesn't exist";
         
-        _likesArticleDbRepositoryMock
-            .Setup(x => x.AddLikeToArticle(idUser, idArticle))
-            .ReturnsAsync(objectResult);
+        _likesPostDbRepositoryMock
+            .Setup(x => x.AddLikeToPost(idUser, idArticle))
+            .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesArticleController.AddNewLike(idUser, idArticle);
+        var actionResult = await _likesPostController.AddNewLike(idUser, idArticle);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as string;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(stringResult, resultValue);
     }
     
     [Fact]
@@ -75,25 +75,25 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Deleted like";
+        var stringResult = "Deleted like";
         
-        _likesArticleDbRepositoryMock
-            .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle))
-            .ReturnsAsync(objectResult);
+        _likesPostDbRepositoryMock
+            .Setup(x => x.DeleteLikeFromPost(idUser, idArticle))
+            .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesArticleController.DeleteLike(idUser, idArticle);
+        var actionResult = await _likesPostController.DeleteLike(idUser, idArticle);
         
         //Assert
         var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as string;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(stringResult, resultValue);
     }
     
     [Fact]
@@ -102,41 +102,41 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Article or user doesn't exist";
+        var stringResult = "Post or user doesn't exist";
         
-        _likesArticleDbRepositoryMock
-            .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle))
-            .ReturnsAsync(objectResult);
+        _likesPostDbRepositoryMock
+            .Setup(x => x.DeleteLikeFromPost(idUser, idArticle))
+            .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesArticleController.DeleteLike(idUser, idArticle);
+        var actionResult = await _likesPostController.DeleteLike(idUser, idArticle);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as string;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(stringResult, resultValue);
     }
     
     [Fact]
-    public async void ExistLike_Returns_Ok()
+    public async void GetLike_Returns_Ok()
     {
         //Arrange
         var idUser = 1;
         var idArticle = 1;
         var boolResult = true;
         
-        _likesArticleDbRepositoryMock
-            .Setup(x => x.ExistLikeArticle(idUser, idArticle))
+        _likesPostDbRepositoryMock
+            .Setup(x => x.ExistLike(idUser, idArticle))
             .ReturnsAsync(boolResult);
 
         //Act
-        var actionResult = await _likesArticleController.ExistLike(idUser, idArticle);
+        var actionResult = await _likesPostController.GetLike(idUser, idArticle);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -151,19 +151,19 @@ public class LikesArticleControllerTests
     }
     
     [Fact]
-    public async void ExistLike_Returns_Not_Found()
+    public async void GetLike_Returns_Not_Found()
     {
         //Arrange
         var idUser = 1;
         var idArticle = 1;
         bool? boolResult = null;
         
-        _likesArticleDbRepositoryMock
-            .Setup(x => x.ExistLikeArticle(idUser, idArticle))
+        _likesPostDbRepositoryMock
+            .Setup(x => x.ExistLike(idUser, idArticle))
             .ReturnsAsync(boolResult);
 
         //Act
-        var actionResult = await _likesArticleController.ExistLike(idUser, idArticle);
+        var actionResult = await _likesPostController.GetLike(idUser, idArticle);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -174,6 +174,6 @@ public class LikesArticleControllerTests
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Article or user doesn't exist", resultValue);
+        Assert.Equal("Post or user doesn't exist", resultValue);
     }
 }
