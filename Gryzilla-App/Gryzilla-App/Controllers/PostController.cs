@@ -57,7 +57,7 @@ public class PostController : Controller
     /// Ok - return list of posts
     /// </returns>
     [HttpGet("/bylikes/most")]
-    public async Task<IActionResult> GetPostsByLikesLeast()
+    public async Task<IActionResult> GetPostsByLikesMost()
     {
         var posts = await _postsDbRepository.GetPostsByLikesFromDb();
         if (posts is null)
@@ -73,7 +73,7 @@ public class PostController : Controller
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("/dates/lates")]
+    [HttpGet("/dates/latest")]
     public async Task<IActionResult> GetPostsByDates()
     {
         var posts = await _postsDbRepository.GetPostsByDateFromDb();
@@ -131,7 +131,7 @@ public class PostController : Controller
     [HttpPost]
     public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
     {
-        var posts = await _postsDbRepository.AddNewPostFromDb(addPostDto);
+        var posts = await _postsDbRepository.AddNewPostToDb(addPostDto);
         
         if (posts is null)
         {

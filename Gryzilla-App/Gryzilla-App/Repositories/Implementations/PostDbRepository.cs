@@ -41,6 +41,7 @@ public class PostDbRepository : IPostDbRepository
                 .Include(x => x.IdUserNavigation)
                 .Select(a => new PostDto
                 {
+                    idPost = post.IdPost,
                     Likes     = _context
                         .Posts
                         .Where(c => c.IdPost == post.IdPost)
@@ -171,7 +172,7 @@ public class PostDbRepository : IPostDbRepository
         return postDto;
     }
 
-    public async Task<NewPostDto?> AddNewPostFromDb(AddPostDto addPostDto)
+    public async Task<NewPostDto?> AddNewPostToDb(AddPostDto addPostDto)
     {
         var user = await _context
             .UserData
@@ -428,6 +429,7 @@ public class PostDbRepository : IPostDbRepository
             .Include(x => x.IdUserNavigation)
             .Select(a => new OnePostDto
             {
+                idPost = post.IdPost,
                 Likes = _context
                     .Posts
                     .Where(c => c.IdPost == post.IdPost)
