@@ -1,9 +1,6 @@
 ﻿using FakeItEasy;
 using Gryzilla_App.Controllers;
-using Gryzilla_App.DTO.Requests.Rank;
-using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.User;
-using Gryzilla_App.DTOs.Responses.Rank;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -131,7 +128,7 @@ public class UserControllerTests
         
         var fakeRepository = A.Fake<IUserDbRepository>();
         
-        A.CallTo(() => fakeRepository.ModifyUserFromDb(idUser, user))
+        A.CallTo(() => fakeRepository.ModifyUserFromDb(idUser, user))!
             .Returns(Task.FromResult(modifiedUser));
         
         var controller = new UserController(fakeRepository);
@@ -154,7 +151,7 @@ public class UserControllerTests
     [Fact]
     public void ModifyUser_Returns_Not_Found()
     {
-        ///Arrange
+        //Arrange
         var idUser = 5;
         var user = A.Dummy<PutUserDto>();
         user.IdUser= idUser;
