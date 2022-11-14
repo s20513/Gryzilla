@@ -1,45 +1,65 @@
-﻿
+﻿using Gryzilla_App.DTOs.Responses.Achievement;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Data;
 
 namespace UnitTest.Achievements;
 
 public class AchievementDbRepositoryTests
 {
-    //zostawiam na potem bo moqowanie dbcontext to grubsza sprawa
-    //https://medium.com/@briangoncalves/dbcontext-dbset-mock-for-unit-test-in-c-with-moq-db5c270e68f3
-    
-    
-    
-    
-    
-    
-    
-    private readonly AchievementDbRepository _repository;
-    private readonly Mock<GryzillaContext> _dbContextMock = new Mock<GryzillaContext>();
+   private readonly Mock<GryzillaContext>? _contextMock;
+   private readonly AchievementDbRepository _repository;
+   
+   public AchievementDbRepositoryTests()
+   {
+      var achievements = new List<Achievement>
+      {
+         new()
+         {
+            IdAchievement = 1,
+            Points = 10,
+            Descripion = "Desc1",
+            AchievementName = "Ach1"
+         },
+         new()
+         {
+            IdAchievement = 2,
+            Points = 10,
+            Descripion = "Desc2",
+            AchievementName = "Ach2"
+         }
+      }.AsQueryable();
 
-    public AchievementDbRepositoryTests()
-    {
-        //_dbContextMock.Setup(x => x.Achievements).Returns(new )
+      var achievementsMock = new Mock<DbSet<Achievement>>();
+      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.Provider).Returns(achievements.Provider);
+      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.Expression).Returns(achievements.Expression);
+      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.ElementType).Returns(achievements.ElementType);
+      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.GetEnumerator()).Returns(achievements.GetEnumerator());
+
+      _contextMock = new Mock<GryzillaContext>();
+      _contextMock.Setup(x => x.Achievements).Returns(achievementsMock.Object);
+   
+      _repository = new AchievementDbRepository(_contextMock.Object);
+   }
+   
+   [Fact]
+   public async void GetAchievementsFromDb_Returns_2_Achievements()
+   {
+      //Arrange
+
+      //Act
+      var result = await _repository.GetAchievementsFromDb();
         
-        _repository = new AchievementDbRepository(_dbContextMock.Object);
-    }
-    
-    /*[Fact]
-    public async void GetAchievementsFromDb_Returns_Achievements()
-    {
-        //Arrange
-        
-
-
-        //Act
-        var achievements = await _repository.GetAchievementsFromDb();
+      //Assert
+      Assert.NotNull(result);
+      Assert.True(result.Count() == 2);
+   }
+   
 
 
 
-        //Assert
 
 
-    }*/
 }
