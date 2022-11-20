@@ -13,11 +13,25 @@ namespace Gryzilla_App.Models
         {
             
         }
-
+        
         public GryzillaContext(DbContextOptions<GryzillaContext> options)
             : base(options)
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Local"].ConnectionString;
+            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
+        }
+
+        public GryzillaContext(DbContextOptions<GryzillaContext> options, bool test)
+            : base(options)
+        {
+            if (test)
+            {
+                _connectionString =
+                    "Data Source=89.68.94.143,2105;Initial Catalog=GryzillaTest;User ID=sa;Password=Poziomka100;TrustServerCertificate=True";
+            }
+            else
+            {
+                _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
+            }
         }
 
         public virtual DbSet<Achievement> Achievements { get; set; }
