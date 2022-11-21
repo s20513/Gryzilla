@@ -1,55 +1,25 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
-namespace UnitTest.CommentPost;
+namespace UnitTest.CommentArticle;
 
-public class CommentPostDbRepositoryTests
+public class CommentArticleMssqlDbRepositoryTests
 {
     private readonly GryzillaContext _context;
-    private readonly CommentPostDbRepository _repository;
+    private readonly CommentArticleMssqlDbRepository _repository;
 
-    public CommentPostDbRepositoryTests()
+    public CommentArticleMssqlDbRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         
         _context = new GryzillaContext(options, true);
-        _repository = new CommentPostDbRepository(_context);
+        _repository = new CommentArticleMssqlDbRepository(_context);
     }
-
-    private async void AddTestDataToDb()
-    {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
-    }
-
+    
     [Fact]
-    public async void AddCommentToPost_Returns_PostCommentDto()
+    public async void AddCommentToArticle_Returns_ArticleCommentDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -73,62 +43,78 @@ public class CommentPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
+            Content = "Content1"
         });
         await _context.SaveChangesAsync();
         
-        var newPostCommentDto = new NewPostCommentDto
+        var newArticleCommentDto = new NewArticleCommentDto
         {
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            Description = "DescArticle1"
         };
         
         //Act
-        var res = await _repository.AddCommentToPost(newPostCommentDto);
+        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
         
         //Assert
         Assert.NotNull(res);
         
-        var postComments = _context.CommentPosts.ToList();
-        Assert.Single(postComments);
+        var articleComments = _context.CommentArticles.ToList();
+        Assert.Single(articleComments);
         
-        var postComment = postComments.SingleOrDefault(e => 
-                                                    e.IdComment       == res.IdComment &&
-                                                    e.IdPost          == res.IdPost &&
-                                                    e.IdUser          == res.IdUser &&
-                                                    e.DescriptionPost == res.Description);
-        Assert.NotNull(postComment);
+        var articleComment = articleComments.SingleOrDefault(e => 
+            e.IdCommentArticle       == res.IdComment &&
+            e.IdArticle          == res.IdArticle &&
+            e.IdUser          == res.IdUser &&
+            e.DescriptionArticle == res.Description);
+        Assert.NotNull(articleComment);
     }
     
     [Fact]
-    public async void AddCommentToPost_With_No_Existing_Post_Returns_Null()
+    public async void  AddCommentToArticle_With_No_Existing_Article_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        var newPostCommentDto = new NewPostCommentDto
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        {
+            Name = "Rank1",
+            RankLevel = 1
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.UserData.AddAsync(new UserDatum
+        {
+            IdRank = 1,
+            Nick = "Nick1",
+            Password = "Pass1",
+            Email = "email1",
+            CreatedAt = DateTime.Today
+        });
+        await _context.SaveChangesAsync();
+        
+        var newArticleCommentDto = new NewArticleCommentDto
         {
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            Description = "DescArticle1"
         };
         
         //Act
-        var res = await _repository.AddCommentToPost(newPostCommentDto);
+        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
         
         //Assert
         Assert.Null(res);
     }
     
     [Fact]
-    public async void AddCommentToPost_With_No_Existing_User_Returns_Null()
+    public async void  AddCommentToArticle_With_No_Existing_User_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -150,32 +136,32 @@ public class CommentPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
+            Content = "Content1"
         });
         await _context.SaveChangesAsync();
 
-        var newPostCommentDto = new NewPostCommentDto
+        var newArticleCommentDto = new NewArticleCommentDto
         {
             IdUser = 2,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            Description = "DescArticle1"
         };
         
         //Act
-        var res = await _repository.AddCommentToPost(newPostCommentDto);
+        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
         
         //Assert
         Assert.Null(res);
     }
     
+    //---------------------------
     [Fact]
-    public async void ModifyPostCommentFromDb_Returns_PostCommentDto()
+    public async void ModifyArticleCommentFromDb_Returns_ArticleCommentDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -197,53 +183,52 @@ public class CommentPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
+            Content = "Content1"
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
         {
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            DescriptionArticle = "DescPost1"
         });
         await _context.SaveChangesAsync();
         
         var idComment = 1;
         
-        var putPostCommentDto = new PutPostCommentDto
+        var putArticleCommentDto = new PutArticleCommentDto
         {
             IdComment = idComment,
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "NewDescPost1"
+            IdArticle = 1,
+            Description = "NewDescArticle1"
         };
         
         //Act
-        var res = await _repository.ModifyPostCommentFromDb(putPostCommentDto, idComment);
+        var res = await _repository.ModifyArticleCommentFromDb(putArticleCommentDto, idComment);
         
         //Assert
         Assert.NotNull(res);
         
-        var postComments = _context.CommentPosts.ToList();
-        Assert.Single(postComments);
+        var articleComments = _context.CommentArticles.ToList();
+        Assert.Single(articleComments);
         
-        var postComment = postComments.SingleOrDefault(e => 
-            e.IdComment       == res.IdComment &&
-            e.IdPost          == res.IdPost &&
+        var articleComment = articleComments.SingleOrDefault(e => 
+            e.IdCommentArticle       == res.IdComment &&
+            e.IdArticle          == res.IdArticle &&
             e.IdUser          == res.IdUser &&
-            e.DescriptionPost == res.Description);
-        Assert.NotNull(postComment);
+            e.DescriptionArticle == res.Description);
+        Assert.NotNull(articleComment);
     }
     
     [Fact]
-    public async void ModifyPostCommentFromDb_Returns_Null()
+    public async void ModifyArticleCommentFromDb_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -265,43 +250,42 @@ public class CommentPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
+            Content = "Content1"
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
         {
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            DescriptionArticle = "DescPost1"
         });
         await _context.SaveChangesAsync();
         
         var idComment = 2;
         
-        var putPostCommentDto = new PutPostCommentDto
+        var putArticleCommentDto = new PutArticleCommentDto
         {
             IdComment = idComment,
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "NewDescPost1"
+            IdArticle = 1,
+            Description = "NewDescArticle1"
         };
         
         //Act
-        var res = await _repository.ModifyPostCommentFromDb(putPostCommentDto, idComment);
+        var res = await _repository.ModifyArticleCommentFromDb(putArticleCommentDto, idComment);
         
         //Assert
         Assert.Null(res);
     }
     
     [Fact]
-    public async void DeleteCommentFromDb_Returns_PostCommentDto()
+    public async void DeleteArticleCommentFromDb_Returns_ArticleCommentDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -323,28 +307,27 @@ public class CommentPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
+            Content = "Content1"
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
         {
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            DescriptionArticle = "DescPost1"
         });
         await _context.SaveChangesAsync();
 
         var id = 1;
         
         //Act
-        var res = await _repository.DeleteCommentFromDb(id);
+        var res = await _repository.DeleteArticleCommentFromDb(id);
         
         //Assert
         Assert.NotNull(res);
@@ -354,7 +337,7 @@ public class CommentPostDbRepositoryTests
     }
     
     [Fact]
-    public async void DeleteCommentFromDb_Returns_Null()
+    public async void DeleteArticleCommentFromDb_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -376,28 +359,27 @@ public class CommentPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
+            Content = "Content1"
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
         {
             IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
+            IdArticle = 1,
+            DescriptionArticle = "DescPost1"
         });
         await _context.SaveChangesAsync();
 
         var id = 2;
         
         //Act
-        var res = await _repository.DeleteCommentFromDb(id);
+        var res = await _repository.DeleteArticleCommentFromDb(id);
         
         //Assert
         Assert.Null(res);
