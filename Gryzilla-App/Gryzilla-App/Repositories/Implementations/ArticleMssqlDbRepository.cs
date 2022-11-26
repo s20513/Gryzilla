@@ -334,7 +334,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
     private async Task<IEnumerable<ArticleDto>?> GetAllArticlesFromDb()
     {
-        return await _context
+        var articles =  await _context
             .Articles
             .Include(x => x.IdUserNavigation)
             .Select(x => new ArticleDto
@@ -378,6 +378,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         Description = c.DescriptionArticle
                     }).ToArray()
             }).ToListAsync();
+
+        return articles.Any() ? articles : null;
     }
     
  
