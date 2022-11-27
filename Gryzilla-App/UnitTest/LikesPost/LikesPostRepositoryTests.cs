@@ -2,19 +2,19 @@
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
-namespace UnitTest.LikesArticle;
+namespace UnitTest.LikesPost;
 
-public class LikesArticleRepositoryTest
+public class LikesPostRepositoryTests
 {
     private readonly GryzillaContext _context;
-    private readonly LikesArticleDbRepository _repository;
+    private readonly LikesPostDbRepository _repository;
 
-    public  LikesArticleRepositoryTest()
+    public  LikesPostRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         
         _context = new GryzillaContext(options, true);
-        _repository = new LikesArticleDbRepository(_context);
+        _repository = new LikesPostDbRepository(_context);
     }
     
     private async Task AddTestDataWithOneLike()
@@ -36,18 +36,16 @@ public class LikesArticleRepositoryTest
         });
         await _context.SaveChangesAsync();
         
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1"
+            Content = "content",
+            Title = "title",
+            HighLight = false,
+            CreatedAt = DateTime.Now,
         });
         await _context.SaveChangesAsync();
-        
-
     }
-    
     
     [Fact]
     public async Task AddNewLikeToDb_Returns_AddedLike()
@@ -58,14 +56,14 @@ public class LikesArticleRepositoryTest
         await AddTestDataWithOneLike();
 
         var idUser = 1;
-        var idArticle = 1;
+        var idPost= 1;
         
         //Act
-        var res = await _repository.AddLikeToArticle(idUser, idArticle);
+        var res = await _repository.AddLikeToPost(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Added like");
+        Assert.True(res == "Added like");
     }
     
     [Fact]
@@ -77,36 +75,38 @@ public class LikesArticleRepositoryTest
         await AddTestDataWithOneLike();
 
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         
-        var article = await _context.Articles.FirstAsync();
+        var post = await _context.Posts.FirstAsync();
         var user = await _context.UserData.FirstAsync();
-        article.IdUsers.Add(user);
+        post.IdUsers.Add(user);
         await _context.SaveChangesAsync();
+        
         //Act
-        var res = await _repository.AddLikeToArticle(idUser, idArticle);
+        var res = await _repository.AddLikeToPost(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Like has been assigned");
+        Assert.True(res == "Like has been assigned");
     }
+    
     [Fact]
-    public async Task AddNewLikeToDb_Returns_ArticleOrUserDoesntExist()
+    public async Task AddNewLikeToDb_Returns_PostOrUserDoesntExist()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         
         //Act
-        var res = await _repository.AddLikeToArticle(idUser, idArticle);
+        var res = await _repository.AddLikeToPost(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Article or user doesn't exist");
+        Assert.True(res == "Post or user doesn't exist");
     }
-
+    
     [Fact] 
     public async Task DeleteLikeToDb_Returns_DeletedLike()
     {
@@ -116,19 +116,19 @@ public class LikesArticleRepositoryTest
         await AddTestDataWithOneLike();
 
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         
-        var article = await _context.Articles.FirstAsync();
+        var post = await _context.Posts.FirstAsync();
         var user = await _context.UserData.FirstAsync();
-        article.IdUsers.Add(user);
+        post.IdUsers.Add(user);
         await _context.SaveChangesAsync();
         
         //Act
-        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle);
+        var res = await _repository.DeleteLikeFromPost(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Deleted like");
+        Assert.True(res == "Deleted like");
     }
     
     [Fact]
@@ -140,32 +140,33 @@ public class LikesArticleRepositoryTest
         await AddTestDataWithOneLike();
 
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         
         //Act
-        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle);
+        var res = await _repository.DeleteLikeFromPost(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Like has not been assigned");
+        Assert.True(res == "Like has not been assigned");
     }
     
     [Fact]
-    public async Task DeleteLikeToDb_Returns_ArticleorUserDoesntExist()
+    public async Task DeleteLikeToDb_Returns_PostorUserDoesntExist()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         
         //Act
-        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle);
+        var res = await _repository.DeleteLikeFromPost(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Article or user doesn't exist");
+        Assert.True(res == "Post or user doesn't exist");
     }
+    
     
     [Fact]
     public async Task ExistLikeToDb_Returns_LikeExist()
@@ -175,31 +176,30 @@ public class LikesArticleRepositoryTest
         
         await AddTestDataWithOneLike();
         var idUser = 1;
-        var idArticle = 1;
-        var article = await _context.Articles.FirstAsync();
+        var idPost = 1;
+        var post = await _context.Posts.FirstAsync();
         var user = await _context.UserData.FirstAsync();
-        article.IdUsers.Add(user);
+        post.IdUsers.Add(user);
         await _context.SaveChangesAsync();
         
         //Act
-        var res = await _repository.ExistLikeArticle(idUser, idArticle);
+        var res = await _repository.ExistLike(idUser, idPost);
         
         //Assert
         Assert.NotNull(res);
         Assert.True(res.Equals(true));
     }
     [Fact]
-    public async Task ExistLikeToDb_Returns_ArticleOrUserDoesNotExist()
+    public async Task ExistLikeToDb_Returns_PostOrUserDoesNotExist()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         var idUser = 1;
-        var idArticle = 1;
-        
+        var idPost = 1;
         
         //Act
-        var res = await _repository.ExistLikeArticle(idUser, idArticle);
+        var res = await _repository.ExistLike(idUser, idPost);
         
         //Assert
         Assert.Null(res);

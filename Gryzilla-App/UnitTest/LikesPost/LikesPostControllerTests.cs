@@ -20,15 +20,15 @@ public class LikesPostControllerTests
     {
         //Arrange
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         var stringResult = "Added like";
         
         _likesPostDbRepositoryMock
-            .Setup(x => x.AddLikeToPost(idUser, idArticle))
+            .Setup(x => x.AddLikeToPost(idUser, idPost))
             .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesPostController.AddNewLike(idUser, idArticle);
+        var actionResult = await _likesPostController.AddNewLike(idUser, idPost);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -47,15 +47,15 @@ public class LikesPostControllerTests
     {
         //Arrange
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         var stringResult = "Post or user doesn't exist";
         
         _likesPostDbRepositoryMock
-            .Setup(x => x.AddLikeToPost(idUser, idArticle))
+            .Setup(x => x.AddLikeToPost(idUser, idPost))
             .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesPostController.AddNewLike(idUser, idArticle);
+        var actionResult = await _likesPostController.AddNewLike(idUser, idPost);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -74,15 +74,15 @@ public class LikesPostControllerTests
     {
         //Arrange
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         var stringResult = "Deleted like";
         
         _likesPostDbRepositoryMock
-            .Setup(x => x.DeleteLikeFromPost(idUser, idArticle))
+            .Setup(x => x.DeleteLikeFromPost(idUser, idPost))
             .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesPostController.DeleteLike(idUser, idArticle);
+        var actionResult = await _likesPostController.DeleteLike(idUser, idPost);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -101,15 +101,15 @@ public class LikesPostControllerTests
     {
         //Arrange
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         var stringResult = "Post or user doesn't exist";
         
         _likesPostDbRepositoryMock
-            .Setup(x => x.DeleteLikeFromPost(idUser, idArticle))
+            .Setup(x => x.DeleteLikeFromPost(idUser, idPost))
             .ReturnsAsync(stringResult);
 
         //Act
-        var actionResult = await _likesPostController.DeleteLike(idUser, idArticle);
+        var actionResult = await _likesPostController.DeleteLike(idUser, idPost);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -128,15 +128,15 @@ public class LikesPostControllerTests
     {
         //Arrange
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         var boolResult = true;
         
         _likesPostDbRepositoryMock
-            .Setup(x => x.ExistLike(idUser, idArticle))
+            .Setup(x => x.ExistLike(idUser, idPost))
             .ReturnsAsync(boolResult);
 
         //Act
-        var actionResult = await _likesPostController.GetLike(idUser, idArticle);
+        var actionResult = await _likesPostController.GetLike(idUser, idPost);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -155,15 +155,15 @@ public class LikesPostControllerTests
     {
         //Arrange
         var idUser = 1;
-        var idArticle = 1;
+        var idPost = 1;
         bool? boolResult = null;
         
         _likesPostDbRepositoryMock
-            .Setup(x => x.ExistLike(idUser, idArticle))
+            .Setup(x => x.ExistLike(idUser, idPost))
             .ReturnsAsync(boolResult);
 
         //Act
-        var actionResult = await _likesPostController.GetLike(idUser, idArticle);
+        var actionResult = await _likesPostController.GetLike(idUser, idPost);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
