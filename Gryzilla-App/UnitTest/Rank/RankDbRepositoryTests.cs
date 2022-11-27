@@ -48,7 +48,7 @@ public class RankDbRepositoryTests
     }
 
     [Fact]
-    public async Task AddNewArticleToDb_Returns_ArticleDto()
+    public async Task AddNewRankToDb_Returns_RankDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -73,7 +73,7 @@ public class RankDbRepositoryTests
     }
     
     [Fact]
-    public async Task AddNewArticleToDb_Returns_ThrowSameNameException()
+    public async Task AddNewRankToDb_Returns_ThrowSameNameException()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -92,7 +92,7 @@ public class RankDbRepositoryTests
     }
     
     [Fact]
-    public async Task ModifyArticleFromDb_Returns_ArticleDto()
+    public async Task ModifyRankFromDb_Returns_RankDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -122,7 +122,7 @@ public class RankDbRepositoryTests
     }
     
     [Fact]
-    public async Task ModifyArticleFromDb_Returns_Null()
+    public async Task ModifyRankFromDb_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -143,7 +143,7 @@ public class RankDbRepositoryTests
     }
     
     [Fact]
-    public async Task ModifyArticleFromDb_Returns_ThrowSameNameException()
+    public async Task ModifyRankFromDb_Returns_ThrowSameNameException()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -162,7 +162,7 @@ public class RankDbRepositoryTests
     }
     
     [Fact]
-    public async Task DeleteArticleFromDb_Returns_ArticleDto()
+    public async Task DeleteRankFromDb_Returns_RankDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -182,7 +182,7 @@ public class RankDbRepositoryTests
     }
     
     [Fact]
-    public async Task DeleteArticleFromDb_Returns_Null()
+    public async Task DeleteRankFromDb_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -200,7 +200,7 @@ public class RankDbRepositoryTests
     
     
     [Fact]
-    public async Task DeleteArticleFromDb_Returns_ThrowReferenceException()
+    public async Task DeleteRankFromDb_Returns_ThrowReferenceException()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
