@@ -61,8 +61,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gryzilla v1"));
 }
 
-app.Urls.Add("https://192.168.0.221:1337");
-app.Urls.Add("https://localhost:1337");
 
 app.UseHttpsRedirection();
 app.UseRouting();

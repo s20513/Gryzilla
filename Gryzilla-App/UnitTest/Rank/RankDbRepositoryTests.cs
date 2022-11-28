@@ -14,7 +14,7 @@ public class RankDbRepositoryTests
     public RankDbRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
-        
+
         _context = new GryzillaContext(options, true);
         _repository = new RankDbRepository(_context);
     }
@@ -26,15 +26,15 @@ public class RankDbRepositoryTests
             Name = "Rank1",
             RankLevel = 1
         });
-        
+
         await _context.SaveChangesAsync();
-        
+
         await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank2",
             RankLevel = 1
         });
-        
+
         await _context.SaveChangesAsync();
         var user = await _context.UserData.AddAsync(new UserDatum
         {
@@ -60,18 +60,18 @@ public class RankDbRepositoryTests
             Name = "Admin",
             RankLevel = 0
         };
-        
-        
+
+
         //Act
         var res = await _repository.AddNewRank(newRankRequestDto);
-        
+
         //Assert
         Assert.NotNull(res);
 
         var ranks = _context.Ranks.ToList();
         Assert.True(ranks.Exists(e => e.IdRank == res.idRank));
     }
-    
+
     [Fact]
     public async Task AddNewRankToDb_Returns_ThrowSameNameException()
     {
@@ -85,12 +85,12 @@ public class RankDbRepositoryTests
             Name = "Rank2",
             RankLevel = 0
         };
-        
+
         //Act
         //Assert
         await Assert.ThrowsAsync<SameNameException>(() => _repository.AddNewRank(newRankRequestDto));
     }
-    
+
     [Fact]
     public async Task ModifyRankFromDb_Returns_RankDto()
     {
@@ -106,21 +106,21 @@ public class RankDbRepositoryTests
             Name = "Admin",
             RankLevel = 0
         };
-        
+
         //Act
         var res = await _repository.ModifyRank(modifyRankRequestDto, idRank);
-        
+
         //Assert
         Assert.NotNull(res);
-        
+
         var rank = await _context.Ranks.SingleOrDefaultAsync(e =>
-            e.IdRank         == idRank
-            && e.Name        == modifyRankRequestDto.Name
-            && e.RankLevel   == modifyRankRequestDto.RankLevel);
-        
+            e.IdRank == idRank
+            && e.Name == modifyRankRequestDto.Name
+            && e.RankLevel == modifyRankRequestDto.RankLevel);
+
         Assert.NotNull(rank);
     }
-    
+
     [Fact]
     public async Task ModifyRankFromDb_Returns_Null()
     {
@@ -134,14 +134,14 @@ public class RankDbRepositoryTests
             Name = "Admin",
             RankLevel = 0
         };
-        
+
         //Act
         var res = await _repository.ModifyRank(modifyRankRequestDto, idRank);
-        
+
         //Assert
         Assert.Null(res);
     }
-    
+
     [Fact]
     public async Task ModifyRankFromDb_Returns_ThrowSameNameException()
     {
@@ -155,12 +155,12 @@ public class RankDbRepositoryTests
             Name = "Rank2",
             RankLevel = 0
         };
-        
+
         //Act
         //Assert
         await Assert.ThrowsAsync<SameNameException>(() => _repository.ModifyRank(modifyRankRequestDto, idRank));
     }
-    
+
     [Fact]
     public async Task DeleteRankFromDb_Returns_RankDto()
     {
@@ -170,17 +170,17 @@ public class RankDbRepositoryTests
         await AddTestDataWithOneRank();
 
         var idRank = 2;
-        
+
         //Act
         var res = await _repository.DeleteRank(idRank);
-        
+
         //Assert
         Assert.NotNull(res);
-        
+
         var ranks = _context.Ranks.ToList();
-        Assert.False(ranks.Exists(e => e.IdRank== res.idRank));
+        Assert.False(ranks.Exists(e => e.IdRank == res.idRank));
     }
-    
+
     [Fact]
     public async Task DeleteRankFromDb_Returns_Null()
     {
@@ -190,15 +190,15 @@ public class RankDbRepositoryTests
         await AddTestDataWithOneRank();
 
         var idRank = 3;
-        
+
         //Act
         var res = await _repository.DeleteRank(idRank);
-        
+
         //Assert
         Assert.Null(res);
     }
-    
-    
+
+
     [Fact]
     public async Task DeleteRankFromDb_Returns_ThrowReferenceException()
     {
@@ -208,7 +208,7 @@ public class RankDbRepositoryTests
         await AddTestDataWithOneRank();
 
         var idRank = 1;
-        
+
         //Act
         //Assert
         await Assert.ThrowsAsync<ReferenceException>(() => _repository.DeleteRank(idRank));

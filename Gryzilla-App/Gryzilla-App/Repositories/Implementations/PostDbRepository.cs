@@ -442,6 +442,9 @@ public class PostDbRepository : IPostDbRepository
                     .Include(b=>b.IdUserNavigation)
                     .Select(x=> new PostCommentDto
                     {
+                        IdPost      = idPost,
+                        IdComment   = x.IdComment,
+                        IdUser      = x.IdUser,
                         Nick        = x.IdUserNavigation.Nick,
                         Description = x.DescriptionPost
                     }).ToArray(),
