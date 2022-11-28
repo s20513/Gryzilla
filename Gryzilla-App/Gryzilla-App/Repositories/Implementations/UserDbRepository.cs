@@ -141,22 +141,19 @@ public class UserDbRepository : IUserDbRepository
     public async Task<UserDto?> DeleteUserFromDb(int idUser)
     {
         var user = await GetUserFromDb(idUser);
-
         if (user is null)
         {
             return null;
         }
-
         var deleteUserById = await _context.UserData
             .Where(x => x.IdUser == idUser)
             .SingleOrDefaultAsync();
-
+        
         if (deleteUserById != null)
         {
             _context.UserData.Remove(deleteUserById);
             await _context.SaveChangesAsync();
         }
-            
         return user;
     }
 }

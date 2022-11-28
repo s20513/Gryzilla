@@ -199,6 +199,7 @@ public class UserRepositoryTests
         //Assert
         Assert.Null(res);
     }
+    
     [Fact]
     public async Task AddUserToDb_Returns_UserDto()
     {
