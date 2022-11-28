@@ -163,6 +163,8 @@ public class FriendsRepositoryTests
         //Assert
         Assert.NotNull(res);
         Assert.NotEmpty(res);
+        Assert.True(res.First().IdUser == user1.IdUser);
+        
     }
     
     [Fact]
