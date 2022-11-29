@@ -64,21 +64,21 @@ public class UserController : Controller
         {
             return BadRequest("Id from route and Id in body have to be same");
         }
-       try
-       {
-           var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);
+        try
+        {
+            var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);
         
-           if (user == null)
-           { 
-               return NotFound("User doesn't exist");
-           }
+            if (user == null)
+            { 
+                return NotFound("User doesn't exist");
+            }
         
-           return Ok(user);
-       }
-       catch (SameNameException e)
-       {
-           return BadRequest(e.Message);
-       }
+            return Ok(user);
+        }
+        catch (SameNameException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>

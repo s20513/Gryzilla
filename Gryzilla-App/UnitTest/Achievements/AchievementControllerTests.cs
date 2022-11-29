@@ -1,36 +1,64 @@
-using FakeItEasy;
 using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Requests;
 using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.DTOs.Responses.Achievement;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 
 namespace UnitTest.Achievements;
 
 public class AchievementControllerTests
 {
+    private readonly AchievementController _achievementController;
+    private readonly Mock<IAchievementDbRepository> _achievementRepositoryMock = new();
+
+    private List<AchievementDto> _fakeAchievements = new List<AchievementDto>
+    {
+        new()
+        {
+            IdAchievement = 1,
+            AchievementName = "Ach1",
+            Description = "Desc1",
+            Points = 20
+        },
+        new()
+        {
+            IdAchievement = 2,
+            AchievementName = "Ach2",
+            Description = "Desc2",
+            Points = 30
+        },
+        new()
+        {
+            IdAchievement = 3,
+            AchievementName = "Ach3",
+            Description = "Desc3",
+            Points = 40
+        }
+    };
+
+    public AchievementControllerTests()
+    {
+        _achievementController = new AchievementController(_achievementRepositoryMock.Object);
+    }
+    
+
     [Fact]
-    public void GetAchievements_Returns_Ok()
+    public async void GetAchievements_Returns_Ok()
     {
         //Arrange
-        var count = 5;
-        
-        IEnumerable<AchievementDto> fakeAchievements = A.CollectionOfDummy<AchievementDto>(count)
-                                                        .AsEnumerable()
-                                                        .ToList();
-        
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-        A.CallTo(() => fakeRepository.GetAchievementsFromDb())!.Returns(Task.FromResult(fakeAchievements));
-        
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.GetAchievementsFromDb())
+            .ReturnsAsync(_fakeAchievements);
         
         //Act
-        var actionResult = controller.GetAchievements();
+        var actionResult = await _achievementController.GetAchievements();
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
@@ -38,453 +66,458 @@ public class AchievementControllerTests
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(fakeAchievements, resultValue);
+        Assert.Equal(_fakeAchievements, resultValue);
     }
-    
+
     [Fact]
-    public void GetAchievements_Returns_Not_found()
+    public async void GetAchievements_Returns_Not_found()
     {
         //Arrange
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        IEnumerable<AchievementDto>? nullValue = null;
         
-        A.CallTo(() => fakeRepository.GetAchievementsFromDb())
-            .Returns(Task.FromResult<IEnumerable<AchievementDto>?>(null));
-        
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.GetAchievementsFromDb())
+            .ReturnsAsync(nullValue);
         
         //Act
-        var actionResult = controller.GetAchievements();
+        var actionResult = await _achievementController.GetAchievements();
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Not found any achievements", resultValue);
     }
 
     [Fact]
-    public void ModifyAchievement_Returns_Ok()
+    public async void ModifyAchievement_Returns_Ok()
     {
         //Arrange
-        var id = 5;
-        
-        var achievement = A.Dummy<PutAchievementDto>();
-        achievement.IdAchievement = id;
-        
-        var modifiedAchievement = A.Dummy<AchievementDto>();
-        modifiedAchievement.Description = "test";
-        
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-        
-        A.CallTo(() => fakeRepository.ModifyAchievement(id, achievement))!
-            .Returns(Task.FromResult(modifiedAchievement));
-        
-        var controller = new AchievementController(fakeRepository);
+        var id = 10;
+        var putAchievementDto = new PutAchievementDto
+        {
+            IdAchievement = id
+        };
+
+        var returnedAchievement = new AchievementDto
+        {
+            IdAchievement = id
+        };
+
+        _achievementRepositoryMock
+            .Setup(x => x.ModifyAchievement(id, putAchievementDto))
+            .ReturnsAsync(returnedAchievement);
         
         //Act
-        var actionResult = controller.ModifyAchievement(id, achievement);
+        var actionResult = await _achievementController.ModifyAchievement(id, putAchievementDto);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
-                
+        
         if (result is null) return;
         var resultValue = result.Value as AchievementDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("test", resultValue.Description);
+        Assert.Equal(id, resultValue.IdAchievement);
     }
     
     [Fact]
-    public void ModifyAchievement_Returns_Bad_Request()
+    public async void ModifyAchievement_Returns_Bad_Request()
     {
         //Arrange
-        var id = 5;
-        var achievement = A.Dummy<PutAchievementDto>();
-        achievement.IdAchievement = 6;
-        
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-        var modifiedAchievement = A.Dummy<AchievementDto>();
-        modifiedAchievement.Description = "test";
-        
-        A.CallTo(() => fakeRepository.ModifyAchievement(id, achievement))!
-            .Returns(Task.FromResult(modifiedAchievement));
-        
-        var controller = new AchievementController(fakeRepository);
-        
+        var id = 10;
+        var putAchievementDto = new PutAchievementDto
+        {
+            IdAchievement = 11
+        };
+
         //Act
-        var actionResult = controller.ModifyAchievement(id, achievement);
+        var actionResult = await _achievementController.ModifyAchievement(id, putAchievementDto);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Id from route and Id in body have to be same", resultValue);
     }
     
     [Fact]
-    public void ModifyAchievement_Returns_Not_Found()
+    public async void ModifyAchievement_Returns_Not_Found()
     {
         //Arrange
-        var id = 5;
-        var achievement = A.Dummy<PutAchievementDto>();
-        achievement.IdAchievement = id;
-        
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        var id = 10;
+        var putAchievementDto = new PutAchievementDto
+        {
+            IdAchievement = id
+        };
 
-        A.CallTo(() => fakeRepository.ModifyAchievement(id, achievement))
-            .Returns(Task.FromResult<AchievementDto?>(null));
-        
-        var controller = new AchievementController(fakeRepository);
+        AchievementDto? nullValue = null;
+
+        _achievementRepositoryMock
+            .Setup(x => x.ModifyAchievement(id, putAchievementDto))
+            .ReturnsAsync(nullValue);
         
         //Act
-        var actionResult = controller.ModifyAchievement(id, achievement);
+        var actionResult = await _achievementController.ModifyAchievement(id, putAchievementDto);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Achievement not found", resultValue);
     }
-    
+
     [Fact]
-    public void AddNewAchievement_Returns_Not_Found()
+    public async void AddNewAchievement_Returns_Ok()
     {
         //Arrange
-        var newAchievement = A.Dummy<AddAchievementDto>();
-        var returnAchievement = A.Dummy<AchievementDto>();
+        var id = 10;
+        var addAchievementDto = new AddAchievementDto();
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        var returnedAchievement = new AchievementDto
+        {
+            IdAchievement = id
+        };
 
-        A.CallTo(() => fakeRepository.AddNewAchievement(newAchievement))
-            .Returns(Task.FromResult(returnAchievement));
-        
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.AddNewAchievement(addAchievementDto))
+            .ReturnsAsync(returnedAchievement);
         
         //Act
-        var actionResult = controller.AddNewAchievement(newAchievement);
+        var actionResult = await _achievementController.AddNewAchievement(addAchievementDto);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as AchievementDto;
+        Assert.NotNull(resultValue);
         
-        Assert.Equal(returnAchievement, resultValue);
+        if (resultValue is null) return;
+        Assert.Equal(id, resultValue.IdAchievement);
     }
-    
+
     [Fact]
-    public void AddNewAchievement_Returns_Bad_Request()
+    public async void AddNewAchievement_Returns_Bad_Request()
     {
         //Arrange
+        var addAchievementDto = new AddAchievementDto();
         var exceptionMessage = "Achievement with given name already exists!";
-        var newAchievement = A.Dummy<AddAchievementDto>();
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-
-        A.CallTo(() => fakeRepository.AddNewAchievement(newAchievement))
-            .Throws(new SameNameException(exceptionMessage));
-        
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.AddNewAchievement(addAchievementDto))
+            .ThrowsAsync(new SameNameException(exceptionMessage));
         
         //Act
-        var actionResult = controller.AddNewAchievement(newAchievement);
+        var actionResult = await _achievementController.AddNewAchievement(addAchievementDto);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
     
     [Fact]
-    public void DeleteAchievement_Returns_Ok()
+    public async void DeleteAchievement_Returns_Ok()
     {
         //Arrange
-        var id = 5;
-        var deletedAchievement = A.Dummy<AchievementDto>();
+        var id = 10;
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        var returnedAchievement = new AchievementDto
+        {
+            IdAchievement = id
+        };
 
-        A.CallTo(() => fakeRepository.DeleteAchievement(id))!
-            .Returns(Task.FromResult(deletedAchievement));
-        
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.DeleteAchievement(id))
+            .ReturnsAsync(returnedAchievement);
         
         //Act
-        var actionResult = controller.DeleteAchievement(id);
+        var actionResult = await _achievementController.DeleteAchievement(id);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as AchievementDto;
+        Assert.NotNull(resultValue);
         
-        Assert.Equal(deletedAchievement, resultValue);
+        if (resultValue is null) return;
+        Assert.Equal(id, resultValue.IdAchievement);
     }
     
     [Fact]
-    public void DeleteAchievement_Returns_Not_Found()
+    public async void DeleteAchievement_Returns_Not_Found()
     {
         //Arrange
-        var id = 5;
+        var id = 10;
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        AchievementDto? nullValue = null;
 
-        A.CallTo(() => fakeRepository.DeleteAchievement(id))
-            .Returns(Task.FromResult<AchievementDto?>(null));
-        
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.DeleteAchievement(id))
+            .ReturnsAsync(nullValue);
         
         //Act
-        var actionResult = controller.DeleteAchievement(id);
+        var actionResult = await _achievementController.DeleteAchievement(id);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Achievement not found", resultValue);
     }
     
     [Fact]
-    public void DeleteAchievement_Returns_Bad_Request()
+    public async void DeleteAchievement_Returns_Bad_Request()
     {
         //Arrange
-        var id = 5;
+        var id = 10;
         var exceptionMessage = "Cannot delete. Some user have this achievement!";
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-
-        A.CallTo(() => fakeRepository.DeleteAchievement(id))
-            .Throws(new ReferenceException(exceptionMessage));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.DeleteAchievement(id))
+            .ThrowsAsync(new ReferenceException(exceptionMessage));
         
         //Act
-        var actionResult = controller.DeleteAchievement(id);
+        var actionResult = await _achievementController.DeleteAchievement(id);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
     
     [Fact]
-    public void AddNewUserAchievement_Returns_Ok()
+    public async void AddNewUserAchievement_Returns_Ok()
     {
         //Arrange
         var idAchievement = 1;
         var idUser = 1;
-        
-        var achievement = A.Dummy<AchievementDto>();
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        var returnedAchievement = new AchievementDto
+        {
+            IdAchievement = idAchievement
+        };
 
-        A.CallTo(() => fakeRepository.AddNewUserAchievement(idAchievement, idUser))!
-            .Returns(Task.FromResult(achievement));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.AddNewUserAchievement(idAchievement, idUser))
+            .ReturnsAsync(returnedAchievement);
         
         //Act
-        var actionResult = controller.AddNewUserAchievement(idAchievement, idUser);
+        var actionResult = await _achievementController.AddNewUserAchievement(idAchievement, idUser);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as AchievementDto;
+        Assert.NotNull(resultValue);
         
-        Assert.Equal(achievement, resultValue);
+        if (resultValue is null) return;
+        Assert.Equal(idAchievement, resultValue.IdAchievement);
     }
     
     [Fact]
-    public void AddNewUserAchievement_Returns_Not_Found()
+    public async void AddNewUserAchievement_Returns_Not_Found()
     {
         //Arrange
         var idAchievement = 1;
         var idUser = 1;
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        AchievementDto? nullvalue = null;
 
-        A.CallTo(() => fakeRepository.AddNewUserAchievement(idAchievement, idUser))
-            .Returns(Task.FromResult<AchievementDto?>(null));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.AddNewUserAchievement(idAchievement, idUser))
+            .ReturnsAsync(nullvalue);
         
         //Act
-        var actionResult = controller.AddNewUserAchievement(idAchievement, idUser);
+        var actionResult = await _achievementController.AddNewUserAchievement(idAchievement, idUser);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Cannot find user or achievement", resultValue);
     }
     
     [Fact]
-    public void AddNewUserAchievement_Returns_Bad_Request()
+    public async void AddNewUserAchievement_Returns_Bad_Request()
     {
         //Arrange
         var idAchievement = 1;
         var idUser = 1;
         var exceptionMessage = "User already has the achievement!";
+        
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-
-        A.CallTo(() => fakeRepository.AddNewUserAchievement(idAchievement, idUser))
-            .Throws(new ReferenceException(exceptionMessage));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.AddNewUserAchievement(idAchievement, idUser))
+            .ThrowsAsync(new ReferenceException(exceptionMessage));
         
         //Act
-        var actionResult = controller.AddNewUserAchievement(idAchievement, idUser);
+        var actionResult = await _achievementController.AddNewUserAchievement(idAchievement, idUser);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
     
     [Fact]
-    public void DeleteUserAchievement_Returns_Ok()
+    public async void DeleteUserAchievement_Returns_Ok()
     {
         //Arrange
         var idAchievement = 1;
         var idUser = 1;
-        
-        var achievement = A.Dummy<AchievementDto>();
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        var returnedAchievement = new AchievementDto
+        {
+            IdAchievement = idAchievement
+        };
 
-        A.CallTo(() => fakeRepository.DeleteUserAchievement(idAchievement, idUser))!
-            .Returns(Task.FromResult(achievement));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.DeleteUserAchievement(idAchievement, idUser))
+            .ReturnsAsync(returnedAchievement);
         
         //Act
-        var actionResult = controller.DeleteUserAchievement(idAchievement, idUser);
+        var actionResult = await _achievementController.DeleteUserAchievement(idAchievement, idUser);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as AchievementDto;
+        Assert.NotNull(resultValue);
         
-        Assert.Equal(achievement, resultValue);
+        if (resultValue is null) return;
+        Assert.Equal(idAchievement, resultValue.IdAchievement);
     }
     
     [Fact]
-    public void DeleteUserAchievement_Returns_Not_Found()
+    public async void DeleteUserAchievement_Returns_Not_Found()
     {
         //Arrange
         var idAchievement = 1;
         var idUser = 1;
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
+        AchievementDto? nullvalue = null;
 
-        A.CallTo(() => fakeRepository.DeleteUserAchievement(idAchievement, idUser))
-            .Returns(Task.FromResult<AchievementDto?>(null));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.DeleteUserAchievement(idAchievement, idUser))
+            .ReturnsAsync(nullvalue);
         
         //Act
-        var actionResult = controller.DeleteUserAchievement(idAchievement, idUser);
+        var actionResult = await _achievementController.DeleteUserAchievement(idAchievement, idUser);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Cannot delete achievement from user", resultValue);
     }
     
     [Fact]
-    public void GetUserAchievements_Returns_Ok()
+    public async void GetUserAchievements_Returns_Ok()
     {
         //Arrange
         var idUser = 1;
-        var count = 5;
-        
-        IEnumerable<AchievementDto> fakeAchievements = A.CollectionOfDummy<AchievementDto>(count)
-                                                        .AsEnumerable()
-                                                        .ToList();
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-        
-        A.CallTo(() => fakeRepository.GetUserAchievements(idUser))!
-            .Returns(Task.FromResult(fakeAchievements));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.GetUserAchievements(idUser))
+            .ReturnsAsync(_fakeAchievements);
         
         //Act
-        var actionResult = controller.GetUserAchievements(idUser);
+        var actionResult = await _achievementController.GetUserAchievements(idUser);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as IEnumerable<AchievementDto>;
+        Assert.NotNull(resultValue);
         
-        Assert.Equal(fakeAchievements, resultValue);
+        if (resultValue is null) return;
+        Assert.Equal(_fakeAchievements, resultValue.ToList());
     }
     
     [Fact]
-    public void GetUserAchievements_Returns_Not_Found()
+    public async void GetUserAchievements_Returns_Not_Found()
     {
         //Arrange
         var idUser = 1;
+        IEnumerable<AchievementDto>? nullValue = null;
 
-        var fakeRepository = A.Fake<IAchievementDbRepository>();
-
-        A.CallTo(() => fakeRepository.GetUserAchievements(idUser))
-            .Returns(Task.FromResult<IEnumerable<AchievementDto>?>(null));
-
-        var controller = new AchievementController(fakeRepository);
+        _achievementRepositoryMock
+            .Setup(x => x.GetUserAchievements(idUser))
+            .ReturnsAsync(nullValue);
         
         //Act
-        var actionResult = controller.GetUserAchievements(idUser);
+        var actionResult = await _achievementController.GetUserAchievements(idUser);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
         
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("User not found", resultValue);
     }
 }

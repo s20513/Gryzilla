@@ -1,5 +1,4 @@
-﻿using FakeItEasy;
-using Gryzilla_App.Controllers;
+﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.DTOs.Responses.Rank;
 using Gryzilla_App.Exceptions;
@@ -152,149 +151,145 @@ public class RankControllerTests
         Assert.Equal("Cannot delete rank", resultValue);
     }
     [Fact]
-    public void DeleteRank_Returns_Bad_Request()
+    public async void DeleteRank_Returns_Bad_Request()
     {
         //Arrange
-        var idRank = 5;
+        var idRank = 1;
         var exceptionMessage = "Cannot delete. Some user have this rank!";
-
-        var fakeRepository = A.Fake<IRankDbRepository>();
-
-        A.CallTo(() => fakeRepository.DeleteRank(idRank))
-            .Throws(new ReferenceException(exceptionMessage));
-
-        var controller = new RankController(fakeRepository);
         
+        _rankRepositoryMock
+            .Setup(x => x.DeleteRank(idRank))
+            .ThrowsAsync(new ReferenceException(exceptionMessage));
+
         //Act
-        var actionResult = controller.DeleteRank(idRank);
+        var actionResult = await _ranksController.DeleteRank(idRank);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
     
     [Fact]
-    public void ModifyRank_Returns_Ok()
+    public async void ModifyRank_Returns_Ok()
     {
         //Arrange
-        var idRank = 5;
+        const int idRank = 1;
+        var punRankDto = new PutRankDto
+        {
+            IdRank = idRank
+        };
         
-        var rank= A.Dummy<PutRankDto>();
-        rank.IdRank = idRank;
+        var rank = new RankDto();
         
-        var modifiedRank= A.Dummy<RankDto>();
-        modifiedRank.Name = "test";
-        
-        var fakeRepository = A.Fake<IRankDbRepository>();
-        
-        A.CallTo(() => fakeRepository.ModifyRank(rank, idRank))!
-            .Returns(Task.FromResult(modifiedRank));
-        
-        var controller = new RankController(fakeRepository);
-        
+        _rankRepositoryMock
+            .Setup(x => x.ModifyRank(punRankDto, idRank))
+            .ReturnsAsync(rank);
+
         //Act
-        var actionResult = controller.ModifyRank(rank, idRank);
+        var actionResult = await _ranksController.ModifyRank(punRankDto, idRank);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
-                
+
         if (result is null) return;
         var resultValue = result.Value as RankDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("test", resultValue.Name);
+        Assert.Equal(rank, resultValue);
     }
     
     [Fact]
-    public void ModifyRank_Returns_Not_Found()
+    public async void ModifyRank_Returns_Not_Found()
     {
         //Arrange
-        var idRank = 5;
-        var rank = A.Dummy<PutRankDto>();
-        rank.IdRank = idRank;
+        const int idRank = 1;
+        var punRankDto = new PutRankDto
+        {
+            IdRank = idRank
+        };
         
-        var fakeRepository = A.Fake<IRankDbRepository>();
+        RankDto? nullValue = null;
+        
+        _rankRepositoryMock
+            .Setup(x => x.ModifyRank(punRankDto, idRank))
+            .ReturnsAsync(nullValue);
 
-        A.CallTo(() => fakeRepository.ModifyRank(rank, idRank))
-            .Returns(Task.FromResult<RankDto?>(null));
-        
-        var controller = new RankController(fakeRepository);
-        
         //Act
-        var actionResult = controller.ModifyRank(rank, idRank);
+        var actionResult = await _ranksController.ModifyRank(punRankDto, idRank);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Cannot modify rank", resultValue);
     }
     
     [Fact]
-    public void ModifyRank_Returns_SameNameException_Bad_Request()
+    public async void ModifyRank_Returns_SameNameException_Bad_Request()
     {
         //Arrange
-        var idRank = 5;
-        var exceptionMessage = "Rank with given name already exists!!";
-        var modifiedRank = A.Dummy<PutRankDto>();
-        modifiedRank.IdRank = 5;
+        const int idRank = 1;
+        var punRankDto = new PutRankDto
+        {
+            IdRank = idRank
+        };
 
-        var fakeRepository = A.Fake<IRankDbRepository>();
+        var exceptionMessage = "Rank with given name already exists!";
+        
+        _rankRepositoryMock
+            .Setup(x => x.ModifyRank(punRankDto, idRank))
+            .ThrowsAsync(new SameNameException(exceptionMessage));
 
-        A.CallTo(() => fakeRepository.ModifyRank(modifiedRank, idRank))
-            .Throws(new SameNameException(exceptionMessage));
-        
-        var controller = new RankController(fakeRepository);
-        
         //Act
-        var actionResult = controller.ModifyRank(modifiedRank, idRank);
+        var actionResult = await _ranksController.ModifyRank(punRankDto, idRank);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
     [Fact]
-    public void ModifyRank_Returns_Bad_Request()
+    public async void ModifyRank_Returns_Bad_Request()
     {
         //Arrange
-        var idRank= 5;
-        var rank = A.Dummy<PutRankDto>();
-        rank.IdRank = 6;
-        
-        var fakeRepository = A.Fake<IRankDbRepository>();
-        var modifiedRank = A.Dummy<RankDto>();
-        modifiedRank.Name = "test";
-        
-        A.CallTo(() => fakeRepository.ModifyRank(rank, idRank))!
-            .Returns(Task.FromResult(modifiedRank));
-        
-        var controller = new RankController(fakeRepository);
-        
+        const int idRank = 1;
+        var punRankDto = new PutRankDto
+        {
+            IdRank = 2
+        };
+
         //Act
-        var actionResult = controller.ModifyRank(rank, idRank);
+        var actionResult = await _ranksController.ModifyRank(punRankDto, idRank);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Id from route and Id in body have to be same", resultValue);
     }
 }

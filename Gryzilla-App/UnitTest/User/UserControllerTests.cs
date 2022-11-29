@@ -1,5 +1,4 @@
-﻿using FakeItEasy;
-using Gryzilla_App.Controllers;
+﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
@@ -73,7 +72,7 @@ public class UserControllerTests
     public async void GetUsers_Returns_Ok()
     {
         //Arrange
-        var users= new UserDto[5];
+        var users = new UserDto[5];
         
         _userRepositoryMock.Setup(x => x.GetUsersFromDb()).ReturnsAsync(users);
 
@@ -116,122 +115,117 @@ public class UserControllerTests
     }
     
      [Fact]
-    public void ModifyUser_Returns_Ok()
+    public async void ModifyUser_Returns_Ok()
     {
         //Arrange
-        var idUser = 5;
-        var user = A.Dummy<PutUserDto>();
-        user.IdUser= idUser;
+        var id = 5;
+        var putUserDto = new PutUserDto
+        {
+            IdUser = id
+        };
+
+        var returnedUser = new UserDto
+        {
+            IdUser = id
+        };
         
-        var modifiedUser= A.Dummy<UserDto>();
-        modifiedUser.Nick = "test";
-        
-        var fakeRepository = A.Fake<IUserDbRepository>();
-        
-        A.CallTo(() => fakeRepository.ModifyUserFromDb(idUser, user))!
-            .Returns(Task.FromResult(modifiedUser));
-        
-        var controller = new UserController(fakeRepository);
-        
+        _userRepositoryMock.Setup(x => x.ModifyUserFromDb(id, putUserDto)).ReturnsAsync(returnedUser);
+
         //Act
-        var actionResult = controller.ModifyUser(idUser, user);
+        var actionResult = await _usersController.ModifyUser(id, putUserDto);
         
         //Assert
-        var result = actionResult.Result as OkObjectResult;
+        var result = actionResult as OkObjectResult;
         Assert.NotNull(result);
-                
+
         if (result is null) return;
         var resultValue = result.Value as UserDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("test", resultValue.Nick);
+        Assert.Equal(id, resultValue.IdUser);
     }
     
     [Fact]
-    public void ModifyUser_Returns_Not_Found()
+    public async void ModifyUser_Returns_Not_Found()
     {
         //Arrange
-        var idUser = 5;
-        var user = A.Dummy<PutUserDto>();
-        user.IdUser= idUser;
+        var id = 5;
+        var putUserDto = new PutUserDto
+        {
+            IdUser = id
+        };
 
-        var fakeRepository = A.Fake<IUserDbRepository>();
+        UserDto? nullValue = null;
+        
+        _userRepositoryMock.Setup(x => x.ModifyUserFromDb(id, putUserDto)).ReturnsAsync(nullValue);
 
-        A.CallTo(() => fakeRepository.ModifyUserFromDb(idUser, user))
-            .Returns(Task.FromResult<UserDto?>(null));
-        
-        var controller = new UserController(fakeRepository);
-        
         //Act
-        var actionResult = controller.ModifyUser(idUser, user);
+        var actionResult = await _usersController.ModifyUser(id, putUserDto);
         
         //Assert
-        var result = actionResult.Result as NotFoundObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("User doesn't exist", resultValue);
     }
     
     [Fact]
-    public void ModifyUser_Returns_SameNameException_Bad_Request()
+    public async void ModifyUser_Returns_SameNameException_Bad_Request()
     {
         //Arrange
-        var idUser = 5;
-        
+        var id = 5;
+        var putUserDto = new PutUserDto
+        {
+            IdUser = id
+        };
         var exceptionMessage = "Nick with given name already exists!";
-        var user= A.Dummy<PutUserDto>();
-        user.IdUser = 5;
 
-        var fakeRepository = A.Fake<IUserDbRepository>();
+        _userRepositoryMock
+            .Setup(x => x.ModifyUserFromDb(id, putUserDto))
+            .ThrowsAsync(new SameNameException(exceptionMessage));
 
-        A.CallTo(() => fakeRepository.ModifyUserFromDb(idUser, user))
-            .Throws(new SameNameException(exceptionMessage));
-        
-        var controller = new UserController(fakeRepository);
-        
         //Act
-        var actionResult = controller.ModifyUser(idUser, user);
+        var actionResult = await _usersController.ModifyUser(id, putUserDto);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
     [Fact]
-    public void ModifyUser_Returns_Bad_Request()
+    public async void ModifyUser_Returns_Bad_Request()
     {
         //Arrange
-        var idUser= 5;
-        var user = A.Dummy<PutUserDto>();
-        user.IdUser = 6;
-        
-        var fakeRepository = A.Fake<IUserDbRepository>();
-        var modifiedUser = A.Dummy<UserDto>();
-        modifiedUser.Nick = "test";
-        
-        A.CallTo(() => fakeRepository.ModifyUserFromDb(idUser, user))!
-            .Returns(Task.FromResult(modifiedUser));
-        
-        var controller = new UserController(fakeRepository);
-        
+        var id = 5;
+        var putUserDto = new PutUserDto
+        {
+            IdUser = 6
+        };
+
         //Act
-        var actionResult = controller.ModifyUser(idUser, user);
+        var actionResult = await _usersController.ModifyUser(id, putUserDto);
         
         //Assert
-        var result = actionResult.Result as BadRequestObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
-        
+
         if (result is null) return;
         var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
         
+        if (resultValue is null) return;
         Assert.Equal("Id from route and Id in body have to be same", resultValue);
     }
     
