@@ -36,6 +36,15 @@ public class GroupRepositoryTests
             Email = "email1",
             CreatedAt = DateTime.Today
         });
+
+        await _context.UserData.AddAsync(new UserDatum
+        {
+            IdRank = 1,
+            Nick = "Nick2",
+            Password = "Pass1",
+            Email = "email1",
+            CreatedAt = DateTime.Today
+        });
         await _context.SaveChangesAsync();
         
         var user = await _context.UserData.FirstAsync();
@@ -50,7 +59,7 @@ public class GroupRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Groups.AddAsync(new Gryzilla_App.Models.Group
+        await _context.Groups.AddAsync(new Group
         {
             GroupName = "test",
             CreatedAt = DateTime.Now,
@@ -63,7 +72,7 @@ public class GroupRepositoryTests
         group.IdUsers.Add(user);
         await _context.SaveChangesAsync();
         
-        await _context.Groups.AddAsync(new Gryzilla_App.Models.Group
+        await _context.Groups.AddAsync(new Group
         {
             GroupName = "test2",
             CreatedAt = DateTime.Now,
@@ -92,7 +101,7 @@ public class GroupRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Groups.AddAsync(new Gryzilla_App.Models.Group
+        await _context.Groups.AddAsync(new Group
         {
             GroupName = "test",
             CreatedAt = DateTime.Now,
@@ -368,12 +377,34 @@ public class GroupRepositoryTests
     }
     
     [Fact]
-    public async Task  RemoveUserFromGroup_Returns_Null()
+    public async Task  RemoveUserFromGroup_GroupOrUserDoesNotExist_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataWithOneGroup();
+
+        var idUser = 2;
+        
+        var userToGroupDto = new UserToGroupDto()
+        {
+            IdGroup = 1,
+            IdUser = 2
+        }; 
+        //Act
+        var res = await _repository.RemoveUserFromGroup(idUser, userToGroupDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task  RemoveUserFromGroup_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithManyGroup();
 
         var idUser = 2;
         
@@ -453,7 +484,7 @@ public class GroupRepositoryTests
     }
     
     [Fact]
-    public async Task AddUserToGroup_Returns_Null()
+    public async Task AddUserToGroup_GroupOrUserDoesNotExist_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -465,7 +496,29 @@ public class GroupRepositoryTests
         var userToGroupDto = new UserToGroupDto()
         {
             IdGroup = 2,
-            IdUser = 2
+            IdUser = 3
+        }; 
+        //Act
+        var res = await _repository.AddUserToGroup(idGroup, userToGroupDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task AddUserToGroup_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyGroup();
+
+        var idGroup = 1;
+        
+        var userToGroupDto = new UserToGroupDto()
+        {
+            IdGroup = idGroup,
+            IdUser = 1
         }; 
         //Act
         var res = await _repository.AddUserToGroup(idGroup, userToGroupDto);

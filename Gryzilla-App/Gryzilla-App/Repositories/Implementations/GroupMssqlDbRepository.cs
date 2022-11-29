@@ -222,12 +222,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         await _context.SaveChangesAsync();
         
         var addUserToGroup = await GetGroupByName(groupRequestDto.GroupName);
-        
-        if (addUserToGroup is null)
-        {
-            return null;
-        }
-        
+
         addUserToGroup.IdUsers.Add(user);
         await _context.SaveChangesAsync();
         

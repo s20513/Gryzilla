@@ -65,6 +65,23 @@ public class FriendsRepositoryTests
     }
     
     [Fact]
+    public async Task AddNewFriendToDb_FriendDoesNotExists_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithManyUser();
+        
+        var idUser1 = 1;
+        var idUser2 = 3;
+        
+        //Act
+        var res = await _repository.AddNewFriendToDb(idUser1, idUser2);
+        
+        //Assert
+        Assert.Null(res);
+    }
+
+    [Fact]
     public async Task AddNewFriendToDb_Returns_FriendDto()
     {
         //Arrange
@@ -134,6 +151,29 @@ public class FriendsRepositoryTests
 
         var idUser1 = 1;
         var idUser2 = 2;
+        
+        //Act
+        var res = await _repository.DeleteFriendFromDb(idUser1, idUser2);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task DeleteFriendFromDb_FriendDoesNotExists_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithManyUser();
+        
+        var idUser1 = 1;
+        var idUser2 = 3;
+        var user = await _context.UserData.Include(x => x.IdUserFriends).FirstAsync();
+        var user1 = await _context.UserData.Include(x => x.IdUserFriends).OrderBy(x=>x.IdUser).LastAsync();
+        
+        user.IdUserFriends.Add(user1);
+        await _context.SaveChangesAsync();
         
         //Act
         var res = await _repository.DeleteFriendFromDb(idUser1, idUser2);
