@@ -46,8 +46,7 @@ builder.Services.AddScoped<ICommentArticleDbRepository, CommentArticleMssqlDbRep
 builder.Services.AddScoped<ITagDbRepository, TagDbRepository>();
 
 
-
-var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
+var connectionString = "Data Source=89.68.94.143,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(connectionString));
