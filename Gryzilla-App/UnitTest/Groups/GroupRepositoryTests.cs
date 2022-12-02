@@ -293,7 +293,7 @@ public class GroupRepositoryTests
     
     
     [Fact]
-    public async Task GetGroupToDb_Returns_GroupDto()
+    public async Task GetGroupFromDb_Returns_GroupDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -316,7 +316,7 @@ public class GroupRepositoryTests
     }
     
     [Fact]
-    public async Task GetGroupToDb_Returns_Null()
+    public async Task GetGroupFromDb_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
