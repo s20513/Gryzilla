@@ -17,155 +17,9 @@ public class CommentArticleMssqlDbRepositoryTests
         _context = new GryzillaContext(options, true);
         _repository = new CommentArticleMssqlDbRepository(_context);
     }
-    
-    [Fact]
-    public async void AddCommentToArticle_Returns_ArticleCommentDto()
+
+    private async Task CreateTestData()
     {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //AddTestDataToDb()
-        
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1"
-        });
-        await _context.SaveChangesAsync();
-        
-        var newArticleCommentDto = new NewArticleCommentDto
-        {
-            IdUser = 1,
-            IdArticle = 1,
-            Description = "DescArticle1"
-        };
-        
-        //Act
-        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
-        
-        //Assert
-        Assert.NotNull(res);
-        
-        var articleComments = _context.CommentArticles.ToList();
-        Assert.Single(articleComments);
-        
-        var articleComment = articleComments.SingleOrDefault(e => 
-            e.IdCommentArticle       == res.IdComment &&
-            e.IdArticle          == res.IdArticle &&
-            e.IdUser          == res.IdUser &&
-            e.DescriptionArticle == res.Description);
-        Assert.NotNull(articleComment);
-    }
-    
-    [Fact]
-    public async void  AddCommentToArticle_With_No_Existing_Article_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-        
-        var newArticleCommentDto = new NewArticleCommentDto
-        {
-            IdUser = 1,
-            IdArticle = 1,
-            Description = "DescArticle1"
-        };
-        
-        //Act
-        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
-        
-        //Assert
-        Assert.Null(res);
-    }
-    
-    [Fact]
-    public async void  AddCommentToArticle_With_No_Existing_User_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1"
-        });
-        await _context.SaveChangesAsync();
-
-        var newArticleCommentDto = new NewArticleCommentDto
-        {
-            IdUser = 2,
-            IdArticle = 1,
-            Description = "DescArticle1"
-        };
-        
-        //Act
-        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
-        
-        //Assert
-        Assert.Null(res);
-    }
-    
-    //---------------------------
-    [Fact]
-    public async void ModifyArticleCommentFromDb_Returns_ArticleCommentDto()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
         await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
@@ -199,7 +53,92 @@ public class CommentArticleMssqlDbRepositoryTests
             DescriptionArticle = "DescPost1"
         });
         await _context.SaveChangesAsync();
+    }
+    
+    [Fact]
+    public async void AddCommentToArticle_Returns_ArticleCommentDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await CreateTestData();
         
+        var newArticleCommentDto = new NewArticleCommentDto
+        {
+            IdUser = 1,
+            IdArticle = 1,
+            Description = "DescArticle1"
+        };
+        
+        //Act
+        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articleComments = _context.CommentArticles.ToList();
+        Assert.True(articleComments.Count == 2);
+        
+        var articleComment = articleComments.SingleOrDefault(e => 
+            e.IdCommentArticle       == res.IdComment &&
+            e.IdArticle          == res.IdArticle &&
+            e.IdUser          == res.IdUser &&
+            e.DescriptionArticle == res.Description);
+        Assert.NotNull(articleComment);
+    }
+    
+    [Fact]
+    public async void  AddCommentToArticle_With_No_Existing_Article_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await CreateTestData();
+        
+        var newArticleCommentDto = new NewArticleCommentDto
+        {
+            IdUser = 1,
+            IdArticle = 2,
+            Description = "DescArticle1"
+        };
+        
+        //Act
+        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async void  AddCommentToArticle_With_No_Existing_User_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await CreateTestData();
+
+        var newArticleCommentDto = new NewArticleCommentDto
+        {
+            IdUser = 2,
+            IdArticle = 1,
+            Description = "DescArticle1"
+        };
+        
+        //Act
+        var res = await _repository.AddCommentToArticle(newArticleCommentDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async void ModifyArticleCommentFromDb_Returns_ArticleCommentDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await CreateTestData();
+
         var idComment = 1;
         
         var putArticleCommentDto = new PutArticleCommentDto
@@ -233,40 +172,8 @@ public class CommentArticleMssqlDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
+        await CreateTestData();
 
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1"
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
-        {
-            IdUser = 1,
-            IdArticle = 1,
-            DescriptionArticle = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
-        
         var idComment = 2;
         
         var putArticleCommentDto = new PutArticleCommentDto
@@ -290,39 +197,7 @@ public class CommentArticleMssqlDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1"
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
-        {
-            IdUser = 1,
-            IdArticle = 1,
-            DescriptionArticle = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
+        await CreateTestData();
 
         var id = 1;
         
@@ -342,39 +217,7 @@ public class CommentArticleMssqlDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1"
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
-        {
-            IdUser = 1,
-            IdArticle = 1,
-            DescriptionArticle = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
+        await CreateTestData();
 
         var id = 2;
         

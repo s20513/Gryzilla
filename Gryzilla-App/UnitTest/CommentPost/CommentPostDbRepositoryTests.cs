@@ -18,7 +18,7 @@ public class CommentPostDbRepositoryTests
         _repository = new CommentPostDbRepository(_context);
     }
 
-    private async void AddTestDataToDb()
+    private async Task AddTestDataToDb()
     {
         await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
@@ -44,6 +44,14 @@ public class CommentPostDbRepositoryTests
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        {
+            IdUser = 1,
+            IdPost = 1,
+            DescriptionPost = "DescPost1"
         });
         await _context.SaveChangesAsync();
     }
@@ -54,35 +62,8 @@ public class CommentPostDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        //AddTestDataToDb()
-        
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
+        await AddTestDataToDb();
 
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
-        
         var newPostCommentDto = new NewPostCommentDto
         {
             IdUser = 1,
@@ -97,7 +78,7 @@ public class CommentPostDbRepositoryTests
         Assert.NotNull(res);
         
         var postComments = _context.CommentPosts.ToList();
-        Assert.Single(postComments);
+        Assert.True(postComments.Count == 2);
         
         var postComment = postComments.SingleOrDefault(e => 
                                                     e.IdComment       == res.IdComment &&
@@ -133,32 +114,7 @@ public class CommentPostDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
+        await AddTestDataToDb();
 
         var newPostCommentDto = new NewPostCommentDto
         {
@@ -180,40 +136,7 @@ public class CommentPostDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
-        {
-            IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
+        await AddTestDataToDb();
         
         var idComment = 1;
         
@@ -248,40 +171,7 @@ public class CommentPostDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
-        {
-            IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
+        await AddTestDataToDb();
         
         var idComment = 2;
         
@@ -306,40 +196,7 @@ public class CommentPostDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
-        {
-            IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
+        await AddTestDataToDb();
 
         var id = 1;
         
@@ -359,40 +216,7 @@ public class CommentPostDbRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
-        {
-            Name = "Rank1",
-            RankLevel = 1
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.UserData.AddAsync(new UserDatum
-        {
-            IdRank = 1,
-            Nick = "Nick1",
-            Password = "Pass1",
-            Email = "email1",
-            CreatedAt = DateTime.Today
-        });
-        await _context.SaveChangesAsync();
-
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
-        {
-            IdUser = 1,
-            Title = "Title1",
-            CreatedAt = DateTime.Today,
-            Content = "Content1",
-            HighLight = false
-        });
-        await _context.SaveChangesAsync();
-        
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
-        {
-            IdUser = 1,
-            IdPost = 1,
-            DescriptionPost = "DescPost1"
-        });
-        await _context.SaveChangesAsync();
+        await AddTestDataToDb();
 
         var id = 2;
         
