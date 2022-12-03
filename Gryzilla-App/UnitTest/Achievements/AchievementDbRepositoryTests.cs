@@ -1,312 +1,448 @@
-﻿using Gryzilla_App.DTOs.Responses.Achievement;
+﻿using Gryzilla_App.DTO.Requests;
+using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using System.Data;
-using Gryzilla_App.DTO.Requests;
-using Gryzilla_App.DTO.Requests.Rank;
-using MockQueryable.Moq;
 
 namespace UnitTest.Achievements;
 
 public class AchievementDbRepositoryTests
 {
-   /*private readonly Mock<GryzillaContext>? _contextMock;
+   private readonly GryzillaContext _context;
    private readonly AchievementDbRepository _repository;
-   
+
    public AchievementDbRepositoryTests()
    {
-      var achievements = new List<Achievement>
-      {
-         new()
-         {
-            IdAchievement = 1,
-            Points = 10,
-            Descripion = "Desc1",
-            AchievementName = "Ach1"
-         },
-         new()
-         {
-            IdAchievement = 2,
-            Points = 10,
-            Descripion = "Desc2",
-            AchievementName = "Ach2"
-         }
-      }.AsQueryable();
+      var options = new DbContextOptions<GryzillaContext>();
 
-      var achievementsMock = new Mock<DbSet<Achievement>>();
-      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.Provider).Returns(achievements.Provider);
-      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.Expression).Returns(achievements.Expression);
-      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.ElementType).Returns(achievements.ElementType);
-      achievementsMock.As<IQueryable<Achievement>>().Setup(x => x.GetEnumerator()).Returns(achievements.GetEnumerator());
-
-      _contextMock = new Mock<GryzillaContext>();
-      _contextMock.Setup(x => x.Achievements).Returns(achievementsMock.Object);
-   
-      _repository = new AchievementDbRepository(_contextMock.Object);
+      _context = new GryzillaContext(options, true);
+      _repository = new AchievementDbRepository(_context);
    }
-   
+
+   private async Task AddTestData()
+   {
+      await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+      {
+         Name = "Rank1",
+         RankLevel = 1
+      });
+      await _context.SaveChangesAsync();
+
+      await _context.UserData.AddAsync(new UserDatum
+      {
+         IdRank = 1,
+         Nick = "Nick1",
+         Password = "Pass1",
+         Email = "email1",
+         CreatedAt = DateTime.Today
+      });
+
+      await _context.UserData.AddAsync(new UserDatum
+      {
+         IdRank = 1,
+         Nick = "Nick2",
+         Password = "Pass2",
+         Email = "email2",
+         CreatedAt = DateTime.Today
+      });
+      await _context.SaveChangesAsync();
+
+      await _context.Achievements.AddAsync(new Achievement
+      {
+         Points = 10,
+         Descripion = "Desc1",
+         AchievementName = "AchName1"
+      });
+
+      await _context.Achievements.AddAsync(new Achievement
+      {
+         Points = 20,
+         Descripion = "Desc2",
+         AchievementName = "AchName2"
+      });
+
+      await _context.Achievements.AddAsync(new Achievement
+      {
+         Points = 30,
+         Descripion = "Desc3",
+         AchievementName = "AchName3"
+      });
+
+      await _context.SaveChangesAsync();
+
+      await _context.AchievementUsers.AddAsync(new AchievementUser
+      {
+         IdUser = 1,
+         IdAchievement = 1,
+         ReceivedAt = DateTime.Now
+      });
+
+      await _context.AchievementUsers.AddAsync(new AchievementUser
+      {
+         IdUser = 1,
+         IdAchievement = 2,
+         ReceivedAt = DateTime.Now
+      });
+
+      await _context.AchievementUsers.AddAsync(new AchievementUser
+      {
+         IdUser = 2,
+         IdAchievement = 2,
+         ReceivedAt = DateTime.Now
+      });
+
+      await _context.SaveChangesAsync();
+   }
+
    [Fact]
-   public async void GetAchievementsFromDb_Returns_2_Achievements()
+   public async Task GetAchievementsFromDb_Returns_IEnumerable()
    {
       //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
 
       //Act
-      var result = await _repository.GetAchievementsFromDb();
-        
-      //Assert
-      Assert.NotNull(result);
-      Assert.True(result.Count() == 2);
-   }*/
-
-
-   [Fact]
-   public async void GetAchievementsFromDb_Returns_2_Achievements()
-   {
-      //Arrange
-      var achievements = new List<Achievement>
-      {
-         new()
-         {
-            IdAchievement = 1,
-            AchievementName = "ach1",
-            Descripion = "desc1",
-            Points = 10
-         },
-         new()
-         {
-            IdAchievement = 2,
-            AchievementName = "ach2",
-            Descripion = "desc2",
-            Points = 20
-         }
-      };
-
-      var achievementDbSetMock = achievements.AsQueryable().BuildMockDbSet();
-      var contextMock = new Mock<GryzillaContext>();
-      contextMock.Setup(x => x.Achievements).Returns(achievementDbSetMock.Object);
-      //contextMock.Setup(x => x.Achievements.Add(It.IsAny<Achievement>())).Returns((Achievement u) => u);
-
-      var repository = new AchievementDbRepository(contextMock.Object);
-
-      // Act
-      var res = await repository.GetAchievementsFromDb();
+      var res = await _repository.GetAchievementsFromDb();
 
       //Assert
       Assert.NotNull(res);
 
-      if (res is null) return;
-      Assert.True(res.Any());
+      var achievements = await _context.Achievements.Select(e => e.IdAchievement).ToListAsync();
+      Assert.Equal(achievements, res.Select(e => e.IdAchievement));
    }
 
    [Fact]
-   public async void GetAchievementsFromDb_Returns_Null()
+   public async Task GetAchievementsFromDb_Returns_Null()
    {
       //Arrange
-      var achievements = new List<Achievement>();
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-      var achievementDbSetMock = achievements.AsQueryable().BuildMockDbSet();
-      var contextMock = new Mock<GryzillaContext>();
-      contextMock.Setup(x => x.Achievements).Returns(achievementDbSetMock.Object);
-
-      var repository = new AchievementDbRepository(contextMock.Object);
-
-      // Act
-      var res = await repository.GetAchievementsFromDb();
+      //Act
+      var res = await _repository.GetAchievementsFromDb();
 
       //Assert
       Assert.Null(res);
    }
 
    [Fact]
-   public async void ModifyAchievement_Returns_Modified_Achievement()
+   public async Task ModifyAchievement_Returns_AchievementDto()
    {
       //Arrange
-      var achievements = new List<Achievement>
-      {
-         new()
-         {
-            IdAchievement = 1,
-            AchievementName = "ach1",
-            Descripion = "desc1",
-            Points = 10
-         },
-         new()
-         {
-            IdAchievement = 2,
-            AchievementName = "ach2",
-            Descripion = "desc2",
-            Points = 20
-         }
-      };
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
 
       var id = 1;
-      var newPoints = 15;
-      var newName = "ach1mod";
-      var newDesc = "desc1mod";
 
       var putAchievementDto = new PutAchievementDto
       {
          IdAchievement = id,
-         Points = newPoints,
-         AchievementName = newName,
-         Description = newDesc
+         AchievementName = "NewAchName",
+         Description = "NewDesc",
+         Points = 40
       };
 
-      var achievementDbSetMock = achievements.AsQueryable().BuildMockDbSet();
-      var contextMock = new Mock<GryzillaContext>();
-      contextMock.Setup(x => x.Achievements).Returns(achievementDbSetMock.Object);
-
-      var repository = new AchievementDbRepository(contextMock.Object);
-
-      // Act
-      var res = await repository.ModifyAchievement(id, putAchievementDto);
+      //Act
+      var res = await _repository.ModifyAchievement(id, putAchievementDto);
 
       //Assert
       Assert.NotNull(res);
 
-      if (res is null) return;
-      Assert.Equal(newName, res.AchievementName);
-      Assert.Equal(newDesc, res.Description);
-      Assert.Equal(newPoints, res.Points);
+      var achievement = await _context.Achievements
+         .Where(e => e.IdAchievement == id
+                     && e.AchievementName == res.AchievementName
+                     && e.Descripion == res.Description
+                     && e.Points == res.Points)
+         .SingleOrDefaultAsync();
+
+      Assert.NotNull(achievement);
    }
-   
+
    [Fact]
-   public async void ModifyAchievement_Returns_Null()
+   public async Task ModifyAchievement_Returns_Null()
    {
       //Arrange
-      var achievements = new List<Achievement>
-      {
-         new()
-         {
-            IdAchievement = 1,
-            AchievementName = "ach1",
-            Descripion = "desc1",
-            Points = 10
-         },
-         new()
-         {
-            IdAchievement = 2,
-            AchievementName = "ach2",
-            Descripion = "desc2",
-            Points = 20
-         }
-      };
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-      var id = 10;
+      var id = 1;
 
       var putAchievementDto = new PutAchievementDto
       {
-         IdAchievement = id
+         IdAchievement = id,
+         AchievementName = "NewAchName",
+         Description = "NewDesc",
+         Points = 40
       };
 
-      var achievementDbSetMock = achievements.AsQueryable().BuildMockDbSet();
-      var contextMock = new Mock<GryzillaContext>();
-      contextMock.Setup(x => x.Achievements).Returns(achievementDbSetMock.Object);
+      //Act
+      var res = await _repository.ModifyAchievement(id, putAchievementDto);
 
-      var repository = new AchievementDbRepository(contextMock.Object);
+      //Assert
+      Assert.Null(res);
+   }
 
-      // Act
-      var res = await repository.ModifyAchievement(id, putAchievementDto);
+   [Fact]
+   public async Task AddNewAchievement_Returns_AchievementDto()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var addAchievementDto = new AddAchievementDto
+      {
+         AchievementName = "NewAchName",
+         Description = "NewDesc",
+         Points = 40
+      };
+
+      //Act
+      var res = await _repository.AddNewAchievement(addAchievementDto);
+
+      //Assert
+      Assert.NotNull(res);
+
+      var achievement = await _context.Achievements
+         .Where(e =>
+            e.IdAchievement == res.IdAchievement
+            && e.AchievementName == res.AchievementName
+            && e.Descripion == res.Description
+            && e.Points == res.Points)
+         .SingleOrDefaultAsync();
+
+      Assert.NotNull(achievement);
+   }
+
+   [Fact]
+   public async Task AddNewAchievement_Throws_SameNameException()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var addAchievementDto = new AddAchievementDto
+      {
+         AchievementName = "AchName1",
+         Description = "NewDesc",
+         Points = 40
+      };
+
+      //Act
+      //Assert
+
+      await Assert.ThrowsAsync<SameNameException>(() => _repository.AddNewAchievement(addAchievementDto));
+   }
+
+   [Fact]
+   public async Task DeleteAchievement_Returns_AchievementDto()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var id = 3;
+
+      //Act
+      var res = await _repository.DeleteAchievement(id);
+
+      //Assert
+      Assert.NotNull(res);
+
+      var achievement = await _context.Achievements
+         .Where(e =>
+            e.IdAchievement == res.IdAchievement
+            && e.AchievementName == res.AchievementName
+            && e.Descripion == res.Description
+            && e.Points == res.Points)
+         .SingleOrDefaultAsync();
+
+      Assert.Null(achievement);
+   }
+
+   [Fact]
+   public async Task DeleteAchievement_Returns_Null()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var id = 4;
+
+      //Act
+      var res = await _repository.DeleteAchievement(id);
+
+      //Assert
+      Assert.Null(res);
+   }
+
+   [Fact]
+   public async Task DeleteAchievement_Throws_ReferenceException()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var id = 1;
+
+      //Act
+
+      //Assert
+      await Assert.ThrowsAsync<ReferenceException>(() => _repository.DeleteAchievement(id));
+   }
+   
+   [Fact]
+   public async Task DeleteUserAchievement_Returns_AchievementDto()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var idAchievement = 1;
+      var idUser = 1;
+
+      //Act
+      var res = await _repository.DeleteUserAchievement(idAchievement, idUser);
+
+      //Assert
+      Assert.NotNull(res);
+
+      var achievementUser = await _context.AchievementUsers
+         .Where(e =>
+            e.IdAchievement == res.IdAchievement
+            && e.IdUser ==     idUser)
+         .SingleOrDefaultAsync();
+
+      Assert.Null(achievementUser);
+   }
+   
+   [Fact]
+   public async Task DeleteUserAchievement_Returns_Null()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var idAchievement = 10;
+      var idUser = 10;
+
+      //Act
+      var res = await _repository.DeleteUserAchievement(idAchievement, idUser);
 
       //Assert
       Assert.Null(res);
    }
    
-
-
-
-   /*[Fact]
-   public async void AddNewAchievement_Returns_New_Achievement()
+   [Fact]
+   public async Task AddNewUserAchievement_Returns_AchievementDto()
    {
       //Arrange
-      var achievements = new List<Achievement>()
-      {
-         new()
-         {
-            IdAchievement = 1,
-            AchievementName = "ach1",
-            Descripion = "desc1",
-            Points = 10
-         },
-         new()
-         {
-            IdAchievement = 2,
-            AchievementName = "ach2",
-            Descripion = "desc2",
-            Points = 20
-         }
-      };
-      
-      achievements.Add(new Achievement());
-      
-      var newName = "newAch";
-      var newDesc = "newDesc";
-      var newPoints = 50;
-      
-      var newAchievementDto = new AddAchievementDto
-      {
-         AchievementName = newName,
-         Description = newDesc,
-         Points = newPoints
-      };
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
+      await AddTestData();
 
-      var achievementDbSetMock = achievements.AsQueryable().BuildMockDbSet();
-      achievementDbSetMock.Object.Add(new Achievement());
-      var t = achievementDbSetMock.Object;
-      
-      var contextMock = new Mock<GryzillaContext>();
-      contextMock.Setup(x => x.Achievements).Returns(achievementDbSetMock.Object);
-      
-      
-      
-      /*contextMock.Setup(x => x.Achievements.Where(e => e.AchievementName == newName).Select(e => e.IdAchievement).First())
-         .Returns(3);
-      
-      contextMock.Setup(x => x.Achievements.FindAsync(1)).ReturnsAsync((object[] ids) =>
-      {
-         var id = (Guid)ids[0];
-         return achievements.FirstOrDefault(x => x.IdAchievement == 1);
-      });#1#
-      
-      /*contextMock.Setup(x => x.Achievements.Select(e => e.IdAchievement)).Returns((object[] ids) =>
-      {
-         var id = (Guid)ids[0];
-         return 3;
-      });#1#
-      
-      
-      
-      
-      /*contextMock.Setup(x => x.Achievements
-         .Where(e => e.AchievementName == newName))
-         .Returns((object[] ids) => new Achievement
-      {
-         IdAchievement = 3
-      });#1#
-      
-      
-      
-      
-      
-      
-      
-      
-      //contextMock.Setup(x => x.Achievements.Add(It.IsAny<Achievement>())).Returns((Achievement u) => u);
+      var idAchievement = 1;
+      var idUser = 2;
 
-      var repository = new AchievementDbRepository(contextMock.Object);
-
-      // Act
-      var res = await repository.AddNewAchievement(newAchievementDto);
+      //Act
+      var res = await _repository.AddNewUserAchievement(idAchievement, idUser);
 
       //Assert
       Assert.NotNull(res);
+
+      var achievementUser = await _context.AchievementUsers
+         .Where(e =>
+            e.IdAchievement == res.IdAchievement
+            && e.IdUser ==     idUser)
+         .SingleOrDefaultAsync();
+
+      Assert.NotNull(achievementUser);
+   }
+   
+   [Fact]
+   public async Task AddNewUserAchievement_Returns_Null()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var idAchievement = 10;
+      var idUser = 10;
+
+      //Act
+      var res = await _repository.AddNewUserAchievement(idAchievement, idUser);
+
+      //Assert
+      Assert.Null(res);
+   }
+   
+   [Fact]
+   public async Task AddNewUserAchievement_Throws_ReferenceException()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+
+      var idAchievement = 1;
+      var idUser = 1;
+
+      //Act
+
+      //Assert
+      await Assert.ThrowsAsync<ReferenceException>(() => _repository.AddNewUserAchievement(idAchievement, idUser));
+   }
+   
+   [Fact]
+   public async Task GetUserAchievements_Returns_IEnumerable()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
       
-      Assert.Equal(newName, res.AchievementName);
-      Assert.Equal(newDesc, res.Description);
-      Assert.Equal(newPoints, res.Points);
-   }*/
+      var idUser = 1;
+
+      //Act
+      var res = await _repository.GetUserAchievements(idUser);
+
+      //Assert
+      Assert.NotNull(res);
+
+      var achievements = await _context.Achievements
+         .SelectMany(e => e.AchievementUsers)
+         .Where(e => e.IdUser == idUser)
+         .Select(e => e.IdAchievement)
+         .ToListAsync();
+      
+      
+      Assert.Equal(achievements, res.Select(e => e.IdAchievement));
+   }
+   
+   [Fact]
+   public async Task GetUserAchievements_Returns_Null()
+   {
+      //Arrange
+      await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+      await AddTestData();
+      
+      var idUser = 10;
+
+      //Act
+      var res = await _repository.GetUserAchievements(idUser);
+
+      //Assert
+      Assert.Null(res);
+   }
 }
+
 
