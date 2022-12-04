@@ -55,9 +55,35 @@ public class PostRepositoryTests
         await _context.SaveChangesAsync();
 
         var post = await _context.Posts.FirstAsync();
+        var user = await _context.UserData.FirstAsync();
         var tag = await  _context.Tags.FirstAsync();
         
+        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        {
+            IdUser = 1,
+            DescriptionPost = "Description",
+            IdPost = 1
+        });
+
+        await _context.Reasons.AddAsync(new Reason
+        {
+            ReasonName = "ReasonName"
+        });
+        
+        post.IdUsers.Add(user);        
         post.IdTags.Add(tag);
+        await _context.SaveChangesAsync();
+        
+        await _context.ReportPosts.AddAsync(new ReportPost
+        {
+            Description = "Description",
+            ReportedAt = DateTime.Now,
+            Viewed = false,
+            IdUser = 1,
+            IdPost = 1,
+            IdReason = 1
+        });
+        
         await _context.SaveChangesAsync();
     }
 
@@ -78,7 +104,7 @@ public class PostRepositoryTests
         Assert.NotNull(res);
 
         var posts = _context.Posts.ToList();
-        Assert.False(posts.Exists(e => e.IdPost == res.IdPost));
+        Assert.False(posts.Exists(e => res != null && e.IdPost == res.IdPost));
     }
 
     [Fact]
@@ -113,7 +139,7 @@ public class PostRepositoryTests
         Assert.NotNull(res);
 
         var tags = _context.Tags.ToList();
-        Assert.True(tags.Exists(e => e.IdTag == res.IdTag));
+        Assert.True(tags.Exists(e => res != null && e.IdTag == res.IdTag));
     }
 
     [Fact]
@@ -131,6 +157,7 @@ public class PostRepositoryTests
         
         post.IdTags.Remove(tag);
         await _context.SaveChangesAsync();
+        
         //Act
         var res = await _repository.DeleteTagFromPost(idPost, idTag);
 
@@ -168,7 +195,7 @@ public class PostRepositoryTests
             IdPost = 1,
             Title = "Title1",
             Content = "Content1",
-            Tags = new  TagByIdDto []
+            Tags = new[]
             {
                 new TagByIdDto
                 {
@@ -176,7 +203,7 @@ public class PostRepositoryTests
                 }
             }
         };
-        var idPost = 1;
+        const int idPost = 1;
         
         //Act
         var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
@@ -236,7 +263,7 @@ public class PostRepositoryTests
             IdPost = 1,
             Title = "Title1",
             Content = "Content1",
-            Tags = new  TagByIdDto []
+            Tags = new[]
             {
                 new TagByIdDto
                 {
@@ -244,8 +271,9 @@ public class PostRepositoryTests
                 }
             }
         };
-        var idPost = 1;
         
+        const int idPost = 1;
+
         //Act
         var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
 
@@ -272,7 +300,7 @@ public class PostRepositoryTests
         var posts = _context.Posts.ToList();
         Assert.Single(posts);
         
-        var post = posts.SingleOrDefault(e => e.IdPost == res.idPost);
+        var post = posts.SingleOrDefault(e => res != null && e.IdPost == res.idPost);
         Assert.NotNull(post);
     }
     
@@ -284,9 +312,9 @@ public class PostRepositoryTests
 
         await AddTestDataToDb();
         
-        var idPost= 2;
+        const int idPost = 2;
         
-        ///Act
+        //Act
         var res = await _repository.GetOnePostFromDb(idPost);
         
         //Assert
@@ -306,14 +334,19 @@ public class PostRepositoryTests
             IdUser = 1,
             Content = "Content",
             Title = "Title",
-            Tags = new TagDto []
+            Tags = new []
             {
                 new TagDto
                 {
                     NameTag = "Tag1"
+                },
+                new TagDto
+                {
+                    NameTag = "Tag2"
                 }
             }
         };
+        
         //Act
         var res = await _repository.AddNewPostToDb(newPostRequestDto);
         
@@ -321,7 +354,7 @@ public class PostRepositoryTests
         Assert.NotNull(res);
 
         var posts = _context.Posts.ToList();
-        Assert.True(posts.Exists(e => e.IdPost == res.IdPost));
+        Assert.True(posts.Exists(e => res != null && e.IdPost == res.IdPost));
     }
     
     [Fact]
@@ -335,7 +368,7 @@ public class PostRepositoryTests
             IdUser = 1,
             Content = "Content",
             Title = "Title",
-            Tags = new TagDto []
+            Tags = new []
             {
                 new TagDto
                 {
@@ -347,6 +380,180 @@ public class PostRepositoryTests
         //Act
         var res = await _repository.AddNewPostToDb(newPostRequestDto);
         
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetPostsFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetPostsFromDb();
+
+        //Assert
+        Assert.NotNull(res);
+
+        var posts = await _context.Posts.Select(e => e.IdPost).ToListAsync();
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    
+    [Fact]
+    public async Task GetPostsFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetPostsFromDb();
+
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetPostsByMostLikesFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetPostsByLikesFromDb();
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetPostsByMostLikesFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetPostsByLikesFromDb();
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetPostsByLeastLikesFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetPostsByLikesLeastFromDb();
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderBy(e => e.IdUsers.Count)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetPostsByLeastLikesFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetPostsByLikesLeastFromDb();
+
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetPostsByDateFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetPostsByDateFromDb();
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderBy(e => e.CreatedAt)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetPostsByDateFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetPostsByDateFromDb();
+
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetPostsByDateOldestFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetPostsByDateOldestFromDb();
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetPostsByDateOldestFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetPostsByDateOldestFromDb();
+
         //Assert
         Assert.Null(res);
     }

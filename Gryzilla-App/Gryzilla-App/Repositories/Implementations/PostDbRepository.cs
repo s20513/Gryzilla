@@ -99,11 +99,6 @@ public class PostDbRepository : IPostDbRepository
 
         var postDtos = await GetTableSort(allPosts);
 
-        if (postDtos is null)
-        {
-            return null;
-        }
-        
         postDtos = postDtos.OrderByDescending(order => order.Likes).ToList();
         return postDtos;
     }
@@ -120,11 +115,6 @@ public class PostDbRepository : IPostDbRepository
         }
        
         var postDto = await GetTableSort(allPosts);
-        
-        if (postDto is null)
-        {
-            return null;
-        }
         
         postDto = postDto.OrderBy(order => order.Likes).ToList();
         return postDto;
@@ -143,11 +133,6 @@ public class PostDbRepository : IPostDbRepository
         
         var postDto = await GetTableSort(allPosts);
         
-        if (postDto is null)
-        {
-            return null;
-        }
-        
         postDto = postDto.OrderByDescending(order => order.CreatedAt).ToList();
         return postDto;
     }
@@ -163,11 +148,6 @@ public class PostDbRepository : IPostDbRepository
         
         var postDto = await GetTableSort(allPosts);
         
-        if (postDto is null)
-        {
-            return null;
-        }
-
         postDto = postDto.OrderBy(order => order.CreatedAt).ToList();
         return postDto;
     }
