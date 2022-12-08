@@ -3,6 +3,7 @@ using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace UnitTest.User;
 
@@ -14,9 +15,12 @@ public class UserRepositoryTests
     public UserRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
+        var configuration = new ConfigurationManager();
+        configuration["JWT:Key"] = "3Zd75xqq5HtGPsjbVanrxgFPZG5FOnNDXmGXW0F7Q7Wng9vT3bIjOSj5M9KyZweyFCzufpUt7JZw0cdF";
+        //to trzeba jakoś lepiej otentegować
         
         _context = new GryzillaContext(options, true);
-        _repository = new UserDbRepository(_context);
+        _repository = new UserDbRepository(_context, new ConfigurationManager());
     }
 
     private async Task AddTestDataWithOneUser()

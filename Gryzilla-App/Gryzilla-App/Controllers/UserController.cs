@@ -1,12 +1,14 @@
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[Authorize]
 public class UserController : Controller
 {
     private readonly IUserDbRepository _userDbRepository;
@@ -122,6 +124,25 @@ public class UserController : Controller
         }
         
         return Ok(user);
+    }
+    
+    /// <summary>
+    ///  Creates token for User
+    /// </summary>
+    /// <param name="loginRequestDto"> LoginRequestDto - Nick and password given by user </param>
+    /// <returns> Return Status OK - New token created. Return Status Unauthorized - given credentials are wrong</returns>
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+    {
+        var res = await _userDbRepository.Login(loginRequestDto);
+        
+        if (res == null)
+        { 
+            return Unauthorized();
+        }
+        
+        return Ok(res);
     }
 
 }

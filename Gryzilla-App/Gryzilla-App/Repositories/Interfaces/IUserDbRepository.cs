@@ -10,5 +10,5 @@ public interface IUserDbRepository
      public Task<UserDto?> ModifyUserFromDb( int idUser, PutUserDto putUserDto);
      public Task<UserDto?> AddUserToDb(AddUserDto addUserDto);
      public Task<UserDto?> DeleteUserFromDb(int idUser);
-     
+     public Task<LoginResponseDto?> Login(LoginRequestDto loginRequestDto);
 }

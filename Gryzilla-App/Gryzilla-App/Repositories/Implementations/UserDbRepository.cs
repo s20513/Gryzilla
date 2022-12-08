@@ -1,18 +1,24 @@
-﻿using Gryzilla_App.DTOs.Requests.User;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Gryzilla_App.Repositories.Implementations;
 
 public class UserDbRepository : IUserDbRepository
 {
     private readonly GryzillaContext _context;
-    public UserDbRepository(GryzillaContext context)
+    private readonly IConfiguration _configuration;
+    public UserDbRepository(GryzillaContext context, IConfiguration configuration)
     {
         _context = context;
+        _configuration = configuration;
     }
     public async Task<UserDto?> GetUserFromDb(int idUser)
     {
@@ -155,5 +161,53 @@ public class UserDbRepository : IUserDbRepository
             await _context.SaveChangesAsync();
         }
         return user;
+    }
+
+    public async Task<LoginResponseDto?> Login(LoginRequestDto loginRequestDto)
+    {
+        var user = await _context.UserData
+            .SingleOrDefaultAsync(e => e.Nick == loginRequestDto.Nick 
+                                       && e.Password == loginRequestDto.Password);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        //dodać sprawdzanie hasła i sprawdzanie wygaśnięcia tokena6
+
+        var token = CreateToken(user.Nick);
+        user.Token = token;
+
+        await _context.SaveChangesAsync();
+
+        return new LoginResponseDto
+        {
+            Id = user.IdUser,
+            Nick = user.Nick,
+            Token = token
+        };
+    }
+
+    private string CreateToken(string nick)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]);
+
+        var description = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(
+                new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, nick),
+                }),
+            Expires = DateTime.UtcNow.AddDays(1),
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = handler.CreateToken(description);
+
+        return handler.WriteToken(token);
     }
 }
