@@ -89,6 +89,7 @@ public class UserController : Controller
     /// <param name="addUserDto">Dto - information about new user</param>
     /// <returns> Return Status Ok - New user added correctly, return user body</returns>
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> PostNewUser([FromBody] AddUserDto addUserDto){
 
         try

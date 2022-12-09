@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
@@ -109,12 +110,22 @@ public class UserDbRepository : IUserDbRepository
         {
             throw new SameNameException("Nick with given name already exists!");
         }
+
+        var idRank = await _context.Ranks
+            .Where(e => e.Name == "User")
+            .Select(e => e.IdRank)
+            .SingleOrDefaultAsync();
+
+        if (idRank == 0)
+        {
+            return null;
+        }
         
         var newUser = new UserDatum
         {
-            IdRank      = 4, //Standard user
+            IdRank      = idRank, //Standard user
             Nick        = addUserDto.Nick,
-            Password    = addUserDto.Password,
+            Password    = HashPassword(addUserDto.Password),
             Email       = addUserDto.Email,
             PhoneNumber = addUserDto.PhoneNumber,
             CreatedAt   = DateTime.Now
@@ -166,15 +177,17 @@ public class UserDbRepository : IUserDbRepository
     public async Task<LoginResponseDto?> Login(LoginRequestDto loginRequestDto)
     {
         var user = await _context.UserData
-            .SingleOrDefaultAsync(e => e.Nick == loginRequestDto.Nick 
-                                       && e.Password == loginRequestDto.Password);
+            .SingleOrDefaultAsync(e => e.Nick == loginRequestDto.Nick);
 
         if (user is null)
         {
             return null;
         }
 
-        //dodać sprawdzanie hasła i sprawdzanie wygaśnięcia tokena6
+        if (!CheckPassword(loginRequestDto.Password, user.Password))
+        {
+            return null;
+        }
 
         var token = CreateToken(user.Nick);
         user.Token = token;
@@ -199,7 +212,7 @@ public class UserDbRepository : IUserDbRepository
             Subject = new ClaimsIdentity(
                 new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, nick),
+                    new(ClaimTypes.Name, nick),
                 }),
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials =
@@ -209,5 +222,23 @@ public class UserDbRepository : IUserDbRepository
         var token = handler.CreateToken(description);
 
         return handler.WriteToken(token);
+    }
+
+    private string HashPassword(string password)
+    {
+        var hash = SHA256.Create();
+
+        var passwordBytes = Encoding.Default.GetBytes(password + _configuration["JWT:Salt"]);
+
+        var hashedPassword = hash.ComputeHash(passwordBytes);
+
+        return Convert.ToHexString(hashedPassword);
+    }
+
+    private bool CheckPassword(string givenPassword, string dbHashedPassword)
+    {
+        var givenPasswordHash = HashPassword(givenPassword);
+
+        return givenPasswordHash == dbHashedPassword;
     }
 }
