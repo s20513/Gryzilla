@@ -39,7 +39,7 @@ public class PostController : Controller
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("/bylikes/least")]
+    [HttpGet("byLikesAsc")]
     public async Task<IActionResult> GetPostsByLikes()
     {
         var posts = await _postsDbRepository.GetPostsByLikesLeastFromDb();
@@ -56,7 +56,7 @@ public class PostController : Controller
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("/bylikes/most")]
+    [HttpGet("byLikesDesc")]
     public async Task<IActionResult> GetPostsByLikesMost()
     {
         var posts = await _postsDbRepository.GetPostsByLikesFromDb();
@@ -73,7 +73,7 @@ public class PostController : Controller
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("/dates/latest")]
+    [HttpGet("byDateDesc")]
     public async Task<IActionResult> GetPostsByDates()
     {
         var posts = await _postsDbRepository.GetPostsByDateFromDb();
@@ -90,7 +90,7 @@ public class PostController : Controller
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("/dates/oldest")]
+    [HttpGet("byDateAsc")]
     public async Task<IActionResult> GetPostsByDatesOldest()
     {
         var posts = await _postsDbRepository.GetPostsByDateOldestFromDb();
@@ -109,7 +109,7 @@ public class PostController : Controller
     /// NotFound - if Post doesn't exist
     /// Ok - return post
     /// </returns>
-    [HttpGet("one/{idPost:int}")]
+    [HttpGet("{idPost:int}")]
     public async Task<IActionResult> GetOnePost([FromRoute] int idPost)
     {
         var posts = await _postsDbRepository.GetOnePostFromDb(idPost);
