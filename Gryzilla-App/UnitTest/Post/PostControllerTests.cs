@@ -142,12 +142,12 @@ public class PostControllerTests
         Assert.Equal("No posts found", resultValue);
     }
     [Fact]
-    public async void GetPostByCommentsFromDb_Returns_Ok()
+    public async void GetPostByLeastLikesFromDb_Returns_Ok()
     {
         //Arrange
         _postRepositoryMock
-            .Setup(x => x.GetPostsByCommentsFromDb())
-            .ReturnsAsync(_fakePosts.OrderBy(x => x.Comments));
+            .Setup(x => x.GetPostsByLikesLeastFromDb())
+            .ReturnsAsync(_fakePosts.OrderBy(x => x.Likes));
 
         //Act
         var actionResult = await _postsController.GetPostsByLikes();
@@ -161,15 +161,15 @@ public class PostControllerTests
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts.OrderBy(x => x.Comments), resultValue);
+        Assert.Equal(_fakePosts.OrderBy(x => x.Likes), resultValue);
     }
     [Fact]
-    public async void GetPostByCommentsFromDb_Not_Found()
+    public async void GetPostByLeastLikesFromDb_Not_Found()
     {
         //Arrange
         IEnumerable<PostDto>? nullValue = null;
         
-        _postRepositoryMock.Setup(x => x.GetPostsByCommentsFromDb()).ReturnsAsync(nullValue);
+        _postRepositoryMock.Setup(x => x.GetPostsByLikesLeastFromDb()).ReturnsAsync(nullValue);
 
         //Act
         var actionResult = await _postsController.GetPostsByLikes();

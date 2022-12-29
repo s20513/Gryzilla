@@ -33,16 +33,16 @@ public class PostController : Controller
         return Ok(posts);
     }
     /// <summary>
-    /// Return posts with the most comments
+    /// Return posts with the least likes
     /// </summary>
     /// <returns>
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("byCommentDesc")]
+    [HttpGet("byLikesAsc")]
     public async Task<IActionResult> GetPostsByLikes()
     {
-        var posts = await _postsDbRepository.GetPostsByCommentsFromDb();
+        var posts = await _postsDbRepository.GetPostsByLikesLeastFromDb();
         if (posts is null)
         {
             return NotFound("No posts found");
@@ -83,7 +83,6 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
-    
     /// <summary>
     /// Return posts from the oldest date
     /// </summary>
@@ -102,7 +101,6 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
-    
     /// <summary>
     /// Get post by Id
     /// </summary>

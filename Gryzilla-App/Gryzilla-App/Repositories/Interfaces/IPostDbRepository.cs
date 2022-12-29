@@ -7,7 +7,7 @@ public interface IPostDbRepository
 {
     public Task<IEnumerable<PostDto>?> GetPostsFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb();
-    public Task<IEnumerable<PostDto>?> GetPostsByCommentsFromDb();
+    public Task<IEnumerable<PostDto>?> GetPostsByLikesLeastFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb();
     public Task<NewPostDto?> AddNewPostToDb(AddPostDto addPostDto);

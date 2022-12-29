@@ -103,7 +103,7 @@ public class PostDbRepository : IPostDbRepository
         return postDtos;
     }
 
-    public async Task<IEnumerable<PostDto>?> GetPostsByCommentsFromDb()
+    public async Task<IEnumerable<PostDto>?> GetPostsByLikesLeastFromDb()
     {
         var allPosts = await _context
             .Posts
@@ -116,7 +116,7 @@ public class PostDbRepository : IPostDbRepository
        
         var postDto = await GetTableSort(allPosts);
         
-        postDto = postDto.OrderByDescending(order => order.Comments).ToList();
+        postDto = postDto.OrderBy(order => order.Likes).ToList();
         return postDto;
     }
 

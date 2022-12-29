@@ -451,7 +451,7 @@ public class PostRepositoryTests
         Assert.Null(res);
     }
     [Fact]
-    public async Task GetPostsByCommentsFromDb_Returns_IEnumerable()
+    public async Task GetPostsByLeastLikesFromDb_Returns_IEnumerable()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -459,27 +459,28 @@ public class PostRepositoryTests
         await AddTestDataToDb();
 
         //Act
-        var res = await _repository.GetPostsByCommentsFromDb();
+        var res = await _repository.GetPostsByLikesLeastFromDb();
         
         //Assert
         Assert.NotNull(res);
         
         var posts = await _context
             .Posts
-            .OrderByDescending(e => e.CommentPosts.Count)
+            .OrderBy(e => e.IdUsers.Count)
             .Select(e => e.IdPost)
             .ToListAsync();
+
 
         if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
     }
     [Fact]
-    public async Task GetPostsByCommentsFromDb_Returns_Null()
+    public async Task GetPostsByLeastLikesFromDb_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetPostsByCommentsFromDb();
+        var res = await _repository.GetPostsByLikesLeastFromDb();
 
         //Assert
         Assert.Null(res);
