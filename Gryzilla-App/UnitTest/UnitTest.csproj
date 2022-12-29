@@ -6,7 +6,6 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-        //wyłączy publikowanie testów wraz z aplikacją
         <IsPublishable>false</IsPublishable >
     </PropertyGroup>
 
