@@ -39,10 +39,10 @@ public class PostController : Controller
     /// NotFound - if any post doesn't exist
     /// Ok - return list of posts
     /// </returns>
-    [HttpGet("byLikesAsc")]
-    public async Task<IActionResult> GetPostsByLikes()
+    [HttpGet("byCommentsDesc")]
+    public async Task<IActionResult> GetPostsByComments()
     {
-        var posts = await _postsDbRepository.GetPostsByLikesLeastFromDb();
+        var posts = await _postsDbRepository.GetPostsByCommentsFromDb();
         if (posts is null)
         {
             return NotFound("No posts found");
