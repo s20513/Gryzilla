@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.PostComment;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace Gryzilla_App.Repositories.Implementations;
 public class PostDbRepository : IPostDbRepository
 {
     private readonly GryzillaContext _context;
+    private IPostDbRepository _postDbRepositoryImplementation;
 
     public PostDbRepository(GryzillaContext context)
     {
@@ -84,6 +86,115 @@ public class PostDbRepository : IPostDbRepository
         var postDto = await GetTableSort(allPosts);
         
         return postDto;
+    }
+
+    public async Task<IEnumerable<PostDto>?> GetQtyPostsFromDb(int qtyPosts)
+    {
+        if (qtyPosts < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allPosts = await _context
+            .Posts
+            .OrderBy(x => x.IdPost)
+            .Skip(qtyPosts-5)
+            .Take(5)
+            .ToArrayAsync();
+        
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+        var postDto = await GetTableSort(allPosts);
+        return postDto;
+    }
+
+    public async Task<IEnumerable<PostDto>?> GetQtyPostsByLikesFromDb(int qtyPosts)
+    {
+        if (qtyPosts < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
+
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+
+        var postDtos = await GetTableSort(allPosts);
+
+        postDtos = postDtos.OrderByDescending(order => order.Likes).Skip(qtyPosts - 5).Take(5).ToList();
+        return postDtos;
+    }
+
+    public async Task<IEnumerable<PostDto>?> GetQtyPostsByCommentsFromDb(int qtyPosts)
+    {
+        if (qtyPosts < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
+
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+
+        var postDtos = await GetTableSort(allPosts);
+
+        postDtos = postDtos.OrderByDescending(order => order.Comments).Skip(qtyPosts - 5).Take(5).ToList();
+        return postDtos;
+    }
+
+    public async Task<IEnumerable<PostDto>?> GetQtyPostsByDateFromDb(int qtyPosts)
+    {
+        if (qtyPosts < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
+
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+
+        var postDtos = await GetTableSort(allPosts);
+
+        postDtos = postDtos.OrderByDescending(order => order.CreatedAt).Skip(qtyPosts - 5).Take(5).ToList();
+        return postDtos;
+    }
+
+    public async  Task<IEnumerable<PostDto>?> GetQtyPostsByDateOldestFromDb(int qtyPosts)
+    {
+        if (qtyPosts < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
+
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+
+        var postDtos = await GetTableSort(allPosts);
+
+       
+        postDtos = postDtos.OrderBy(order => order.CreatedAt).Skip(qtyPosts - 5).Take(5).ToList();
+        return postDtos;
+        
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb()

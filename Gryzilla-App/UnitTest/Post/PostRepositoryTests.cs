@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
@@ -383,7 +384,51 @@ public class PostRepositoryTests
         //Assert
         Assert.Null(res);
     }
-    
+    [Fact]
+    public async Task GetQtyPostsFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetQtyPostsFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetQtyPostsFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyPostsFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyPostsFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsFromDb(4));
+    }
     [Fact]
     public async Task GetPostsFromDb_Returns_IEnumerable()
     {
@@ -415,6 +460,51 @@ public class PostRepositoryTests
         Assert.Null(res);
     }
     
+    [Fact]
+    public async Task GetQtyPostsByMostLikesFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetQtyPostsByLikesFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetQtyPostsByMostLikesFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyPostsByLikesFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyPostsByMostLikesFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByLikesFromDb(4));
+    }
     [Fact]
     public async Task GetPostsByMostLikesFromDb_Returns_IEnumerable()
     {
@@ -451,6 +541,51 @@ public class PostRepositoryTests
         Assert.Null(res);
     }
     [Fact]
+    public async Task GetQtyPostsByCommentsFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetQtyPostsByCommentsFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetQtyPostsByCommentsFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyPostsByCommentsFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyPostsByCommentsFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByCommentsFromDb(4));
+    }
+    [Fact]
     public async Task GetPostsByCommentsFromDb_Returns_IEnumerable()
     {
         //Arrange
@@ -485,7 +620,51 @@ public class PostRepositoryTests
         //Assert
         Assert.Null(res);
     }
-    
+    [Fact]
+    public async Task GetQtyPostsByDateFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetQtyPostsByDateFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderBy(e => e.CreatedAt)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetQtyPostsByDateFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyPostsByDateFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyPostsByDateFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByDateFromDb(4));
+    }
     [Fact]
     public async Task GetPostsByDateFromDb_Returns_IEnumerable()
     {
@@ -521,7 +700,51 @@ public class PostRepositoryTests
         //Assert
         Assert.Null(res);
     }
-    
+    [Fact]
+    public async Task GetQtyPostsByDateOldestFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetQtyPostsByDateOldestFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => e.IdPost)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+    }
+    [Fact]
+    public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyPostsByDateOldestFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetPostsByDateOldestFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByDateOldestFromDb(4));
+    }
     [Fact]
     public async Task GetPostsByDateOldestFromDb_Returns_IEnumerable()
     {

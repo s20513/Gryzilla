@@ -1,7 +1,9 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Gryzilla_App.Controllers;
 
@@ -32,6 +34,143 @@ public class PostController : Controller
         
         return Ok(posts);
     }
+    
+    /// <summary>
+    /// Get posts 
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
+    [HttpGet("qty/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPosts(int qtyPosts)
+    {
+        IEnumerable<PostDto>? posts;
+        
+        try
+        {
+           posts = await _postsDbRepository
+               .GetQtyPostsFromDb(qtyPosts);
+
+            if (posts is null)
+            {
+                return NotFound("No posts found");
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok(posts);
+    }
+    /// <summary>
+    /// Return posts with the least likes
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
+    [HttpGet("qty/byCommentsDesc/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPostsByComments(int qtyPosts)
+    {
+        IEnumerable<PostDto>? posts;
+        
+        try
+        {
+            posts = await _postsDbRepository.GetQtyPostsByCommentsFromDb(qtyPosts);
+            if (posts.IsNullOrEmpty())
+            {
+                return NotFound("No posts found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok(posts);
+    }
+    /// <summary>
+    /// Return posts with the most likes
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
+    [HttpGet("qty/byLikesDesc/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPostsByLikesMost(int qtyPosts)
+    {
+        IEnumerable<PostDto>? posts;
+        try
+        {
+            posts = await _postsDbRepository.GetQtyPostsByLikesFromDb(qtyPosts);
+            if (posts.IsNullOrEmpty())
+            {
+                return NotFound("No posts found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+       
+        return Ok(posts);
+    }
+    /// <summary>
+    /// Return posts from the latest date
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
+    [HttpGet("qty/byDateDesc/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPostsByDates(int qtyPosts)
+    {
+        IEnumerable<PostDto>? posts;
+        try
+        {
+            posts = await _postsDbRepository.GetQtyPostsByDateFromDb(qtyPosts);
+            if (posts.IsNullOrEmpty())
+            {
+                return NotFound("No posts found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok(posts);
+    }
+
+    /// <summary>
+    /// Return posts from the oldest date
+    /// </summary>
+    /// <returns>
+    /// NotFound - if any post doesn't exist
+    /// Ok - return list of posts
+    /// </returns>
+    [HttpGet("qty/byDateAsc/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPostsByDatesOldest(int qtyPosts)
+    {
+        IEnumerable<PostDto>? posts;
+        try
+        {
+            posts = await _postsDbRepository.GetQtyPostsByDateOldestFromDb(qtyPosts);
+
+            if (posts.IsNullOrEmpty())
+            {
+                return NotFound("No posts found");
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+        
+        return Ok(posts);
+    }
+    
     /// <summary>
     /// Return posts with the least likes
     /// </summary>
@@ -43,7 +182,7 @@ public class PostController : Controller
     public async Task<IActionResult> GetPostsByComments()
     {
         var posts = await _postsDbRepository.GetPostsByCommentsFromDb();
-        if (posts is null)
+        if (posts.IsNullOrEmpty())
         {
             return NotFound("No posts found");
         }

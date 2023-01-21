@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -97,6 +98,77 @@ public class PostControllerTests
         if (resultValue is null) return;
         Assert.Equal("No posts found", resultValue);
     }
+    
+    [Fact]
+    public async void GetQtyPostByMostLikesFromDb_Returns_Ok()
+    {
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByLikesFromDb(5))
+            .ReturnsAsync(_fakePosts.OrderByDescending(x => x.Likes));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByLikesMost(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakePosts.OrderByDescending(x => x.Likes), resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostByMostLikesFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByLikesFromDb(5))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByLikesMost(5);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyPostByMostLikesFromDb_Not_Found()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetPostsByLikesFromDb()).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetPostsByLikesMost(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
     [Fact]
     public async void GetPostByMostLikesFromDb_Returns_Ok()
     {
@@ -142,6 +214,76 @@ public class PostControllerTests
         Assert.Equal("No posts found", resultValue);
     }
     [Fact]
+    public async void GetQtyPostsByCommentsFromDb_Returns_Ok()
+    {
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByCommentsFromDb(5))
+            .ReturnsAsync(_fakePosts.OrderBy(x => x.Comments));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByComments(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakePosts.OrderByDescending(x => x.Comments), resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostByCommentsFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByCommentsFromDb(5))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByComments(5);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+
+    [Fact]
+    public async void GetQtyPostsByCommentsFromDb_Not_Found()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetPostsByCommentsFromDb()).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetPostsByComments(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
+    [Fact]
     public async void GetPostsByCommentsFromDb_Returns_Ok()
     {
         //Arrange
@@ -173,6 +315,77 @@ public class PostControllerTests
 
         //Act
         var actionResult = await _postsController.GetPostsByComments();
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyPostByLatestDateFromDb_Returns_Ok()
+    {
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByDateFromDb(5))
+            .ReturnsAsync(_fakePosts.OrderByDescending(x => x.CreatedAt));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByDates(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakePosts.OrderByDescending(x => x.CreatedAt), resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyPostByLatestDateFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByDateFromDb(5))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByDates(5);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostByLatestDateFromDb_Not_Found()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetQtyPostsByDateFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetPostsByDates(5);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -230,6 +443,76 @@ public class PostControllerTests
         Assert.Equal("No posts found", resultValue);
     }
     [Fact]
+    public async void GetQtyPostByOldestDateFromDb_Returns_Ok()
+    {
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByDateOldestFromDb(5))
+            .ReturnsAsync(_fakePosts.OrderBy(x => x.CreatedAt));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByDatesOldest(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakePosts.OrderBy(x => x.CreatedAt), resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyPostByOldestDateFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsByDateOldestFromDb(5))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _postsController.GetPostsByDatesOldest(5);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostByOldestDateFromDb_Not_Found()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetQtyPostsByDateOldestFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetPostsByDatesOldest(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
+    [Fact]
     public async void GetPostByOldestDateFromDb_Returns_Ok()
     {
         //Arrange
@@ -272,6 +555,31 @@ public class PostControllerTests
         
         if (resultValue is null) return;
         Assert.Equal("No posts found", resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyPostsFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsFromDb(5))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _postsController.GetPosts(5);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
     }
     
     [Fact]
