@@ -27,6 +27,26 @@ public class TagRepositoryTests
         });
         await _context.SaveChangesAsync();
     }
+    
+    private async Task AddTestDataWithManyTags()
+    {
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        {
+            NameTag = "Call of duty"
+        });
+        
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        {
+            NameTag = "Wiedźmin"
+        });
+        
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        {
+            NameTag = "World of tanks"
+        });
+        
+        await _context.SaveChangesAsync();
+    }
 
     [Fact]
     public async Task AddNewTagToDb_Returns_TagDto()
@@ -71,7 +91,7 @@ public class TagRepositoryTests
     
         
     [Fact]
-    public async Task GetTagsFromDb_Returns_TagDto()
+    public async Task GetTagsFromDb_Returns_FullTagDtoArray()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -137,5 +157,44 @@ public class TagRepositoryTests
         //Assert
         Assert.Null(res);
 
+    }
+    
+    [Fact]
+    public async Task GetTagsStartingWithParamFromDb_Returns_FullTagDtoArray()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithManyTags();
+
+        var startOfTagName = "W";
+
+        //Act
+        var res = await _repository.GetTagsStartingWithParamFromDb(startOfTagName);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var tags = await _context.Tags
+            .Where(x => x.NameTag.StartsWith(startOfTagName))
+            .Select(e => e.IdTag)
+            .ToListAsync();
+        
+        Assert.Equal(tags, res.Select(e => e.Id));;
+    }
+    
+    [Fact]
+    public async Task GetTagsStartingWithParamFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        var startOfTagName = "W";
+
+        //Act
+        var res = await _repository.GetTagsStartingWithParamFromDb(startOfTagName);
+
+        //Assert
+        Assert.Null(res);
     }
 }

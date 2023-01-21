@@ -76,4 +76,19 @@ public class TagDbRepository: ITagDbRepository
             Name = newTag.NameTag
         };
     }
+
+    public async Task<IEnumerable<FullTagDto>?> GetTagsStartingWithParamFromDb(string startOfTagName)
+    {
+        var tags = await _context
+            .Tags
+            .Where(x => x.NameTag.StartsWith(startOfTagName))
+            .Select(x => new FullTagDto
+            {
+                Id = x.IdTag,
+                Name = x.NameTag
+            })
+            .ToArrayAsync();
+
+        return tags.Length == 0 ? null : tags;
+    }
 }

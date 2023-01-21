@@ -84,4 +84,25 @@ public class TagController: Controller
             return BadRequest(e.Message);
         }
     }
+    
+    /// <summary>
+    ///  Get tags starting, which name starts with startingText
+    /// </summary>
+    /// <param name="startOfTagName"> string which determines the start on tag names </param>
+    /// <returns>
+    /// NotFound - if there is no tag which starts with startingText value
+    /// OK - return list of tags which starts with startingText value
+    /// </returns>
+    [HttpGet("{startOfTagName}")]
+    public async Task<IActionResult> GetTagsStartingWithParam(string startOfTagName)
+    {
+        var tags = await _tagDbRepository.GetTagsStartingWithParamFromDb(startOfTagName);
+        
+        if (tags is null)
+        {
+            return NotFound($"No tags found starting with {startOfTagName} were found");
+        }
+
+        return Ok(tags);
+    }
 }

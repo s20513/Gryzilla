@@ -190,4 +190,52 @@ public class TagControllerTests
         Assert.Equal("Tag with given name already exists!", resultValue);
     }
     
+    [Fact]
+    public async void GetTagsStartingWithParam_Returns_Ok()
+    {
+        //Arrange
+        var startOfTagName = "";
+        var tags= new FullTagDto[5];
+        
+        _tagRepositoryMock.Setup(x => x.GetTagsStartingWithParamFromDb(startOfTagName)).ReturnsAsync(tags);
+
+        //Act
+        var actionResult = await _tagsController.GetTagsStartingWithParam(startOfTagName);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as FullTagDto[];
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(tags, resultValue);
+    }
+    
+    [Fact]
+    public async void GetTagsStartingWithParam_Not_Found()
+    {
+        //Arrange
+        var startOfTagName = "cw";
+        IEnumerable<FullTagDto>? nullValue = null;
+        
+        _tagRepositoryMock.Setup(x => x.GetTagsStartingWithParamFromDb(startOfTagName)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _tagsController.GetTagsStartingWithParam(startOfTagName);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal($"No tags found starting with {startOfTagName} were found", resultValue);
+    }
+    
 }
