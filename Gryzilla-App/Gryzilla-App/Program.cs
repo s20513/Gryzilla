@@ -8,7 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
+//ustrawić na true żeby mieć swaggera w publishu
+var includeSwaggerInPublish = true;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -104,7 +105,7 @@ builder.Services.AddDbContext<GryzillaContext>(options =>
     
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || includeSwaggerInPublish)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
