@@ -33,7 +33,8 @@
         public string Email { get; set; } = null!;
         public string? PhoneNumber { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string? Token { get; set; }
+        public Guid? RefreshToken { get; set; }
+        public DateTime? TokenExpire { get; set; }
 
         public Rank IdRankNavigation { get; set; } = null!;
         public ICollection<AchievementUser> AchievementUsers { get; set; }

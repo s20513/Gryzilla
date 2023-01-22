@@ -131,7 +131,7 @@ public class UserController : Controller
     ///  Creates token for User
     /// </summary>
     /// <param name="loginRequestDto"> LoginRequestDto - Nick and password given by user </param>
-    /// <returns> Return Status OK - New token created. Return Status Unauthorized - given credentials are wrong</returns>
+    /// <returns> Return Status OK - New token created. Return Status Forbid - given credentials are wrong</returns>
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
@@ -140,7 +140,25 @@ public class UserController : Controller
         
         if (res == null)
         { 
-            return Unauthorized();
+            return Forbid();
+        }
+        
+        return Ok(res);
+    }
+    
+    /// <summary>
+    ///  Refresh users token
+    /// </summary>
+    /// <param name="refreshToken"> string - refresh token </param>
+    /// <returns> Return Status OK - New token created. Return Status Forbid - token expired</returns>
+    [HttpPost("refreshToken")]
+    public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+    {
+        var res = await _userDbRepository.RefreshToken(refreshToken);
+        
+        if (res == null)
+        { 
+            return Forbid();
         }
         
         return Ok(res);

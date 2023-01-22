@@ -174,9 +174,10 @@ public class UserDbRepository : IUserDbRepository
         return user;
     }
 
-    public async Task<LoginResponseDto?> Login(LoginRequestDto loginRequestDto)
+    public async Task<TokenResponseDto?> Login(LoginRequestDto loginRequestDto)
     {
         var user = await _context.UserData
+            .Include(e => e.IdRankNavigation)
             .SingleOrDefaultAsync(e => e.Nick == loginRequestDto.Nick);
 
         if (user is null)
@@ -189,20 +190,51 @@ public class UserDbRepository : IUserDbRepository
             return null;
         }
 
-        var token = CreateToken(user.Nick);
-        user.Token = token;
+        var refreshToken = Guid.NewGuid();
+        user.RefreshToken = refreshToken;
+        user.TokenExpire = DateTime.Now.AddMinutes(30);
 
         await _context.SaveChangesAsync();
 
-        return new LoginResponseDto
+        var token = GenerateToken(user);
+
+        return new TokenResponseDto
         {
-            Id = user.IdUser,
-            Nick = user.Nick,
-            Token = token
+            Token = token,
+            RefreshToken = refreshToken.ToString()
         };
     }
 
-    private string CreateToken(string nick)
+    public async Task<TokenResponseDto?> RefreshToken(string refreshToken)
+    {
+        var user = await _context.UserData
+            .Include(e => e.IdRankNavigation)
+            .Where(e => e.RefreshToken.ToString() == refreshToken)
+            .SingleOrDefaultAsync();
+        
+        if (user is null || 
+            user.TokenExpire < DateTime.Now)
+        {
+            return null;
+        }
+        
+        var newRefreshToken = Guid.NewGuid();
+        user.RefreshToken = newRefreshToken;
+        user.TokenExpire = DateTime.Now.AddMinutes(30);
+
+        await _context.SaveChangesAsync();
+
+        var token = GenerateToken(user);
+
+        return new TokenResponseDto
+        {
+            Token = token,
+            RefreshToken = newRefreshToken.ToString()
+        };
+        
+    }
+
+    private string GenerateToken(UserDatum user)
     {
         var handler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_configuration["JWT:Key"]);
@@ -212,18 +244,19 @@ public class UserDbRepository : IUserDbRepository
             Subject = new ClaimsIdentity(
                 new Claim[]
                 {
-                    new(ClaimTypes.Name, nick),
+                    new(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+                    new(ClaimTypes.Name, user.Nick),
+                    new(ClaimTypes.Role, user.IdRankNavigation.Name),
                 }),
-            Expires = DateTime.UtcNow.AddDays(1),
-            SigningCredentials =
-                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            Expires = DateTime.UtcNow.AddMinutes(15),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
         var token = handler.CreateToken(description);
 
         return handler.WriteToken(token);
     }
-
+    
     private string HashPassword(string password)
     {
         var hash = SHA256.Create();
