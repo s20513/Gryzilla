@@ -97,11 +97,6 @@ public class TagController: Controller
     public async Task<IActionResult> GetTagsStartingWithParam(string startOfTagName)
     {
         var tags = await _tagDbRepository.GetTagsStartingWithParamFromDb(startOfTagName);
-        
-        if (tags is null)
-        {
-            return NotFound($"No tags found starting with {startOfTagName} were found");
-        }
 
         return Ok(tags);
     }

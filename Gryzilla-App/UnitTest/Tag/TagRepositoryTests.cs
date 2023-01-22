@@ -184,7 +184,7 @@ public class TagRepositoryTests
     }
     
     [Fact]
-    public async Task GetTagsStartingWithParamFromDb_Returns_Null()
+    public async Task GetTagsStartingWithParamFromDb_Returns_EmptyArray()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -195,6 +195,6 @@ public class TagRepositoryTests
         var res = await _repository.GetTagsStartingWithParamFromDb(startOfTagName);
 
         //Assert
-        Assert.Null(res);
+        Assert.Empty(res);
     }
 }

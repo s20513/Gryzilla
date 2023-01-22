@@ -77,7 +77,7 @@ public class TagDbRepository: ITagDbRepository
         };
     }
 
-    public async Task<IEnumerable<FullTagDto>?> GetTagsStartingWithParamFromDb(string startOfTagName)
+    public async Task<IEnumerable<FullTagDto>> GetTagsStartingWithParamFromDb(string startOfTagName)
     {
         var tags = await _context
             .Tags
@@ -89,6 +89,6 @@ public class TagDbRepository: ITagDbRepository
             })
             .ToArrayAsync();
 
-        return tags.Length == 0 ? null : tags;
+        return tags;
     }
 }
