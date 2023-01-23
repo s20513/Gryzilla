@@ -163,5 +163,18 @@ public class UserController : Controller
         
         return Ok(res);
     }
+    
+    [HttpPost("rank")]
+    public async Task<IActionResult> ChangeUserRank([FromBody] UserRank userRank)
+    {
+        var res = await _userDbRepository.ChangeUserRank(userRank);
+        
+        if (res == null)
+        { 
+            return NotFound("Rank or user does not exists!");
+        }
+        
+        return Ok(res);
+    }
 
 }

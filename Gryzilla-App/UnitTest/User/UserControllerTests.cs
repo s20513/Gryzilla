@@ -307,6 +307,7 @@ public class UserControllerTests
         if (resultValue is null) return;
         Assert.Equal("Nick with given name already exists!", resultValue);
     }
+    
     [Fact]
     public async void DeleteUser_Returns_Ok()
     {
@@ -353,6 +354,54 @@ public class UserControllerTests
         
         if (resultValue is null) return;
         Assert.Equal("User doesn't exist", resultValue);
+    }
+    
+    [Fact]
+    public async void ChangeUserRank_Returns_Ok()
+    {
+        //Arrange
+        var userRank = new UserRank();
+        var userDto = new UserDto();
+
+        _userRepositoryMock.Setup(x => x.ChangeUserRank(userRank)).ReturnsAsync(userDto);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserRank(userRank);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as UserDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(userDto, resultValue);
+    }
+    
+    [Fact]
+    public async void ChangeUserRank_Not_Found()
+    {
+        //Arrange
+        var userRank = new UserRank();
+        UserDto? userDto = null;
+        
+        _userRepositoryMock.Setup(x => x.ChangeUserRank(userRank)).ReturnsAsync(userDto);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserRank(userRank);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("Rank or user does not exists!", resultValue);
     }
 
 }

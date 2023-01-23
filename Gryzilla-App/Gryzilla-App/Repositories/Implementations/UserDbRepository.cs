@@ -234,6 +234,37 @@ public class UserDbRepository : IUserDbRepository
         
     }
 
+    public async Task<UserDto?> ChangeUserRank(UserRank userRank)
+    {
+        var rank = await _context.Ranks.SingleOrDefaultAsync(x => x.IdRank == userRank.IdRank);
+
+        if (rank is null)
+        {
+            return null;
+        }
+
+        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == userRank.IdUser);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        user.IdRank = rank.IdRank;
+        await _context.SaveChangesAsync();
+
+        return new UserDto
+        {
+            IdUser = user.IdUser,
+            Nick = user.Nick,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            IdRank = rank.IdRank,
+            RankName = rank.Name,
+            CreatedAt = user.CreatedAt
+        };
+    }
+
     private string GenerateToken(UserDatum user)
     {
         var handler = new JwtSecurityTokenHandler();

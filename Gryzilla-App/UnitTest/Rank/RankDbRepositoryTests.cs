@@ -69,7 +69,7 @@ public class RankDbRepositoryTests
         Assert.NotNull(res);
 
         var ranks = _context.Ranks.ToList();
-        Assert.True(ranks.Exists(e => e.IdRank == res.idRank));
+        Assert.True(ranks.Exists(e => e.IdRank == res.IdRank));
     }
 
     [Fact]
@@ -178,7 +178,7 @@ public class RankDbRepositoryTests
         Assert.NotNull(res);
 
         var ranks = _context.Ranks.ToList();
-        Assert.False(ranks.Exists(e => e.IdRank == res.idRank));
+        Assert.False(ranks.Exists(e => e.IdRank == res.IdRank));
     }
 
     [Fact]

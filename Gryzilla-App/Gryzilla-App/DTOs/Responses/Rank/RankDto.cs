@@ -2,7 +2,7 @@
 
 public class RankDto
 {
-    public int idRank { get; set; }
+    public int IdRank { get; set; }
     public string Name { get; set; }
     public int RankLevel { get; set; }
 }

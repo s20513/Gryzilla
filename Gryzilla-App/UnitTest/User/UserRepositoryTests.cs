@@ -321,4 +321,72 @@ public class UserRepositoryTests
         //Assert
         Assert.Empty(res);
     }
+    
+    [Fact]
+    public async Task ChangeUserRank_Returns_UserDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var userRank = new UserRank
+        {
+            IdUser = 1,
+            IdRank = 2
+        };
+
+        //Act
+        var res = await _repository.ChangeUserRank(userRank);
+        
+        //Assert
+        Assert.NotNull(res);
+
+        var userRankId = _context.UserData
+            .Where(e => e.IdUser == userRank.IdUser)
+            .Select(e => e.IdRank)
+            .SingleOrDefault();
+        
+        Assert.True(userRankId == userRank.IdRank);
+    }
+    
+    [Fact]
+    public async Task ChangeUserRank_WithNoExistingRankWithGivenId_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        var userRank = new UserRank
+        {
+            IdUser = 1,
+            IdRank = 20
+        };
+
+        //Act
+        var res = await _repository.ChangeUserRank(userRank);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task ChangeUserRank_WithNoExistingUserWithGivenId_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var userRank = new UserRank
+        {
+            IdUser = 100,
+            IdRank = 2
+        };
+
+        //Act
+        var res = await _repository.ChangeUserRank(userRank);
+        
+        //Assert
+        Assert.Null(res);
+    }
 }

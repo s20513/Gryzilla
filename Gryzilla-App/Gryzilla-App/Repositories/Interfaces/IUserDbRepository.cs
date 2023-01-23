@@ -12,4 +12,5 @@ public interface IUserDbRepository
      public Task<UserDto?> DeleteUserFromDb(int idUser);
      public Task<TokenResponseDto?> Login(LoginRequestDto loginRequestDto);
      public Task<TokenResponseDto?> RefreshToken(string refreshToken);
+     public Task<UserDto?> ChangeUserRank(UserRank userRank);
 }
