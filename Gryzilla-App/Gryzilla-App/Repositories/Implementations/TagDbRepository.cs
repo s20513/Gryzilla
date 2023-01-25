@@ -9,7 +9,6 @@ namespace Gryzilla_App.Repositories.Implementations;
 
 public class TagDbRepository: ITagDbRepository
 {
-    //spiąć w program
     private readonly GryzillaContext _context;
 
     public TagDbRepository(GryzillaContext context)

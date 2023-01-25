@@ -96,6 +96,7 @@ builder.Services.AddScoped<IGroupDbRepository, GroupMssqlDbRepository>();
 builder.Services.AddScoped<IArticleDbRepository, ArticleMssqlDbRepository>();
 builder.Services.AddScoped<ICommentArticleDbRepository, CommentArticleMssqlDbRepository>();
 builder.Services.AddScoped<ITagDbRepository, TagDbRepository>();
+builder.Services.AddScoped<IReasonDbRepository, ReasonDbRepository>();
 
 
 var connectionString = "Data Source=89.68.94.143,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";

@@ -66,7 +66,7 @@ public class PostRepositoryTests
             IdPost = 1
         });
 
-        await _context.Reasons.AddAsync(new Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
         {
             ReasonName = "ReasonName"
         });
