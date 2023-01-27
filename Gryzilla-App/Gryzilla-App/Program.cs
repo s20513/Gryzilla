@@ -96,6 +96,8 @@ builder.Services.AddScoped<IGroupDbRepository, GroupMssqlDbRepository>();
 builder.Services.AddScoped<IArticleDbRepository, ArticleMssqlDbRepository>();
 builder.Services.AddScoped<ICommentArticleDbRepository, CommentArticleMssqlDbRepository>();
 builder.Services.AddScoped<ITagDbRepository, TagDbRepository>();
+builder.Services.AddScoped<IReportCommentPostDbRepository, ReportCommentPostDbRepository>();
+builder.Services.AddScoped<IReportCommentArticleDbRepository, ReportCommentArticleDbRepository>();
 builder.Services.AddScoped<IReasonDbRepository, ReasonDbRepository>();
 
 
