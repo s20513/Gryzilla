@@ -581,7 +581,53 @@ public class PostControllerTests
         if (resultValue is null) return;
         Assert.Equal(exceptionMessage, resultValue);
     }
-    
+    [Fact]
+    public async void GetQtyPostsFromDb_Returns_Null()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetQtyPostsFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetPosts(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostsFromDb_Returns_ListOfPosts()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetQtyPostsFromDb(5))
+            .ReturnsAsync(_fakePosts.OrderBy(x => x.CreatedAt));
+
+        //Act
+        var actionResult = await _postsController.GetPosts(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakePosts, resultValue);
+    }
     [Fact]
     public async void GetPostFromDb_Returns_Ok()
     {
