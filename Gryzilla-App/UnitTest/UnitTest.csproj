@@ -38,8 +38,4 @@
       <ProjectReference Include="..\Gryzilla-App\Gryzilla-App.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="TopComment" />
-    </ItemGroup>
-
 </Project>
