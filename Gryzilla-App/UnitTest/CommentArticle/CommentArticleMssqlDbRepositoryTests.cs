@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTOs.Requests.ArticleComment;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ public class CommentArticleMssqlDbRepositoryTests
 
     private async Task CreateTestData()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -37,7 +38,7 @@ public class CommentArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
         {
             IdUser = 1,
             Title = "Title1",
@@ -46,7 +47,7 @@ public class CommentArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.CommentArticle
         {
             IdUser = 1,
             IdArticle = 1,

@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTOs.Requests.Group;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -21,7 +22,7 @@ public class GroupRepositoryTests
 
     private async Task AddTestDataWithManyGroup()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -84,7 +85,7 @@ public class GroupRepositoryTests
     
     private async Task AddTestDataWithOneGroup()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1

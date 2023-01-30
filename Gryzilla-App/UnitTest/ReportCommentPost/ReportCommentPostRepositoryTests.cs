@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTOs.Requests.ReportCommentPost;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTOs.Requests.ReportCommentPost;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -20,7 +21,7 @@ public class ReportCommentPostRepositoryTests
     }
      private async Task AddTestDataToDb()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -45,7 +46,7 @@ public class ReportCommentPostRepositoryTests
             CreatedAt = DateTime.Today
         });
         await _context.SaveChangesAsync();
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
             Title = "Title1",
@@ -55,7 +56,7 @@ public class ReportCommentPostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        await _context.CommentPosts.AddAsync(new Gryzilla_App.CommentPost
         {
             IdUser = 1,
             IdPost = 1,
@@ -63,19 +64,19 @@ public class ReportCommentPostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
         {
             ReasonName = "Test2"
         });
         
         await _context.SaveChangesAsync();
-        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
         {
             ReasonName = "Test3"
         });
         
         await _context.SaveChangesAsync();
-        await _context.ReportCommentPosts.AddAsync(new Gryzilla_App.Models.ReportCommentPost
+        await _context.ReportCommentPosts.AddAsync(new Gryzilla_App.ReportCommentPost
         {
             IdUser = 1,
             IdComment = 1,

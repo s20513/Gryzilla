@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTOs.Requests.User;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -25,28 +26,28 @@ public class UserRepositoryTests
 
     private async Task AddTestDataWithOneUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
         });
         await _context.SaveChangesAsync();
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Moderator",
             RankLevel = 2
         });
         await _context.SaveChangesAsync();
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Admin",
             RankLevel = 3
         });
         await _context.SaveChangesAsync();
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "User",
             RankLevel = 4
@@ -66,7 +67,7 @@ public class UserRepositoryTests
     
     private async Task AddTestDataWithManyUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1

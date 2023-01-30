@@ -22,12 +22,12 @@ public class ReasonsRepositoryTests
 
     private async Task AddTestDataToDb()
     {
-        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
         {
             ReasonName = "Test1"
         });
 
-        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
         {
             ReasonName = "Test2"
         });

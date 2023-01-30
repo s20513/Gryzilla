@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Models;
+﻿using Gryzilla_App;
+using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class LikesPostRepositoryTests
     
     private async Task AddTestDataWithOneLike()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -36,7 +37,7 @@ public class LikesPostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
             Content = "content",

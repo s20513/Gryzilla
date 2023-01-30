@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -21,7 +22,7 @@ public class ArticleMssqlDbRepositoryTests
     
     private async Task AddTestDataWithManyArticles()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank()
         {
             Name = "Rank1",
             RankLevel = 1
@@ -48,7 +49,7 @@ public class ArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
         {
             IdUser = 1,
             Title = "Title1",
@@ -57,7 +58,7 @@ public class ArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
         {
             IdUser = 2,
             Title = "Title2",
@@ -66,7 +67,7 @@ public class ArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Tag
         {
             NameTag = "Tag1"
         });
@@ -83,7 +84,7 @@ public class ArticleMssqlDbRepositoryTests
     
     private async Task AddTestDataWithOneArticle()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -100,7 +101,7 @@ public class ArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
         {
             IdUser = 1,
             Title = "Title1",
@@ -109,7 +110,7 @@ public class ArticleMssqlDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Tag
         {
             NameTag = "Tag1"
         });
@@ -123,7 +124,7 @@ public class ArticleMssqlDbRepositoryTests
 
         await _context.SaveChangesAsync();
 
-        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.CommentArticle
         {
             IdUser = 1,
             IdArticle = 1,

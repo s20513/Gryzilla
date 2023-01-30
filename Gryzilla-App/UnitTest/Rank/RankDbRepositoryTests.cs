@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Requests.Rank;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTO.Requests.Rank;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -21,7 +22,7 @@ public class RankDbRepositoryTests
 
     private async Task AddTestDataWithOneRank()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -29,7 +30,7 @@ public class RankDbRepositoryTests
 
         await _context.SaveChangesAsync();
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank2",
             RankLevel = 1

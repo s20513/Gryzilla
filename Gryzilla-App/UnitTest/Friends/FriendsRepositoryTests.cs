@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Exceptions;
+﻿using Gryzilla_App;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ public class FriendsRepositoryTests
 
     private async Task AddTestDataWithManyUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "User",
             RankLevel = 4

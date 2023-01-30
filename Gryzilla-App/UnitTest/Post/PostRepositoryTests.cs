@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using Gryzilla_App;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
@@ -22,7 +23,7 @@ public class PostRepositoryTests
     
     private async Task AddTestDataToDb()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -39,7 +40,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
             Title = "Title1",
@@ -49,7 +50,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Tag
         {
             NameTag = "Tag1"
         });
@@ -59,14 +60,14 @@ public class PostRepositoryTests
         var user = await _context.UserData.FirstAsync();
         var tag = await  _context.Tags.FirstAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
+        await _context.CommentPosts.AddAsync(new Gryzilla_App.CommentPost
         {
             IdUser = 1,
             DescriptionPost = "Description",
             IdPost = 1
         });
 
-        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
         {
             ReasonName = "ReasonName"
         });
