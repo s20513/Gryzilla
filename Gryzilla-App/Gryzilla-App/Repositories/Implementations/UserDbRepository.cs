@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Drawing;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -263,6 +264,64 @@ public class UserDbRepository : IUserDbRepository
             RankName = rank.Name,
             CreatedAt = user.CreatedAt
         };
+    }
+
+    public async Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser)
+    {
+        var user = await _context.UserData
+            .Include(x => x.IdRankNavigation)
+            .Where(x => x.IdUser == idUser)
+            .SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        byte[]? photoBytes = null;
+        if (photo.Length > 0)
+        {
+            using var ms = new MemoryStream();
+            await photo.CopyToAsync(ms);
+            photoBytes = ms.ToArray();
+            
+            ms.Close();
+            await ms.DisposeAsync();
+        }
+
+        if (photoBytes is null)
+        {
+            return null;
+        }
+        user.Photo = photoBytes;
+        await _context.SaveChangesAsync();
+
+        return new UserDto
+        {
+            IdUser = user.IdUser,
+            Nick = user.Nick,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            CreatedAt = user.CreatedAt,
+            RankName = user.IdRankNavigation.Name,
+            IdRank = user.IdRank
+        };
+    }
+
+    public async Task<string?> GetUserPhoto(int idUser)
+    {
+        var user = await _context.UserData
+            .Include(x => x.IdRankNavigation)
+            .Where(x => x.IdUser == idUser)
+            .SingleOrDefaultAsync();
+
+        if (user?.Photo is null)
+        {
+            return null;
+        }
+
+        string imageBase64Data = Convert.ToBase64String(user.Photo);
+        return $"data:image/jpg;base64,{imageBase64Data}";
     }
 
     private string GenerateToken(UserDatum user)

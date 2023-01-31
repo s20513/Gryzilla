@@ -8,7 +8,7 @@ namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/users")]
-[Authorize]
+//[Authorize]
 public class UserController : Controller
 {
     private readonly IUserDbRepository _userDbRepository;
@@ -176,5 +176,21 @@ public class UserController : Controller
         
         return Ok(res);
     }
+    
 
+    [HttpPost("photo/{idUser:int}")]
+    public async Task<IActionResult> SetUserPhoto([FromForm] IFormFile file,[FromRoute] int idUser)
+    {
+        var res = await _userDbRepository.SetUserPhoto(file, idUser);
+        
+        return Ok(res);
+    }
+    
+    [HttpGet("photo/{idUser:int}")]
+    public async Task<IActionResult> GetUserPhoto([FromRoute] int idUser)
+    {
+        var res = await _userDbRepository.GetUserPhoto(idUser);
+        
+        return Ok(res);
+    }
 }

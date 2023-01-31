@@ -1,4 +1,6 @@
-﻿using Gryzilla_App.DTOs.Requests.User;
+﻿using System.Drawing;
+using System.Net.Mime;
+using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
 
 namespace Gryzilla_App.Repositories.Interfaces;
@@ -13,4 +15,6 @@ public interface IUserDbRepository
      public Task<TokenResponseDto?> Login(LoginRequestDto loginRequestDto);
      public Task<TokenResponseDto?> RefreshToken(string refreshToken);
      public Task<UserDto?> ChangeUserRank(UserRank userRank);
+     public Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser);
+     public Task<string?> GetUserPhoto(int idUser);
 }
