@@ -81,7 +81,6 @@ builder.Services.AddAuthentication(options =>
 //Adding controllers in .net 6
 builder.Services.AddControllers();
 
-
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
 builder.Services.AddScoped<IFriendsDbRepository, FriendsDbRepository>();
 builder.Services.AddScoped<IPostDbRepository, PostDbRepository>();
@@ -98,7 +97,7 @@ builder.Services.AddScoped<ITagDbRepository, TagDbRepository>();
 builder.Services.AddScoped<IReportCommentPostDbRepository, ReportCommentPostDbRepository>();
 builder.Services.AddScoped<IReportCommentArticleDbRepository, ReportCommentArticleDbRepository>();
 builder.Services.AddScoped<IReasonDbRepository, ReasonDbRepository>();
-
+builder.Services.AddScoped<IProfileCommentDbRepository, ProfileCommentDbRepository>();
 
 var connectionString = "Data Source=89.68.94.143,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
 //DbContext -> MssqlDbConnString

@@ -8,7 +8,7 @@ namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/users")]
-//[Authorize]
+[Authorize]
 public class UserController : Controller
 {
     private readonly IUserDbRepository _userDbRepository;
