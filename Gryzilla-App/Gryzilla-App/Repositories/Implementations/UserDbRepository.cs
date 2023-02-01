@@ -308,20 +308,14 @@ public class UserDbRepository : IUserDbRepository
         };
     }
 
-    public async Task<string?> GetUserPhoto(int idUser)
+    public async Task<byte[]?> GetUserPhoto(int idUser)
     {
-        var user = await _context.UserData
-            .Include(x => x.IdRankNavigation)
+        var userPhoto = await _context.UserData
             .Where(x => x.IdUser == idUser)
+            .Select(e => e.Photo)
             .SingleOrDefaultAsync();
 
-        if (user?.Photo is null)
-        {
-            return null;
-        }
-
-        string imageBase64Data = Convert.ToBase64String(user.Photo);
-        return $"data:image/jpg;base64,{imageBase64Data}";
+        return userPhoto ?? null;
     }
 
     private string GenerateToken(UserDatum user)
