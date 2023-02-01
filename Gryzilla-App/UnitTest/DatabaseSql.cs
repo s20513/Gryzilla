@@ -1,6 +1,6 @@
 ﻿namespace UnitTest;
 
-public class DatabaseSql
+public static class DatabaseSql
 {
     public static string GetTruncateSql()
     {
