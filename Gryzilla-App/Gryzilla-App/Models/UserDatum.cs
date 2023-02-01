@@ -39,6 +39,7 @@ namespace Gryzilla_App
         public Guid? RefreshToken { get; set; }
         public DateTime? TokenExpire { get; set; }
         public byte[]? Photo { get; set; }
+        public string? PhotoType { get; set; }
 
         public virtual Rank IdRankNavigation { get; set; } = null!;
         public virtual ICollection<AchievementUser> AchievementUsers { get; set; }

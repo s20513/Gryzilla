@@ -16,5 +16,5 @@ public interface IUserDbRepository
      public Task<TokenResponseDto?> RefreshToken(string refreshToken);
      public Task<UserDto?> ChangeUserRank(UserRank userRank);
      public Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser);
-     public Task<byte[]?> GetUserPhoto(int idUser);
+     public Task<UserPhotoResponseDto?> GetUserPhoto(int idUser);
 }

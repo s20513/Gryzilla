@@ -277,7 +277,7 @@ public class UserDbRepository : IUserDbRepository
         {
             return null;
         }
-
+        
         byte[]? photoBytes = null;
         if (photo.Length > 0)
         {
@@ -294,6 +294,7 @@ public class UserDbRepository : IUserDbRepository
             return null;
         }
         user.Photo = photoBytes;
+        user.PhotoType = Path.GetExtension(photo.FileName).Remove(0,1);
         await _context.SaveChangesAsync();
 
         return new UserDto
@@ -308,14 +309,27 @@ public class UserDbRepository : IUserDbRepository
         };
     }
 
-    public async Task<byte[]?> GetUserPhoto(int idUser)
+    public async Task<UserPhotoResponseDto?> GetUserPhoto(int idUser)
     {
-        var userPhoto = await _context.UserData
+        var userPhotoData = await _context.UserData
             .Where(x => x.IdUser == idUser)
-            .Select(e => e.Photo)
+            .Select(e => new
+            {
+                e.Photo,
+                e.PhotoType
+            })
             .SingleOrDefaultAsync();
 
-        return userPhoto ?? null;
+        if (userPhotoData?.PhotoType is null || userPhotoData.Photo is null)
+        {
+            return null;
+        }
+        
+        return new UserPhotoResponseDto
+        {
+            Type = userPhotoData.PhotoType,
+            base64PhotoData = Convert.ToBase64String(userPhotoData.Photo)
+        };
     }
 
     private string GenerateToken(UserDatum user)
