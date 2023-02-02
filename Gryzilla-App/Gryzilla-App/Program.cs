@@ -98,6 +98,7 @@ builder.Services.AddScoped<IReportCommentPostDbRepository, ReportCommentPostDbRe
 builder.Services.AddScoped<IReportCommentArticleDbRepository, ReportCommentArticleDbRepository>();
 builder.Services.AddScoped<IReasonDbRepository, ReasonDbRepository>();
 builder.Services.AddScoped<IProfileCommentDbRepository, ProfileCommentDbRepository>();
+builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>();
 
 var connectionString = "Data Source=89.68.94.143,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
 //DbContext -> MssqlDbConnString

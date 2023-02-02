@@ -1,5 +1,4 @@
-﻿using Gryzilla_App.DTO.Responses.Friends;
-using Gryzilla_App.DTOs.Requests.ProfileComment;
+﻿using Gryzilla_App.DTOs.Requests.ProfileComment;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -11,7 +10,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
 {
     private readonly GryzillaContext _context;
     
-    public ProfileCommentDbRepository(GryzillaContext context, IConfiguration configuration)
+    public ProfileCommentDbRepository(GryzillaContext context)
     {
         _context = context;
     }
