@@ -101,9 +101,9 @@ builder.Services.AddScoped<IProfileCommentDbRepository, ProfileCommentDbReposito
 builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>();
 
 //To dla WAN
-//var connectionString = "Data Source=89.68.94.143,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
+var connectionString = "Data Source=89.68.200.216,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
 //To dla LAN
-var connectionString = "Data Source=192.168.0.221,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
+//var connectionString = "Data Source=192.168.0.221,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
 //DbContext -> MssqlDbConnString
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(connectionString));
