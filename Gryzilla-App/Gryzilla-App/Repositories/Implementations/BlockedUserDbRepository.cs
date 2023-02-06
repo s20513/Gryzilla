@@ -61,6 +61,9 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             return null;
         }
 
+        //sprawdzić czy user ma odpowiednią rangę
+        //sprawdź czy user już jest zablokowany
+        
         var blockedUser = new BlockedUser
         {
             IdUser = blockedUserRequestDto.IdUserBlocking,
@@ -92,6 +95,8 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             .Include(e => e.IdUserBlockedNavigation.IdRankNavigation)
             .SingleOrDefaultAsync();
         
+        //sprawdzić czy user ma odpowiednią rangę
+
         if (blockedUser is null)
         {
             return null;

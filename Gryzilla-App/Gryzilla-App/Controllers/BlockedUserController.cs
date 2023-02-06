@@ -75,14 +75,14 @@ public class BlockedUserController: Controller
     [HttpGet("{idUser:int}")]
     public async Task<IActionResult> GetUserBlockingHistory(int idUser)
     {
-        var blockedUser = await _blockedUserDbRepository.GetUserBlockingHistory(idUser);
+        var userBlockingHistory = await _blockedUserDbRepository.GetUserBlockingHistory(idUser);
 
-        if (blockedUser is null)
+        if (userBlockingHistory is null)
         {
             return NotFound("Users does not exist");
         }
 
-        return Ok(blockedUser);
+        return Ok(userBlockingHistory);
     }
     
     /// <summary>

@@ -13,8 +13,6 @@ TRUNCATE TABLE [AchievementUser]
 DELETE FROM [Achievement]
 DBCC CHECKIDENT ([Achievement], RESEED, 0)
 
-TRUNCATE TABLE [Blocked]
-
 TRUNCATE TABLE [Notification]
 
 TRUNCATE TABLE [ProfileComment]
