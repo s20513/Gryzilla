@@ -156,4 +156,18 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             History = history
         };
     }
+
+    public async Task<bool?> CheckIfUserIsBlocked(int idUser)
+    {
+        var userData = await _context.UserData
+            .AnyAsync(e => e.IdUser == idUser);
+
+        if (!userData)
+        {
+            return null;
+        }
+        
+        return await _context.BlockedUsers
+            .AnyAsync(e => e.IdUserBlocked == idUser);
+    }
 }

@@ -9,4 +9,5 @@ public interface IBlockedUserDbRepository
     public Task<BlockedUserDto?> BlockUser(BlockedUserRequestDto blockedUserRequestDto);
     public Task<string?> UnlockUser(int idUser);
     public Task<UserBlockingHistoryDto?> GetUserBlockingHistory(int idUser);
+    public Task<bool?> CheckIfUserIsBlocked(int idUser);
 }

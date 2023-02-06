@@ -85,4 +85,23 @@ public class BlockedUserController: Controller
         return Ok(blockedUser);
     }
     
+    /// <summary>
+    /// CheckIfUserIsBlocked
+    /// </summary>
+    /// <param name="idUser">int - User id </param>
+    /// <returns>Return Status OK - bool if user is blocked</returns>
+    /// <returns>Return Status NotFound - returns string if user does not exist</returns>
+    [HttpGet("check/{idUser:int}")]
+    public async Task<IActionResult> CheckIfUserIsBlocked(int idUser)
+    {
+        var blockedUser = await _blockedUserDbRepository.CheckIfUserIsBlocked(idUser);
+
+        if (blockedUser is null)
+        {
+            return NotFound("Users does not exist");
+        }
+
+        return Ok(blockedUser);
+    }
+    
 }
