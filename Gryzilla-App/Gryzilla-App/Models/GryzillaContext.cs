@@ -23,7 +23,7 @@ namespace Gryzilla_App.Models
             if (test)
             {
                 _connectionString =
-                    "Data Source=89.68.94.143,2105;Initial Catalog=GryzillaTest;User ID=sa;Password=Poziomka100;TrustServerCertificate=True";
+                    "Data Source=89.68.200.216,2105;Initial Catalog=GryzillaTest;User ID=sa;Password=Poziomka100;TrustServerCertificate=True";
                 
             }
             else

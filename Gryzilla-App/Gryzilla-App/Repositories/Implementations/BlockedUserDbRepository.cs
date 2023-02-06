@@ -28,6 +28,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
                 RankName = e.IdUserBlockedNavigation.IdRankNavigation.Name,
                 IdUserBlocking = e.IdUser,
                 Start = EF.Property<DateTime>(e, "StartTime"),
+                End = null,
                 Comment = e.Comment
             })
             .ToListAsync();
@@ -45,6 +46,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
 
         var blockedUserData = await _context.UserData
             .Include(e => e.IdRankNavigation)
+            .Where(e => e.IdUser == blockedUserRequestDto.IdUserBlocked)
             .Select(e => new
             {
                 e.Nick,
@@ -77,6 +79,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             RankName = blockedUserData.RankName,
             IdUserBlocking = blockedUserRequestDto.IdUserBlocking,
             Start = DateTime.Now,
+            End = null,
             Comment = blockedUserRequestDto.Comment
         };
     }
@@ -117,23 +120,32 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
         {
             return null;
         }
-
+        
         var history = await _context.BlockedUsers
             .TemporalAll()
             .Where(e => e.IdUserBlocked == idUser)
-            .Include(e => e.IdUserNavigation)
-            .Include(e => e.IdUserNavigation.IdRankNavigation)
-            .Select(e => new BlockingUserDto
-            {
-                IdUserBlocking = e.IdUser,
-                UserBlockingNick = e.IdUserBlockedNavigation.Nick,
-                UserBlockingIdRank = e.IdUserBlockedNavigation.IdRank,
-                UserBlockingRankName = e.IdUserBlockedNavigation.IdRankNavigation.Name,
-                Start = EF.Property<DateTime>(e, "StartTime"),
-                End = EF.Property<DateTime>(e, "EndTime"),
-                Comment = e.Comment
-            })
+            .Join(_context.UserData, blockedUser => blockedUser.IdUser, datum => datum.IdUser, (blockedUser, datum) =>
+                new
+                {
+                    IdUserBlocking = datum.IdUser,
+                    UserBlockingNick = datum.Nick,
+                    UserBlockingIdRank = datum.IdRank,
+                    Start = EF.Property<DateTime>(blockedUser, "StartTime"),
+                    End = EF.Property<DateTime>(blockedUser, "EndTime"),
+                    blockedUser.Comment 
+            }).Join(_context.Ranks, arg => arg.UserBlockingIdRank, rank => rank.IdRank, (arg, rank) =>
+                new BlockingUserDto
+                {
+                    IdUserBlocking = arg.IdUserBlocking,
+                    UserBlockingNick = arg.UserBlockingNick,
+                    UserBlockingIdRank = arg.UserBlockingIdRank,
+                    UserBlockingRankName = rank.Name,
+                    Start = arg.Start,
+                    End = arg.End.Date.Year == 9999 ? null : arg.End,
+                    Comment = arg.Comment
+                })
             .ToListAsync();
+
 
         return new UserBlockingHistoryDto
         {
