@@ -1,16 +1,17 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses.Posts;
 
 namespace Gryzilla_App.Repositories.Interfaces;
 
 public interface IPostDbRepository
 {
     public Task<IEnumerable<PostDto>?> GetPostsFromDb();
-    public Task<IEnumerable<PostDto>?> GetQtyPostsFromDb(int qtyPosts);
-    public Task<IEnumerable<PostDto>?> GetQtyPostsByLikesFromDb(int qtyPosts);
-    public Task<IEnumerable<PostDto>?> GetQtyPostsByCommentsFromDb(int qtyPosts);
-    public Task<IEnumerable<PostDto>?> GetQtyPostsByDateFromDb(int qtyPosts);
-    public Task<IEnumerable<PostDto>?> GetQtyPostsByDateOldestFromDb(int qtyPosts);
+    public Task<PostQtyDto?> GetQtyPostsFromDb(int qtyPosts);
+    public Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts);
+    public Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts);
+    public Task<PostQtyDto?> GetQtyPostsByDateFromDb(int qtyPosts);
+    public Task<PostQtyDto?> GetQtyPostsByDateOldestFromDb(int qtyPosts);
     public Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByCommentsFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateFromDb();

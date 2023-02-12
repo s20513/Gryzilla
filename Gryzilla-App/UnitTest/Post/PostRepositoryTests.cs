@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -49,7 +50,51 @@ public class PostRepositoryTests
             HighLight = false
         });
         await _context.SaveChangesAsync();
-
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Today,
+            Content = "Content1",
+            HighLight = false
+        });
+        await _context.SaveChangesAsync();
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Today,
+            Content = "Content1",
+            HighLight = false
+        });
+        await _context.SaveChangesAsync();
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Today,
+            Content = "Content1",
+            HighLight = false
+        });
+        await _context.SaveChangesAsync();
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Today,
+            Content = "Content1",
+            HighLight = false
+        });
+        await _context.SaveChangesAsync();
+        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Today,
+            Content = "Content1",
+            HighLight = false
+        });
+        await _context.SaveChangesAsync();
         await _context.Tags.AddAsync(new Gryzilla_App.Tag
         {
             NameTag = "Tag1"
@@ -299,7 +344,7 @@ public class PostRepositoryTests
         //Assert
         Assert.NotNull(res);
         
-        var posts = _context.Posts.ToList();
+        var posts = _context.Posts.Where(x=>x.IdPost == idPost).ToList();
         Assert.Single(posts);
         
         var post = posts.SingleOrDefault(e => res != null && e.IdPost == res.idPost);
@@ -314,7 +359,7 @@ public class PostRepositoryTests
 
         await AddTestDataToDb();
         
-        const int idPost = 2;
+        const int idPost = 7;
         
         //Act
         var res = await _repository.GetOnePostFromDb(idPost);
@@ -401,12 +446,14 @@ public class PostRepositoryTests
         
         var posts = await _context
             .Posts
+            .Skip(0)
+            .Take(5)
             .OrderByDescending(e => e.CreatedAt)
             .Select(e => e.IdPost)
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.posts.Select(x=> x.idPost));
     }
     [Fact]
     public async Task GetQtyPostsFromDb_Returns_Null()
@@ -477,12 +524,14 @@ public class PostRepositoryTests
         
         var posts = await _context
             .Posts
+            .Skip(0)
+            .Take(5)
             .OrderByDescending(e => e.IdUsers.Count)
             .Select(e => e.IdPost)
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByMostLikesFromDb_Returns_Null()
@@ -557,12 +606,14 @@ public class PostRepositoryTests
         
         var posts = await _context
             .Posts
+            .Skip(0)
+            .Take(5)
             .OrderByDescending(e => e.IdUsers.Count)
             .Select(e => e.IdPost)
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByCommentsFromDb_Returns_Null()
@@ -637,12 +688,14 @@ public class PostRepositoryTests
         
         var posts = await _context
             .Posts
+            .Skip(0)
+            .Take(5)
             .OrderBy(e => e.CreatedAt)
             .Select(e => e.IdPost)
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByDateFromDb_Returns_Null()
@@ -717,12 +770,14 @@ public class PostRepositoryTests
         
         var posts = await _context
             .Posts
+            .Skip(0)
+            .Take(5)
             .OrderByDescending(e => e.CreatedAt)
             .Select(e => e.IdPost)
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()

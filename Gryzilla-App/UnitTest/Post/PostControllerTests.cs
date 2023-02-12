@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,91 @@ public class PostControllerTests
             CreatedAt = DateTime.Now,
             Likes = 1
         },
+    };
+    
+    private readonly PostQtyDto _fakeQtyPost = new PostQtyDto
+    {
+        posts = new PostDto []
+        {
+            new PostDto
+            {
+                idPost = 1,
+                Nick ="Ola",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            }
+        },
+        isNext = false
+    };
+    private readonly PostQtyDto _fakeQtyPosts = new PostQtyDto
+    {
+        posts = new PostDto []
+        {
+            new PostDto
+            {
+                idPost = 1,
+                Nick ="Nick2",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            },
+            new PostDto
+            {
+                idPost = 2,
+                Nick ="Nick2",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            },
+            new PostDto
+            {
+                idPost = 3,
+                Nick ="Nick2",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            },
+            new PostDto
+            {
+                idPost = 4,
+                Nick ="Nick2",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            },
+            new PostDto
+            {
+                idPost = 5,
+                Nick ="Nick2",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            },
+            new PostDto
+            {
+                idPost = 6,
+                Nick ="Nick2",
+                Title = "Test",
+                Comments = 1,
+                Content = "XYZ",
+                CreatedAt = DateTime.Now,
+                Likes = 1 
+            }
+        },
+        isNext = false
     };
     
     private readonly IEnumerable<PostDto> _fakePosts = new List<PostDto>
@@ -105,7 +191,7 @@ public class PostControllerTests
         //Arrange
         _postRepositoryMock
             .Setup(x => x.GetQtyPostsByLikesFromDb(5))
-            .ReturnsAsync(_fakePosts.OrderByDescending(x => x.Likes));
+            .ReturnsAsync(_fakeQtyPost);
 
         //Act
         var actionResult = await _postsController.GetPostsByLikesMost(5);
@@ -115,11 +201,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as IEnumerable<PostDto>;
+        var resultValue = result.Value as PostQtyDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts.OrderByDescending(x => x.Likes), resultValue);
+        Assert.Equal(_fakeQtyPost, resultValue);
     }
     [Fact]
     public async void GetQtyPostByMostLikesFromDb_Returns_WrongNumberException_Bad_Request()
@@ -219,7 +305,7 @@ public class PostControllerTests
         //Arrange
         _postRepositoryMock
             .Setup(x => x.GetQtyPostsByCommentsFromDb(5))
-            .ReturnsAsync(_fakePosts.OrderBy(x => x.Comments));
+            .ReturnsAsync(_fakeQtyPosts);
 
         //Act
         var actionResult = await _postsController.GetPostsByComments(5);
@@ -229,11 +315,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as IEnumerable<PostDto>;
+        var resultValue = result.Value as PostQtyDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts.OrderByDescending(x => x.Comments), resultValue);
+        Assert.Equal(_fakeQtyPosts, resultValue);
     }
     [Fact]
     public async void GetQtyPostByCommentsFromDb_Returns_WrongNumberException_Bad_Request()
@@ -334,7 +420,7 @@ public class PostControllerTests
         //Arrange
         _postRepositoryMock
             .Setup(x => x.GetQtyPostsByDateFromDb(5))
-            .ReturnsAsync(_fakePosts.OrderByDescending(x => x.CreatedAt));
+            .ReturnsAsync(_fakeQtyPost);
 
         //Act
         var actionResult = await _postsController.GetPostsByDates(5);
@@ -344,11 +430,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as IEnumerable<PostDto>;
+        var resultValue = result.Value as PostQtyDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts.OrderByDescending(x => x.CreatedAt), resultValue);
+        Assert.Equal(_fakeQtyPost, resultValue);
     }
     
     [Fact]
@@ -380,7 +466,7 @@ public class PostControllerTests
     public async void GetQtyPostByLatestDateFromDb_Not_Found()
     {
         //Arrange
-        IEnumerable<PostDto>? nullValue = null;
+        PostQtyDto? nullValue = null;
         
         _postRepositoryMock.Setup(x => x.GetQtyPostsByDateFromDb(5)).ReturnsAsync(nullValue);
 
@@ -448,7 +534,7 @@ public class PostControllerTests
         //Arrange
         _postRepositoryMock
             .Setup(x => x.GetQtyPostsByDateOldestFromDb(5))
-            .ReturnsAsync(_fakePosts.OrderBy(x => x.CreatedAt));
+            .ReturnsAsync(_fakeQtyPosts);
 
         //Act
         var actionResult = await _postsController.GetPostsByDatesOldest(5);
@@ -458,11 +544,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as IEnumerable<PostDto>;
+        var resultValue = result.Value as PostQtyDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts.OrderBy(x => x.CreatedAt), resultValue);
+        Assert.Equal(_fakeQtyPosts, resultValue);
     }
     
     [Fact]
@@ -494,7 +580,7 @@ public class PostControllerTests
     public async void GetQtyPostByOldestDateFromDb_Not_Found()
     {
         //Arrange
-        IEnumerable<PostDto>? nullValue = null;
+        PostQtyDto nullValue = null;
         
         _postRepositoryMock.Setup(x => x.GetQtyPostsByDateOldestFromDb(5)).ReturnsAsync(nullValue);
 
@@ -585,7 +671,7 @@ public class PostControllerTests
     public async void GetQtyPostsFromDb_Returns_Null()
     {
         //Arrange
-        IEnumerable<PostDto>? nullValue = null;
+        PostQtyDto nullValue = null;
         
         _postRepositoryMock.Setup(x => x.GetQtyPostsFromDb(5)).ReturnsAsync(nullValue);
 
@@ -612,7 +698,7 @@ public class PostControllerTests
         //Arrange
         _postRepositoryMock
             .Setup(x => x.GetQtyPostsFromDb(5))
-            .ReturnsAsync(_fakePosts.OrderBy(x => x.CreatedAt));
+            .ReturnsAsync(_fakeQtyPost);
 
         //Act
         var actionResult = await _postsController.GetPosts(5);
@@ -622,11 +708,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as IEnumerable<PostDto>;
+        var resultValue = result.Value as PostQtyDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts, resultValue);
+        Assert.Equal(_fakeQtyPost, resultValue);
     }
     [Fact]
     public async void GetPostFromDb_Returns_Ok()

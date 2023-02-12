@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ public class PostController : Controller
     [HttpGet("qty/{qtyPosts:int}")]
     public async Task<IActionResult> GetPosts(int qtyPosts)
     {
-        IEnumerable<PostDto>? posts;
+        PostQtyDto? posts;
         
         try
         {
@@ -73,12 +74,12 @@ public class PostController : Controller
     [HttpGet("qty/byCommentsDesc/{qtyPosts:int}")]
     public async Task<IActionResult> GetPostsByComments(int qtyPosts)
     {
-        IEnumerable<PostDto>? posts;
+        PostQtyDto? posts;
         
         try
         {
             posts = await _postsDbRepository.GetQtyPostsByCommentsFromDb(qtyPosts);
-            if (posts.IsNullOrEmpty())
+            if (posts == null)
             {
                 return NotFound("No posts found");
             }
@@ -100,11 +101,11 @@ public class PostController : Controller
     [HttpGet("qty/byLikesDesc/{qtyPosts:int}")]
     public async Task<IActionResult> GetPostsByLikesMost(int qtyPosts)
     {
-        IEnumerable<PostDto>? posts;
+        PostQtyDto? posts;
         try
         {
             posts = await _postsDbRepository.GetQtyPostsByLikesFromDb(qtyPosts);
-            if (posts.IsNullOrEmpty())
+            if (posts == null) 
             {
                 return NotFound("No posts found");
             }
@@ -126,11 +127,11 @@ public class PostController : Controller
     [HttpGet("qty/byDateDesc/{qtyPosts:int}")]
     public async Task<IActionResult> GetPostsByDates(int qtyPosts)
     {
-        IEnumerable<PostDto>? posts;
+        PostQtyDto? posts;
         try
         {
             posts = await _postsDbRepository.GetQtyPostsByDateFromDb(qtyPosts);
-            if (posts.IsNullOrEmpty())
+            if (posts == null)
             {
                 return NotFound("No posts found");
             }
@@ -153,12 +154,12 @@ public class PostController : Controller
     [HttpGet("qty/byDateAsc/{qtyPosts:int}")]
     public async Task<IActionResult> GetPostsByDatesOldest(int qtyPosts)
     {
-        IEnumerable<PostDto>? posts;
+        PostQtyDto? posts;
         try
         {
             posts = await _postsDbRepository.GetQtyPostsByDateOldestFromDb(qtyPosts);
 
-            if (posts.IsNullOrEmpty())
+            if (posts == null)
             {
                 return NotFound("No posts found");
             }
