@@ -11,4 +11,6 @@ public class UserDto
     public int IdRank {get; set;}
     public string RankName {get; set;} = null!;
     public DateTime CreatedAt {get; set;}
+    public string? LinkDiscord { get; set; }
+    public string? LinkSteam { get; set; }
 }

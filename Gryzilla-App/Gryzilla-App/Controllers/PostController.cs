@@ -37,6 +37,26 @@ public class PostController : Controller
     }
     
     /// <summary>
+    /// Get top posts 
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
+    [HttpGet("top")]
+    public async Task<IActionResult> GetTopPosts()
+    {
+        IEnumerable<PostDto>? posts = await _postsDbRepository
+            .GetTopPosts();
+
+        if (posts is null)
+        {
+            return NotFound("No posts found");
+        }
+        
+        return Ok(posts);
+    }
+    
+    /// <summary>
     /// Get posts 
     /// </summary>
     /// <returns>

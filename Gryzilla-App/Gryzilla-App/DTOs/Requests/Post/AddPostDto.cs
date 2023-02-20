@@ -18,5 +18,5 @@ public class AddPostDto
     [MinLength(2,ErrorMessage = "Min length : 2")]
     public string Content { get; set; }
     
-    public TagDto [] Tags { get; set; }
+    public string [] Tags { get; set; }
 }

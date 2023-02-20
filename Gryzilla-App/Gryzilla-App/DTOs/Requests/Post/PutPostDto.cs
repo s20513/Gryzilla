@@ -15,5 +15,5 @@ public class PutPostDto
     [MaxLength(200,ErrorMessage = "Max length : 200")]
     public string Content { get; set; }
     
-    public TagByIdDto [] Tags { get; set; }
+    public string [] Tags { get; set; }
 }

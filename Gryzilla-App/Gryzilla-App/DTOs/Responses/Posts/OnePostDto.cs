@@ -9,7 +9,7 @@ public class OnePostDto
     public string Title { get; set; }
     public string Content { get; set; }
     public DateTime CreatedAt { get; set; }
-    public TagDto? [] Tags { get; set; }
+    public string? [] Tags { get; set; }
     public PostCommentDto? [] Comments { get; set; }
     public int? Likes{ get; set; }
 }

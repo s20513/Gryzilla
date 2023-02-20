@@ -35,7 +35,9 @@ public class UserDbRepository : IUserDbRepository
                 Email       = x.Email,
                 PhoneNumber = x.PhoneNumber,
                 CreatedAt   = x.CreatedAt,
-                RankName    = x.IdRankNavigation.Name
+                RankName    = x.IdRankNavigation.Name,
+                LinkDiscord = x.LinkDiscord,
+                LinkSteam   = x.LinkSteam
             })
             .SingleOrDefaultAsync();
         
@@ -54,7 +56,9 @@ public class UserDbRepository : IUserDbRepository
                 PhoneNumber = x.PhoneNumber,
                 CreatedAt   = x.CreatedAt,
                 IdRank      = x.IdRank,
-                RankName    = x.IdRankNavigation.Name
+                RankName    = x.IdRankNavigation.Name,
+                LinkDiscord = x.LinkDiscord,
+                LinkSteam   = x.LinkSteam
             })
             .ToArrayAsync();
 
@@ -94,7 +98,9 @@ public class UserDbRepository : IUserDbRepository
                 PhoneNumber  = user.PhoneNumber,
                 CreatedAt    = user.CreatedAt,
                 IdRank       = user.IdRank,
-                RankName     = user.IdRankNavigation.Name
+                RankName     = user.IdRankNavigation.Name,
+                LinkDiscord  = user.LinkDiscord,
+                LinkSteam    = user.LinkSteam
             };
         }
 

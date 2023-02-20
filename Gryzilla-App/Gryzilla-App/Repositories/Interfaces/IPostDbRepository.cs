@@ -7,6 +7,7 @@ namespace Gryzilla_App.Repositories.Interfaces;
 public interface IPostDbRepository
 {
     public Task<IEnumerable<PostDto>?> GetPostsFromDb();
+    public  Task<IEnumerable<PostDto>?> GetTopPosts();
     public Task<PostQtyDto?> GetQtyPostsFromDb(int qtyPosts);
     public Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts);
     public Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts);

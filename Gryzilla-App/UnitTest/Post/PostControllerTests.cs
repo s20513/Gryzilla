@@ -1018,4 +1018,50 @@ public class PostControllerTests
         if (resultValue is null) return;
         Assert.Equal("Cannot delete tag", resultValue);
     }
+    
+    [Fact]
+    public async void GetTopPost_Not_Found()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetTopPosts()).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetTopPosts();
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
+    
+    [Fact]
+    public async void GetTopPost_Returns_Ok()
+    {
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetTopPosts())
+            .ReturnsAsync(_fakePosts.OrderByDescending(x => x.Likes));
+
+        //Act
+        var actionResult = await _postsController.GetTopPosts();
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakePosts.OrderByDescending(x => x.Likes), resultValue);
+    }
 }

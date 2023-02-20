@@ -45,7 +45,7 @@ public class PostDbRepository : IPostDbRepository
                 .Select(a => new PostDto
                 {
                     idPost = post.IdPost,
-                    Likes     = _context
+                    Likes  = _context
                         .Posts
                         .Where(c => c.IdPost == post.IdPost)
                         .SelectMany(b => b.IdUsers)
@@ -63,7 +63,7 @@ public class PostDbRepository : IPostDbRepository
                         .Posts
                         .Where(x => x.IdPost == post.IdPost)
                         .SelectMany(x => x.IdTags)
-                        .Select(x => new TagDto {NameTag = x.NameTag})
+                        .Select(x => x.NameTag)
                         .ToArray()
                 }).SingleOrDefaultAsync();
 
@@ -126,7 +126,28 @@ public class PostDbRepository : IPostDbRepository
             isNext = next
         };
     }
+    public async Task<IEnumerable<PostDto>?> GetTopPosts()
+    {
+        var allPosts = await _context
+            .Posts
+            .ToArrayAsync();
 
+        if (allPosts.Length == 0)
+        {
+            return null;
+        }
+
+        var postDtos = await GetTableSort(allPosts);
+
+        postDtos = postDtos
+            .OrderByDescending(order => order.Likes)
+            .Skip(0)
+            .Take(3)
+            .ToList();
+
+        return postDtos;
+    }
+    
     public async Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts)
     {
         var next = false;
@@ -383,7 +404,7 @@ public class PostDbRepository : IPostDbRepository
         {
             var newTag = await _context
                 .Tags
-                .Where(x => x.NameTag == tag.NameTag)
+                .Where(x => x.NameTag == tag)
                 .SingleOrDefaultAsync();
             
             if (newTag is not null)
@@ -392,7 +413,7 @@ public class PostDbRepository : IPostDbRepository
             }
             else
             {
-                post.IdTags.Add(await AddNewTag(tag.NameTag));
+                post.IdTags.Add(await AddNewTag(tag));
             }
         }
 
@@ -415,10 +436,7 @@ public class PostDbRepository : IPostDbRepository
                 .Posts
                 .Where(x => x.IdPost == idNewPost)
                 .SelectMany(x => x.IdTags)
-                .Select(x => new TagDto
-                {
-                    NameTag = x.NameTag
-                }).ToArrayAsync()
+                .Select(x => x.NameTag).ToArrayAsync()
         };
     }
 
@@ -555,7 +573,7 @@ public class PostDbRepository : IPostDbRepository
             {
                 var newTag = await _context
                     .Tags
-                    .Where(x => x.IdTag == tag.IdTag)
+                    .Where(x => x.NameTag == tag)
                     .SingleOrDefaultAsync();
 
                 if (newTag is not null)
@@ -577,10 +595,7 @@ public class PostDbRepository : IPostDbRepository
                     .Posts
                     .Where(x=>x.IdPost==idPost)
                     .SelectMany(x=>x.IdTags)
-                    .Select(x=>new TagDto
-                    {
-                        NameTag = x.NameTag
-                    }).ToArrayAsync()
+                    .Select(x=>x.NameTag).ToArrayAsync()
             };
         }
 
@@ -641,7 +656,7 @@ public class PostDbRepository : IPostDbRepository
                     .Posts
                     .Where(x => x.IdPost == post.IdPost)
                     .SelectMany(x => x.IdTags)
-                    .Select(x => new TagDto {NameTag = x.NameTag})
+                    .Select(x => x.NameTag)
                     .ToArray()
                 
             }).SingleOrDefaultAsync();
