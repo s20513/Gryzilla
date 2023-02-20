@@ -56,14 +56,11 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             .SingleOrDefaultAsync();
         
         
-        if (blockedUserData is null)
+        if (blockedUserData is null || blockedUserData.RankName == "Admin")
         {
             return null;
         }
 
-        //sprawdzić czy user ma odpowiednią rangę
-        //sprawdź czy user już jest zablokowany
-        
         var blockedUser = new BlockedUser
         {
             IdUser = blockedUserRequestDto.IdUserBlocking,
@@ -94,8 +91,6 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             .Include(e => e.IdUserBlockedNavigation)
             .Include(e => e.IdUserBlockedNavigation.IdRankNavigation)
             .SingleOrDefaultAsync();
-        
-        //sprawdzić czy user ma odpowiednią rangę
 
         if (blockedUser is null)
         {

@@ -23,14 +23,21 @@ public class BlockedUserDbRepositoryTests
     {
         await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
-            Name = "Rank1",
+            Name = "User",
             RankLevel = 1
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        {
+            Name = "Admin",
+            RankLevel = 4
         });
         await _context.SaveChangesAsync();
 
         await _context.UserData.AddAsync(new UserDatum
         {
-            IdRank = 1,
+            IdRank = 2,
             Nick = "Nick1",
             Password = "Pass1",
             Email = "email1",
@@ -76,10 +83,17 @@ public class BlockedUserDbRepositoryTests
             RankLevel = 1
         });
         await _context.SaveChangesAsync();
+        
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        {
+            Name = "Admin",
+            RankLevel = 4
+        });
+        await _context.SaveChangesAsync();
 
         await _context.UserData.AddAsync(new UserDatum
         {
-            IdRank = 1,
+            IdRank = 2,
             Nick = "Nick1",
             Password = "Pass1",
             Email = "email1",
@@ -98,7 +112,7 @@ public class BlockedUserDbRepositoryTests
     }
     
     [Fact]
-    public async Task GetAchievementsFromDb_Returns_IEnumerable()
+    public async Task GetBlockedUsers_Returns_IEnumerable()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -114,35 +128,125 @@ public class BlockedUserDbRepositoryTests
         var blockedUsersIds = await _context.BlockedUsers.Select(e => e.IdUserBlocked).ToListAsync();
         Assert.Equal(blockedUsersIds, res.Select(e => e.IdUserBlocked));
     }
+
+    [Fact]
+    public async Task BlockUser_WithBlockingUserNotExisting_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithNoBlocking();
+
+        var blockedUserRequestDto = new BlockedUserRequestDto
+        {
+            IdUserBlocking = 10,
+            IdUserBlocked = 2,
+            Comment = "Test"
+        };
+        
+        //Act
+        var res = await _repository.BlockUser(blockedUserRequestDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
     
-    /*[Fact]
+    [Fact]
+    public async Task BlockUser_WithBlockedUserNotExisting_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithNoBlocking();
+
+        var blockedUserRequestDto = new BlockedUserRequestDto
+        {
+            IdUserBlocking = 1,
+            IdUserBlocked = 20,
+            Comment = "Test"
+        };
+        
+        //Act
+        var res = await _repository.BlockUser(blockedUserRequestDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task BlockUser_WithBlockedUserAsAdmin_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithNoBlocking();
+
+        var blockedUserRequestDto = new BlockedUserRequestDto
+        {
+            IdUserBlocking = 2,
+            IdUserBlocked = 1,
+            Comment = "Test"
+        };
+        
+        //Act
+        var res = await _repository.BlockUser(blockedUserRequestDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
     public async Task BlockUser_Returns_BlockedUserDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
         await AddTestDataWithNoBlocking();
 
         var blockedUserRequestDto = new BlockedUserRequestDto
         {
             IdUserBlocking = 1,
             IdUserBlocked = 2,
-            Comment = "test3"
+            Comment = "Test"
         };
-
+        
         //Act
         var res = await _repository.BlockUser(blockedUserRequestDto);
-
+        
         //Assert
         Assert.NotNull(res);
-
-        var blockedUsersId = await _context.BlockedUsers.Select(e => e.IdUserBlocked).SingleAsync();
-        Assert.Equal(blockedUsersId, blockedUserRequestDto.IdUserBlocked);
-    }*/
-    
+    }
     
     [Fact]
-    public async Task GetAchievementsFromDb_Returns_UserBlockingHistoryDto()
+    public async Task UnlockUser_WithBlockedUserNotExisting_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithNoBlocking();
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.UnlockUser(idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task UnlockUser_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithBlockedAndPreviousBlocked();
+
+        var idUser = 2;
+        
+        //Act
+        var res = await _repository.UnlockUser(idUser);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
+    
+    [Fact]
+    public async Task GetUserBlockingHistory_Returns_UserBlockingHistoryDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -167,7 +271,7 @@ public class BlockedUserDbRepositoryTests
     }
     
     [Fact]
-    public async Task GetAchievementsFromDb_Returns_Null()
+    public async Task GetUserBlockingHistory_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -179,6 +283,39 @@ public class BlockedUserDbRepositoryTests
 
         //Assert
         Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task CheckIfUserIsBlocked_WithUserNotExisting_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithNoBlocking();
+
+        var idUser = 20;
+
+        //Act
+        var res = await _repository.CheckIfUserIsBlocked(idUser);
+
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task CheckIfUserIsBlocked_Returns_Bool()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithNoBlocking();
+
+        var idUser = 2;
+
+        //Act
+        var res = await _repository.CheckIfUserIsBlocked(idUser);
+
+        //Assert
+        Assert.NotNull(res);
+        Assert.False(res);
     }
     
 }
