@@ -23,12 +23,10 @@ public class LinkController : Controller
     public async Task<IActionResult> GetUserLinks([FromRoute] int idUser)
     {
         var link = await _linkDbRepository.GetUserLinks(idUser);
-        
         if (link is null)
         {
             return NotFound("User doesn't exist"); 
         }
-        
         return Ok(link);
     }
     

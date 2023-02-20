@@ -428,6 +428,7 @@ public class PostDbRepository : IPostDbRepository
         return new NewPostDto()
         {
             IdPost    = idNewPost,
+            Nick      = user.Nick,
             Title     = post.Title,
             CreatedAt = post.CreatedAt,
             Content   = post.Content,
@@ -436,7 +437,10 @@ public class PostDbRepository : IPostDbRepository
                 .Posts
                 .Where(x => x.IdPost == idNewPost)
                 .SelectMany(x => x.IdTags)
-                .Select(x => x.NameTag).ToArrayAsync()
+                .Select(x => x.NameTag).ToArrayAsync(),
+            Comments = 0,
+            Likes    = 0
+            
         };
     }
 

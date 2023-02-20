@@ -287,17 +287,15 @@ public class LinkControllerTests
             .ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _linkController.DeleteSteamLink(idUser);
+        var actionResult = await _linkController.GetUserLinks(idUser);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
 
-        if (result is null) return;
         var resultValue = result.Value as string;
         Assert.NotNull(resultValue);
         
-        if (resultValue is null) return;
         Assert.Equal("User doesn't exist", resultValue);
     }
 }
