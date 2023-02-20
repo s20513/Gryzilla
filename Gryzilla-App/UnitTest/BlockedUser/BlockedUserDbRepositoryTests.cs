@@ -27,11 +27,18 @@ public class BlockedUserDbRepositoryTests
             RankLevel = 1
         });
         await _context.SaveChangesAsync();
-        
+
         await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
             Name = "Admin",
             RankLevel = 4
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        {
+            Name = "Blocked",
+            RankLevel = 0
         });
         await _context.SaveChangesAsync();
 
@@ -58,7 +65,8 @@ public class BlockedUserDbRepositoryTests
         {
             IdUser = 1,
             IdUserBlocked = 2,
-            Comment = "test1"
+            Comment = "test1",
+            UserBlockedRankId = 1
         });
         await _context.SaveChangesAsync();
 
@@ -70,7 +78,8 @@ public class BlockedUserDbRepositoryTests
         {
             IdUser = 1,
             IdUserBlocked = 2,
-            Comment = "test2"
+            Comment = "test2",
+            UserBlockedRankId = 1
         });
         await _context.SaveChangesAsync();
     }
@@ -79,15 +88,22 @@ public class BlockedUserDbRepositoryTests
     {
         await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
-            Name = "Rank1",
+            Name = "User",
             RankLevel = 1
+        });
+        await _context.SaveChangesAsync();
+
+        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        {
+            Name = "Admin",
+            RankLevel = 4
         });
         await _context.SaveChangesAsync();
         
         await _context.Ranks.AddAsync(new Gryzilla_App.Rank
         {
-            Name = "Admin",
-            RankLevel = 4
+            Name = "Blocked",
+            RankLevel = 0
         });
         await _context.SaveChangesAsync();
 
