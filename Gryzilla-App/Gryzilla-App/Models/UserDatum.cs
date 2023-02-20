@@ -11,7 +11,6 @@ namespace Gryzilla_App
             Articles = new HashSet<Article>();
             BlockedUserIdUserBlockedNavigations = new HashSet<BlockedUser>();
             BlockedUserIdUserNavigations = new HashSet<BlockedUser>();
-            Blockeds = new HashSet<Blocked>();
             CommentArticles = new HashSet<CommentArticle>();
             CommentPosts = new HashSet<CommentPost>();
             Groups = new HashSet<Group>();
@@ -46,7 +45,6 @@ namespace Gryzilla_App
         public virtual ICollection<Article> Articles { get; set; }
         public virtual ICollection<BlockedUser> BlockedUserIdUserBlockedNavigations { get; set; }
         public virtual ICollection<BlockedUser> BlockedUserIdUserNavigations { get; set; }
-        public virtual ICollection<Blocked> Blockeds { get; set; }
         public virtual ICollection<CommentArticle> CommentArticles { get; set; }
         public virtual ICollection<CommentPost> CommentPosts { get; set; }
         public virtual ICollection<Group> Groups { get; set; }

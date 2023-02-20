@@ -47,26 +47,28 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
         var blockedUserData = await _context.UserData
             .Include(e => e.IdRankNavigation)
             .Where(e => e.IdUser == blockedUserRequestDto.IdUserBlocked)
-            .Select(e => new
-            {
-                e.Nick,
-                e.IdRank,
-                RankName = e.IdRankNavigation.Name
-            })
             .SingleOrDefaultAsync();
         
         
-        if (blockedUserData is null || blockedUserData.RankName == "Admin")
+        if (blockedUserData is null || blockedUserData.IdRankNavigation.Name == "Admin")
         {
             return null;
         }
+
+        var blockedRankId = await _context.Ranks
+            .Where(e => e.Name == "Blocked")
+            .Select(e => e.IdRank)
+            .SingleAsync();
 
         var blockedUser = new BlockedUser
         {
             IdUser = blockedUserRequestDto.IdUserBlocking,
             IdUserBlocked = blockedUserRequestDto.IdUserBlocked,
-            Comment = blockedUserRequestDto.Comment
+            Comment = blockedUserRequestDto.Comment,
+            UserBlockedRankId = blockedUserData.IdRank
         };
+
+        blockedUserData.IdRank = blockedRankId;
 
         await _context.BlockedUsers.AddAsync(blockedUser);
         await _context.SaveChangesAsync();
@@ -76,7 +78,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             IdUserBlocked = blockedUserRequestDto.IdUserBlocked,
             Nick = blockedUserData.Nick,
             IdRank = blockedUserData.IdRank,
-            RankName = blockedUserData.RankName,
+            RankName = blockedUserData.IdRankNavigation.Name,
             IdUserBlocking = blockedUserRequestDto.IdUserBlocking,
             Start = DateTime.Now,
             End = null,
@@ -96,6 +98,10 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
         {
             return null;
         }
+
+        var userData = await _context.UserData.SingleAsync(e => e.IdUser == idUser);
+
+        userData.IdRank = blockedUser.UserBlockedRankId;
 
         _context.Remove(blockedUser);
         await _context.SaveChangesAsync();

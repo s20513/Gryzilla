@@ -35,7 +35,6 @@ namespace Gryzilla_App.Models
         public virtual DbSet<Achievement> Achievements { get; set; } = null!;
         public virtual DbSet<AchievementUser> AchievementUsers { get; set; } = null!;
         public virtual DbSet<Article> Articles { get; set; } = null!;
-        public virtual DbSet<Blocked> Blockeds { get; set; } = null!;
         public virtual DbSet<BlockedUser> BlockedUsers { get; set; } = null!;
         public virtual DbSet<CommentArticle> CommentArticles { get; set; } = null!;
         public virtual DbSet<CommentPost> CommentPosts { get; set; } = null!;
@@ -160,33 +159,7 @@ namespace Gryzilla_App.Models
                             j.IndexerProperty<int>("IdTag").HasColumnName("idTag");
                         });
             });
-
-            modelBuilder.Entity<Blocked>(entity =>
-            {
-                entity.HasKey(e => e.IdBlocked)
-                    .HasName("Blocked_pk");
-
-                entity.ToTable("Blocked");
-
-                entity.Property(e => e.IdBlocked).HasColumnName("idBlocked");
-
-                entity.Property(e => e.DateEnded)
-                    .HasColumnType("datetime")
-                    .HasColumnName("dateEnded");
-
-                entity.Property(e => e.DateStarted)
-                    .HasColumnType("datetime")
-                    .HasColumnName("dateStarted");
-
-                entity.Property(e => e.IdUser).HasColumnName("idUser");
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Blockeds)
-                    .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Blocked_User");
-            });
-
+            
             modelBuilder.Entity<BlockedUser>(entity =>
             {
                 entity.HasKey(e => new { e.IdUser, e.IdUserBlocked })
@@ -213,6 +186,10 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.Comment)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UserBlockedRankId)
+                    .IsRequired()
+                    .HasColumnName("userBlockedRankId");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.BlockedUserIdUserNavigations)
