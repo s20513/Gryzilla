@@ -58,7 +58,7 @@ public class LinkController : Controller
     [HttpPut("steam")]
     public async Task<IActionResult> PutSteamLink([FromBody] LinkDto linkDto)
     {
-        var link = await _linkDbRepository.PutLinkDiscord(linkDto);
+        var link = await _linkDbRepository.PutLinkSteam(linkDto);
         
         if (link is null)
         {
