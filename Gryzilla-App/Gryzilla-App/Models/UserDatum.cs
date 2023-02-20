@@ -39,8 +39,8 @@ namespace Gryzilla_App
         public DateTime? TokenExpire { get; set; }
         public byte[]? Photo { get; set; }
         public string? PhotoType { get; set; }
-        public string? LinkSteam { get; set; }
-        public string? LinkDiscord { get; set; }
+        public string? SteamLink { get; set; }
+        public string? DiscordLink { get; set; }
 
         public virtual Rank IdRankNavigation { get; set; } = null!;
         public virtual ICollection<AchievementUser> AchievementUsers { get; set; }

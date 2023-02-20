@@ -36,8 +36,8 @@ public class UserDbRepository : IUserDbRepository
                 PhoneNumber = x.PhoneNumber,
                 CreatedAt   = x.CreatedAt,
                 RankName    = x.IdRankNavigation.Name,
-                LinkDiscord = x.LinkDiscord,
-                LinkSteam   = x.LinkSteam
+                LinkDiscord = x.DiscordLink,
+                LinkSteam   = x.SteamLink
             })
             .SingleOrDefaultAsync();
         
@@ -57,8 +57,8 @@ public class UserDbRepository : IUserDbRepository
                 CreatedAt   = x.CreatedAt,
                 IdRank      = x.IdRank,
                 RankName    = x.IdRankNavigation.Name,
-                LinkDiscord = x.LinkDiscord,
-                LinkSteam   = x.LinkSteam
+                LinkDiscord = x.DiscordLink,
+                LinkSteam   = x.SteamLink
             })
             .ToArrayAsync();
 
@@ -99,8 +99,8 @@ public class UserDbRepository : IUserDbRepository
                 CreatedAt    = user.CreatedAt,
                 IdRank       = user.IdRank,
                 RankName     = user.IdRankNavigation.Name,
-                LinkDiscord  = user.LinkDiscord,
-                LinkSteam    = user.LinkSteam
+                LinkDiscord  = user.DiscordLink,
+                LinkSteam    = user.SteamLink
             };
         }
 
@@ -135,7 +135,9 @@ public class UserDbRepository : IUserDbRepository
             Password    = HashPassword(addUserDto.Password),
             Email       = addUserDto.Email,
             PhoneNumber = addUserDto.PhoneNumber,
-            CreatedAt   = DateTime.Now
+            CreatedAt   = DateTime.Now,
+            DiscordLink = null,
+            SteamLink   = null
         };
         
         await _context.UserData.AddAsync(newUser);

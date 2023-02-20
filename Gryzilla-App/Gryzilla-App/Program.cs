@@ -100,7 +100,7 @@ builder.Services.AddScoped<IReasonDbRepository, ReasonDbRepository>();
 builder.Services.AddScoped<IProfileCommentDbRepository, ProfileCommentDbRepository>();
 builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>();
 builder.Services.AddScoped<IBlockedUserDbRepository, BlockedUserDbRepository>();
-
+builder.Services.AddScoped<ILinkDbRepository, LinkDbRepository>();
 //To dla WAN
 var connectionString = "Data Source=89.68.200.216,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
 //To dla LAN
