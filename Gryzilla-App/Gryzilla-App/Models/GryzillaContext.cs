@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Configuration;
+using Microsoft.EntityFrameworkCore;
+using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 
 
 namespace Gryzilla_App.Models
@@ -22,8 +24,18 @@ namespace Gryzilla_App.Models
         {
             if (test)
             {
-                _connectionString =
-                    "Data Source=89.68.200.216,2105;Initial Catalog=GryzillaTest;User ID=sa;Password=Poziomka100;TrustServerCertificate=True";
+                var path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\Gryzilla-App\App.config"));
+
+                var fileMap = new ExeConfigurationFileMap
+                {
+                    ExeConfigFilename = path
+                };
+                var configuration = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+                
+                //To dla WAN
+                _connectionString = configuration.ConnectionStrings.ConnectionStrings["GryzillaDatabaseTest-Global"].ConnectionString;
+                //To dla LAN
+                //_connectionString = configuration.ConnectionStrings.ConnectionStrings["GryzillaDatabaseTest-Local"].ConnectionString;
                 
             }
             else

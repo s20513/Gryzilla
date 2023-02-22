@@ -101,11 +101,12 @@ builder.Services.AddScoped<IProfileCommentDbRepository, ProfileCommentDbReposito
 builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>();
 builder.Services.AddScoped<IBlockedUserDbRepository, BlockedUserDbRepository>();
 builder.Services.AddScoped<ILinkDbRepository, LinkDbRepository>();
+
 //To dla WAN
-var connectionString = "Data Source=89.68.200.216,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
+var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
 //To dla LAN
-//var connectionString = "Data Source=192.168.0.221,2105;Initial Catalog=Gryzilla;User ID=sa;Password=Poziomka100";
-//DbContext -> MssqlDbConnString
+//var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Local"].ConnectionString;
+
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(connectionString));
     
