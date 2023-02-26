@@ -228,7 +228,38 @@ public class PostRepositoryTests
         Assert.Null(res);
     }
     
+    [Fact]
+    public async Task ModifyPostWithoutTagsFromDb_Returns_PostDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataToDb();
         
+        var putPostDto = new PutPostDto
+        {
+            IdPost = 1,
+            Title = "Title1",
+            Content = "Content1",
+            Tags = new string[]
+            {
+            }
+        };
+        const int idPost = 1;
+        
+        //Act
+        var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
+
+        //Assert
+        Assert.NotNull(res);
+
+        var post = await _context.Posts.SingleOrDefaultAsync(e =>
+            e.IdPost     == idPost
+            && e.Content == putPostDto.Content
+            && e.Title   == putPostDto.Title);
+
+        Assert.NotNull(post);
+    } 
     [Fact]
     public async Task ModifyPostFromDb_Returns_PostDto()
     {
@@ -279,6 +310,7 @@ public class PostRepositoryTests
             Content = "Content1",
             Tags = new string []
             {
+                "testTag", "Tag1"
             }
         };
         var idPost = 1;
