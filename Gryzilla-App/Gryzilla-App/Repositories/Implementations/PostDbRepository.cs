@@ -575,14 +575,18 @@ public class PostDbRepository : IPostDbRepository
             
             foreach (var tag in putPostDto.Tags)
             {
-                var newTag = await _context
+                var currentTag = await _context
                     .Tags
                     .Where(x => x.NameTag == tag)
                     .SingleOrDefaultAsync();
 
-                if (newTag is not null)
+                if (currentTag is not null)
                 {
-                    post.IdTags.Add(newTag);  
+                    post.IdTags.Add(currentTag);
+                }
+                else
+                {
+                    post.IdTags.Add(await AddNewTag(tag));
                 }
             }
             
