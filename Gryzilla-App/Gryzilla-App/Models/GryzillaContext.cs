@@ -16,7 +16,7 @@ namespace Gryzilla_App.Models
         public GryzillaContext(DbContextOptions<GryzillaContext> options)
             : base(options)
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
+            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase"].ConnectionString;
         }
 
         public GryzillaContext(DbContextOptions<GryzillaContext> options, bool test)
@@ -32,15 +32,11 @@ namespace Gryzilla_App.Models
                 };
                 var configuration = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
                 
-                //To dla WAN
-                _connectionString = configuration.ConnectionStrings.ConnectionStrings["GryzillaDatabaseTest-Global"].ConnectionString;
-                //To dla LAN
-                //_connectionString = configuration.ConnectionStrings.ConnectionStrings["GryzillaDatabaseTest-Local"].ConnectionString;
-                
+                _connectionString = configuration.ConnectionStrings.ConnectionStrings["GryzillaDatabaseTest"].ConnectionString;
             }
             else
             {
-                _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
+                _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase"].ConnectionString;
             }
         }
 
