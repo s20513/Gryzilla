@@ -102,10 +102,7 @@ builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>(
 builder.Services.AddScoped<IBlockedUserDbRepository, BlockedUserDbRepository>();
 builder.Services.AddScoped<ILinkDbRepository, LinkDbRepository>();
 
-//To dla WAN
-var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Global"].ConnectionString;
-//To dla LAN
-//var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase-Local"].ConnectionString;
+var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase"].ConnectionString;
 
 builder.Services.AddDbContext<GryzillaContext>(options => 
     options.UseSqlServer(connectionString));
