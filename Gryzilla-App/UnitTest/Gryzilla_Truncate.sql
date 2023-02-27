@@ -10,6 +10,8 @@ SET(SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.BlockedUser_History, DATA_CONSIS
 
 TRUNCATE TABLE [AchievementUser]
 
+TRUNCATE TABLE [ReportUser]
+
 DELETE FROM [Achievement]
 DBCC CHECKIDENT ([Achievement], RESEED, 0)
 
