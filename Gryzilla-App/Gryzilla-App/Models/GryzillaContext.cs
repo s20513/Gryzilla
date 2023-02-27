@@ -57,6 +57,8 @@ namespace Gryzilla_App.Models
         public virtual DbSet<ReportPost> ReportPosts { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<UserDatum> UserData { get; set; } = null!;
+        
+        public virtual DbSet<ReportUser> ReportUsers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -569,6 +571,53 @@ namespace Gryzilla_App.Models
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Table_20_User");
+            });
+            
+            modelBuilder.Entity<ReportUser>(entity =>
+            {
+                entity.HasKey(e => e.IdReson)
+                    .HasName("ReportUser_pk");
+
+                entity.ToTable("ReportUser");
+
+                entity.Property(e => e.IdReson)
+                    .ValueGeneratedNever()
+                    .HasColumnName("idReson");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.IdReason).HasColumnName("idReason");
+
+                entity.Property(e => e.IdUserReported).HasColumnName("idUserReported");
+
+                entity.Property(e => e.IdUserReporting).HasColumnName("idUserReporting");
+
+                entity.Property(e => e.ReportedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("reportedAt");
+
+                entity.Property(e => e.Viewed).HasColumnName("viewed");
+
+                entity.HasOne(d => d.IdReasonNavigation)
+                    .WithMany(p => p.ReportUsers)
+                    .HasForeignKey(d => d.IdReason)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ReportUser_Reason");
+
+                entity.HasOne(d => d.IdUserReportedNavigation)
+                    .WithMany(p => p.ReportUserIdUserReportedNavigations)
+                    .HasForeignKey(d => d.IdUserReported)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ReportUser_UserDataReported");
+
+                entity.HasOne(d => d.IdUserReportingNavigation)
+                    .WithMany(p => p.ReportUserIdUserReportingNavigations)
+                    .HasForeignKey(d => d.IdUserReporting)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ReportUser_UserReporting");
             });
 
             modelBuilder.Entity<Tag>(entity =>
