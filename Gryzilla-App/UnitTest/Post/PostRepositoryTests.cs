@@ -44,7 +44,6 @@ public class PostRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
@@ -53,7 +52,6 @@ public class PostRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
@@ -62,7 +60,6 @@ public class PostRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
@@ -71,7 +68,6 @@ public class PostRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
@@ -80,7 +76,6 @@ public class PostRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
@@ -89,7 +84,6 @@ public class PostRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
@@ -239,7 +233,6 @@ public class PostRepositoryTests
         var putPostDto = new PutPostDto
         {
             IdPost = 1,
-            Title = "Title1",
             Content = "Content1",
             Tags = new string[]
             {
@@ -255,8 +248,7 @@ public class PostRepositoryTests
 
         var post = await _context.Posts.SingleOrDefaultAsync(e =>
             e.IdPost     == idPost
-            && e.Content == putPostDto.Content
-            && e.Title   == putPostDto.Title);
+            && e.Content == putPostDto.Content);
 
         Assert.NotNull(post);
     } 
@@ -271,7 +263,6 @@ public class PostRepositoryTests
         var putPostDto = new PutPostDto
         {
             IdPost = 1,
-            Title = "Title1",
             Content = "Content1",
             Tags = new string[]
             {
@@ -289,8 +280,7 @@ public class PostRepositoryTests
 
         var post = await _context.Posts.SingleOrDefaultAsync(e =>
             e.IdPost     == idPost
-            && e.Content == putPostDto.Content
-            && e.Title   == putPostDto.Title);
+            && e.Content == putPostDto.Content);
 
         Assert.NotNull(post);
     }
@@ -306,7 +296,6 @@ public class PostRepositoryTests
         var putPostDto = new PutPostDto
         {
             IdPost = 1,
-            Title = "Title1",
             Content = "Content1",
             Tags = new string []
             {
@@ -323,8 +312,7 @@ public class PostRepositoryTests
 
         var post = await _context.Posts.SingleOrDefaultAsync(e =>
             e.IdPost     == idPost
-            && e.Content == putPostDto.Content
-            && e.Title   == putPostDto.Title);
+            && e.Content == putPostDto.Content);
 
         Assert.NotNull(post);
     }
@@ -338,7 +326,6 @@ public class PostRepositoryTests
         var putPostDto = new PutPostDto
         {
             IdPost = 1,
-            Title = "Title1",
             Content = "Content1",
             Tags = new string[]
             {
@@ -407,7 +394,6 @@ public class PostRepositoryTests
         {
             IdUser = 1,
             Content = "Content",
-            Title = "Title",
             Tags = new []
             {
                 
@@ -436,7 +422,6 @@ public class PostRepositoryTests
         {
             IdUser = 1,
             Content = "Content",
-            Title = "Title",
             Tags = new []
             {
                 "Tag1"

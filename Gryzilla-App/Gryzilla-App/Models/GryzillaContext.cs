@@ -372,11 +372,6 @@ namespace Gryzilla_App.Models
 
                 entity.Property(e => e.IdUser).HasColumnName("idUser");
 
-                entity.Property(e => e.Title)
-                    .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .HasColumnName("title");
-
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.IdUser)

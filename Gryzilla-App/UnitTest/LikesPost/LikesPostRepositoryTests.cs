@@ -41,7 +41,6 @@ public class LikesPostRepositoryTests
         {
             IdUser = 1,
             Content = "content",
-            Title = "title",
             HighLight = false,
             CreatedAt = DateTime.Now,
         });

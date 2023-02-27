@@ -15,7 +15,6 @@ namespace Gryzilla_App
 
         public int IdPost { get; set; }
         public int IdUser { get; set; }
-        public string Title { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public string Content { get; set; } = null!;
         public bool HighLight { get; set; }

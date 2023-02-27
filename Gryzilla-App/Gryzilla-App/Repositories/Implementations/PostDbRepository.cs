@@ -57,7 +57,6 @@ public class PostDbRepository : IPostDbRepository
                         .Count(),
                     CreatedAt = a.CreatedAt,
                     Content   = a.Content,
-                    Title     = a.Title,
                     Nick      = a.IdUserNavigation.Nick,
                     Tags      = _context
                         .Posts
@@ -392,7 +391,6 @@ public class PostDbRepository : IPostDbRepository
         var post = new Post
         {
             IdUser    = addPostDto.IdUser,
-            Title     = addPostDto.Title,
             CreatedAt = DateTime.Now,
             Content   = addPostDto.Content,
             HighLight = false
@@ -429,7 +427,6 @@ public class PostDbRepository : IPostDbRepository
         {
             IdPost    = idNewPost,
             Nick      = user.Nick,
-            Title     = post.Title,
             CreatedAt = post.CreatedAt,
             Content   = post.Content,
             IdUser    = post.IdUser,
@@ -510,7 +507,6 @@ public class PostDbRepository : IPostDbRepository
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
-            Title     = post.Title,
         };
     }
 
@@ -563,7 +559,6 @@ public class PostDbRepository : IPostDbRepository
             return null;
         }
         
-        post.Title   = putPostDto.Title;
         post.Content = putPostDto.Content;
         
         if (putPostDto.Tags.Length > 0)
@@ -598,7 +593,6 @@ public class PostDbRepository : IPostDbRepository
                 Content   = post.Content,
                 IdPost    = post.IdPost,
                 IdUser    = post.IdUser,
-                Title     = post.Title,
                 Tags      = await _context
                     .Posts
                     .Where(x=>x.IdPost==idPost)
@@ -614,7 +608,6 @@ public class PostDbRepository : IPostDbRepository
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
-            Title     = post.Title,
         };
     }
 
@@ -658,7 +651,6 @@ public class PostDbRepository : IPostDbRepository
                 
                 CreatedAt = a.CreatedAt,
                 Content   = a.Content,
-                Title     = a.Title,
                 Nick      = a.IdUserNavigation.Nick,
                 Tags      = _context
                     .Posts

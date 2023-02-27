@@ -41,7 +41,6 @@ public class CommentPostDbRepositoryTests
         await _context.Posts.AddAsync(new Gryzilla_App.Post
         {
             IdUser = 1,
-            Title = "Title1",
             CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false

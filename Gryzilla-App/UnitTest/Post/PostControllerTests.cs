@@ -26,7 +26,6 @@ public class PostControllerTests
         { 
             idPost = 1,
             Nick ="Ola",
-            Title = "Test",
             Content = "XYZ",
             CreatedAt = DateTime.Now,
             Likes = 1
@@ -41,7 +40,6 @@ public class PostControllerTests
             {
                 idPost = 1,
                 Nick ="Ola",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -58,7 +56,6 @@ public class PostControllerTests
             {
                 idPost = 1,
                 Nick ="Nick2",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -68,7 +65,6 @@ public class PostControllerTests
             {
                 idPost = 2,
                 Nick ="Nick2",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -78,7 +74,6 @@ public class PostControllerTests
             {
                 idPost = 3,
                 Nick ="Nick2",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -88,7 +83,6 @@ public class PostControllerTests
             {
                 idPost = 4,
                 Nick ="Nick2",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -98,7 +92,6 @@ public class PostControllerTests
             {
                 idPost = 5,
                 Nick ="Nick2",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -108,7 +101,6 @@ public class PostControllerTests
             {
                 idPost = 6,
                 Nick ="Nick2",
-                Title = "Test",
                 Comments = 1,
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
@@ -124,7 +116,6 @@ public class PostControllerTests
         { 
             idPost = 1,
             Nick ="Ola",
-            Title = "Test",
             Comments = 1,
             Content = "XYZ",
             CreatedAt = DateTime.Now,
@@ -134,7 +125,6 @@ public class PostControllerTests
         {
             idPost = 2,
             Nick ="Mateusz",
-            Title = "Test1",
             Comments = 1,
             Content = "XYZ",
             CreatedAt = DateTime.Now,
