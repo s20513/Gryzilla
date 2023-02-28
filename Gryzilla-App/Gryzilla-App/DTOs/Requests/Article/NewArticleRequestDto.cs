@@ -13,7 +13,6 @@ public class NewArticleRequestDto
     public string Title { get; set; }
     
     [Required]
-    [MaxLength(200, ErrorMessage = "Max length : 200")]
     public string Content { get; set; }
     
     public List<TagDto> Tags { get; set; }

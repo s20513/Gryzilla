@@ -131,7 +131,6 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdArticle).HasColumnName("idArticle");
 
                 entity.Property(e => e.Content)
-                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("content");
 
