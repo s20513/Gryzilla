@@ -13,5 +13,5 @@ public class NewPostCommentDto
     [Required]
     [MaxLength(200,ErrorMessage = "Max length : 200")]
     
-    public string DescriptionPost { get; set; }
+    public string Content { get; set; }
 }

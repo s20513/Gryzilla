@@ -68,7 +68,7 @@ public class CommentPostDbRepositoryTests
         {
             IdUser = 1,
             IdPost = 1,
-            DescriptionPost = "DescPost1"
+            Content = "DescPost1"
         };
         
         //Act
@@ -98,7 +98,7 @@ public class CommentPostDbRepositoryTests
         {
             IdUser = 1,
             IdPost = 1,
-            DescriptionPost = "DescPost1"
+            Content = "DescPost1"
         };
         
         //Act
@@ -120,7 +120,7 @@ public class CommentPostDbRepositoryTests
         {
             IdUser = 2,
             IdPost = 1,
-            DescriptionPost = "DescPost1"
+            Content = "DescPost1"
         };
         
         //Act
@@ -145,7 +145,7 @@ public class CommentPostDbRepositoryTests
             IdComment = idComment,
             IdUser = 1,
             IdPost = 1,
-            DescriptionPost = "NewDescPost1"
+            Content = "NewDescPost1"
         };
         
         //Act
@@ -180,7 +180,7 @@ public class CommentPostDbRepositoryTests
             IdComment = idComment,
             IdUser = 1,
             IdPost = 1,
-            DescriptionPost = "NewDescPost1"
+            Content = "NewDescPost1"
         };
         
         //Act

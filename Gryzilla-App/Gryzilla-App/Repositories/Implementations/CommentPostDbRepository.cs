@@ -45,7 +45,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         {
             IdUser          = newPostCommentDto.IdUser,
             IdPost          = newPostCommentDto.IdPost,
-            DescriptionPost = newPostCommentDto.DescriptionPost
+            DescriptionPost = newPostCommentDto.Content
         };
         
         await _context.CommentPosts.AddAsync(newCommentPost);
@@ -79,7 +79,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             return null;
         }
 
-        commentPost.DescriptionPost = putPostCommentDto.DescriptionPost;
+        commentPost.DescriptionPost = putPostCommentDto.Content;
         await _context.SaveChangesAsync();
         
         nick = await _context
@@ -94,7 +94,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = putPostCommentDto.IdUser,
-            Description = putPostCommentDto.DescriptionPost
+            Description = putPostCommentDto.Content
         };
     }
 
