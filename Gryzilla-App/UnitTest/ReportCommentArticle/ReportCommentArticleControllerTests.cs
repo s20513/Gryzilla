@@ -261,7 +261,7 @@ public class ReportCommentArticleControllerTests
         //Arrange
         var returnedComment = new ReportCommentArticleDto();
         
-        var deleteReportArticleCommentDto = new DefaultReportCommentArticleDto()
+        var deleteReportArticleCommentDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
             IdReason = 1,
@@ -290,7 +290,7 @@ public class ReportCommentArticleControllerTests
     public async void DeleteReportArticleComment_Returns_Not_Found()
     {
         //Arrange
-        var deleteReportArticleCommentDto = new DefaultReportCommentArticleDto()
+        var deleteReportArticleCommentDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
             IdReason = 1,

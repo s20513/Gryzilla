@@ -2,7 +2,7 @@
 
 namespace Gryzilla_App.DTOs.Requests.ReportCommentArticle;
 
-public class DefaultReportCommentArticleDto
+public class DeleteReportCommentArticleDto
 {
     [Required]
     public int IdUser { get; set; }

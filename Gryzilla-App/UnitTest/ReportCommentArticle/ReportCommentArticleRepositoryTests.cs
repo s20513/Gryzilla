@@ -248,7 +248,7 @@ public class ReportCommentArticleRepositoryTests
 
         await AddTestDataToDb();
 
-        var deleteReportDto = new DefaultReportCommentArticleDto()
+        var deleteReportDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
             IdCommentArticle = 1,
@@ -273,7 +273,7 @@ public class ReportCommentArticleRepositoryTests
 
         await AddTestDataToDb();
 
-        var deleteReportDto = new DefaultReportCommentArticleDto()
+        var deleteReportDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
             IdCommentArticle = 2,
@@ -294,7 +294,7 @@ public class ReportCommentArticleRepositoryTests
 
         await AddTestDataToDb();
 
-        var deleteReportDto = new DefaultReportCommentArticleDto()
+        var deleteReportDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
             IdCommentArticle = 1,

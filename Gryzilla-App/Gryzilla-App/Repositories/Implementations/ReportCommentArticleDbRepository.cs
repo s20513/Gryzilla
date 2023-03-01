@@ -65,7 +65,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         };
     }
 
-    public async Task<ReportCommentArticleDto?> DeleteReportCommentArticleFromDb(DefaultReportCommentArticleDto deleteReportCommentDto)
+    public async Task<ReportCommentArticleDto?> DeleteReportCommentArticleFromDb(DeleteReportCommentArticleDto deleteReportCommentDto)
     {
         var user = await _context
             .UserData
@@ -85,18 +85,18 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             return null;
         }
         
-        var reportCommentDto = await _context
+        var reportCommentArticle = await _context
             .ReportCommentArticles.Where(x => x.IdUser == deleteReportCommentDto.IdUser)
             .Where(x => x.IdCommentArticle == deleteReportCommentDto.IdCommentArticle)
             .Where(x => x.IdReason == deleteReportCommentDto.IdReason)
             .SingleOrDefaultAsync();
 
-        if (reportCommentDto is null)
+        if (reportCommentArticle is null)
         {
             return null;
         }
         
-        _context.ReportCommentArticles.Remove(reportCommentDto);
+        _context.ReportCommentArticles.Remove(reportCommentArticle);
         await _context.SaveChangesAsync();
         
         var newReportCommentPost = new ReportCommentArticleDto
@@ -104,9 +104,9 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser             = deleteReportCommentDto.IdUser,
             IdComment          = deleteReportCommentDto.IdCommentArticle,
             IdReason           = deleteReportCommentDto.IdReason,
-            Description        = reportCommentDto.Description,
-            Viewed             = reportCommentDto.Viewed,
-            ReportedAt         = reportCommentDto.ReportedAt
+            Description        = reportCommentArticle.Description,
+            Viewed             = reportCommentArticle.Viewed,
+            ReportedAt         = reportCommentArticle.ReportedAt
         };
 
         return newReportCommentPost;
@@ -183,7 +183,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         };
     }
 
-    public async Task<IEnumerable<ReportCommentArticleDto?>> GetReportCommentArticlesFromDb()
+    public async Task<IEnumerable<ReportCommentArticleDto>> GetReportCommentArticlesFromDb()
     {
         var reportCommentArticle = await _context.ReportCommentArticles
             .Select(e => new ReportCommentArticleDto

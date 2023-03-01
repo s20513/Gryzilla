@@ -86,7 +86,7 @@ public class ReportCommentArticleController: Controller
     /// <param name="reportCommentArticle">DeleteReportArticleComment</param>
     /// <returns>DeleteReportArticleComment</returns>
     [HttpDelete]
-    public async Task<IActionResult> DeleteReportArticleComment([FromBody] DefaultReportCommentArticleDto reportCommentArticle)
+    public async Task<IActionResult> DeleteReportArticleComment([FromBody] DeleteReportCommentArticleDto reportCommentArticle)
     {
         var report = await _reportCommentArticleDbRepository.DeleteReportCommentArticleFromDb(reportCommentArticle);
 
