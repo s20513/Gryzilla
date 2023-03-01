@@ -115,7 +115,7 @@ public class PostRepositoryTests
         post.IdTags.Add(tag);
         await _context.SaveChangesAsync();
         
-        await _context.ReportPosts.AddAsync(new ReportPost
+        await _context.ReportPosts.AddAsync(new Gryzilla_App.ReportPost
         {
             Description = "Description",
             ReportedAt = DateTime.Now,
