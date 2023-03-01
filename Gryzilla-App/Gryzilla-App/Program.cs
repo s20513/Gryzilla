@@ -102,6 +102,7 @@ builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>(
 builder.Services.AddScoped<IBlockedUserDbRepository, BlockedUserDbRepository>();
 builder.Services.AddScoped<ILinkDbRepository, LinkDbRepository>();
 builder.Services.AddScoped<IReportPostDbRepository, ReportPostDbRepository>();
+builder.Services.AddScoped<IReportUserDbRepository, ReportUserDbRepository>();
 
 var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase"].ConnectionString;
 

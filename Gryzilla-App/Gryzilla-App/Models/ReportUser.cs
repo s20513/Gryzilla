@@ -5,7 +5,7 @@ namespace Gryzilla_App
 {
     public partial class ReportUser
     {
-        public int IdReson { get; set; }
+        public int IdReport { get; set; }
         public string Description { get; set; } = null!;
         public DateTime ReportedAt { get; set; }
         public bool Viewed { get; set; }

@@ -574,12 +574,12 @@ namespace Gryzilla_App.Models
             
             modelBuilder.Entity<ReportUser>(entity =>
             {
-                entity.HasKey(e => e.IdReson)
+                entity.HasKey(e => e.IdReport)
                     .HasName("ReportUser_pk");
 
                 entity.ToTable("ReportUser");
 
-                entity.Property(e => e.IdReson)
+                entity.Property(e => e.IdReport)
                     .ValueGeneratedNever()
                     .HasColumnName("idReson");
 
