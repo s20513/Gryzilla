@@ -65,7 +65,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         };
     }
 
-    public async Task<ReportCommentArticleDto?> DeleteReportCommentArticleToDb(DefaultReportCommentArticleDto deleteReportCommentDto)
+    public async Task<ReportCommentArticleDto?> DeleteReportCommentArticleFromDb(DefaultReportCommentArticleDto deleteReportCommentDto)
     {
         var user = await _context
             .UserData
@@ -112,7 +112,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         return newReportCommentPost;
     }
 
-    public async Task<ReportCommentArticleDto?> UpdateReportCommentArticleToDb(UpdateReportCommentArticleDto updateReportCommentDto)
+    public async Task<ReportCommentArticleDto?> UpdateReportCommentArticleFromDb(UpdateReportCommentArticleDto updateReportCommentDto)
     {
         var user = await _context
             .UserData
@@ -158,7 +158,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         };
     }
 
-    public async Task<ReportCommentArticleDto?> GetOneReportCommentArticleToDb(int idUser, int idComment, int idReason)
+    public async Task<ReportCommentArticleDto?> GetOneReportCommentArticleFromDb(int idUser, int idComment, int idReason)
     {
         var reportCommentDto = await _context
             .ReportCommentArticles.Where(x => x.IdUser == idUser)
@@ -183,7 +183,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         };
     }
 
-    public async Task<IEnumerable<ReportCommentArticleDto?>> GetReportCommentArticlesToDb()
+    public async Task<IEnumerable<ReportCommentArticleDto?>> GetReportCommentArticlesFromDb()
     {
         var reportCommentArticle = await _context.ReportCommentArticles
             .Select(e => new ReportCommentArticleDto

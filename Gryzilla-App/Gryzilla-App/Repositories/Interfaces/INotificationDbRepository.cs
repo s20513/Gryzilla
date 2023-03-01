@@ -7,6 +7,6 @@ public interface INotificationDbRepository
 {
     public Task<NotificationDto?> ModifyNotificationFromDb(int idNotification, ModifyNotificationDto modifyNotification);
     public Task<NotificationDto?> DeleteNotificationFromDb(int idNotification);
-    public Task<NotificationDto?> AddNotificationFromDb(NewNotificationDto newNotificationDto);
+    public Task<NotificationDto?> AddNotificationToDb(NewNotificationDto newNotificationDto);
 
 }

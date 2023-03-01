@@ -19,7 +19,7 @@ public class NotificationController : Controller
     [HttpPost]
     public async Task<IActionResult> AddNotification([FromBody] NewNotificationDto newNotificationDto)
     { 
-       var notification = await _notificationDbRepository.AddNotificationFromDb(newNotificationDto);
+       var notification = await _notificationDbRepository.AddNotificationToDb(newNotificationDto);
        if (notification is null)
        {
            return NotFound("No user with given id found");

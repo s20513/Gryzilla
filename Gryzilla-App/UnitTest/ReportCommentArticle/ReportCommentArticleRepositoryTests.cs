@@ -97,7 +97,7 @@ public class ReportCommentArticleRepositoryTests
         await AddTestDataToDb();
         
         //Act
-        var res = await _repository.GetReportCommentArticlesToDb();
+        var res = await _repository.GetReportCommentArticlesFromDb();
         
         //Assert
         Assert.NotNull(res);
@@ -114,7 +114,7 @@ public class ReportCommentArticleRepositoryTests
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetReportCommentArticlesToDb();
+        var res = await _repository.GetReportCommentArticlesFromDb();
         
         //Assert
         Assert.Empty(res);
@@ -132,7 +132,7 @@ public class ReportCommentArticleRepositoryTests
         var idReason = 1;
         
         //Act
-        var res = await _repository.GetOneReportCommentArticleToDb(idUser, idComment, idReason);
+        var res = await _repository.GetOneReportCommentArticleFromDb(idUser, idComment, idReason);
         
         //Assert
         Assert.NotNull(res);
@@ -157,7 +157,7 @@ public class ReportCommentArticleRepositoryTests
         var idReason = 1;
         
         //Act
-        var res = await _repository.GetOneReportCommentArticleToDb(idUser, idComment, idReason);
+        var res = await _repository.GetOneReportCommentArticleFromDb(idUser, idComment, idReason);
         
         //Assert
         Assert.Null(res);
@@ -256,7 +256,7 @@ public class ReportCommentArticleRepositoryTests
         };
         
         //Act
-        var res = await _repository.DeleteReportCommentArticleToDb(deleteReportDto);
+        var res = await _repository.DeleteReportCommentArticleFromDb(deleteReportDto);
         
         //Assert
         Assert.NotNull(res);
@@ -281,7 +281,7 @@ public class ReportCommentArticleRepositoryTests
         };
         
         //Act
-        var res = await _repository.DeleteReportCommentArticleToDb(deleteReportDto);
+        var res = await _repository.DeleteReportCommentArticleFromDb(deleteReportDto);
         
         //Assert
         Assert.Null(res);
@@ -302,7 +302,7 @@ public class ReportCommentArticleRepositoryTests
         };
         
         //Act
-        var res = await _repository.DeleteReportCommentArticleToDb(deleteReportDto);
+        var res = await _repository.DeleteReportCommentArticleFromDb(deleteReportDto);
         
         //Assert
         Assert.Null(res);
@@ -324,7 +324,7 @@ public class ReportCommentArticleRepositoryTests
         };
 
         //Act
-        var res = await _repository.UpdateReportCommentArticleToDb(modifyReportRequestDto);
+        var res = await _repository.UpdateReportCommentArticleFromDb(modifyReportRequestDto);
 
         //Assert
         Assert.Null(res);
@@ -345,7 +345,7 @@ public class ReportCommentArticleRepositoryTests
         };
 
         //Act
-        var res = await _repository.UpdateReportCommentArticleToDb(modifyReportRequestDto);
+        var res = await _repository.UpdateReportCommentArticleFromDb(modifyReportRequestDto);
 
         //Assert
         Assert.Null(res);
@@ -366,7 +366,7 @@ public class ReportCommentArticleRepositoryTests
             Viewed = false
         };
         //Act
-        var res = await _repository.UpdateReportCommentArticleToDb(modifyReportRequestDto);
+        var res = await _repository.UpdateReportCommentArticleFromDb(modifyReportRequestDto);
         
         //Assert
         Assert.NotNull(res);

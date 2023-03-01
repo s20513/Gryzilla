@@ -40,7 +40,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         return profileComments;
     }
 
-    public async Task <ProfileCommentDto?> AddProfileCommentFromDb(int idUser, NewProfileComment newProfileComment)
+    public async Task <ProfileCommentDto?> AddProfileCommentToDb(int idUser, NewProfileComment newProfileComment)
     {
         var user = await _context
             .UserData

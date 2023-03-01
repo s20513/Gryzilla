@@ -6,8 +6,8 @@ namespace Gryzilla_App.Repositories.Interfaces;
 public interface IReportCommentPostDbRepository
 {
     public Task<ReportCommentPostDto?> AddReportCommentPostToDb(NewReportCommentPostDto newReportCommentDto);
-    public Task<ReportCommentPostDto?> DeleteReportCommentPostToDb(DefaultReportCommentPostDto deleteReportCommentDto);
-    public Task<ReportCommentPostDto?> UpdateReportCommentPostToDb(UpdateReportCommentPostDto updateReportCommentDto);
-    public Task<ReportCommentPostDto?> GetOneReportCommentPostToDb(int idUser, int idComment, int idReason);
-    public Task<IEnumerable<ReportCommentPostDto>> GetReportCommentPostsToDb();
+    public Task<ReportCommentPostDto?> DeleteReportCommentPostFromDb(DefaultReportCommentPostDto deleteReportCommentDto);
+    public Task<ReportCommentPostDto?> UpdateReportCommentPostFromDb(UpdateReportCommentPostDto updateReportCommentDto);
+    public Task<ReportCommentPostDto?> GetOneReportCommentPostFromDb(int idUser, int idComment, int idReason);
+    public Task<IEnumerable<ReportCommentPostDto>> GetReportCommentPostsFromDb();
 }

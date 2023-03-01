@@ -45,7 +45,7 @@ public class ProfileCommentController : Controller
     [HttpPost("{idUser:int}")]
     public async Task<IActionResult> PostProfileComment([FromBody] NewProfileComment newProfileComment, [FromRoute] int idUser)
     {
-        var profileComment = await _profileCommentDbRepository.AddProfileCommentFromDb(idUser, newProfileComment);
+        var profileComment = await _profileCommentDbRepository.AddProfileCommentToDb(idUser, newProfileComment);
     
         if (profileComment == null)
         { 

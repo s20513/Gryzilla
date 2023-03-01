@@ -25,7 +25,7 @@ public class NotificationControllerTests
         var returnedNotification = new NotificationDto();
         
         _notificationRepositoryMock
-            .Setup(x => x.AddNotificationFromDb(newNotificationDto))
+            .Setup(x => x.AddNotificationToDb(newNotificationDto))
             .ReturnsAsync(returnedNotification);
 
         //Act
@@ -51,7 +51,7 @@ public class NotificationControllerTests
         NotificationDto? nullValue = null;
         
         _notificationRepositoryMock
-            .Setup(x => x.AddNotificationFromDb(newNotificationDto))
+            .Setup(x => x.AddNotificationToDb(newNotificationDto))
             .ReturnsAsync(nullValue);
 
         //Act

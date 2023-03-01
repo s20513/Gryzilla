@@ -71,7 +71,7 @@ public class ProfileCommentControllerTests
         var returnedProfileComment = new ProfileCommentDto();
         
         _profileRepositoryMock
-            .Setup(x => x.AddProfileCommentFromDb(1, newProfileCommentDto))
+            .Setup(x => x.AddProfileCommentToDb(1, newProfileCommentDto))
             .ReturnsAsync(returnedProfileComment);
 
         //Act
@@ -97,7 +97,7 @@ public class ProfileCommentControllerTests
         ProfileCommentDto? nullValue = null;
         
         _profileRepositoryMock
-            .Setup(x => x.AddProfileCommentFromDb(1, newProfileCommentDto))
+            .Setup(x => x.AddProfileCommentToDb(1, newProfileCommentDto))
             .ReturnsAsync(nullValue);
 
         //Act

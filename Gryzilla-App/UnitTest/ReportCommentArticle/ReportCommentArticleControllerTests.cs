@@ -25,7 +25,7 @@ public class ReportCommentArticleControllerTests
         //Arrange
         var reports = new ReportCommentArticleDto[5];
 
-        _reportRepositoryMock.Setup(e => e.GetReportCommentArticlesToDb()).ReturnsAsync(reports);
+        _reportRepositoryMock.Setup(e => e.GetReportCommentArticlesFromDb()).ReturnsAsync(reports);
         
         //Act
         var actionResult = await _reportController.GetReports();
@@ -53,7 +53,7 @@ public class ReportCommentArticleControllerTests
              IdComment = 1
         };
 
-        _reportRepositoryMock.Setup(e => e.GetOneReportCommentArticleToDb(report.IdReason, report.IdUser, report.IdComment)).ReturnsAsync(report);
+        _reportRepositoryMock.Setup(e => e.GetOneReportCommentArticleFromDb(report.IdReason, report.IdUser, report.IdComment)).ReturnsAsync(report);
         
         //Act
         var actionResult = await _reportController.GetReport(report.IdReason, report.IdUser, report.IdComment);
@@ -79,7 +79,7 @@ public class ReportCommentArticleControllerTests
         int idCommentArticle = 1;
         ReportCommentArticleDto? reports = null;
 
-        _reportRepositoryMock.Setup(e => e.GetOneReportCommentArticleToDb(idReason, idUser, idCommentArticle)).ReturnsAsync(reports);
+        _reportRepositoryMock.Setup(e => e.GetOneReportCommentArticleFromDb(idReason, idUser, idCommentArticle)).ReturnsAsync(reports);
 
         //Act
         var actionResult = await _reportController.GetReport(idReason, idUser, idCommentArticle);
@@ -101,7 +101,7 @@ public class ReportCommentArticleControllerTests
         //Arrange
         List<ReportCommentArticleDto>? reports = new List<ReportCommentArticleDto>();
 
-        _reportRepositoryMock.Setup(e => e.GetReportCommentArticlesToDb()).ReturnsAsync(reports);
+        _reportRepositoryMock.Setup(e => e.GetReportCommentArticlesFromDb()).ReturnsAsync(reports);
 
         //Act
         var actionResult = await _reportController.GetReports();
@@ -207,7 +207,7 @@ public class ReportCommentArticleControllerTests
         var returnedComment = new ReportCommentArticleDto();
         
         _reportRepositoryMock
-            .Setup(x => x.UpdateReportCommentArticleToDb(putReportArticleCommentDto))
+            .Setup(x => x.UpdateReportCommentArticleFromDb(putReportArticleCommentDto))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -237,7 +237,7 @@ public class ReportCommentArticleControllerTests
         ReportCommentArticleDto? nullValue = null;
         
         _reportRepositoryMock
-            .Setup(x => x.UpdateReportCommentArticleToDb(putReportArticleCommentDto))
+            .Setup(x => x.UpdateReportCommentArticleFromDb(putReportArticleCommentDto))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -268,7 +268,7 @@ public class ReportCommentArticleControllerTests
             IdCommentArticle = 1
         };
         _reportRepositoryMock
-            .Setup(x => x.DeleteReportCommentArticleToDb(deleteReportArticleCommentDto))
+            .Setup(x => x.DeleteReportCommentArticleFromDb(deleteReportArticleCommentDto))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -299,7 +299,7 @@ public class ReportCommentArticleControllerTests
         ReportCommentArticleDto? nullValue = null;
         
         _reportRepositoryMock
-            .Setup(x => x.DeleteReportCommentArticleToDb(deleteReportArticleCommentDto))
+            .Setup(x => x.DeleteReportCommentArticleFromDb(deleteReportArticleCommentDto))
             .ReturnsAsync( nullValue);
 
         //Act

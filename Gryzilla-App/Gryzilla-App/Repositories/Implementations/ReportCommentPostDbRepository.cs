@@ -75,7 +75,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
     /// </summary>
     /// <param name="deleteReportCommentDto">DeleteReportCommentPostDto</param>
     /// <returns>DeleteReportCommentPostDto</returns>
-    public async Task<ReportCommentPostDto?> DeleteReportCommentPostToDb(DefaultReportCommentPostDto deleteReportCommentDto)
+    public async Task<ReportCommentPostDto?> DeleteReportCommentPostFromDb(DefaultReportCommentPostDto deleteReportCommentDto)
     {
         var user = await _context
             .UserData
@@ -124,7 +124,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
     /// </summary>
     /// <param name="updateReportCommentDto">UpdateReportCommentPostDto</param>
     /// <returns>UpdateReportCommentPostDto</returns>
-    public async Task<ReportCommentPostDto?> UpdateReportCommentPostToDb(UpdateReportCommentPostDto updateReportCommentDto)
+    public async Task<ReportCommentPostDto?> UpdateReportCommentPostFromDb(UpdateReportCommentPostDto updateReportCommentDto)
     {
         var user = await _context
             .UserData
@@ -176,7 +176,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
     /// <param name="idComment">idComment</param>
     /// <param name="idReason">idReason</param>
     /// <returns></returns>
-    public async Task<ReportCommentPostDto?> GetOneReportCommentPostToDb(int idUser, int idComment, int idReason)
+    public async Task<ReportCommentPostDto?> GetOneReportCommentPostFromDb(int idUser, int idComment, int idReason)
     {
         var reportCommentDto = await _context
             .ReportCommentPosts.Where(x => x.IdUser == idUser)
@@ -204,7 +204,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
     ///  Get report comment posts list
     /// </summary>
     /// <returns>List - ReportCommentPostDto</returns>
-    public async Task<IEnumerable<ReportCommentPostDto>> GetReportCommentPostsToDb()
+    public async Task<IEnumerable<ReportCommentPostDto>> GetReportCommentPostsFromDb()
     {
         var reportCommentPost = await _context.ReportCommentPosts
             .Select(e => new ReportCommentPostDto

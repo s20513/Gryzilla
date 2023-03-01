@@ -26,7 +26,7 @@ public class ReportCommentArticleController: Controller
     [HttpGet]
     public async Task<IActionResult> GetReports()
     {
-        var reports = await _reportCommentArticleDbRepository.GetReportCommentArticlesToDb();
+        var reports = await _reportCommentArticleDbRepository.GetReportCommentArticlesFromDb();
         
         if (reports.IsNullOrEmpty())
         {
@@ -45,7 +45,7 @@ public class ReportCommentArticleController: Controller
     [HttpGet("one/{idUser:int}/{idComment:int}/{idReason:int}")]
     public async Task<IActionResult> GetReport([FromRoute] int idUser, [FromRoute] int idComment, [FromRoute] int idReason)
     {
-        var report = await _reportCommentArticleDbRepository.GetOneReportCommentArticleToDb(idUser, idComment, idReason);
+        var report = await _reportCommentArticleDbRepository.GetOneReportCommentArticleFromDb(idUser, idComment, idReason);
 
         if (report is null)
         {
@@ -88,7 +88,7 @@ public class ReportCommentArticleController: Controller
     [HttpDelete]
     public async Task<IActionResult> DeleteReportArticleComment([FromBody] DefaultReportCommentArticleDto reportCommentArticle)
     {
-        var report = await _reportCommentArticleDbRepository.DeleteReportCommentArticleToDb(reportCommentArticle);
+        var report = await _reportCommentArticleDbRepository.DeleteReportCommentArticleFromDb(reportCommentArticle);
 
         if (report is null)
         {
@@ -106,7 +106,7 @@ public class ReportCommentArticleController: Controller
     [HttpPut]
     public async Task<IActionResult> UpdateReportPostComment([FromBody] UpdateReportCommentArticleDto reportCommentArticle)
     {
-        var report = await _reportCommentArticleDbRepository.UpdateReportCommentArticleToDb(reportCommentArticle);
+        var report = await _reportCommentArticleDbRepository.UpdateReportCommentArticleFromDb(reportCommentArticle);
 
         if (report is null)
         {

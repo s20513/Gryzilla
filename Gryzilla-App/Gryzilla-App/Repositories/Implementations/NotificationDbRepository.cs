@@ -16,7 +16,7 @@ public class NotificationDbRepository : INotificationDbRepository
         _context = context;
     }
     
-    public async Task <NotificationDto?> AddNotificationFromDb(NewNotificationDto newNotificationDto)
+    public async Task <NotificationDto?> AddNotificationToDb(NewNotificationDto newNotificationDto)
     {
         var user = await _context
             .UserData

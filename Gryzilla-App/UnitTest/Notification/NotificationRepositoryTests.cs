@@ -62,7 +62,7 @@ public class NotificationRepositoryTests
         };
         
         //Act
-        var res = await _repository.AddNotificationFromDb(newNotificationRequestDto);
+        var res = await _repository.AddNotificationToDb(newNotificationRequestDto);
         
         //Assert
         Assert.NotNull(res);
@@ -85,7 +85,7 @@ public class NotificationRepositoryTests
         };
         
         //Act
-        var res = await _repository.AddNotificationFromDb(newNotificationRequestDto);
+        var res = await _repository.AddNotificationToDb(newNotificationRequestDto);
         
         //Assert
         Assert.Null(res);
