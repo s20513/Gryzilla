@@ -50,15 +50,16 @@ public class PostDbRepository : IPostDbRepository
                         .Where(c => c.IdPost == post.IdPost)
                         .SelectMany(b => b.IdUsers)
                         .Count(),
-                    Comments  = _context
-                        .Posts
-                        .Where(c => c.IdPost == post.IdPost)
-                        .SelectMany(x=>x.CommentPosts)
-                        .Count(),
-                    CreatedAt = a.CreatedAt,
-                    Content   = a.Content,
-                    Nick      = a.IdUserNavigation.Nick,
-                    Tags      = _context
+                    Comments      = _context
+                                    .Posts
+                                    .Where(c => c.IdPost == post.IdPost)
+                                    .SelectMany(b => b.CommentPosts)
+                                    .Count(),
+                    CommentsDtos  = GetCommentPost(post.IdPost),
+                    CreatedAt     = a.CreatedAt,
+                    Content       = a.Content,
+                    Nick          = a.IdUserNavigation.Nick,
+                    Tags          = _context
                         .Posts
                         .Where(x => x.IdPost == post.IdPost)
                         .SelectMany(x => x.IdTags)
@@ -66,12 +67,29 @@ public class PostDbRepository : IPostDbRepository
                         .ToArray()
                 }).SingleOrDefaultAsync();
 
-            if (newPost != null) postDto.Add(newPost);
+            if (newPost != null)
+                postDto.Add(newPost);
         }
 
         return postDto;
     }
 
+    public List<PostCommentDto> GetCommentPost(int idPost)
+    {
+        var postComment =  _context
+            .CommentPosts
+            .Where(x => x.IdPost == idPost)
+            .Select(x => new PostCommentDto
+            {
+                Description = x.DescriptionPost,
+                IdComment = x.IdComment,
+                IdPost = x.IdPost,
+                IdUser = x.IdUser
+            })
+            .ToList();
+        List <PostCommentDto> list = postComment.Take(2).ToList();
+        return list;
+    }
     public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
     {
         var allPosts = await _context
