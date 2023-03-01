@@ -108,6 +108,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
 
         reportPost.Description = updateReportPostRequestDto.Description;
         reportPost.Viewed = updateReportPostRequestDto.Viewed;
+        await _context.SaveChangesAsync();
 
         return new ReportPostResponseDto
         {
