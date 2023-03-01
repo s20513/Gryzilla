@@ -40,7 +40,7 @@ public class ReportPostController: Controller
     /// <param name="reportPostIdsRequestDto">ReportPostIdsRequestDto</param>
     /// <returns>ReportPostIdsRequestDto</returns>
     [HttpGet]
-    public async Task<IActionResult> GetReports([FromBody] ReportPostIdsRequestDto reportPostIdsRequestDto)
+    public async Task<IActionResult> GetReport([FromBody] ReportPostIdsRequestDto reportPostIdsRequestDto)
     {
         var report = await _reportPostDbRepository.GetReportPostFromDb(reportPostIdsRequestDto);
         
@@ -67,7 +67,7 @@ public class ReportPostController: Controller
 
             if (report is null)
             {
-                NotFound("User, post or reason does not exist");
+                return NotFound("User, post or reason does not exist");
             }
 
         }
