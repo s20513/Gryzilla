@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -40,7 +41,15 @@ public class PostControllerTests
             {
                 idPost = 1,
                 Nick ="Ola",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -56,7 +65,15 @@ public class PostControllerTests
             {
                 idPost = 1,
                 Nick ="Nick2",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -65,7 +82,15 @@ public class PostControllerTests
             {
                 idPost = 2,
                 Nick ="Nick2",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -74,7 +99,15 @@ public class PostControllerTests
             {
                 idPost = 3,
                 Nick ="Nick2",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -83,7 +116,15 @@ public class PostControllerTests
             {
                 idPost = 4,
                 Nick ="Nick2",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -92,7 +133,15 @@ public class PostControllerTests
             {
                 idPost = 5,
                 Nick ="Nick2",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -101,7 +150,15 @@ public class PostControllerTests
             {
                 idPost = 6,
                 Nick ="Nick2",
-                Comments = 1,
+                CommentsDtos = new List<PostCommentDto>()
+                {
+                    new PostCommentDto
+                    {
+                        IdPost = 1,
+                        Description = "Description",
+                        IdUser = 1,
+                    }
+                },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
                 Likes = 1 
@@ -116,7 +173,15 @@ public class PostControllerTests
         { 
             idPost = 1,
             Nick ="Ola",
-            Comments = 1,
+            CommentsDtos = new List<PostCommentDto>()
+            {
+                new PostCommentDto
+                {
+                    IdPost = 1,
+                    Description = "Description",
+                    IdUser = 1,
+                }
+            },
             Content = "XYZ",
             CreatedAt = DateTime.Now,
             Likes = 1
@@ -125,7 +190,15 @@ public class PostControllerTests
         {
             idPost = 2,
             Nick ="Mateusz",
-            Comments = 1,
+            CommentsDtos = new List<PostCommentDto>()
+            {
+                new PostCommentDto
+                {
+                    IdPost = 1,
+                    Description = "Description",
+                    IdUser = 1,
+                }
+            },
             Content = "XYZ",
             CreatedAt = DateTime.Now,
             Likes = 1
