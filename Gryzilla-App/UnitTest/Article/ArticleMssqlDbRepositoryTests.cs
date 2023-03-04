@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
@@ -521,5 +522,141 @@ public class ArticleMssqlDbRepositoryTests
         
         //Assert
         Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetQtyArticlesFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+
+        //Act
+        var res = await _repository.GetQtyArticlesFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Skip(0)
+            .Take(5)
+            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.articles.Select(x=>x.IdArticle));
+    }
+    [Fact]
+    public async Task GetQtyArticlesFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyArticlesFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyArticlesFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesFromDb(4));
+    }
+    
+    [Fact]
+    public async Task GetQtyArticlesMostLikesFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+
+        //Act
+        var res = await _repository.GetQtyArticlesByMostLikesFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Skip(0)
+            .Take(5)
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+    }
+    [Fact]
+    public async Task GetTopArticle_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetTopArticles();
+
+        //Assert
+        Assert.Null(res);
+    }
+    
+    
+    [Fact]
+    public async Task GetTopPost_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+
+        //Act
+        var res = await _repository.GetTopArticles();
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Skip(0)
+            .Take(3)
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.Select(e => e.IdArticle));
+    }
+    
+    [Fact]
+    public async Task GetQtyArticlesByMostLikesFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyArticlesByMostLikesFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyArticlesByMostLikesFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByMostLikesFromDb(5));
     }
 }

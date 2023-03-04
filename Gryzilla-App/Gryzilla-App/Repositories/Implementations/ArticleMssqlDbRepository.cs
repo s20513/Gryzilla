@@ -145,7 +145,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     CommentsNum = _context
                        .CommentArticles
                        .Count(c => c.IdArticle == x.IdArticle),
-                    Comments = GetCommentArticle(x.IdArticle),
+                    Comments = GetCommentArticle(idArticle),
                 })
                 .SingleOrDefaultAsync();
 
@@ -454,7 +454,10 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             Tags       = articleDto
                 .Tags
                 .Select(x => x.NameTag)
-                .ToArray()
+                .ToArray(),
+            CommentsNum = 0,
+            LikesNum = 0,
+            Comments = new List<ArticleCommentDto>()
         };
     }
     public async Task<ArticleDto?> DeleteArticleFromDb(int idArticle)
@@ -532,7 +535,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             },
             Title      = article.Title,
             Content    = article.Content,
-            CreatedAt  = article.CreatedAt
+            CreatedAt  = article.CreatedAt,
         };
     }
 
@@ -592,45 +595,64 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 .Where(e => e.IdArticle == article.IdArticle)
                 .SelectMany(e => e.IdUsers)
                 .Count(),
-            
+            CommentsNum = _context
+                .Articles
+                .Where(e => e.IdArticle == article.IdArticle)
+                .SelectMany(e => e.CommentArticles)
+                .Count(),
             Comments = GetCommentArticle(article.IdArticle),
         };
     }
 
     private async Task<IEnumerable<ArticleDto>?> GetAllArticlesFromDb()
     {
-        var articles =  await _context
-            .Articles
-            .Include(x => x.IdUserNavigation)
-            .Select(x => new ArticleDto
-            {
-                IdArticle  = x.IdArticle,
-                Author     = new ReducedUserResponseDto
+        var allArticles = await _context.Articles.ToArrayAsync();
+        
+        var articleDto = new List<ArticleDto>();
+        
+        foreach (var article in allArticles)
+        {
+            var newArticle = await _context
+                .Articles
+                .Include(x => x.IdUserNavigation)
+                .Where(x=>x.IdArticle == article.IdArticle)
+                .Select(x => new ArticleDto
                 {
-                    IdUser = x.IdUser,
-                    Nick   = x.IdUserNavigation.Nick
-                },
-                Title     = x.Title,
-                Content   = x.Content,
-                CreatedAt = x.CreatedAt,
-                
-                Tags = _context
-                    .Articles
-                    .Where(t => t.IdArticle == x.IdArticle)
-                    .SelectMany(t => x.IdTags)
-                    .Select(x => x.NameTag)
-                    .ToArray(),
-                
-                LikesNum = _context
-                    .Articles
-                    .Where(l => l.IdArticle == x.IdArticle)
-                    .SelectMany(l => l.IdUsers)
-                    .Count(),
-                
-                Comments = GetCommentArticle(x.IdArticle),
-            }).ToListAsync();
+                    IdArticle = x.IdArticle,
+                    Author = new ReducedUserResponseDto
+                    {
+                        IdUser = x.IdUser,
+                        Nick = x.IdUserNavigation.Nick
+                    },
+                    Title = x.Title,
+                    Content = x.Content,
+                    CreatedAt = x.CreatedAt,
 
-        return articles.Any() ? articles : null;
+                    Tags = _context
+                        .Articles
+                        .Where(t => t.IdArticle == x.IdArticle)
+                        .SelectMany(t => x.IdTags)
+                        .Select(x => x.NameTag)
+                        .ToArray(),
+
+                    LikesNum = _context
+                        .Articles
+                        .Where(l => l.IdArticle == x.IdArticle)
+                        .SelectMany(l => l.IdUsers)
+                        .Count(),
+                    CommentsNum = _context
+                        .CommentArticles
+                        .Count(c => c.IdArticle == x.IdArticle),
+                    Comments = GetCommentArticle(article.IdArticle),
+                }).SingleOrDefaultAsync();
+            
+            if (newArticle != null)
+            {
+                articleDto.Add(newArticle);
+            }
+        }
+
+        return articleDto;
     }
     
  
