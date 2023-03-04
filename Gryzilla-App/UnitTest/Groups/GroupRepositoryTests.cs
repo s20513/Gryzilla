@@ -229,7 +229,7 @@ public class GroupRepositoryTests
         {
             IdGroup = 3,
             GroupName = "test",
-            Description = "Nowa grupa"
+            Content = "Nowa grupa"
         };
         
         //Act
@@ -253,7 +253,7 @@ public class GroupRepositoryTests
         {
             IdGroup = 2,
             GroupName = "changedName",
-            Description = "Nowa grupa"
+            Content = "Nowa grupa"
         };
         
         //Act
@@ -265,7 +265,7 @@ public class GroupRepositoryTests
         var group = await _context.Groups.SingleOrDefaultAsync(e =>
             e.IdGroup == idGroup
             && e.GroupName    == modifyGroupRequestDto.GroupName
-            && e.Description   == modifyGroupRequestDto.Description);
+            && e.Description   == modifyGroupRequestDto.Content);
         
         Assert.NotNull(group);
     }
@@ -284,7 +284,7 @@ public class GroupRepositoryTests
         {
             IdGroup = 2,
             GroupName = "test",
-            Description = "Nowa grupa"
+            Content = "Nowa grupa"
         };
         
         //Act

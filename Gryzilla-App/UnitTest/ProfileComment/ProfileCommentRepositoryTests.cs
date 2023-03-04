@@ -79,7 +79,7 @@ public class ProfileCommentRepositoryTests
         var newProfileCommentRequestDto = new NewProfileComment
         {
             IdUserComment = 3,
-            Description = "Komentarz"
+            Content = "Komentarz"
         };
         
         
@@ -103,7 +103,7 @@ public class ProfileCommentRepositoryTests
         var newProfileCommentRequestDto = new NewProfileComment
         {
             IdUserComment = 1,
-            Description = "Komentarz"
+            Content = "Komentarz"
         };
         
         //Act
@@ -123,7 +123,7 @@ public class ProfileCommentRepositoryTests
         var newProfileCommentRequestDto = new NewProfileComment
         {
             IdUserComment = 4,
-            Description = "Komentarz"
+            Content = "Komentarz"
         };
         
         //Act
@@ -178,7 +178,7 @@ public class ProfileCommentRepositoryTests
         
         var modifyProfileCommentRequestDto = new ModifyProfileComment
         {
-            Description = "Komentarz"
+            Content = "Komentarz"
         };
         
         //Act
@@ -200,7 +200,7 @@ public class ProfileCommentRepositoryTests
         
         var modifyProfileCommentRequestDto = new ModifyProfileComment
         {
-            Description = "Komentarz"
+            Content = "Komentarz"
         };
         
         //Act
@@ -211,7 +211,7 @@ public class ProfileCommentRepositoryTests
         
         var profileComments = await _context.ProfileComments.SingleOrDefaultAsync(e =>
             e.IdProfileComment == idProfileComment
-            && e.Description   == modifyProfileCommentRequestDto.Description);
+            && e.Description   == modifyProfileCommentRequestDto.Content);
         
         Assert.NotNull(profileComments);
     }

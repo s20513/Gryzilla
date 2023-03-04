@@ -45,7 +45,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = newReportPostRequestDto.IdUser,
             IdPost = newReportPostRequestDto.IdPost,
             IdReason = newReportPostRequestDto.IdReason,
-            Description = newReportPostRequestDto.Description,
+            Description = newReportPostRequestDto.Content,
             Viewed = false,
             ReportedAt = DateTime.Now
         };
@@ -58,7 +58,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = newReportPostRequestDto.IdUser,
             IdPost = newReportPostRequestDto.IdPost,
             IdReason = newReportPostRequestDto.IdReason,
-            Description = newReportPostRequestDto.Description,
+            Content = newReportPostRequestDto.Content,
             Viewed = false,
             ReportedAt = DateTime.Now
         };
@@ -86,7 +86,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = reportPost.IdUser,
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
-            Description = reportPost.Description,
+            Content = reportPost.Description,
             Viewed = reportPost.Viewed,
             ReportedAt = reportPost.ReportedAt
         };
@@ -106,7 +106,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             return null;
         }
 
-        reportPost.Description = updateReportPostRequestDto.Description;
+        reportPost.Description = updateReportPostRequestDto.Content;
         reportPost.Viewed = updateReportPostRequestDto.Viewed;
         await _context.SaveChangesAsync();
 
@@ -115,7 +115,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = reportPost.IdUser,
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
-            Description = reportPost.Description,
+            Content = reportPost.Description,
             Viewed = reportPost.Viewed,
             ReportedAt = reportPost.ReportedAt
         };
@@ -140,7 +140,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = reportPost.IdUser,
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
-            Description = reportPost.Description,
+            Content = reportPost.Description,
             Viewed = reportPost.Viewed,
             ReportedAt = reportPost.ReportedAt
         };
@@ -155,7 +155,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
                 IdUser = e.IdUser,
                 IdPost = e.IdPost,
                 IdReason = e.IdReason,
-                Description = e.Description,
+                Content = e.Description,
                 Viewed = e.Viewed,
                 ReportedAt = e.ReportedAt
             }).ToListAsync();

@@ -46,7 +46,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser             = newReportCommentDto.IdUser,
             IdCommentArticle   = newReportCommentDto.IdCommentArticle,
             IdReason           = newReportCommentDto.IdReason,
-            Description        = newReportCommentDto.Description,
+            Description        = newReportCommentDto.Content,
             Viewed             = false,
             ReportedAt         = DateTime.Now
         };
@@ -59,7 +59,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser      = newReportCommentDto.IdUser,
             IdComment   = newReportCommentDto.IdCommentArticle,
             IdReason    = newReportCommentDto.IdReason,
-            Description = newReportCommentDto.Description,
+            Content = newReportCommentDto.Content,
             Viewed      = false,
             ReportedAt  = DateTime.Now
         };
@@ -104,7 +104,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser             = deleteReportCommentDto.IdUser,
             IdComment          = deleteReportCommentDto.IdCommentArticle,
             IdReason           = deleteReportCommentDto.IdReason,
-            Description        = reportCommentArticle.Description,
+            Content        = reportCommentArticle.Description,
             Viewed             = reportCommentArticle.Viewed,
             ReportedAt         = reportCommentArticle.ReportedAt
         };
@@ -143,7 +143,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             return null;
         }
 
-        reportCommentDto.Description = updateReportCommentDto.Description;
+        reportCommentDto.Description = updateReportCommentDto.Content;
         reportCommentDto.Viewed = updateReportCommentDto.Viewed;
         await _context.SaveChangesAsync();
         
@@ -152,7 +152,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser      = updateReportCommentDto.IdUser,
             IdComment   = updateReportCommentDto.IdCommentArticle,
             IdReason    = updateReportCommentDto.IdReason,
-            Description = updateReportCommentDto.Description,
+            Content = updateReportCommentDto.Content,
             Viewed      = updateReportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
         };
@@ -177,7 +177,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser      = reportCommentDto.IdUser,
             IdComment   = reportCommentDto.IdCommentArticle,
             IdReason    = reportCommentDto.IdReason,
-            Description = reportCommentDto.Description,
+            Content = reportCommentDto.Description,
             Viewed      = reportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
         };
@@ -191,7 +191,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
                 IdUser      = e.IdUser,
                 IdComment   = e.IdCommentArticle,
                 IdReason    = e.IdReason,
-                Description = e.Description,
+                Content = e.Description,
                 Viewed      = e.Viewed,
                 ReportedAt  = e.ReportedAt
             }).ToListAsync();

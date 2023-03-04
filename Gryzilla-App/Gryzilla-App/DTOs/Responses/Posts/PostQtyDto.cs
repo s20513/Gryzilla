@@ -4,6 +4,6 @@ namespace Gryzilla_App.DTOs.Responses.Posts;
 
 public class PostQtyDto
 {
-    public IEnumerable<PostDto>? posts { get; set; }
-    public bool  isNext { get; set; }
+    public IEnumerable<PostDto>? Posts { get; set; }
+    public bool  IsNext { get; set; }
 }

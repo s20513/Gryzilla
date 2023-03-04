@@ -99,7 +99,7 @@ public class RepostPostDbRepositoryTests
             IdUser = 3,
             IdPost = 1,
             IdReason = 1,
-            Description = "test"
+            Content = "test"
         };
         
         //Act
@@ -129,7 +129,7 @@ public class RepostPostDbRepositoryTests
             IdUser = 10,
             IdPost = 1,
             IdReason = 1,
-            Description = "test"
+            Content = "test"
         };
         
         //Act
@@ -152,7 +152,7 @@ public class RepostPostDbRepositoryTests
             IdUser = 1,
             IdPost = 1,
             IdReason = 1,
-            Description = "test"
+            Content = "test"
         };
         
         //Act
@@ -225,7 +225,7 @@ public class RepostPostDbRepositoryTests
             IdUser = 2,
             IdPost = 1,
             IdReason = 1,
-            Description = "NewTest",
+            Content = "NewTest",
             Viewed = true
         };
         
@@ -239,7 +239,7 @@ public class RepostPostDbRepositoryTests
             e.IdUser == updateReportPostRequestDto.IdUser
             && e.IdPost == updateReportPostRequestDto.IdPost
             && e.IdReason == updateReportPostRequestDto.IdReason
-            && e.Description == updateReportPostRequestDto.Description
+            && e.Description == updateReportPostRequestDto.Content
             && e.Viewed == updateReportPostRequestDto.Viewed);
         
         Assert.True(report);
@@ -258,7 +258,7 @@ public class RepostPostDbRepositoryTests
             IdUser = 10,
             IdPost = 1,
             IdReason = 1,
-            Description = "NewTest",
+            Content = "NewTest",
             Viewed = true
         };
         

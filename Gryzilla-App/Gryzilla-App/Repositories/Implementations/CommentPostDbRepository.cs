@@ -59,7 +59,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdUser      = user.IdUser,
             IdComment   = idComment,
             IdPost      = newPostCommentDto.IdPost,
-            Description = newCommentPost.DescriptionPost
+            Content = newCommentPost.DescriptionPost
         };
     }
 
@@ -94,7 +94,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = putPostCommentDto.IdUser,
-            Description = putPostCommentDto.Content
+            Content = putPostCommentDto.Content
         };
     }
 
@@ -126,7 +126,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdPost      = commentPost.IdPost,
             IdUser      = commentPost.IdUser,
             IdComment   = idComment,
-            Description = commentPost.DescriptionPost
+            Content = commentPost.DescriptionPost
         };
     }
 }

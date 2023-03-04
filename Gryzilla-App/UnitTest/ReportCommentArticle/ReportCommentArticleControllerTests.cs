@@ -201,7 +201,7 @@ public class ReportCommentArticleControllerTests
         //Arrange
         var putReportArticleCommentDto = new UpdateReportCommentArticleDto()
         {
-            Description = "string1" 
+            Content = "string1" 
         };
         
         var returnedComment = new ReportCommentArticleDto();
@@ -231,7 +231,7 @@ public class ReportCommentArticleControllerTests
         //Arrange
         var putReportArticleCommentDto = new UpdateReportCommentArticleDto()
         {
-            Description = "string1" 
+            Content = "string1" 
         };
 
         ReportCommentArticleDto? nullValue = null;

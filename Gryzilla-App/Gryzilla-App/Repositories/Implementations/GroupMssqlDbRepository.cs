@@ -53,7 +53,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                 IdGroup       = e.IdGroup,
                 IdUserCreator = e.IdUserCreator,
                 GroupName     = e.GroupName,
-                Description   = e.Description,
+                Content   = e.Description,
                 CreatedAt     = e.CreatedAt,
                 Users         = _context.Groups
                     .Where(g => g.IdGroup == idGroup)
@@ -83,7 +83,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                 IdGroup       = e.IdGroup,
                 IdUserCreator = e.IdUserCreator,
                 GroupName     = e.GroupName,
-                Description   = e.Description,
+                Content   = e.Description,
                 CreatedAt     = e.CreatedAt,
                 Users         = _context.Groups
                     .Where(g => g.IdGroup == e.IdGroup)
@@ -124,7 +124,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
         }
         
         group.GroupName   = groupRequestDto.GroupName; 
-        group.Description = groupRequestDto.Description;
+        group.Description = groupRequestDto.Content;
         
         await _context.SaveChangesAsync();
 
@@ -285,7 +285,7 @@ public class GroupMssqlDbRepository: IGroupDbRepository
                          IdGroup       = x.IdGroup,
                          IdUserCreator = x.IdUserCreator,
                          GroupName     = x.GroupName,
-                         Description   = x.Description,
+                         Content   = x.Description,
                          CreatedAt     = x.CreatedAt
                      }).ToArrayAsync();
 

@@ -456,7 +456,7 @@ public class PostRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.posts.Select(x=> x.idPost));
+        if (res != null) Assert.Equal(posts, res.Posts.Select(x=> x.idPost));
     }
     [Fact]
     public async Task GetQtyPostsFromDb_Returns_Null()
@@ -534,7 +534,7 @@ public class PostRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetTopPost_Returns_Null()
@@ -656,7 +656,7 @@ public class PostRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByCommentsFromDb_Returns_Null()
@@ -738,7 +738,7 @@ public class PostRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByDateFromDb_Returns_Null()
@@ -820,7 +820,7 @@ public class PostRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(posts, res.posts.Select(e => e.idPost));
+        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost));
     }
     [Fact]
     public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()

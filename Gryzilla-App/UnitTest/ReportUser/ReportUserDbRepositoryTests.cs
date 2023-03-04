@@ -90,7 +90,7 @@ public class ReportUserDbRepositoryTests
             IdUserReported = 1,
             IdUserReporting = 3,
             IdReason = 1,
-            Description = "test"
+            Content = "test"
         };
         
         //Act
@@ -118,7 +118,7 @@ public class ReportUserDbRepositoryTests
             IdUserReported = 1,
             IdUserReporting = 4,
             IdReason = 1,
-            Description = "test"
+            Content = "test"
         };
         
         //Act
@@ -141,7 +141,7 @@ public class ReportUserDbRepositoryTests
             IdUserReported = 1,
             IdUserReporting = 1,
             IdReason = 1,
-            Description = "test"
+            Content = "test"
         };
         
         //Act
@@ -200,7 +200,7 @@ public class ReportUserDbRepositoryTests
         var updateReport = new ModifyReportUser
         {
             IdReport = 1,
-            Description = "NewTest",
+            Content = "NewTest",
             Viewed = true
         };
         
@@ -214,7 +214,7 @@ public class ReportUserDbRepositoryTests
             .ReportUsers
             .AnyAsync(e => 
                 e.IdReport       == updateReport.IdReport
-                && e.Description == updateReport.Description
+                && e.Description == updateReport.Content
                 && e.Viewed      == updateReport.Viewed);
         
         Assert.True(report);
@@ -231,7 +231,7 @@ public class ReportUserDbRepositoryTests
         var updateReport = new ModifyReportUser
         {
             IdReport = 2,
-            Description = "NewTest",
+            Content = "NewTest",
             Viewed = true
         };
         

@@ -82,7 +82,7 @@ public class PostDbRepository : IPostDbRepository
             .Include(c => c.IdUserNavigation)
             .Select(x => new PostCommentDto
             {
-                Description = x.DescriptionPost,
+                Content = x.DescriptionPost,
                 IdComment = x.IdComment,
                 IdPost = x.IdPost,
                 IdUser = x.IdUser,
@@ -141,8 +141,8 @@ public class PostDbRepository : IPostDbRepository
         
         return new PostQtyDto()
         {
-            posts = postDto,
-            isNext = next
+            Posts = postDto,
+            IsNext = next
         };
     }
     public async Task<IEnumerable<PostDto>?> GetTopPosts()
@@ -203,8 +203,8 @@ public class PostDbRepository : IPostDbRepository
         
         return new PostQtyDto()
         {
-            posts = postDtos,
-            isNext = next
+            Posts = postDtos,
+            IsNext = next
         };
     }
 
@@ -245,8 +245,8 @@ public class PostDbRepository : IPostDbRepository
         
         return new PostQtyDto()
         {
-            posts = postDtos,
-            isNext = next
+            Posts = postDtos,
+            IsNext = next
         };
     }
 
@@ -285,8 +285,8 @@ public class PostDbRepository : IPostDbRepository
         
         return new PostQtyDto()
         {
-            posts = postDtos,
-            isNext = next
+            Posts = postDtos,
+            IsNext = next
         };
     }
 
@@ -325,8 +325,8 @@ public class PostDbRepository : IPostDbRepository
         
         return new PostQtyDto()
         {
-            posts = postDtos,
-            isNext = next
+            Posts = postDtos,
+            IsNext = next
         };
         
     }
@@ -666,7 +666,7 @@ public class PostDbRepository : IPostDbRepository
                         IdComment   = x.IdComment,
                         IdUser      = x.IdUser,
                         Nick        = x.IdUserNavigation.Nick,
-                        Description = x.DescriptionPost
+                        Content = x.DescriptionPost
                     }).ToArray(),
                 
                 CreatedAt = a.CreatedAt,

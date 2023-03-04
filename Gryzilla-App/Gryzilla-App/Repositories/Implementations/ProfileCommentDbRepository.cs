@@ -66,7 +66,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         {
             IdUser        = idUser,
             IdUserComment = newProfileComment.IdUserComment,
-            Description   = newProfileComment.Description
+            Description   = newProfileComment.Content
         };
 
         await _context.ProfileComments.AddAsync(profileComment);
@@ -76,7 +76,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
             IdUser        = idUser,
             IdUserAccount = newProfileComment.IdUserComment,
             Nick          = userComment.Nick,
-            Description   = newProfileComment.Description
+            Description   = newProfileComment.Content
         };
     }
 
@@ -117,7 +117,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
             return null;
         }
 
-        profileComment.Description = modifyProfileComment.Description;
+        profileComment.Description = modifyProfileComment.Content;
         await _context.SaveChangesAsync();
         
        return new ProfileCommentDto

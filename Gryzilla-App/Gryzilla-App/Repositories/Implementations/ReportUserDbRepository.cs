@@ -44,7 +44,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = newReportUserDto.IdReason,
             IdUserReported  = newReportUserDto.IdUserReported,
             IdUserReporting = newReportUserDto.IdUserReporting,
-            Description     = newReportUserDto.Description,
+            Description     = newReportUserDto.Content,
             Viewed          = false,
             ReportedAt      = DateTime.Now
         };
@@ -57,7 +57,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = newReportUserDto.IdReason,
             IdUserReported  = newReportUserDto.IdUserReported,
             IdUserReporting = newReportUserDto.IdUserReporting,
-            Description     = newReportUserDto.Description,
+            Content     = newReportUserDto.Content,
             Viewed          = false,
             ReportedAt      = DateTime.Now
         };
@@ -75,7 +75,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             return null;
         }
 
-        reportUser.Description = modifyReportUser.Description;
+        reportUser.Description = modifyReportUser.Content;
         reportUser.Viewed = modifyReportUser.Viewed;
 
         await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = modifyReportUser.IdReason,
             IdUserReported  = reportUser.IdUserReported,
             IdUserReporting = reportUser.IdUserReporting,
-            Description     = reportUser.Description,
+            Content     = reportUser.Description,
             Viewed          = reportUser.Viewed,
             ReportedAt      = reportUser.ReportedAt
         };
@@ -102,7 +102,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
                 IdReason        = e.IdReason,
                 IdUserReported  = e.IdUserReported,
                 IdUserReporting = e.IdUserReporting,
-                Description     = e.Description,
+                Content     = e.Description,
                 Viewed          = e.Viewed,
                 ReportedAt      = e.ReportedAt
             }).ToListAsync();
@@ -128,7 +128,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = report.IdReason,
             IdUserReported  = report.IdUserReported,
             IdUserReporting = report.IdUserReporting,
-            Description     = report.Description,
+            Content     = report.Description,
             Viewed          = report.Viewed
         };
     }
@@ -154,7 +154,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = report.IdReason,
             IdUserReported  = report.IdUserReported,
             IdUserReporting = report.IdUserReporting,
-            Description     = report.Description,
+            Content     = report.Description,
             Viewed          = report.Viewed
         };
     }

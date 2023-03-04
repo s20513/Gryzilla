@@ -51,7 +51,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = newReportCommentDto.IdUser,
             IdComment   = newReportCommentDto.IdComment,
             IdReason    = newReportCommentDto.IdReason,
-            Description = newReportCommentDto.Description,
+            Description = newReportCommentDto.Content,
             Viewed      = false,
             ReportedAt  = DateTime.Now
         };
@@ -64,7 +64,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = newReportCommentDto.IdUser,
             IdComment   = newReportCommentDto.IdComment,
             IdReason    = newReportCommentDto.IdReason,
-            Description = newReportCommentDto.Description,
+            Content = newReportCommentDto.Content,
             Viewed      = false,
             ReportedAt  = DateTime.Now
         };
@@ -113,7 +113,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = deleteReportCommentDto.IdUser,
             IdComment   = deleteReportCommentDto.IdComment,
             IdReason    = deleteReportCommentDto.IdReason,
-            Description = reportCommentDto.Description,
+            Content = reportCommentDto.Description,
             Viewed      = reportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
         };
@@ -154,7 +154,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             return null;
         }
 
-        reportCommentDto.Description = updateReportCommentDto.Description;
+        reportCommentDto.Description = updateReportCommentDto.Content;
         reportCommentDto.Viewed = updateReportCommentDto.Viewed;
         await _context.SaveChangesAsync();
         
@@ -163,7 +163,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = updateReportCommentDto.IdUser,
             IdComment   = updateReportCommentDto.IdComment,
             IdReason    = updateReportCommentDto.IdReason,
-            Description = updateReportCommentDto.Description,
+            Content = updateReportCommentDto.Content,
             Viewed      = updateReportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
         };
@@ -194,7 +194,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = reportCommentDto.IdUser,
             IdComment   = reportCommentDto.IdComment,
             IdReason    = reportCommentDto.IdReason,
-            Description = reportCommentDto.Description,
+            Content = reportCommentDto.Description,
             Viewed      = reportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
         };
@@ -212,7 +212,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
                 IdUser      = e.IdUser,
                 IdComment   = e.IdComment,
                 IdReason    = e.IdReason,
-                Description = e.Description,
+                Content = e.Description,
                 Viewed      = e.Viewed,
                 ReportedAt  = e.ReportedAt
             }).ToListAsync();

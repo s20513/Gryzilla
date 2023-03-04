@@ -35,7 +35,7 @@ public class PostControllerTests
     
     private readonly PostQtyDto _fakeQtyPost = new PostQtyDto
     {
-        posts = new PostDto []
+        Posts = new PostDto []
         {
             new PostDto
             {
@@ -46,7 +46,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -55,11 +55,11 @@ public class PostControllerTests
                 Likes = 1 
             }
         },
-        isNext = false
+        IsNext = false
     };
     private readonly PostQtyDto _fakeQtyPosts = new PostQtyDto
     {
-        posts = new PostDto []
+        Posts = new PostDto []
         {
             new PostDto
             {
@@ -70,7 +70,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -87,7 +87,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -104,7 +104,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -121,7 +121,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -138,7 +138,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -155,7 +155,7 @@ public class PostControllerTests
                     new PostCommentDto
                     {
                         IdPost = 1,
-                        Description = "Description",
+                        Content = "Description",
                         IdUser = 1,
                     }
                 },
@@ -164,7 +164,7 @@ public class PostControllerTests
                 Likes = 1 
             }
         },
-        isNext = false
+        IsNext = false
     };
     
     private readonly IEnumerable<PostDto> _fakePosts = new List<PostDto>
@@ -178,7 +178,7 @@ public class PostControllerTests
                 new PostCommentDto
                 {
                     IdPost = 1,
-                    Description = "Description",
+                    Content = "Description",
                     IdUser = 1,
                 }
             },
@@ -195,7 +195,7 @@ public class PostControllerTests
                 new PostCommentDto
                 {
                     IdPost = 1,
-                    Description = "Description",
+                    Content = "Description",
                     IdUser = 1,
                 }
             },

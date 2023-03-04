@@ -184,8 +184,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         return new ArticleQtyDto()
         {
-            articles = articleDto,
-            isNext = next
+            Articles = articleDto,
+            IsNext = next
         };
     }
 
@@ -225,8 +225,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         return new ArticleQtyDto()
         {
-            articles = articlesDto,
-            isNext = next
+            Articles = articlesDto,
+            IsNext = next
         };
     }
 
@@ -268,8 +268,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         return new ArticleQtyDto()
         {
-            articles = articlesDto,
-            isNext = next
+            Articles = articlesDto,
+            IsNext = next
         };
     }
 
@@ -310,8 +310,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         return new ArticleQtyDto()
         {
-            articles = articlesDto,
-            isNext = next
+            Articles = articlesDto,
+            IsNext = next
         };
     }
     public async Task<IEnumerable<ArticleDto>?> GetTopArticles()
@@ -371,8 +371,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         
         return new ArticleQtyDto()
         {
-            articles = articlesDto,
-            isNext = next
+            Articles = articlesDto,
+            IsNext = next
         };
     }
     public async Task<IEnumerable<ArticleDto>?> GetArticlesFromDb()

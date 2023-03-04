@@ -9,7 +9,7 @@ public class ReportUserDto
     
     public int IdReason { get; set; }
     
-    public string Description{ get; set; }
+    public string Content{ get; set; }
     
     public DateTime ReportedAt { get; set; }
     

@@ -21,21 +21,21 @@ public class AchievementControllerTests
         {
             IdAchievement = 1,
             AchievementName = "Ach1",
-            Description = "Desc1",
+            Content = "Desc1",
             Points = 20
         },
         new()
         {
             IdAchievement = 2,
             AchievementName = "Ach2",
-            Description = "Desc2",
+            Content = "Desc2",
             Points = 30
         },
         new()
         {
             IdAchievement = 3,
             AchievementName = "Ach3",
-            Description = "Desc3",
+            Content = "Desc3",
             Points = 40
         }
     };

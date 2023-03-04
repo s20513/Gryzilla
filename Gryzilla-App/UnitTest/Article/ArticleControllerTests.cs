@@ -59,7 +59,7 @@ public class ArticleControllerTests
     };
     private readonly ArticleQtyDto _fakeQtyArticles = new ArticleQtyDto
     {
-        articles = new ArticleDto []
+        Articles = new ArticleDto []
         {
             new()
             {
@@ -101,7 +101,7 @@ public class ArticleControllerTests
                 LikesNum = 3
             }
         },
-        isNext = false
+        IsNext = false
     };
     
     public ArticleControllerTests()

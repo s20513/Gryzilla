@@ -547,7 +547,7 @@ public class ArticleMssqlDbRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(articles, res.articles.Select(x=>x.IdArticle));
+        if (res != null) Assert.Equal(articles, res.Articles.Select(x=>x.IdArticle));
     }
     [Fact]
     public async Task GetQtyArticlesFromDb_Returns_Null()
@@ -595,7 +595,7 @@ public class ArticleMssqlDbRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
     }
     [Fact]
     public async Task GetTopArticle_Returns_Null()
@@ -683,7 +683,7 @@ public class ArticleMssqlDbRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
     }
     [Fact]
     public async Task GetQtyArticlesByCommentsFromDb_Returns_Null()
@@ -731,7 +731,7 @@ public class ArticleMssqlDbRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
     }
     [Fact]
     public async Task GetQtyArticlesByDateFromDb_Returns_Null()
@@ -778,7 +778,7 @@ public class ArticleMssqlDbRepositoryTests
             .ToListAsync();
 
 
-        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
     }
     [Fact]
     public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()

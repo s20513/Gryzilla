@@ -2,5 +2,5 @@
 
 public class ModifyProfileComment
 {
-    public string Description { get; set; }
+    public string Content { get; set; }
 }

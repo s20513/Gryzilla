@@ -121,7 +121,7 @@ public class ProfileCommentControllerTests
         //Arrange
         var putProfileComment = new ModifyProfileComment()
         {
-            Description = "string1" 
+            Content = "string1" 
         };
         
         var returnedComment = new ProfileCommentDto();
@@ -151,7 +151,7 @@ public class ProfileCommentControllerTests
         //Arrange
         var putProfileComment = new ModifyProfileComment()
         {
-            Description = "string1" 
+            Content = "string1" 
         };
 
         ProfileCommentDto? nullValue = null;

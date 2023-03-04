@@ -179,7 +179,7 @@ public class ReportCommentArticleRepositoryTests
             IdUser = 2,
             IdCommentArticle = 1,
             IdReason = 2,
-            Description = "Description"
+            Content = "Description"
         };
         
         //Act
@@ -208,7 +208,7 @@ public class ReportCommentArticleRepositoryTests
             IdUser = 1,
             IdCommentArticle = 1,
             IdReason = 1,
-            Description = "Description"
+            Content = "Description"
         };
         
         //Act
@@ -228,7 +228,7 @@ public class ReportCommentArticleRepositoryTests
             IdUser = 1,
             IdCommentArticle = 1,
             IdReason = 1,
-            Description = "Description"
+            Content = "Description"
         };
         //Act
         var res = await _repository.AddReportCommentArticleToDb(newReportDto);
@@ -319,7 +319,7 @@ public class ReportCommentArticleRepositoryTests
             IdUser = 1,
             IdCommentArticle = 2,
             IdReason = 1,
-            Description = "Description1",
+            Content = "Description1",
             Viewed = false
         };
 
@@ -340,7 +340,7 @@ public class ReportCommentArticleRepositoryTests
             IdUser = 1,
             IdCommentArticle = 1,
             IdReason = 2,
-            Description = "Description1",
+            Content = "Description1",
             Viewed = false
         };
 
@@ -362,7 +362,7 @@ public class ReportCommentArticleRepositoryTests
             IdUser = 1,
             IdCommentArticle = 1,
             IdReason = 1,
-            Description = "Description1",
+            Content = "Description1",
             Viewed = false
         };
         //Act

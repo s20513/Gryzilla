@@ -84,7 +84,7 @@ public class CommentPostDbRepositoryTests
                                                     e.IdComment       == res.IdComment &&
                                                     e.IdPost          == res.IdPost &&
                                                     e.IdUser          == res.IdUser &&
-                                                    e.DescriptionPost == res.Description);
+                                                    e.DescriptionPost == res.Content);
         Assert.NotNull(postComment);
     }
     
@@ -161,7 +161,7 @@ public class CommentPostDbRepositoryTests
             e.IdComment       == res.IdComment &&
             e.IdPost          == res.IdPost &&
             e.IdUser          == res.IdUser &&
-            e.DescriptionPost == res.Description);
+            e.DescriptionPost == res.Content);
         Assert.NotNull(postComment);
     }
     

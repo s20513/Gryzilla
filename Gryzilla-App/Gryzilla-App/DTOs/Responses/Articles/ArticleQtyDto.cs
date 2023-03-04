@@ -2,6 +2,6 @@
 
 public class ArticleQtyDto
 {
-    public IEnumerable<ArticleDto>? articles { get; set; }
-    public bool isNext { get; set; }
+    public IEnumerable<ArticleDto>? Articles { get; set; }
+    public bool IsNext { get; set; }
 }

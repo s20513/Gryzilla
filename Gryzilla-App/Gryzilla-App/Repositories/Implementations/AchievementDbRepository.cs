@@ -24,7 +24,7 @@ public class AchievementDbRepository : IAchievementDbRepository
                 .Select(x=>new AchievementDto
                 {
                     IdAchievement   = x.IdAchievement,
-                    Description     = x.Descripion,
+                    Content     = x.Descripion,
                     AchievementName = x.AchievementName,
                     Points          = x.Points
                 })
@@ -45,7 +45,7 @@ public class AchievementDbRepository : IAchievementDbRepository
             return null;
         }
         
-        achievement.Descripion      = putAchievementDto.Description;
+        achievement.Descripion      = putAchievementDto.Content;
         achievement.Points          = putAchievementDto.Points;
         achievement.AchievementName = putAchievementDto.AchievementName;
         
@@ -55,7 +55,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         {
             IdAchievement   = achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description     = achievement.Descripion,
+            Content     = achievement.Descripion,
             Points          = achievement.Points
         };
     }
@@ -78,7 +78,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         
         newAchievement = new Achievement
         {
-            Descripion      = addAchievementDto.Description,
+            Descripion      = addAchievementDto.Content,
             AchievementName = addAchievementDto.AchievementName,
             Points          = addAchievementDto.Points
         };
@@ -96,7 +96,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         {
             IdAchievement   = idAchievement,
             AchievementName = newAchievement.AchievementName,
-            Description     = newAchievement.Descripion,
+            Content     = newAchievement.Descripion,
             Points          = newAchievement.Points
         };
     }
@@ -134,7 +134,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         {
             IdAchievement   = achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description     = achievement.Descripion,
+            Content     = achievement.Descripion,
             Points          = achievement.Points
         };
     }
@@ -174,7 +174,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         {
             IdAchievement   = userAchievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description     = achievement.Descripion,
+            Content     = achievement.Descripion,
             Points          = achievement.Points
         };
     }
@@ -224,7 +224,7 @@ public class AchievementDbRepository : IAchievementDbRepository
         {
             IdAchievement   = achievement.IdAchievement,
             AchievementName = achievement.AchievementName,
-            Description     =  achievement.Descripion,
+            Content     =  achievement.Descripion,
             Points          = achievement.Points
         };
     }
@@ -249,7 +249,7 @@ public class AchievementDbRepository : IAchievementDbRepository
             {
                 IdAchievement   = x.IdAchievement,
                 AchievementName = x.IdAchievementNavigation.AchievementName,
-                Description     = x.IdAchievementNavigation.Descripion,
+                Content     = x.IdAchievementNavigation.Descripion,
                 Points          = x.IdAchievementNavigation.Points
             }).ToArrayAsync();
         

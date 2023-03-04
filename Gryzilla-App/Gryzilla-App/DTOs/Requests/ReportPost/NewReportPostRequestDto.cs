@@ -16,5 +16,5 @@ public class NewReportPostRequestDto
     [Required]
     [MaxLength(200,ErrorMessage = "Max length : 200")]
     [MinLength(2,ErrorMessage = "Min length : 2")]
-    public string Description{ get; set; }
+    public string Content{ get; set; }
 }

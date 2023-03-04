@@ -141,7 +141,7 @@ public class AchievementDbRepositoryTests
       {
          IdAchievement = id,
          AchievementName = "NewAchName",
-         Description = "NewDesc",
+         Content = "NewDesc",
          Points = 40
       };
 
@@ -154,7 +154,7 @@ public class AchievementDbRepositoryTests
       var achievement = await _context.Achievements
          .Where(e => e.IdAchievement == id
                      && e.AchievementName == res.AchievementName
-                     && e.Descripion == res.Description
+                     && e.Descripion == res.Content
                      && e.Points == res.Points)
          .SingleOrDefaultAsync();
 
@@ -173,7 +173,7 @@ public class AchievementDbRepositoryTests
       {
          IdAchievement = id,
          AchievementName = "NewAchName",
-         Description = "NewDesc",
+         Content = "NewDesc",
          Points = 40
       };
 
@@ -195,7 +195,7 @@ public class AchievementDbRepositoryTests
       var addAchievementDto = new AddAchievementDto
       {
          AchievementName = "NewAchName",
-         Description = "NewDesc",
+         Content = "NewDesc",
          Points = 40
       };
 
@@ -209,7 +209,7 @@ public class AchievementDbRepositoryTests
          .Where(e =>
             e.IdAchievement == res.IdAchievement
             && e.AchievementName == res.AchievementName
-            && e.Descripion == res.Description
+            && e.Descripion == res.Content
             && e.Points == res.Points)
          .SingleOrDefaultAsync();
 
@@ -227,7 +227,7 @@ public class AchievementDbRepositoryTests
       var addAchievementDto = new AddAchievementDto
       {
          AchievementName = "AchName1",
-         Description = "NewDesc",
+         Content = "NewDesc",
          Points = 40
       };
 
@@ -257,7 +257,7 @@ public class AchievementDbRepositoryTests
          .Where(e =>
             e.IdAchievement == res.IdAchievement
             && e.AchievementName == res.AchievementName
-            && e.Descripion == res.Description
+            && e.Descripion == res.Content
             && e.Points == res.Points)
          .SingleOrDefaultAsync();
 

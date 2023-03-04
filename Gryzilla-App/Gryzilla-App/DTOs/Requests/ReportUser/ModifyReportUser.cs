@@ -6,7 +6,7 @@ public class ModifyReportUser
     
     public int IdReason { get; set; }
     
-    public string Description{ get; set; }
+    public string Content{ get; set; }
     
     public bool Viewed { get; set; }
 
