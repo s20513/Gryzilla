@@ -66,10 +66,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         .Articles
                         .Where(t => t.IdArticle == idArticle)
                         .SelectMany(t => x.IdTags)
-                        .Select(t => new TagDto
-                        {
-                            NameTag = t.NameTag
-                        })
+                        .Select(x => x.NameTag)
                         .ToArray(),
                     
                     LikesNum = _context
@@ -173,11 +170,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             CreatedAt  = article.CreatedAt,
             Tags       = articleDto
                 .Tags
-                .Select(e => new TagDto
-                {
-                    NameTag = e.NameTag
-                }
-                ).ToArray()
+                .Select(x => x.NameTag)
+                .ToArray()
         };
     }
     public async Task<ArticleDto?> DeleteArticleFromDb(int idArticle)
@@ -306,10 +300,9 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             Title       = article.Title,
             Content     = article.Content,
             CreatedAt   = article.CreatedAt,
-            Tags        = articleDbTags.Select(e => new TagDto
-            {
-                NameTag = e.NameTag
-            }).ToArray(),
+            Tags        = articleDbTags.
+                Select(x => x.NameTag)
+                .ToArray(),
             
             LikesNum = _context
                 .Articles
@@ -353,10 +346,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     .Articles
                     .Where(t => t.IdArticle == x.IdArticle)
                     .SelectMany(t => x.IdTags)
-                    .Select(t => new TagDto
-                    {
-                        NameTag = t.NameTag
-                    })
+                    .Select(x => x.NameTag)
                     .ToArray(),
                 
                 LikesNum = _context
