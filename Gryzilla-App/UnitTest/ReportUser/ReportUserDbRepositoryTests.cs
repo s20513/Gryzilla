@@ -180,7 +180,7 @@ public class ReportUserDbRepositoryTests
 
         await AddTestDataToDb();
 
-        var reportId = 1;
+        var reportId = 2;
         
         //Act
         var res = await _repository.DeleteReportUserFromDb(reportId);
@@ -188,16 +188,16 @@ public class ReportUserDbRepositoryTests
         //Assert
         Assert.Null(res);
     }
-    /*
+    
     [Fact]
-    public async Task UpdateReportPostFromDb_Returns_ReportPostResponseDto()
+    public async Task UpdateReportArticleFromDb_Returns_ReportArticleResponseDto()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         await AddTestDataToDb();
 
-        var updateReportPostRequestDto = new ModifyReportUser()
+        var updateReport = new ModifyReportUser
         {
             IdReport = 1,
             Description = "NewTest",
@@ -205,43 +205,98 @@ public class ReportUserDbRepositoryTests
         };
         
         //Act
-        var res = await _repository.UpdateReportPostFromDb(updateReportPostRequestDto);
+        var res = await _repository.UpdateReportUserFromDb(updateReport);
         
         //Assert
         Assert.NotNull(res);
 
-        var report = await _context.ReportPosts.AnyAsync(e => 
-            e.IdUser == updateReportPostRequestDto.IdUser
-            && e.IdPost == updateReportPostRequestDto.IdPost
-            && e.IdReason == updateReportPostRequestDto.IdReason
-            && e.Description == updateReportPostRequestDto.Description
-            && e.Viewed == updateReportPostRequestDto.Viewed);
+        var report = await _context
+            .ReportUsers
+            .AnyAsync(e => 
+                e.IdReport       == updateReport.IdReport
+                && e.Description == updateReport.Description
+                && e.Viewed      == updateReport.Viewed);
         
         Assert.True(report);
     }
     
     [Fact]
-    public async Task UpdateReportPostFromDb_WithNotExistingUser_Returns_Null()
+    public async Task UpdateReportUserFromDb_WithNotExistingUser_Returns_Null()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         await AddTestDataToDb();
 
-        var updateReportPostRequestDto = new UpdateReportPostRequestDto
+        var updateReport = new ModifyReportUser
         {
-            IdUser = 10,
-            IdPost = 1,
-            IdReason = 1,
+            IdReport = 2,
             Description = "NewTest",
             Viewed = true
         };
         
         //Act
-        var res = await _repository.UpdateReportPostFromDb(updateReportPostRequestDto);
+        var res = await _repository.UpdateReportUserFromDb(updateReport);
         
         //Assert
         Assert.Null(res);
     }
-    */
+    
+    [Fact]
+    public async Task GetReportUserFromDb_Returns_ReportUserResponseDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataToDb();
+
+        var reportId = 1;
+        
+        //Act
+        var res = await _repository.GetUserReportFromDb(reportId);
+        
+        //Assert
+        Assert.NotNull(res);
+
+        var report = await _context.ReportUsers.AnyAsync(e => 
+            e.IdReport == reportId);
+        
+        Assert.True(report);
+    }
+    
+    [Fact]
+    public async Task GetReportUserFromDb_WithNotExistingUser_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataToDb();
+
+        var reportId = 2;
+        
+        //Act
+        var res = await _repository.GetUserReportFromDb(reportId);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetReportUsersFromDb_Returns_ListOfReportUsers()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataToDb();
+
+        //Act
+        var res = await _repository.GetUsersReportsFromDb();
+        
+        //Assert
+        Assert.NotNull(res);
+
+        var reportsNum = await _context.ReportUsers.CountAsync();
+        
+        Assert.True(res.Count() == reportsNum);
+    }
 }

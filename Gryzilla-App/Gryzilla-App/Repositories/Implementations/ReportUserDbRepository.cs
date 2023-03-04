@@ -78,6 +78,8 @@ public class ReportUserDbRepository : IReportUserDbRepository
         reportUser.Description = modifyReportUser.Description;
         reportUser.Viewed = modifyReportUser.Viewed;
 
+        await _context.SaveChangesAsync();
+        
         return new ReportUserDto
         {
             idReport        = modifyReportUser.IdReport,
