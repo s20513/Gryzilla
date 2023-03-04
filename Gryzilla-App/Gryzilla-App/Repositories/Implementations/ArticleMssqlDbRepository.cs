@@ -3,6 +3,7 @@ using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -81,18 +82,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         CommentsNum = _context
                             .CommentArticles
                             .Count(c => c.IdArticle == x.IdArticle),
-                        Comments = _context
-                            .CommentArticles
-                            .Where(c => c.IdArticle == x.IdArticle)
-                            .Include(c => c.IdUserNavigation)
-                            .Select(c => new ArticleCommentDto
-                            {
-                                IdArticle = c.IdArticle,
-                                Nick = c.IdUserNavigation.Nick,
-                                IdComment = c.IdCommentArticle,
-                                IdUser = c.IdUserNavigation.IdUser,
-                                Description = c.DescriptionArticle
-                            }).ToArray()
+                        Comments = GetCommentArticle(article.IdArticle),
                     })
                     .SingleOrDefaultAsync();
             
@@ -103,6 +93,25 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         }
 
         return articleDto;
+    }
+    
+    public List<ArticleCommentDto> GetCommentArticle(int idArticle)
+    {
+        var articleComment =  _context
+            .CommentArticles
+            .Where(x => x.IdArticle == idArticle)
+            .Include(c => c.IdUserNavigation)
+            .Select(x => new ArticleCommentDto()
+            {
+                Description = x.DescriptionArticle,
+                IdComment = x.IdCommentArticle,
+                IdArticle = x.IdArticle,
+                IdUser = x.IdUser,
+                Nick   = x.IdUserNavigation.Nick
+            })
+            .ToList();
+        List <ArticleCommentDto> list = articleComment.Take(2).ToList();
+        return list;
     }
     public async Task<ArticleDto?> GetArticleFromDb(int idArticle)
     {
@@ -136,18 +145,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     CommentsNum = _context
                        .CommentArticles
                        .Count(c => c.IdArticle == x.IdArticle),
-                    Comments = _context
-                        .CommentArticles
-                        .Where(c => c.IdArticle == x.IdArticle)
-                        .Include(c => c.IdUserNavigation)
-                        .Select(c => new ArticleCommentDto
-                        {
-                            IdArticle   = c.IdArticle,
-                            Nick        = c.IdUserNavigation.Nick,
-                            IdComment   = c.IdCommentArticle,
-                            IdUser      = c.IdUserNavigation.IdUser,
-                            Description = c.DescriptionArticle
-                        }).ToArray()
+                    Comments = GetCommentArticle(x.IdArticle),
                 })
                 .SingleOrDefaultAsync();
 
@@ -595,18 +593,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 .SelectMany(e => e.IdUsers)
                 .Count(),
             
-            Comments = _context
-                .CommentArticles
-                .Where(e => e.IdArticle == article.IdArticle)
-                .Include(e => e.IdUserNavigation)
-                .Select(e => new ArticleCommentDto
-                {
-                    IdArticle   = e.IdArticle,
-                    Nick        = e.IdUserNavigation.Nick,
-                    IdComment   = e.IdCommentArticle,
-                    IdUser      = e.IdUserNavigation.IdUser,
-                    Description = e.DescriptionArticle
-                }).ToArray()
+            Comments = GetCommentArticle(article.IdArticle),
         };
     }
 
@@ -640,18 +627,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     .SelectMany(l => l.IdUsers)
                     .Count(),
                 
-                Comments = _context
-                    .CommentArticles
-                    .Where(c => c.IdArticle == x.IdArticle)
-                    .Include(c => c.IdUserNavigation)
-                    .Select(c => new ArticleCommentDto
-                    {
-                        IdArticle   = c.IdArticle,
-                        Nick        = c.IdUserNavigation.Nick,
-                        IdComment   = c.IdCommentArticle,
-                        IdUser      = c.IdUserNavigation.IdUser,
-                        Description = c.DescriptionArticle
-                    }).ToArray()
+                Comments = GetCommentArticle(x.IdArticle),
             }).ToListAsync();
 
         return articles.Any() ? articles : null;

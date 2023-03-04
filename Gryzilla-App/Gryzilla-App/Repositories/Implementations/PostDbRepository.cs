@@ -79,12 +79,14 @@ public class PostDbRepository : IPostDbRepository
         var postComment =  _context
             .CommentPosts
             .Where(x => x.IdPost == idPost)
+            .Include(c => c.IdUserNavigation)
             .Select(x => new PostCommentDto
             {
                 Description = x.DescriptionPost,
                 IdComment = x.IdComment,
                 IdPost = x.IdPost,
-                IdUser = x.IdUser
+                IdUser = x.IdUser,
+                Nick  =x.IdUserNavigation.Nick
             })
             .ToList();
         List <PostCommentDto> list = postComment.Take(2).ToList();

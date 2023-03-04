@@ -1,7 +1,5 @@
 ﻿using Gryzilla_App.DTO.Responses;
-using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
-using Gryzilla_App.DTOs.Responses.PostComment;
 
 namespace Gryzilla_App.DTOs.Responses.Articles;
 
@@ -15,5 +13,5 @@ public class ArticleDto
     public string[]? Tags { get; set; }
     public int? LikesNum { get; set; }
     public int? CommentsNum { get; set; }
-    public ArticleCommentDto[]? Comments { get; set; }
+    public List<ArticleCommentDto>? Comments { get; set; }
 }
