@@ -54,7 +54,7 @@ public class ReportUserController: Controller
 
             if (report is null)
             {
-                return NotFound("User, post or reason does not exist");
+                return NotFound("Users or reason does not exist");
             }
 
         }

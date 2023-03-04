@@ -163,7 +163,7 @@ public class ArticleController: Controller
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by comments</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
     [HttpGet("/articles/qty/byComments/{qtyArticles:int}")]
-    public async Task<IActionResult> GetAllArticlesByCommentsFromDb([FromRoute] int qtyArticles)
+    public async Task<IActionResult> GetQtyArticlesByCommentsFromDb([FromRoute] int qtyArticles)
     {
         ArticleQtyDto? articles;
         try
@@ -188,7 +188,7 @@ public class ArticleController: Controller
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by earliest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
     [HttpGet("/articles/qty/byDate/earliest/{qtyArticles:int}")]
-    public async Task<IActionResult> GetAllArticlesByEarliestDateFromDb([FromRoute] int qtyArticles)
+    public async Task<IActionResult> GetQtyArticlesByEarliestDateFromDb([FromRoute] int qtyArticles)
     {
         ArticleQtyDto? articles;
         try
@@ -213,8 +213,8 @@ public class ArticleController: Controller
     /// <returns>
     /// Return articles list
     /// </returns>
-    [HttpGet("articles/top")]
-    public async Task<IActionResult> GetTopPosts()
+    [HttpGet("top")]
+    public async Task<IActionResult> GetTopArticles()
     {
         IEnumerable<ArticleDto>? posts = await _articleDbRepository.GetTopArticles();
 
@@ -231,7 +231,7 @@ public class ArticleController: Controller
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
     [HttpGet("/articles/qty/byDate/oldest/{qtyArticles:int}")]
-    public async Task<IActionResult> GetAllArticlesByOldestDateFromDb([FromRoute] int qtyArticles)
+    public async Task<IActionResult> GetQtyArticlesByOldestDateFromDb([FromRoute] int qtyArticles)
     {
         ArticleQtyDto? articles;
         try

@@ -3,7 +3,6 @@ using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
-using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
@@ -103,7 +102,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             .Include(c => c.IdUserNavigation)
             .Select(x => new ArticleCommentDto()
             {
-                Description = x.DescriptionArticle,
+                Content = x.DescriptionArticle,
                 IdComment = x.IdCommentArticle,
                 IdArticle = x.IdArticle,
                 IdUser = x.IdUser,
@@ -652,8 +651,9 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             }
         }
 
-        return articleDto;
+        return articleDto.Any() ? articleDto : null;
     }
-    
- 
+
+
+
 }

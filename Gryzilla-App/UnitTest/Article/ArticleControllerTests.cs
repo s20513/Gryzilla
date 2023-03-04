@@ -1,7 +1,9 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -54,6 +56,52 @@ public class ArticleControllerTests
             CreatedAt = DateTime.Now,
             LikesNum = 3
         }
+    };
+    private readonly ArticleQtyDto _fakeQtyArticles = new ArticleQtyDto
+    {
+        articles = new ArticleDto []
+        {
+            new()
+            {
+                IdArticle = 1,
+                Author = new ReducedUserResponseDto
+                {
+                    IdUser = 1,
+                    Nick = "Adam"
+                },
+                Title = "Title1",
+                Content = "Content1",
+                CreatedAt = DateTime.Now,
+                LikesNum = 1
+            },
+            new()
+            {
+                IdArticle = 2,
+                Author = new ReducedUserResponseDto
+                {
+                    IdUser = 2,
+                    Nick = "Ola"
+                },
+                Title = "Title2",
+                Content = "Content2",
+                CreatedAt = DateTime.Now,
+                LikesNum = 2
+            },
+            new()
+            {
+                IdArticle = 3,
+                Author = new ReducedUserResponseDto
+                {
+                    IdUser = 3,
+                    Nick = "Karol"
+                },
+                Title = "Title3",
+                Content = "Content3",
+                CreatedAt = DateTime.Now,
+                LikesNum = 3
+            }
+        },
+        isNext = false
     };
     
     public ArticleControllerTests()
@@ -549,14 +597,406 @@ public class ArticleControllerTests
     }
     
     
+    [Fact]
+    public async void GetQtyArticleByMostLikesFromDb_Returns_Ok()
+    {
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByMostLikesFromDb(5))
+            .ReturnsAsync(_fakeQtyArticles);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ArticleQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyArticles, resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticleByMostLikesFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByMostLikesFromDb(4))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(4);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyArticleByMostLikesFromDb_Not_Found()
+    {
+        //Arrange
+        Func<ArticleQtyDto?> nullValue = null;
+        
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByMostLikesFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyArticlesByCommentsFromDb_Returns_Ok()
+    {
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByCommentsFromDb(5))
+            .ReturnsAsync(_fakeQtyArticles);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ArticleQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyArticles, resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticleByCommentsFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByCommentsFromDb(5))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+
+    [Fact]
+    public async void GetQtyArticlesByCommentsFromDb_Not_Found()
+    {
+        //Arrange
+        Func<ArticleQtyDto?> nullValue = null;
+        
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByCommentsFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
+    }
     
     
+    [Fact]
+    public async void GetQtyArticlesByLatestDateFromDb_Returns_Ok()
+    {
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByEarliestDateFromDb(5))
+            .ReturnsAsync(_fakeQtyArticles);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ArticleQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyArticles, resultValue);
+    }
     
+    [Fact]
+    public async void GetQtyArticleByLatestDateFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByEarliestDateFromDb(4))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(4);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticleByLatestDateFromDb_Not_Found()
+    {
+        //Arrange
+        ArticleQtyDto? nullValue = null;
+        
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByEarliestDateFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
+    }
     
+    [Fact]
+    public async void GetQtyArticleByOldestDateFromDb_Returns_Ok()
+    {
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByOldestDateFromDb(5))
+            .ReturnsAsync(_fakeQtyArticles);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ArticleQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyArticles, resultValue);
+    }
     
+    [Fact]
+    public async void GetQtyArticlesByOldestDateFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesByOldestDateFromDb(4))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(4);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticlesByOldestDateFromDb_Not_Found()
+    {
+        //Arrange
+        ArticleQtyDto nullValue = null;
+        
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByOldestDateFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(5);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
+    }
     
+    [Fact] 
+    public async void GetQtyArticlesFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesFromDb(4))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _articleController.GetQtyAllArticlesFromDb(4);
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticlesFromDb_Returns_Null()
+    {
+        //Arrange
+        ArticleQtyDto nullValue = null;
+        
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesFromDb(5)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetQtyAllArticlesFromDb(4);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticlesFromDb_Returns_ListOfArticles()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetQtyArticlesFromDb(5))
+            .ReturnsAsync(_fakeQtyArticles);
+
+        //Act
+        var actionResult = await _articleController.GetQtyAllArticlesFromDb(5);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ArticleQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyArticles, resultValue);
+    }
     
+    [Fact]
+    public async void GetTopArticles_Not_Found()
+    {
+        //Arrange
+        IEnumerable<ArticleDto>? nullValue = null;
+        
+        _articleRepositoryMock.Setup(x => x.GetTopArticles()).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetTopArticles();
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
+    }
     
-    
-    
+    [Fact]
+    public async void GetTopArticle_Returns_Ok()
+    {
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetTopArticles())
+            .ReturnsAsync(_fakeArticles.OrderByDescending(x => x.LikesNum));
+
+        //Act
+        var actionResult = await _articleController.GetTopArticles();
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<ArticleDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeArticles.OrderByDescending(x => x.LikesNum), resultValue);
+    }
 }

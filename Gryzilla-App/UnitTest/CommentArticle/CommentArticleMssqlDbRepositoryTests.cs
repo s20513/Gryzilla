@@ -68,7 +68,7 @@ public class CommentArticleMssqlDbRepositoryTests
         {
             IdUser = 1,
             IdArticle = 1,
-            Description = "DescArticle1"
+            Content = "DescArticle1"
         };
         
         //Act
@@ -84,7 +84,7 @@ public class CommentArticleMssqlDbRepositoryTests
             e.IdCommentArticle       == res.IdComment &&
             e.IdArticle          == res.IdArticle &&
             e.IdUser          == res.IdUser &&
-            e.DescriptionArticle == res.Description);
+            e.DescriptionArticle == res.Content);
         Assert.NotNull(articleComment);
     }
     
@@ -100,7 +100,7 @@ public class CommentArticleMssqlDbRepositoryTests
         {
             IdUser = 1,
             IdArticle = 2,
-            Description = "DescArticle1"
+            Content = "DescArticle1"
         };
         
         //Act
@@ -122,7 +122,7 @@ public class CommentArticleMssqlDbRepositoryTests
         {
             IdUser = 2,
             IdArticle = 1,
-            Description = "DescArticle1"
+            Content = "DescArticle1"
         };
         
         //Act
@@ -147,7 +147,7 @@ public class CommentArticleMssqlDbRepositoryTests
             IdComment = idComment,
             IdUser = 1,
             IdArticle = 1,
-            Description = "NewDescArticle1"
+            Content = "NewDescArticle1"
         };
         
         //Act
@@ -163,7 +163,7 @@ public class CommentArticleMssqlDbRepositoryTests
             e.IdCommentArticle       == res.IdComment &&
             e.IdArticle          == res.IdArticle &&
             e.IdUser          == res.IdUser &&
-            e.DescriptionArticle == res.Description);
+            e.DescriptionArticle == res.Content);
         Assert.NotNull(articleComment);
     }
     
@@ -182,7 +182,7 @@ public class CommentArticleMssqlDbRepositoryTests
             IdComment = idComment,
             IdUser = 1,
             IdArticle = 1,
-            Description = "NewDescArticle1"
+            Content = "NewDescArticle1"
         };
         
         //Act

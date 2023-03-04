@@ -706,7 +706,7 @@ public class PostControllerTests
         Assert.Equal("No posts found", resultValue);
     }
     
-    [Fact]
+    [Fact] 
     public async void GetQtyPostsFromDb_Returns_WrongNumberException_Bad_Request()
     {
         //Arrange

@@ -15,5 +15,5 @@ public class PutArticleCommentDto
     
     [Required]
     [MaxLength(200, ErrorMessage = "Max length : 200")]
-    public string Description { get; set; }
+    public string Content { get; set; }
 }

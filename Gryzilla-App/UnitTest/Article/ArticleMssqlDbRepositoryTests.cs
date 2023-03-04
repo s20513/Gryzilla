@@ -612,7 +612,7 @@ public class ArticleMssqlDbRepositoryTests
     
     
     [Fact]
-    public async Task GetTopPost_Returns_IEnumerable()
+    public async Task GetTopArticle_Returns_IEnumerable()
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
@@ -657,6 +657,149 @@ public class ArticleMssqlDbRepositoryTests
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByMostLikesFromDb(5));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByMostLikesFromDb(4));
+    }
+    
+    [Fact]
+    public async Task GetQtyArticlesByCommentsFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+
+        //Act
+        var res = await _repository.GetQtyArticlesByCommentsFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Skip(0)
+            .Take(5)
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+    }
+    [Fact]
+    public async Task GetQtyArticlesByCommentsFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyArticlesByCommentsFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyArticlesCommentsFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByCommentsFromDb(4));
+    }
+    
+    [Fact]
+    public async Task GetQtyArticleByDateFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+
+        //Act
+        var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Skip(0)
+            .Take(5)
+            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+    }
+    [Fact]
+    public async Task GetQtyArticlesByDateFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetQtyArticlesByDateFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByEarliestDateFromDb(4));
+    }
+    [Fact]
+    public async Task GetQtyArticlesByDateOldestFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+
+        //Act
+        var res = await _repository.GetQtyArticlesByOldestDateFromDb(5);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Skip(0)
+            .Take(5)
+            .OrderBy(e => e.CreatedAt)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.articles.Select(e => e.IdArticle));
+    }
+    [Fact]
+    public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        var res = await _repository.GetQtyArticlesByOldestDateFromDb(5);
+
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task GetArticlesByDateOldestFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByOldestDateFromDb(4));
     }
 }

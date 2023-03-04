@@ -44,7 +44,7 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
         {
             IdUser             = newArticleCommentDto.IdUser,
             IdArticle          = newArticleCommentDto.IdArticle,
-            DescriptionArticle = newArticleCommentDto.Description
+            DescriptionArticle = newArticleCommentDto.Content
         };
 
         await _context.CommentArticles.AddAsync(articleComment);
@@ -58,7 +58,7 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             Nick        = user.Nick,
             IdUser      = user.IdUser,
             IdArticle   = newArticleCommentDto.IdArticle,
-            Description = newArticleCommentDto.Description
+            Content     = newArticleCommentDto.Content
         };
     }
     
@@ -77,7 +77,7 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             return null;
         }
 
-        comment.DescriptionArticle = putArticleCommentDto.Description;
+        comment.DescriptionArticle = putArticleCommentDto.Content;
         await _context.SaveChangesAsync();
         
         nick = await _context
@@ -92,7 +92,7 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             IdComment   = comment.IdCommentArticle,
             IdUser      = putArticleCommentDto.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
-            Description = putArticleCommentDto.Description
+            Content     = putArticleCommentDto.Content
         };
     }
 
@@ -123,7 +123,7 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             IdComment   = idComment,
             IdUser      = comment.IdUser,
             IdArticle   = comment.IdArticle,
-            Description = comment.DescriptionArticle
+            Content     = comment.DescriptionArticle
         };
     }
     
