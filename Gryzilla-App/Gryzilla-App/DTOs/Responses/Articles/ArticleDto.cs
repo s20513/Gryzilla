@@ -14,5 +14,6 @@ public class ArticleDto
     public DateTime CreatedAt { get; set; }
     public string[]? Tags { get; set; }
     public int? LikesNum { get; set; }
+    public int? CommentsNum { get; set; }
     public ArticleCommentDto[]? Comments { get; set; }
 }

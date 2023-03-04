@@ -82,8 +82,8 @@ public class ReportUserDbRepository : IReportUserDbRepository
         {
             idReport        = modifyReportUser.IdReport,
             IdReason        = modifyReportUser.IdReason,
-            IdUserReported  = modifyReportUser.IdUserReported,
-            IdUserReporting = modifyReportUser.IdUserReporting,
+            IdUserReported  = reportUser.IdUserReported,
+            IdUserReporting = reportUser.IdUserReporting,
             Description     = reportUser.Description,
             Viewed          = reportUser.Viewed,
             ReportedAt      = reportUser.ReportedAt

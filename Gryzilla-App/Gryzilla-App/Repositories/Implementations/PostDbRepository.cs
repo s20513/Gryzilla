@@ -46,10 +46,10 @@ public class PostDbRepository : IPostDbRepository
                 {
                     idPost = post.IdPost,
                     Likes  = _context
-                        .Posts
-                        .Where(c => c.IdPost == post.IdPost)
-                        .SelectMany(b => b.IdUsers)
-                        .Count(),
+                            .Posts
+                            .Where(c => c.IdPost == post.IdPost)
+                            .SelectMany(b => b.IdUsers)
+                            .Count(),
                     Comments      = _context
                                     .Posts
                                     .Where(c => c.IdPost == post.IdPost)

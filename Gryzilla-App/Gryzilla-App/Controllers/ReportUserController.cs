@@ -30,7 +30,7 @@ public class ReportUserController: Controller
         return Ok(reports);
     }
     
-    [HttpGet]
+    [HttpGet("{idReport:int}")]
     public async Task<IActionResult> GetReport([FromRoute] int idReport)
     {
         var report = await _reportUserDbRepository.GetUserReportFromDb(idReport);
@@ -81,7 +81,7 @@ public class ReportUserController: Controller
     }
     
     
-    [HttpDelete]
+    [HttpDelete("{idReport:int}")]
     public async Task<IActionResult> DeleteReport([FromRoute] int idReport)
     {
         var report = await _reportUserDbRepository.DeleteReportUserFromDb(idReport);

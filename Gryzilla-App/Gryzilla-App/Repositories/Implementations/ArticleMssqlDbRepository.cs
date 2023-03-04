@@ -3,6 +3,7 @@ using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +43,67 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             article.IdTags.Add(tag);
         }
     }
-    
+    private async Task<IEnumerable<ArticleDto>?> GetTableSort(Article[] allArticles)
+    {
+        var articleDto = new List<ArticleDto>();
+
+        foreach (var article in allArticles)
+        {
+            var newArticle =
+                await _context
+                    .Articles
+                    .Where(x => x.IdArticle == article.IdArticle)
+                    .Include(x => x.IdUserNavigation)
+                    .Select(x => new ArticleDto
+                    {
+                        IdArticle = x.IdArticle,
+                        Author = new ReducedUserResponseDto
+                        {
+                            IdUser = x.IdUser,
+                            Nick = x.IdUserNavigation.Nick
+                        },
+                        Title = x.Title,
+                        Content = x.Content,
+                        CreatedAt = x.CreatedAt,
+
+                        Tags = _context
+                            .Articles
+                            .Where(t => t.IdArticle ==article.IdArticle)
+                            .SelectMany(t => x.IdTags)
+                            .Select(x => x.NameTag)
+                            .ToArray(),
+
+                        LikesNum = _context
+                            .Articles
+                            .Where(l => l.IdArticle == x.IdArticle)
+                            .SelectMany(l => l.IdUsers)
+                            .Count(),
+                        CommentsNum = _context
+                            .CommentArticles
+                            .Count(c => c.IdArticle == x.IdArticle),
+                        Comments = _context
+                            .CommentArticles
+                            .Where(c => c.IdArticle == x.IdArticle)
+                            .Include(c => c.IdUserNavigation)
+                            .Select(c => new ArticleCommentDto
+                            {
+                                IdArticle = c.IdArticle,
+                                Nick = c.IdUserNavigation.Nick,
+                                IdComment = c.IdCommentArticle,
+                                IdUser = c.IdUserNavigation.IdUser,
+                                Description = c.DescriptionArticle
+                            }).ToArray()
+                    })
+                    .SingleOrDefaultAsync();
+            
+            if (newArticle != null)
+            {
+                articleDto.Add(newArticle);
+            }
+        }
+
+        return articleDto;
+    }
     public async Task<ArticleDto?> GetArticleFromDb(int idArticle)
     {
         var article = 
@@ -61,20 +122,20 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     Title     = x.Title,
                     Content   = x.Content,
                     CreatedAt = x.CreatedAt,
-                    
                     Tags = _context
                         .Articles
                         .Where(t => t.IdArticle == idArticle)
                         .SelectMany(t => x.IdTags)
                         .Select(x => x.NameTag)
                         .ToArray(),
-                    
                     LikesNum = _context
                         .Articles
                         .Where(l => l.IdArticle == x.IdArticle)
                         .SelectMany(l => l.IdUsers)
                         .Count(),
-                    
+                    CommentsNum = _context
+                       .CommentArticles
+                       .Count(c => c.IdArticle == x.IdArticle),
                     Comments = _context
                         .CommentArticles
                         .Where(c => c.IdArticle == x.IdArticle)
@@ -92,7 +153,231 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         return article ?? null;
     }
+    public async Task<ArticleQtyDto?> GetQtyArticlesFromDb(int qtyArticles)
+    {
+        bool next = false;
+        
+        if (qtyArticles < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        
+        var allArticles = await _context
+            .Articles
+            .OrderBy(x => x.IdArticle)
+            .Skip(qtyArticles-5)
+            .Take(5)
+            .ToArrayAsync();
+        
+        if (allArticles.Length == 0)
+        {
+            return null;
+        }
 
+        var nextArticle = await _context
+            .Articles
+            .CountAsync();
+
+        if (qtyArticles < nextArticle)
+        {
+            next = true;
+        }
+        
+        var articleDto = await GetTableSort(allArticles);
+        
+        return new ArticleQtyDto()
+        {
+            articles = articleDto,
+            isNext = next
+        };
+    }
+
+    public async Task<ArticleQtyDto?> GetQtyArticlesByMostLikesFromDb(int qtyArticles)
+    {
+        bool next = false;
+        
+        if (qtyArticles < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allArticles = await _context
+            .Articles
+            .ToArrayAsync();
+        
+        if (allArticles.Length == 0)
+        {
+            return null;
+        }
+        
+        var articlesDto = await GetTableSort(allArticles);
+
+        articlesDto = articlesDto
+            .OrderByDescending(x => x.LikesNum)
+            .Skip(qtyArticles - 5)
+            .Take(5)
+            .ToArray();
+        
+        var nextArticle = await _context
+            .Articles
+            .CountAsync();
+
+        if (qtyArticles < nextArticle)
+        {
+            next = true;
+        }
+        
+        return new ArticleQtyDto()
+        {
+            articles = articlesDto,
+            isNext = next
+        };
+    }
+
+
+    public async Task<ArticleQtyDto?> GetQtyArticlesByEarliestDateFromDb(int qtyArticles)
+    {
+        bool next = false;
+        
+        if (qtyArticles < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allArticles = await _context
+            .Articles
+            .ToArrayAsync();
+        
+        if (allArticles.Length == 0)
+        {
+            return null;
+        }
+        
+        var articlesDto = await GetTableSort(allArticles);
+
+        
+        articlesDto = articlesDto
+            .OrderByDescending(x => x.CreatedAt)
+            .Skip(qtyArticles - 5)
+            .Take(5)
+            .ToArray();
+        
+        var nextArticle = await _context
+            .Articles
+            .CountAsync();
+
+        if (qtyArticles < nextArticle)
+        {
+            next = true;
+        }
+        
+        return new ArticleQtyDto()
+        {
+            articles = articlesDto,
+            isNext = next
+        };
+    }
+
+    public async Task<ArticleQtyDto?> GetQtyArticlesByOldestDateFromDb(int qtyArticles)
+    {
+        bool next = false;
+        
+        if (qtyArticles < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allArticles = await _context
+            .Articles
+            .ToArrayAsync();
+        
+        if (allArticles.Length == 0)
+        {
+            return null;
+        }
+        
+        var articlesDto = await GetTableSort(allArticles);
+
+        
+        articlesDto = articlesDto
+            .OrderBy(x => x.CreatedAt)
+            .Skip(qtyArticles - 5)
+            .Take(5)
+            .ToArray();
+        
+        var nextArticle = await _context
+            .Articles
+            .CountAsync();
+
+        if (qtyArticles < nextArticle)
+        {
+            next = true;
+        }
+        
+        return new ArticleQtyDto()
+        {
+            articles = articlesDto,
+            isNext = next
+        };
+    }
+    public async Task<IEnumerable<ArticleDto>?> GetTopArticles()
+    {
+        var allArticles = await _context
+            .Articles
+            .ToArrayAsync();
+
+        if (allArticles.Length == 0)
+        {
+            return null;
+        }
+
+        var articlesDtos = await GetTableSort(allArticles);
+
+        articlesDtos = articlesDtos
+            .OrderByDescending(order => order.LikesNum)
+            .Skip(0)
+            .Take(3)
+            .ToList();
+
+        return articlesDtos;
+    }
+    public async Task<ArticleQtyDto?> GetQtyArticlesByCommentsFromDb(int qtyArticles)
+    {
+        bool next = false;
+        
+        if (qtyArticles < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allArticles = await _context
+            .Articles
+            .ToArrayAsync();
+        
+        if (allArticles.Length == 0)
+        {
+            return null;
+        }
+        
+        var articlesDto = await GetTableSort(allArticles);
+
+        articlesDto = articlesDto
+            .OrderByDescending(x => x.CommentsNum)
+            .Skip(qtyArticles - 5)
+            .Take(5)
+            .ToArray();
+        
+        var nextArticle = await _context
+            .Articles
+            .CountAsync();
+
+        if (qtyArticles < nextArticle)
+        {
+            next = true;
+        }
+        
+        return new ArticleQtyDto()
+        {
+            articles = articlesDto,
+            isNext = next
+        };
+    }
     public async Task<IEnumerable<ArticleDto>?> GetArticlesFromDb()
     {
         var articles = await GetAllArticlesFromDb();

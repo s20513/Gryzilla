@@ -1,4 +1,6 @@
 using Gryzilla_App.DTOs.Requests.Article;
+using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -100,6 +102,150 @@ public class ArticleController: Controller
         if (articles is null)
         {
             return NotFound("No articles found");
+        }
+        
+        return Ok(articles);
+    }
+
+    /// <summary>
+    /// Find all Articles from db
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/qty/{qtyArticles:int}")]
+    public async Task<IActionResult> GetQtyAllArticlesFromDb([FromRoute] int qtyArticles)
+    {
+        ArticleQtyDto? articles;
+        try
+        {
+            articles = await _articleDbRepository.GetQtyArticlesFromDb(qtyArticles);
+            if (articles is null)
+            {
+                return NotFound("No articles found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+       
+        
+        return Ok(articles);
+    }
+    /// <summary>
+    /// Find all Articles from db sorted by Likes
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by most Likes</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/qty/byLikes/{qtyArticles:int}")]
+    public async Task<IActionResult> GetQtyArticlesByMostLikesFromDb([FromRoute] int qtyArticles)
+    {
+        ArticleQtyDto? articles;
+        try
+        {
+            articles = await _articleDbRepository.GetQtyArticlesByMostLikesFromDb(qtyArticles);
+            if (articles is null)
+            {
+                return NotFound("No articles found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+        
+        return Ok(articles);
+    }
+    
+    /// <summary>
+    /// Find all Articles from db sorted by Comments
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by comments</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/qty/byComments/{qtyArticles:int}")]
+    public async Task<IActionResult> GetAllArticlesByCommentsFromDb([FromRoute] int qtyArticles)
+    {
+        ArticleQtyDto? articles;
+        try
+        { 
+            articles = await _articleDbRepository.GetQtyArticlesByCommentsFromDb(qtyArticles);
+            if (articles is null)
+            {
+                return NotFound("No articles found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+        
+        return Ok(articles);
+    }
+    
+    /// <summary>
+    /// Find all Articles from db sorted by date
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by earliest date</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/qty/byDate/earliest/{qtyArticles:int}")]
+    public async Task<IActionResult> GetAllArticlesByEarliestDateFromDb([FromRoute] int qtyArticles)
+    {
+        ArticleQtyDto? articles;
+        try
+        { 
+            articles = await _articleDbRepository.GetQtyArticlesByEarliestDateFromDb(qtyArticles);
+        
+            if (articles is null)
+            {
+                return NotFound("No articles found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+        
+        return Ok(articles);
+    }
+    /// <summary>
+    /// Get top articles
+    /// </summary>
+    /// <returns>
+    /// Return articles list
+    /// </returns>
+    [HttpGet("articles/top")]
+    public async Task<IActionResult> GetTopPosts()
+    {
+        IEnumerable<ArticleDto>? posts = await _articleDbRepository.GetTopArticles();
+
+        if (posts is null)
+        {
+            return NotFound("No articles found");
+        }
+        
+        return Ok(posts);
+    }
+    /// <summary>
+    /// Find all Articles from db sorted by date
+    /// </summary>
+    /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
+    /// <returns>Return Status Not Found - no Articles in db</returns>
+    [HttpGet("/articles/qty/byDate/oldest/{qtyArticles:int}")]
+    public async Task<IActionResult> GetAllArticlesByOldestDateFromDb([FromRoute] int qtyArticles)
+    {
+        ArticleQtyDto? articles;
+        try
+        { 
+            articles = await _articleDbRepository.GetQtyArticlesByOldestDateFromDb(qtyArticles);
+        
+            if (articles is null)
+            {
+                return NotFound("No articles found");
+            }
+        }
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
         }
         
         return Ok(articles);

@@ -580,8 +580,7 @@ namespace Gryzilla_App.Models
                 entity.ToTable("ReportUser");
 
                 entity.Property(e => e.IdReport)
-                    .ValueGeneratedNever()
-                    .HasColumnName("idReson");
+                    .HasColumnName("idReport");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(200)
