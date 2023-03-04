@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTOs.Requests.BlockedUser;
 using Gryzilla_App.DTOs.Responses.BlockedUser;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
                 IdRank = e.IdUserBlockedNavigation.IdRank,
                 RankName = e.IdUserBlockedNavigation.IdRankNavigation.Name,
                 IdUserBlocking = e.IdUser,
-                Start = EF.Property<DateTime>(e, "StartTime"),
+                Start = DateTimeConverter.GetDateTimeToStringWithFormat(EF.Property<DateTime>(e, "StartTime")),
                 End = null,
                 Comment = e.Comment
             })
@@ -80,7 +81,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             IdRank = blockedUserData.IdRank,
             RankName = blockedUserData.IdRankNavigation.Name,
             IdUserBlocking = blockedUserRequestDto.IdUserBlocking,
-            Start = DateTime.Now,
+            Start = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             End = null,
             Comment = blockedUserRequestDto.Comment
         };
@@ -146,8 +147,8 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
                     UserBlockingNick = arg.UserBlockingNick,
                     UserBlockingIdRank = arg.UserBlockingIdRank,
                     UserBlockingRankName = rank.Name,
-                    Start = arg.Start,
-                    End = arg.End.Date.Year == 9999 ? null : arg.End,
+                    Start = DateTimeConverter.GetDateTimeToStringWithFormat(arg.Start),
+                    End = arg.End.Date.Year == 9999 ? null : DateTimeConverter.GetDateTimeToStringWithFormat(arg.End),
                     Comment = arg.Comment
                 })
             .ToListAsync();

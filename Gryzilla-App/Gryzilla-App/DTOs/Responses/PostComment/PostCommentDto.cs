@@ -8,5 +8,5 @@ public class PostCommentDto
     public string Nick { get; set; }
     public string Content { get; set; }
     
-    public DateTime CreatedAt { get; set; }
+    public string CreatedAt { get; set; }
 }

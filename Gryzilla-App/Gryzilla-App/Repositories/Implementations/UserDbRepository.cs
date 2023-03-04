@@ -6,6 +6,7 @@ using System.Text;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ public class UserDbRepository : IUserDbRepository
                 Nick        = x.Nick,
                 Email       = x.Email,
                 PhoneNumber = x.PhoneNumber,
-                CreatedAt   = x.CreatedAt,
+                CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
                 RankName    = x.IdRankNavigation.Name,
                 LinkDiscord = x.DiscordLink,
                 LinkSteam   = x.SteamLink
@@ -54,7 +55,7 @@ public class UserDbRepository : IUserDbRepository
                 Nick        = x.Nick,
                 Email       = x.Email,
                 PhoneNumber = x.PhoneNumber,
-                CreatedAt   = x.CreatedAt,
+                CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
                 IdRank      = x.IdRank,
                 RankName    = x.IdRankNavigation.Name,
                 LinkDiscord = x.DiscordLink,
@@ -96,7 +97,7 @@ public class UserDbRepository : IUserDbRepository
                 Nick         = user.Nick,
                 Email        = user.Email,
                 PhoneNumber  = user.PhoneNumber,
-                CreatedAt    = user.CreatedAt,
+                CreatedAt    = DateTimeConverter.GetDateTimeToStringWithFormat(user.CreatedAt),
                 IdRank       = user.IdRank,
                 RankName     = user.IdRankNavigation.Name,
                 LinkDiscord  = user.DiscordLink,
@@ -156,7 +157,7 @@ public class UserDbRepository : IUserDbRepository
                Nick        = x.Nick,
                Email       = x.Email,
                PhoneNumber = x.PhoneNumber,
-               CreatedAt   = x.CreatedAt,
+               CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
                RankName    = x.IdRankNavigation.Name
            })
            .SingleOrDefaultAsync();
@@ -270,7 +271,7 @@ public class UserDbRepository : IUserDbRepository
             PhoneNumber = user.PhoneNumber,
             IdRank = rank.IdRank,
             RankName = rank.Name,
-            CreatedAt = user.CreatedAt
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(user.CreatedAt)
         };
     }
 
@@ -311,7 +312,7 @@ public class UserDbRepository : IUserDbRepository
             Nick = user.Nick,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
-            CreatedAt = user.CreatedAt,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(user.CreatedAt),
             RankName = user.IdRankNavigation.Name,
             IdRank = user.IdRank
         };

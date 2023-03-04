@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.PostComment;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = newPostCommentDto.IdPost,
             Content = newCommentPost.DescriptionPost,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now)
         };
     }
 
@@ -96,7 +97,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = putPostCommentDto.IdUser,
             Content = putPostCommentDto.Content,
-            CreatedAt = commentPost.CreatedAt
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
         };
     }
 
@@ -129,7 +130,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdUser      = commentPost.IdUser,
             IdComment   = idComment,
             Content = commentPost.DescriptionPost,
-            CreatedAt = commentPost.CreatedAt
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
         };
     }
 }

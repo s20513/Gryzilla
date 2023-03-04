@@ -15,7 +15,7 @@ namespace Gryzilla_App
         public int IdPost { get; set; }
         public string DescriptionPost { get; set; } = null!;
         
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public virtual Post IdPostNavigation { get; set; } = null!;
         public virtual UserDatum IdUserNavigation { get; set; } = null!;

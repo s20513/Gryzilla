@@ -1,5 +1,6 @@
 using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -94,7 +95,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = putArticleCommentDto.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
             Content     = putArticleCommentDto.Content,
-            CreatedAt = comment.CreatedAt
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
         };
     }
 
@@ -126,7 +127,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = comment.IdUser,
             IdArticle   = comment.IdArticle,
             Content     = comment.DescriptionArticle,
-            CreatedAt = comment.CreatedAt
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
         };
     }
     

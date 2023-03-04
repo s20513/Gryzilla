@@ -4,6 +4,7 @@ using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -64,7 +65,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         },
                         Title = x.Title,
                         Content = x.Content,
-                        CreatedAt = x.CreatedAt,
+                        CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
 
                         Tags = _context
                             .Articles
@@ -107,7 +108,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 IdArticle = x.IdArticle,
                 IdUser = x.IdUser,
                 Nick   = x.IdUserNavigation.Nick,
-                CreatedAt = x.CreatedAt
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
             })
             .ToList();
         List <ArticleCommentDto> list = articleComment.Take(2).ToList();
@@ -130,7 +131,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     },
                     Title     = x.Title,
                     Content   = x.Content,
-                    CreatedAt = x.CreatedAt,
+                    CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
                     Tags = _context
                         .Articles
                         .Where(t => t.IdArticle == idArticle)
@@ -450,7 +451,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             },
             Title      = article.Title,
             Content    = article.Content,
-            CreatedAt  = article.CreatedAt,
+            CreatedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
             Tags       = articleDto
                 .Tags
                 .Select(x => x.NameTag)
@@ -535,7 +536,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             },
             Title      = article.Title,
             Content    = article.Content,
-            CreatedAt  = article.CreatedAt,
+            CreatedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
         };
     }
 
@@ -585,7 +586,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
             },
             Title       = article.Title,
             Content     = article.Content,
-            CreatedAt   = article.CreatedAt,
+            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
             Tags        = articleDbTags.
                 Select(x => x.NameTag)
                 .ToArray(),
@@ -626,7 +627,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                     },
                     Title = x.Title,
                     Content = x.Content,
-                    CreatedAt = x.CreatedAt,
+                    CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
 
                     Tags = _context
                         .Articles

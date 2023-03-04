@@ -4,6 +4,7 @@ using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -27,7 +28,7 @@ public class ArticleControllerTests
             },
             Title = "Title1",
             Content = "Content1",
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             LikesNum = 1
         },
         new()
@@ -40,7 +41,7 @@ public class ArticleControllerTests
             },
             Title = "Title2",
             Content = "Content2",
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             LikesNum = 2
         },
         new()
@@ -53,7 +54,7 @@ public class ArticleControllerTests
             },
             Title = "Title3",
             Content = "Content3",
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             LikesNum = 3
         }
     };
@@ -71,7 +72,7 @@ public class ArticleControllerTests
                 },
                 Title = "Title1",
                 Content = "Content1",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 LikesNum = 1
             },
             new()
@@ -84,7 +85,7 @@ public class ArticleControllerTests
                 },
                 Title = "Title2",
                 Content = "Content2",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 LikesNum = 2
             },
             new()
@@ -97,7 +98,7 @@ public class ArticleControllerTests
                 },
                 Title = "Title3",
                 Content = "Content3",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 LikesNum = 3
             }
         },

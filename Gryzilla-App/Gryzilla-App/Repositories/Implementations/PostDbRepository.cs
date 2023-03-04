@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,6 @@ namespace Gryzilla_App.Repositories.Implementations;
 public class PostDbRepository : IPostDbRepository
 {
     private readonly GryzillaContext _context;
-    private IPostDbRepository _postDbRepositoryImplementation;
 
     public PostDbRepository(GryzillaContext context)
     {
@@ -56,7 +56,7 @@ public class PostDbRepository : IPostDbRepository
                                     .SelectMany(b => b.CommentPosts)
                                     .Count(),
                     CommentsDtos  = GetCommentPost(post.IdPost),
-                    CreatedAt     = a.CreatedAt,
+                    CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(a.CreatedAt),
                     Content       = a.Content,
                     Nick          = a.IdUserNavigation.Nick,
                     Tags          = _context
@@ -87,7 +87,7 @@ public class PostDbRepository : IPostDbRepository
                 IdPost = x.IdPost,
                 IdUser = x.IdUser,
                 Nick  =x.IdUserNavigation.Nick,
-                CreatedAt = x.CreatedAt
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
             })
             .ToList();
         List <PostCommentDto> list = postComment.Take(2).ToList();
@@ -448,7 +448,7 @@ public class PostDbRepository : IPostDbRepository
         {
             IdPost    = idNewPost,
             Nick      = user.Nick,
-            CreatedAt = post.CreatedAt,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(post.CreatedAt),
             Content   = post.Content,
             IdUser    = post.IdUser,
             Tags      = await _context
@@ -524,7 +524,7 @@ public class PostDbRepository : IPostDbRepository
         
         return new DeletePostDto
         {
-            DeletedAt = DateTime.Now,
+            DeletedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
@@ -610,7 +610,7 @@ public class PostDbRepository : IPostDbRepository
             
             return new ModifyPostDto
             {
-                CreatedAt = post.CreatedAt,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(post.CreatedAt),
                 Content   = post.Content,
                 IdPost    = post.IdPost,
                 IdUser    = post.IdUser,
@@ -625,7 +625,7 @@ public class PostDbRepository : IPostDbRepository
         await _context.SaveChangesAsync();
         return new ModifyPostDto
         {
-            CreatedAt = post.CreatedAt,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(post.CreatedAt),
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
@@ -670,7 +670,7 @@ public class PostDbRepository : IPostDbRepository
                         Content = x.DescriptionPost
                     }).ToArray(),
                 
-                CreatedAt = a.CreatedAt,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(a.CreatedAt),
                 Content   = a.Content,
                 Nick      = a.IdUserNavigation.Nick,
                 Tags      = _context

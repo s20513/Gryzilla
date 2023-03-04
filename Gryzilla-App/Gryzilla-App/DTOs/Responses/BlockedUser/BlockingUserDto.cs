@@ -6,7 +6,7 @@ public class BlockingUserDto
     public string UserBlockingNick { get; set; }
     public int UserBlockingIdRank { get; set; }
     public string UserBlockingRankName { get; set; }
-    public DateTime Start { get; set; }
-    public DateTime? End { get; set; }
+    public string Start { get; set; }
+    public string? End { get; set; }
     public string? Comment { get; set; }
 }

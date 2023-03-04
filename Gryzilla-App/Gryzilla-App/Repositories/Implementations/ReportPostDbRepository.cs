@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTOs.Requests.ReportPost;
 using Gryzilla_App.DTOs.Responses.ReportPost;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdReason = newReportPostRequestDto.IdReason,
             Content = newReportPostRequestDto.Content,
             Viewed = false,
-            ReportedAt = DateTime.Now
+            ReportedAt = DateTimeConverter.GetDateTimeToStringWithFormat(newReportPost.ReportedAt)
         };
     }
 
@@ -88,7 +89,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdReason = reportPost.IdReason,
             Content = reportPost.Description,
             Viewed = reportPost.Viewed,
-            ReportedAt = reportPost.ReportedAt
+            ReportedAt = DateTimeConverter.GetDateTimeToStringWithFormat(reportPost.ReportedAt)
         };
     }
 
@@ -117,7 +118,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdReason = reportPost.IdReason,
             Content = reportPost.Description,
             Viewed = reportPost.Viewed,
-            ReportedAt = reportPost.ReportedAt
+            ReportedAt = DateTimeConverter.GetDateTimeToStringWithFormat(reportPost.ReportedAt)
         };
     }
 
@@ -142,7 +143,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdReason = reportPost.IdReason,
             Content = reportPost.Description,
             Viewed = reportPost.Viewed,
-            ReportedAt = reportPost.ReportedAt
+            ReportedAt = DateTimeConverter.GetDateTimeToStringWithFormat(reportPost.ReportedAt)
         };
     }
 
@@ -157,7 +158,7 @@ public class ReportPostDbRepository: IReportPostDbRepository
                 IdReason = e.IdReason,
                 Content = e.Description,
                 Viewed = e.Viewed,
-                ReportedAt = e.ReportedAt
+                ReportedAt = DateTimeConverter.GetDateTimeToStringWithFormat(e.ReportedAt)
             }).ToListAsync();
 
         return reportPosts;

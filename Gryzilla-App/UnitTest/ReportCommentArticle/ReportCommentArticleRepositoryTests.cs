@@ -59,7 +59,8 @@ public class ReportCommentArticleRepositoryTests
         {
             IdUser = 1,
             IdArticle = 1,
-            DescriptionArticle = "DescPost1"
+            DescriptionArticle = "DescPost1",
+            CreatedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
         

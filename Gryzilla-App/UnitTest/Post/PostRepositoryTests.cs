@@ -102,7 +102,8 @@ public class PostRepositoryTests
         {
             IdUser = 1,
             DescriptionPost = "Description",
-            IdPost = 1
+            IdPost = 1,
+            CreatedAt = DateTime.Now
         });
 
         await _context.Reasons.AddAsync(new Gryzilla_App.Reason

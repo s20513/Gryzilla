@@ -4,6 +4,7 @@ using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -28,7 +29,7 @@ public class PostControllerTests
             idPost = 1,
             Nick ="Ola",
             Content = "XYZ",
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             Likes = 1
         },
     };
@@ -51,7 +52,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             }
         },
@@ -75,7 +76,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             },
             new PostDto
@@ -92,7 +93,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             },
             new PostDto
@@ -109,7 +110,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             },
             new PostDto
@@ -126,7 +127,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             },
             new PostDto
@@ -143,7 +144,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             },
             new PostDto
@@ -160,7 +161,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
                 Likes = 1 
             }
         },
@@ -183,7 +184,7 @@ public class PostControllerTests
                 }
             },
             Content = "XYZ",
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             Likes = 1
         },
         new()
@@ -200,7 +201,7 @@ public class PostControllerTests
                 }
             },
             Content = "XYZ",
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
             Likes = 1
         }
     };

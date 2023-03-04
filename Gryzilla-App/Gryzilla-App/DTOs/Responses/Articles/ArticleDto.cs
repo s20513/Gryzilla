@@ -9,7 +9,7 @@ public class ArticleDto
     public ReducedUserResponseDto? Author { get; set; }
     public string? Title { get; set; }
     public string? Content { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public string CreatedAt { get; set; }
     public string[]? Tags { get; set; }
     public int? LikesNum { get; set; }
     public int? CommentsNum { get; set; }

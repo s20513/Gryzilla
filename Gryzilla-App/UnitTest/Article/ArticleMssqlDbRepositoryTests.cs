@@ -129,7 +129,8 @@ public class ArticleMssqlDbRepositoryTests
         {
             IdUser = 1,
             IdArticle = 1,
-            DescriptionArticle = "DescArt1"
+            DescriptionArticle = "DescArt1",
+            CreatedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
     }
