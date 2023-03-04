@@ -94,7 +94,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         return articleDto;
     }
     
-    public List<ArticleCommentDto> GetCommentArticle(int idArticle)
+    private List<ArticleCommentDto> GetCommentArticle(int idArticle)
     {
         var articleComment =  _context
             .CommentArticles
@@ -106,7 +106,8 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                 IdComment = x.IdCommentArticle,
                 IdArticle = x.IdArticle,
                 IdUser = x.IdUser,
-                Nick   = x.IdUserNavigation.Nick
+                Nick   = x.IdUserNavigation.Nick,
+                CreatedAt = x.CreatedAt
             })
             .ToList();
         List <ArticleCommentDto> list = articleComment.Take(2).ToList();
@@ -134,7 +135,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
                         .Articles
                         .Where(t => t.IdArticle == idArticle)
                         .SelectMany(t => x.IdTags)
-                        .Select(x => x.NameTag)
+                        .Select(t => t.NameTag)
                         .ToArray(),
                     LikesNum = _context
                         .Articles

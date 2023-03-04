@@ -59,7 +59,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdUser      = user.IdUser,
             IdComment   = idComment,
             IdPost      = newPostCommentDto.IdPost,
-            Content = newCommentPost.DescriptionPost
+            Content = newCommentPost.DescriptionPost,
+            CreatedAt = DateTime.Now
         };
     }
 
@@ -94,7 +95,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = putPostCommentDto.IdUser,
-            Content = putPostCommentDto.Content
+            Content = putPostCommentDto.Content,
+            CreatedAt = commentPost.CreatedAt
         };
     }
 
@@ -126,7 +128,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdPost      = commentPost.IdPost,
             IdUser      = commentPost.IdUser,
             IdComment   = idComment,
-            Content = commentPost.DescriptionPost
+            Content = commentPost.DescriptionPost,
+            CreatedAt = commentPost.CreatedAt
         };
     }
 }

@@ -74,7 +74,7 @@ public class PostDbRepository : IPostDbRepository
         return postDto;
     }
 
-    public List<PostCommentDto> GetCommentPost(int idPost)
+    private List<PostCommentDto> GetCommentPost(int idPost)
     {
         var postComment =  _context
             .CommentPosts
@@ -86,7 +86,8 @@ public class PostDbRepository : IPostDbRepository
                 IdComment = x.IdComment,
                 IdPost = x.IdPost,
                 IdUser = x.IdUser,
-                Nick  =x.IdUserNavigation.Nick
+                Nick  =x.IdUserNavigation.Nick,
+                CreatedAt = x.CreatedAt
             })
             .ToList();
         List <PostCommentDto> list = postComment.Take(2).ToList();

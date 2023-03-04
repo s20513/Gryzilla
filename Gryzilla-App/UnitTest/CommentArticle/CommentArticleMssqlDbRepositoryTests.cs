@@ -9,14 +9,14 @@ namespace UnitTest.CommentArticle;
 public class CommentArticleMssqlDbRepositoryTests
 {
     private readonly GryzillaContext _context;
-    private readonly CommentArticleMssqlDbRepository _repository;
+    private readonly CommentArticleDbRepository _repository;
 
     public CommentArticleMssqlDbRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         
         _context = new GryzillaContext(options, true);
-        _repository = new CommentArticleMssqlDbRepository(_context);
+        _repository = new CommentArticleDbRepository(_context);
     }
 
     private async Task CreateTestData()

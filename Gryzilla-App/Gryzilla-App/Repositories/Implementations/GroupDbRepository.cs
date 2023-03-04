@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
 
-public class GroupMssqlDbRepository: IGroupDbRepository
+public class GroupDbRepository: IGroupDbRepository
 {
     private readonly GryzillaContext _context;
 
-    public GroupMssqlDbRepository(GryzillaContext context)
+    public GroupDbRepository(GryzillaContext context)
     {
         _context = context;
     }

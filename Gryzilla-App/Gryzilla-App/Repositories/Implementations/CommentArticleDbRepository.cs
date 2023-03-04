@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
 
-public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
+public class CommentArticleDbRepository:ICommentArticleDbRepository
 {
     private readonly GryzillaContext _context;
 
-    public CommentArticleMssqlDbRepository(GryzillaContext context)
+    public CommentArticleDbRepository(GryzillaContext context)
     {
         _context = context;
     }
@@ -44,7 +44,8 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
         {
             IdUser             = newArticleCommentDto.IdUser,
             IdArticle          = newArticleCommentDto.IdArticle,
-            DescriptionArticle = newArticleCommentDto.Content
+            DescriptionArticle = newArticleCommentDto.Content,
+            CreatedAt = DateTime.Now
         };
 
         await _context.CommentArticles.AddAsync(articleComment);
@@ -92,7 +93,8 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             IdComment   = comment.IdCommentArticle,
             IdUser      = putArticleCommentDto.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
-            Content     = putArticleCommentDto.Content
+            Content     = putArticleCommentDto.Content,
+            CreatedAt = comment.CreatedAt
         };
     }
 
@@ -123,7 +125,8 @@ public class CommentArticleMssqlDbRepository:ICommentArticleDbRepository
             IdComment   = idComment,
             IdUser      = comment.IdUser,
             IdArticle   = comment.IdArticle,
-            Content     = comment.DescriptionArticle
+            Content     = comment.DescriptionArticle,
+            CreatedAt = comment.CreatedAt
         };
     }
     

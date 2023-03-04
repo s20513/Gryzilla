@@ -90,9 +90,9 @@ builder.Services.AddScoped<ILikesArticleDbRepository, LikesArticleDbRepository>(
  //trzeba zrobić
 builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();
 builder.Services.AddScoped<IAchievementDbRepository, AchievementDbRepository>();
-builder.Services.AddScoped<IGroupDbRepository, GroupMssqlDbRepository>();
+builder.Services.AddScoped<IGroupDbRepository, GroupDbRepository>();
 builder.Services.AddScoped<IArticleDbRepository, ArticleMssqlDbRepository>();
-builder.Services.AddScoped<ICommentArticleDbRepository, CommentArticleMssqlDbRepository>();
+builder.Services.AddScoped<ICommentArticleDbRepository, CommentArticleDbRepository>();
 builder.Services.AddScoped<ITagDbRepository, TagDbRepository>();
 builder.Services.AddScoped<IReportCommentPostDbRepository, ReportCommentPostDbRepository>();
 builder.Services.AddScoped<IReportCommentArticleDbRepository, ReportCommentArticleDbRepository>();

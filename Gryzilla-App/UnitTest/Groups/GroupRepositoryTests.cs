@@ -10,14 +10,14 @@ namespace UnitTest.Groups;
 public class GroupRepositoryTests
 {
     private readonly GryzillaContext _context;
-    private readonly GroupMssqlDbRepository _repository;
+    private readonly GroupDbRepository _repository;
 
     public GroupRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         
         _context = new GryzillaContext(options, true);
-        _repository = new GroupMssqlDbRepository(_context);
+        _repository = new GroupDbRepository(_context);
     }
 
     private async Task AddTestDataWithManyGroup()
