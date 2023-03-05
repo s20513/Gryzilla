@@ -254,7 +254,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         
         articlesDto = articlesDto
-            .OrderByDescending(x => x.CreatedAt)
+            .OrderByDescending(x => Convert.ToDateTime(x.CreatedAt))
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();
@@ -296,7 +296,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         
         articlesDto = articlesDto
-            .OrderBy(x => x.CreatedAt)
+            .OrderBy(x => Convert.ToDateTime(x.CreatedAt))
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();
@@ -398,13 +398,13 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
     public async Task<IEnumerable<ArticleDto>?> GetArticlesByEarliestDateFromDb()
     {
         var articles = await GetAllArticlesFromDb();
-        return articles?.OrderByDescending(order => order.CreatedAt);
+        return articles?.OrderByDescending(order => Convert.ToDateTime(order.CreatedAt));
     }
 
     public async Task<IEnumerable<ArticleDto>?> GetArticlesByOldestDateFromDb()
     {
         var articles = await GetAllArticlesFromDb();
-        return articles?.OrderBy(order => order.CreatedAt);
+        return articles?.OrderBy(order => Convert.ToDateTime(order.CreatedAt));
     }
 
     public async Task<ArticleDto?> AddNewArticleToDb(NewArticleRequestDto articleDto)

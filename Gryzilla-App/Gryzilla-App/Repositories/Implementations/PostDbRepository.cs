@@ -270,7 +270,7 @@ public class PostDbRepository : IPostDbRepository
         var postDtos = await GetTableSort(allPosts);
 
         postDtos = postDtos
-            .OrderByDescending(order => order.CreatedAt)
+            .OrderByDescending(order => Convert.ToDateTime(order.CreatedAt))
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
@@ -310,7 +310,7 @@ public class PostDbRepository : IPostDbRepository
 
         var postDtos = await GetTableSort(allPosts);
         postDtos = postDtos
-            .OrderBy(order => order.CreatedAt)
+            .OrderBy(order => Convert.ToDateTime(order.CreatedAt))
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
@@ -378,7 +378,7 @@ public class PostDbRepository : IPostDbRepository
         
         var postDto = await GetTableSort(allPosts);
         
-        postDto = postDto.OrderByDescending(order => order.CreatedAt).ToList();
+        postDto = postDto.OrderByDescending(order => Convert.ToDateTime(order.CreatedAt)).ToList();
         return postDto;
     }
 
@@ -393,7 +393,7 @@ public class PostDbRepository : IPostDbRepository
         
         var postDto = await GetTableSort(allPosts);
         
-        postDto = postDto.OrderBy(order => order.CreatedAt).ToList();
+        postDto = postDto.OrderBy(order => Convert.ToDateTime(order.CreatedAt)).ToList();
         return postDto;
     }
 
