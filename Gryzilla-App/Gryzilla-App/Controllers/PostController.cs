@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -289,6 +290,7 @@ public class PostController : Controller
     /// Ok - return body of post if added successfully
     /// </returns>
     [HttpPost]
+    //[Authorize(Roles = "User")]
     public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
     {
         var posts = await _postsDbRepository.AddNewPostToDb(addPostDto);
