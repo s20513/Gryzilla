@@ -158,7 +158,7 @@ public class UserController : Controller
         
         if (res == null)
         { 
-            return Forbid();
+            return Forbid("Token expired");
         }
         
         return Ok(res);

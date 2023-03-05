@@ -355,7 +355,7 @@ public class UserDbRepository : IUserDbRepository
                     new(ClaimTypes.Name, user.Nick),
                     new(ClaimTypes.Role, user.IdRankNavigation.Name),
                 }),
-            Expires = DateTime.UtcNow.AddMinutes(15),
+            Expires = DateTime.UtcNow.AddMinutes(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
