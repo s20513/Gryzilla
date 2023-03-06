@@ -11,11 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
 
-public class ArticleMssqlDbRepository: IArticleDbRepository
+public class ArticleDbRepository: IArticleDbRepository
 {
     private readonly GryzillaContext _context;
 
-    public ArticleMssqlDbRepository(GryzillaContext context)
+    public ArticleDbRepository(GryzillaContext context)
     {
         _context = context;
     }
@@ -243,6 +243,7 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         }
         var allArticles = await _context
             .Articles
+            .OrderByDescending(e => e.CreatedAt)
             .ToArrayAsync();
         
         if (allArticles.Length == 0)
@@ -254,7 +255,6 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         
         articlesDto = articlesDto
-            .OrderByDescending(x => Convert.ToDateTime(x.CreatedAt))
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();
@@ -283,8 +283,10 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
+        
         var allArticles = await _context
             .Articles
+            .OrderBy(e => e.CreatedAt)
             .ToArrayAsync();
         
         if (allArticles.Length == 0)
@@ -296,7 +298,6 @@ public class ArticleMssqlDbRepository: IArticleDbRepository
 
         
         articlesDto = articlesDto
-            .OrderBy(x => Convert.ToDateTime(x.CreatedAt))
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();

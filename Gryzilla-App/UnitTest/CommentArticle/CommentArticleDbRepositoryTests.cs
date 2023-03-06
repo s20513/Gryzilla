@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace UnitTest.CommentArticle;
 
-public class CommentArticleMssqlDbRepositoryTests
+public class CommentArticleDbRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly CommentArticleDbRepository _repository;
 
-    public CommentArticleMssqlDbRepositoryTests()
+    public CommentArticleDbRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         

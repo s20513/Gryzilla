@@ -8,17 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace UnitTest.Article;
 
-public class ArticleMssqlDbRepositoryTests
+public class ArticleDbRepositoryTests
 {
     private readonly GryzillaContext _context;
-    private readonly ArticleMssqlDbRepository _repository;
+    private readonly ArticleDbRepository _repository;
 
-    public ArticleMssqlDbRepositoryTests()
+    public ArticleDbRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         
         _context = new GryzillaContext(options, true);
-        _repository = new ArticleMssqlDbRepository(_context);
+        _repository = new ArticleDbRepository(_context);
     }
     
     private async Task AddTestDataWithManyArticles()

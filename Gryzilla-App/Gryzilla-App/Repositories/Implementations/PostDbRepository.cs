@@ -260,6 +260,7 @@ public class PostDbRepository : IPostDbRepository
         }
         var allPosts = await _context
             .Posts
+            .OrderByDescending(e => e.CreatedAt)
             .ToArrayAsync();
 
         if (allPosts.Length == 0)
@@ -270,7 +271,6 @@ public class PostDbRepository : IPostDbRepository
         var postDtos = await GetTableSort(allPosts);
 
         postDtos = postDtos
-            .OrderByDescending(order => Convert.ToDateTime(order.CreatedAt))
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
@@ -301,6 +301,7 @@ public class PostDbRepository : IPostDbRepository
         
         var allPosts = await _context
             .Posts
+            .OrderBy(e => e.CreatedAt)
             .ToArrayAsync();
 
         if (allPosts.Length == 0)
@@ -310,7 +311,6 @@ public class PostDbRepository : IPostDbRepository
 
         var postDtos = await GetTableSort(allPosts);
         postDtos = postDtos
-            .OrderBy(order => Convert.ToDateTime(order.CreatedAt))
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
@@ -369,6 +369,7 @@ public class PostDbRepository : IPostDbRepository
     {
         var allPosts = await _context
             .Posts
+            .OrderByDescending(e => e.CreatedAt)
             .ToArrayAsync();
 
         if (allPosts.Length == 0)
@@ -378,13 +379,15 @@ public class PostDbRepository : IPostDbRepository
         
         var postDto = await GetTableSort(allPosts);
         
-        postDto = postDto.OrderByDescending(order => Convert.ToDateTime(order.CreatedAt)).ToList();
         return postDto;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb()
     {
-        var allPosts = await _context.Posts.ToArrayAsync();
+        var allPosts = await _context
+            .Posts
+            .OrderBy(e => e.CreatedAt)
+            .ToArrayAsync();
 
         if (allPosts.Length == 0)
         {
@@ -393,7 +396,6 @@ public class PostDbRepository : IPostDbRepository
         
         var postDto = await GetTableSort(allPosts);
         
-        postDto = postDto.OrderBy(order => Convert.ToDateTime(order.CreatedAt)).ToList();
         return postDto;
     }
 
