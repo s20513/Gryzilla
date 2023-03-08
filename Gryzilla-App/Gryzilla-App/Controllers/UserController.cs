@@ -149,10 +149,10 @@ public class UserController : Controller
     /// <summary>
     ///  Refresh users token
     /// </summary>
-    /// <param name="refreshToken"> string - refresh token </param>
+    /// <param name="refreshToken"> RefreshTokenDto - refresh token </param>
     /// <returns> Return Status OK - New token created. Return Status Forbid - token expired</returns>
     [HttpPost("refreshToken")]
-    public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshToken)
     {
         var res = await _userDbRepository.RefreshToken(refreshToken);
         

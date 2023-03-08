@@ -13,7 +13,7 @@ public interface IUserDbRepository
      public Task<UserDto?> AddUserToDb(AddUserDto addUserDto);
      public Task<UserDto?> DeleteUserFromDb(int idUser);
      public Task<TokenResponseDto?> Login(LoginRequestDto loginRequestDto);
-     public Task<TokenResponseDto?> RefreshToken(string refreshToken);
+     public Task<TokenResponseDto?> RefreshToken(RefreshTokenDto refreshToken);
      public Task<UserDto?> ChangeUserRank(UserRank userRank);
      public Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser);
      public Task<UserPhotoResponseDto?> GetUserPhoto(int idUser);

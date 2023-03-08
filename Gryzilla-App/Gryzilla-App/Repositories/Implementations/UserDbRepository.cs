@@ -215,11 +215,11 @@ public class UserDbRepository : IUserDbRepository
         };
     }
 
-    public async Task<TokenResponseDto?> RefreshToken(string refreshToken)
+    public async Task<TokenResponseDto?> RefreshToken(RefreshTokenDto refreshToken)
     {
         var user = await _context.UserData
             .Include(e => e.IdRankNavigation)
-            .Where(e => e.RefreshToken.ToString() == refreshToken)
+            .Where(e => e.RefreshToken.ToString() == refreshToken.RefreshToken)
             .SingleOrDefaultAsync();
         
         if (user is null || 
