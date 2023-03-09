@@ -68,13 +68,32 @@ public class CommentArticleController: Controller
     /// <returns> Return Status Ok - Article Comment deleted correctly, returns Article Comment body</returns>
     /// <returns>Return status Not Found - Article Comment not found</returns>
     [HttpDelete("{idComment:int}")]
-    public async Task<IActionResult> DeleteArticleComment(int idComment)
+    public async Task<IActionResult> DeleteArticleComment([FromRoute] int idComment)
     {
         var result = await _commentArticleDbRepository.DeleteArticleCommentFromDb(idComment);
 
         if (result is null)
         {
             return NotFound("Comment not found");
+        }
+            
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Get Article Comments
+    /// </summary>
+    /// <param name="idArticle">Article Id</param>
+    /// <returns> Return Status Ok and return article comments</returns>
+    /// <returns>Return status Not Found - Article Comment not found</returns>
+    [HttpGet("{idArticle:int}")]
+    public async Task<IActionResult> GetArticleComment([FromRoute] int idArticle)
+    {
+        var result = await _commentArticleDbRepository.GetArticleCommentsFromDb(idArticle);
+
+        if (result is null)
+        {
+            return NotFound("Comments not found");
         }
             
         return Ok(result);

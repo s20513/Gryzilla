@@ -199,6 +199,7 @@ public class ArticleDbRepository: IArticleDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
+        
         var allArticles = await _context
             .Articles
             .ToArrayAsync();

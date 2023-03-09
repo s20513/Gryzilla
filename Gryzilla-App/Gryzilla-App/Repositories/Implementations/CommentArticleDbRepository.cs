@@ -46,7 +46,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser             = newArticleCommentDto.IdUser,
             IdArticle          = newArticleCommentDto.IdArticle,
             DescriptionArticle = newArticleCommentDto.Content,
-            CreatedAt = DateTime.Now
+            CreatedAt          = DateTime.Now
         };
 
         await _context.CommentArticles.AddAsync(articleComment);
@@ -60,7 +60,8 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             Nick        = user.Nick,
             IdUser      = user.IdUser,
             IdArticle   = newArticleCommentDto.IdArticle,
-            Content     = newArticleCommentDto.Content
+            Content     = newArticleCommentDto.Content,
+            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(articleComment.CreatedAt)
         };
     }
     
@@ -95,7 +96,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = putArticleCommentDto.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
             Content     = putArticleCommentDto.Content,
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
+            CreatedAt    = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
         };
     }
 
@@ -130,5 +131,35 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
         };
     }
-    
+    public async Task<GetArticleCommentDto> GetArticleCommentsFromDb(int idArticle)
+    {
+        var article = await _context.Articles.SingleOrDefaultAsync(x => x.IdArticle == idArticle);
+
+        if (article is null)
+        {
+            return null;
+        }
+
+        var comments = await _context
+            .CommentArticles
+            .Where(x => x.IdArticle == idArticle).
+            Select(x=> new ArticleCommentDto
+            {
+                IdComment = x.IdCommentArticle,
+                IdUser  = x.IdUser,
+                IdArticle = idArticle,
+                Content = x.DescriptionArticle,
+                Nick    = _context
+                    .UserData
+                    .Where(u=>u.IdUser == x.IdUser)
+                    .Select(u=>u.Nick)
+                    .SingleOrDefault(),
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
+            }).ToArrayAsync();
+
+        return new GetArticleCommentDto
+        {
+            Comments = comments
+        };
+    }
 }

@@ -208,4 +208,53 @@ public class CommentPostControllerTests
         Assert.Equal("Comment not found", resultValue);
     }
     
+    [Fact]
+    public async void GetPostComment_Returns_Ok()
+    {
+        //Arrange
+        var returnedComment = new GetPostCommentDto();
+        
+        _commentPostRepositoryMock
+            .Setup(x => x.GetArticleCommentsFromDb(1))
+            .ReturnsAsync(returnedComment);
+
+        //Act
+        var actionResult = await _commentPostController.GetPostComments(1);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as GetPostCommentDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(returnedComment, resultValue);
+    }
+    
+    [Fact]
+    public async void GetPostComment_Returns_Not_Found()
+    {
+        //Arrange
+        GetPostCommentDto? nullValue = null;
+        
+        _commentPostRepositoryMock
+            .Setup(x => x.GetArticleCommentsFromDb(1))
+            .ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _commentPostController.GetPostComments(1);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("Comments not found", resultValue);
+    }
 }

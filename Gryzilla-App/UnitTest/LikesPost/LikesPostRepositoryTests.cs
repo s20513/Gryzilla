@@ -187,7 +187,7 @@ public class LikesPostRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.Equals(true));
+        Assert.True(res.liked.Equals(true));
     }
     [Fact]
     public async Task ExistLikeToDb_Returns_PostOrUserDoesNotExist()

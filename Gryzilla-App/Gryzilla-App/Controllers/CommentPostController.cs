@@ -79,4 +79,22 @@ public class CommentPostController : Controller
         return Ok(comment);
     }
     
+    /// <summary>
+    /// Get Post Comments
+    /// </summary>
+    /// <param name="idPost">Post Id</param>
+    /// <returns> Return Status Ok - Post Comments</returns>
+    /// <returns>Return status Not Found - Post Comment not found</returns>
+    [HttpGet("{idPost:int}")]
+    public async Task<IActionResult> GetPostComments([FromRoute] int idPost)
+    {
+        var comment = await _commentPostDbRepository.GetArticleCommentsFromDb(idPost);
+        
+        if (comment is null)
+        {
+            return NotFound("Comments not found");
+        }
+        
+        return Ok(comment);
+    }
 }

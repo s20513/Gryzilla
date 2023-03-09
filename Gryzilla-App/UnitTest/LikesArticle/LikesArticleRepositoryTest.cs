@@ -177,9 +177,11 @@ public class LikesArticleRepositoryTest
         await AddTestDataWithOneLike();
         var idUser = 1;
         var idArticle = 1;
+        
         var article = await _context.Articles.FirstAsync();
         var user = await _context.UserData.FirstAsync();
         article.IdUsers.Add(user);
+        
         await _context.SaveChangesAsync();
         
         //Act
@@ -187,7 +189,7 @@ public class LikesArticleRepositoryTest
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.Equals(true));
+        Assert.True(res.liked.Equals(true));
     }
     [Fact]
     public async Task ExistLikeToDb_Returns_ArticleOrUserDoesNotExist()

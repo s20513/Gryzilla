@@ -208,5 +208,55 @@ public class CommentArticleControllerTests
         Assert.Equal("Comment not found", resultValue);
     }
     
+    [Fact]
+    public async void GetArticleComments_Returns_Ok()
+    {
+        //Arrange
+        var id = 1;
+        var returnedComment = new GetArticleCommentDto();
+        
+        _commentArticleRepositoryMock
+            .Setup(x => x.GetArticleCommentsFromDb(id))
+            .ReturnsAsync(returnedComment);
+
+        //Act
+        var actionResult = await _commentArticleController.GetArticleComment(id);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as GetArticleCommentDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(returnedComment, resultValue);
+    }
     
+    [Fact]
+    public async void GetArticleComments_Returns_Not_Found()
+    {
+        //Arrange
+        var id = 1;
+        GetArticleCommentDto? nullValue = null;
+        
+        _commentArticleRepositoryMock
+            .Setup(x => x.GetArticleCommentsFromDb(id))!
+            .ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _commentArticleController.GetArticleComment(id);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("Comments not found", resultValue);
+    }
 }

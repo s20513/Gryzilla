@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.Controllers;
+using Gryzilla_App.DTOs.Responses.LikesPost;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -58,7 +59,7 @@ public class LikesPostControllerTests
         var actionResult = await _likesPostController.AddNewLike(idUser, idPost);
         
         //Assert
-        var result = actionResult as NotFoundObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
@@ -112,7 +113,7 @@ public class LikesPostControllerTests
         var actionResult = await _likesPostController.DeleteLike(idUser, idPost);
         
         //Assert
-        var result = actionResult as NotFoundObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
@@ -129,7 +130,10 @@ public class LikesPostControllerTests
         //Arrange
         var idUser = 1;
         var idPost = 1;
-        var boolResult = true;
+        var boolResult = new LikesPostDto
+        {
+            liked = true
+        };
         
         _likesPostDbRepositoryMock
             .Setup(x => x.ExistLike(idUser, idPost))
@@ -143,11 +147,11 @@ public class LikesPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as bool?;
+        var resultValue = result.Value as LikesPostDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.True(resultValue);
+        Assert.True(resultValue.liked);
     }
     
     [Fact]
@@ -156,7 +160,7 @@ public class LikesPostControllerTests
         //Arrange
         var idUser = 1;
         var idPost = 1;
-        bool? boolResult = null;
+        LikesPostDto boolResult = null;
         
         _likesPostDbRepositoryMock
             .Setup(x => x.ExistLike(idUser, idPost))
@@ -166,7 +170,7 @@ public class LikesPostControllerTests
         var actionResult = await _likesPostController.GetLike(idUser, idPost);
         
         //Assert
-        var result = actionResult as NotFoundObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;

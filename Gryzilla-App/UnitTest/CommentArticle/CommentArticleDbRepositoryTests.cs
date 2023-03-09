@@ -230,4 +230,35 @@ public class CommentArticleDbRepositoryTests
         Assert.Null(res);
     }
     
+    [Fact]
+    public async void GetCommentFromArticle_Returns_Ok()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await CreateTestData();
+        
+        //Act
+        var res = await _repository.GetArticleCommentsFromDb(1);
+        
+        //Assert
+        //Assert
+        Assert.NotNull(res);
+        
+        var articleComments = _context.CommentArticles.Where(x=>x.IdArticle ==1).ToList();
+        Assert.True(res.Comments != null && res.Comments.Count() == articleComments.Count());
+    }
+    
+    [Fact]
+    public async void  GetCommentFromArticle_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        //Act
+        var res = await _repository.GetArticleCommentsFromDb(1);
+        
+        //Assert
+        Assert.Null(res);
+    }
 }

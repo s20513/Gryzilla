@@ -46,7 +46,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         {
             IdUser          = newPostCommentDto.IdUser,
             IdPost          = newPostCommentDto.IdPost,
-            DescriptionPost = newPostCommentDto.Content
+            DescriptionPost = newPostCommentDto.Content,
+            CreatedAt       = DateTime.Now
         };
         
         await _context.CommentPosts.AddAsync(newCommentPost);
@@ -60,8 +61,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdUser      = user.IdUser,
             IdComment   = idComment,
             IdPost      = newPostCommentDto.IdPost,
-            Content = newCommentPost.DescriptionPost,
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now)
+            Content     = newCommentPost.DescriptionPost,
+            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(newCommentPost.CreatedAt)
         };
     }
 
@@ -96,8 +97,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = putPostCommentDto.IdUser,
-            Content = putPostCommentDto.Content,
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
+            Content     = putPostCommentDto.Content,
+            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
         };
     }
 
@@ -129,8 +130,40 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdPost      = commentPost.IdPost,
             IdUser      = commentPost.IdUser,
             IdComment   = idComment,
-            Content = commentPost.DescriptionPost,
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
+            Content     = commentPost.DescriptionPost,
+            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
+        };
+    }
+    
+    public async Task<GetPostCommentDto> GetArticleCommentsFromDb(int idPost)
+    {
+        string nick;
+
+        var posts = await _context.Posts.SingleOrDefaultAsync(x => x.IdPost == idPost);
+
+        if (posts is null)
+        {
+            return null;
+        }
+
+        var comments = await _context
+            .CommentPosts
+            .Where(x => x.IdPost == idPost).
+            Select(x=> new PostCommentDto
+            {
+                IdPost = idPost,
+                Content = x.DescriptionPost,
+                Nick    = _context
+                    .UserData
+                    .Where(u=>u.IdUser == x.IdUser)
+                    .Select(u=>u.Nick)
+                    .SingleOrDefault(),
+                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
+            }).ToArrayAsync();
+
+        return new GetPostCommentDto
+        {
+            Comments = comments
         };
     }
 }

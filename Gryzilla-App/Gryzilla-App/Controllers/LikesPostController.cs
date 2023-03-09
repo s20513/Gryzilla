@@ -31,7 +31,7 @@ public class LikesPostController : Controller
         
         if (likes != null && !likes.Equals("Added like"))
         {
-            return NotFound(likes);
+            return BadRequest(likes);
         }
         
         return Ok(likes);
@@ -54,7 +54,7 @@ public class LikesPostController : Controller
         
         if (likes != null && !likes.Equals("Deleted like"))
         {
-            return NotFound(likes);
+            return BadRequest(likes);
         }
 
         return Ok(likes);
@@ -76,7 +76,7 @@ public class LikesPostController : Controller
         
         if (likes is null)
         {
-            return NotFound("Post or user doesn't exist"); 
+            return BadRequest("Post or user doesn't exist"); 
         }
         return Ok(likes);
     }

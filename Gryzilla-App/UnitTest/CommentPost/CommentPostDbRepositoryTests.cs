@@ -228,4 +228,39 @@ public class CommentPostDbRepositoryTests
         Assert.Null(res);
     }
     
+    [Fact]
+    public async void GetCommentsPost_Returns_PostCommentDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataToDb();
+
+        var id = 1;
+        
+        //Act
+        var res = await _repository.GetArticleCommentsFromDb(id);
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var postComments = _context.CommentPosts.Where(x=>x.IdPost==id).ToList();
+        Assert.True(postComments.Count == res.Comments.Count());
+       
+        Assert.NotNull(res.Comments);
+    }
+    
+    [Fact]
+    public async void GetCommentsPost_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        var id = 1;
+        //Act
+        var res = await _repository.GetArticleCommentsFromDb(id);
+        
+        //Assert
+        Assert.Null(res);
+    }
 }

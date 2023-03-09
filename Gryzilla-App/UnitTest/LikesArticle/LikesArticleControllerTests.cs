@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.Controllers;
+using Gryzilla_App.DTOs.Responses.LikesArticle;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -58,7 +59,7 @@ public class LikesArticleControllerTests
         var actionResult = await _likesArticleController.AddNewLike(idUser, idArticle);
         
         //Assert
-        var result = actionResult as NotFoundObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
@@ -112,7 +113,7 @@ public class LikesArticleControllerTests
         var actionResult = await _likesArticleController.DeleteLike(idUser, idArticle);
         
         //Assert
-        var result = actionResult as NotFoundObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
@@ -129,7 +130,10 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        var boolResult = true;
+        var boolResult = new LikesArticleDto
+        {
+            liked = true
+        };
         
         _likesArticleDbRepositoryMock
             .Setup(x => x.ExistLikeArticle(idUser, idArticle))
@@ -143,11 +147,11 @@ public class LikesArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as bool?;
+        var resultValue = result.Value as LikesArticleDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.True(resultValue);
+        Assert.True(resultValue.liked);
     }
     
     [Fact]
@@ -156,7 +160,7 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        bool? boolResult = null;
+        LikesArticleDto boolResult = null;
         
         _likesArticleDbRepositoryMock
             .Setup(x => x.ExistLikeArticle(idUser, idArticle))
@@ -166,11 +170,11 @@ public class LikesArticleControllerTests
         var actionResult = await _likesArticleController.ExistLike(idUser, idArticle);
         
         //Assert
-        var result = actionResult as NotFoundObjectResult;
+        var result = actionResult as BadRequestObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
