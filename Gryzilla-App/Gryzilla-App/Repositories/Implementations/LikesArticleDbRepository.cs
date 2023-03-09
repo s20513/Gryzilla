@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Models;
+﻿using Gryzilla_App.DTOs.Responses.LikesArticle;
+using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,7 +46,7 @@ public class LikesArticleDbRepository : ILikesArticleDbRepository
         return articleLike;
     }
    
-    public async Task<bool?> ExistLikeArticle(int idUser, int idArticle)
+    public async Task<LikesArticleDto?> ExistLikeArticle(int idUser, int idArticle)
     {
         var user = await GetUser(idUser);
         var article = await GetArticle(idArticle);
@@ -55,8 +56,11 @@ public class LikesArticleDbRepository : ILikesArticleDbRepository
             return null;
         }
         var articleLike = await GetArticleLike(idArticle, idUser);
-        
-        return articleLike is not null;
+
+        return new LikesArticleDto
+        {
+            liked = articleLike is not null ? true : false
+        };
     }
 
     public async Task<object?> DeleteLikeFromArticle(int idUser, int idArticle)
