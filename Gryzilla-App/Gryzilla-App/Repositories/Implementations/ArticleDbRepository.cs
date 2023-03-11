@@ -19,7 +19,7 @@ public class ArticleDbRepository: IArticleDbRepository
     {
         _context = context;
     }
-    private void CreateMissingTagsAndBindWithArticle(IEnumerable<TagDto> newArticleTags, Article article, List<Tag> dbTags)
+    private void CreateMissingTagsAndBindWithArticle(String [] newArticleTags, Article article, List<Tag> dbTags)
     {
         List<Tag>?    articleDbTags;
         List<string>? articleTagList;
@@ -27,7 +27,7 @@ public class ArticleDbRepository: IArticleDbRepository
         List<string>? tagsToCreate;
         
         articleTagList = new List<string>();
-        articleTagList.AddRange(newArticleTags.Select(tag => tag.NameTag));
+        articleTagList.AddRange(newArticleTags.Select(tag => tag));
         
         allTagsFromDb = dbTags.Select(x => x.NameTag).ToList();
         tagsToCreate = articleTagList.Where(x => !allTagsFromDb.Contains(x)).ToList();
@@ -433,7 +433,7 @@ public class ArticleDbRepository: IArticleDbRepository
         
         await _context.Articles.AddAsync(article);
 
-        if (articleDto.Tags.Count != 0)
+        if (articleDto.Tags.Length != 0)
         {
             tags = await _context.Tags.ToListAsync();
             CreateMissingTagsAndBindWithArticle(articleDto.Tags, article, tags);
@@ -456,7 +456,6 @@ public class ArticleDbRepository: IArticleDbRepository
             CreatedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
             Tags       = articleDto
                 .Tags
-                .Select(x => x.NameTag)
                 .ToArray(),
             CommentsNum = 0,
             LikesNum = 0,

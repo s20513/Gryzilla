@@ -368,16 +368,10 @@ public class ArticleDbRepositoryTests
             IdUser = 1,
             Title = "Fun Title",
             Content = "blablabla",
-            Tags = new List<TagDto>
+            Tags = new []
             {
-                new()
-                {
-                    NameTag = "TestTag"
-                },
-                new()
-                {
-                    NameTag = "TestTag2"
-                }
+                "Tag1",
+                "Tag2"
             }
         };
         
@@ -404,16 +398,10 @@ public class ArticleDbRepositoryTests
             IdUser = 2,
             Title = "Fun Title",
             Content = "blablabla",
-            Tags = new List<TagDto>
+            Tags = new []
             {
-                new()
-                {
-                    NameTag = "TestTag"
-                },
-                new()
-                {
-                    NameTag = "TestTag2"
-                }
+                "Tag1",
+                "Tag2"
             }
         };
         
@@ -476,16 +464,10 @@ public class ArticleDbRepositoryTests
             IdArticle = id,
             Title = "NewTitle",
             Content = "NewContent",
-            Tags = new List<TagDto>
+            Tags = new []
             {
-                new()
-                {
-                    NameTag = "TestTag"
-                },
-                new()
-                {
-                    NameTag = "TestTag2"
-                }
+                "Tag1",
+                "Tag2"
             }
         };
         

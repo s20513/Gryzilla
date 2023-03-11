@@ -15,5 +15,5 @@ public class NewArticleRequestDto
     [Required]
     public string Content { get; set; }
     
-    public List<TagDto> Tags { get; set; }
+    public string[]? Tags { get; set; }
 }
