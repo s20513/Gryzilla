@@ -517,11 +517,11 @@ public class PostRepositoryTests
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
+        DateTime time = DateTime.Now;
         await AddTestDataToDb();
 
         //Act
-        var res = await _repository.GetQtyPostsByLikesFromDb(5);
+        var res = await _repository.GetQtyPostsByLikesFromDb(5, time);
         
         //Assert
         Assert.NotNull(res);
@@ -581,10 +581,11 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByMostLikesFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyPostsByLikesFromDb(5);
+        var res = await _repository.GetQtyPostsByLikesFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -593,11 +594,12 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByMostLikesFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByLikesFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByLikesFromDb(4, time));
     }
     [Fact]
     public async Task GetPostsByMostLikesFromDb_Returns_IEnumerable()
@@ -639,11 +641,11 @@ public class PostRepositoryTests
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
+        DateTime time = DateTime.Now;
         await AddTestDataToDb();
 
         //Act
-        var res = await _repository.GetQtyPostsByCommentsFromDb(5);
+        var res = await _repository.GetQtyPostsByCommentsFromDb(5, time);
         
         //Assert
         Assert.NotNull(res);
@@ -663,10 +665,11 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByCommentsFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyPostsByCommentsFromDb(5);
+        var res = await _repository.GetQtyPostsByCommentsFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -675,11 +678,12 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByCommentsFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByCommentsFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByCommentsFromDb(4, time));
     }
     [Fact]
     public async Task GetPostsByCommentsFromDb_Returns_IEnumerable()
@@ -720,12 +724,13 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByDateFromDb_Returns_IEnumerable()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataToDb();
 
         //Act
-        var res = await _repository.GetQtyPostsByDateFromDb(5);
+        var res = await _repository.GetQtyPostsByDateFromDb(5, time);
         
         //Assert
         Assert.NotNull(res);
@@ -745,10 +750,11 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByDateFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyPostsByDateFromDb(5);
+        var res = await _repository.GetQtyPostsByDateFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -757,11 +763,12 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByDateFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByDateFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByDateFromDb(4, time));
     }
     [Fact]
     public async Task GetPostsByDateFromDb_Returns_IEnumerable()
@@ -803,11 +810,11 @@ public class PostRepositoryTests
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
+        DateTime time = DateTime.Now;
         await AddTestDataToDb();
 
         //Act
-        var res = await _repository.GetQtyPostsByDateOldestFromDb(5);
+        var res = await _repository.GetQtyPostsByDateOldestFromDb(5, time);
         
         //Assert
         Assert.NotNull(res);
@@ -827,10 +834,11 @@ public class PostRepositoryTests
     public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyPostsByDateOldestFromDb(5);
+        var res = await _repository.GetQtyPostsByDateOldestFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -839,11 +847,12 @@ public class PostRepositoryTests
     public async Task GetPostsByDateOldestFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByDateOldestFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyPostsByDateOldestFromDb(4, time));
     }
     [Fact]
     public async Task GetPostsByDateOldestFromDb_Returns_IEnumerable()

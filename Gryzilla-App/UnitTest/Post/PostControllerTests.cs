@@ -52,7 +52,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             }
         },
@@ -76,7 +76,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             },
             new PostDto
@@ -93,7 +93,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             },
             new PostDto
@@ -110,7 +110,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             },
             new PostDto
@@ -127,7 +127,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             },
             new PostDto
@@ -144,7 +144,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             },
             new PostDto
@@ -161,7 +161,7 @@ public class PostControllerTests
                     }
                 },
                 Content = "XYZ",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 Likes = 1 
             }
         },
@@ -184,7 +184,7 @@ public class PostControllerTests
                 }
             },
             Content = "XYZ",
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            CreatedAt = DateTime.Now,
             Likes = 1
         },
         new()
@@ -201,7 +201,7 @@ public class PostControllerTests
                 }
             },
             Content = "XYZ",
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            CreatedAt = DateTime.Now,
             Likes = 1
         }
     };
@@ -253,12 +253,13 @@ public class PostControllerTests
     public async void GetQtyPostByMostLikesFromDb_Returns_Ok()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByLikesFromDb(5))
+            .Setup(x => x.GetQtyPostsByLikesFromDb(5, time))
             .ReturnsAsync(_fakeQtyPost);
 
         //Act
-        var actionResult = await _postsController.GetPostsByLikesMost(5);
+        var actionResult = await _postsController.GetPostsByLikesMost(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -277,13 +278,13 @@ public class PostControllerTests
         //Arrange
         
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
-
+        DateTime time = DateTime.Now;
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByLikesFromDb(5))
+            .Setup(x => x.GetQtyPostsByLikesFromDb(5, time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _postsController.GetPostsByLikesMost(5);
+        var actionResult = await _postsController.GetPostsByLikesMost(5, time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -302,11 +303,11 @@ public class PostControllerTests
     {
         //Arrange
         IEnumerable<PostDto>? nullValue = null;
-        
+        DateTime time = DateTime.Now;
         _postRepositoryMock.Setup(x => x.GetPostsByLikesFromDb()).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _postsController.GetPostsByLikesMost(5);
+        var actionResult = await _postsController.GetPostsByLikesMost(5, time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -323,6 +324,7 @@ public class PostControllerTests
     public async void GetPostByMostLikesFromDb_Returns_Ok()
     {
         //Arrange
+        
         _postRepositoryMock
             .Setup(x => x.GetPostsByLikesFromDb())
             .ReturnsAsync(_fakePosts.OrderByDescending(x => x.Likes));
@@ -367,12 +369,13 @@ public class PostControllerTests
     public async void GetQtyPostsByCommentsFromDb_Returns_Ok()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByCommentsFromDb(5))
+            .Setup(x => x.GetQtyPostsByCommentsFromDb(5, time))
             .ReturnsAsync(_fakeQtyPosts);
 
         //Act
-        var actionResult = await _postsController.GetPostsByComments(5);
+        var actionResult = await _postsController.GetPostsByComments(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -391,13 +394,13 @@ public class PostControllerTests
         //Arrange
         
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
-
+        DateTime time = DateTime.Now;
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByCommentsFromDb(5))
+            .Setup(x => x.GetQtyPostsByCommentsFromDb(5, time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _postsController.GetPostsByComments(5);
+        var actionResult = await _postsController.GetPostsByComments(5, time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -416,11 +419,11 @@ public class PostControllerTests
     {
         //Arrange
         IEnumerable<PostDto>? nullValue = null;
-        
+        DateTime time = DateTime.Now;
         _postRepositoryMock.Setup(x => x.GetPostsByCommentsFromDb()).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _postsController.GetPostsByComments(5);
+        var actionResult = await _postsController.GetPostsByComments(5, time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -482,12 +485,13 @@ public class PostControllerTests
     public async void GetQtyPostByLatestDateFromDb_Returns_Ok()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByDateFromDb(5))
+            .Setup(x => x.GetQtyPostsByDateFromDb(5, time))
             .ReturnsAsync(_fakeQtyPost);
 
         //Act
-        var actionResult = await _postsController.GetPostsByDates(5);
+        var actionResult = await _postsController.GetPostsByDates(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -505,15 +509,15 @@ public class PostControllerTests
     public async void GetQtyPostByLatestDateFromDb_Returns_WrongNumberException_Bad_Request()
     {
         //Arrange
-        
+        DateTime time = DateTime.Now;
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
 
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByDateFromDb(5))
+            .Setup(x => x.GetQtyPostsByDateFromDb(5,time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _postsController.GetPostsByDates(5);
+        var actionResult = await _postsController.GetPostsByDates(5,time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -531,11 +535,11 @@ public class PostControllerTests
     {
         //Arrange
         PostQtyDto? nullValue = null;
-        
-        _postRepositoryMock.Setup(x => x.GetQtyPostsByDateFromDb(5)).ReturnsAsync(nullValue);
+        DateTime time = DateTime.Now;
+        _postRepositoryMock.Setup(x => x.GetQtyPostsByDateFromDb(5,time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _postsController.GetPostsByDates(5);
+        var actionResult = await _postsController.GetPostsByDates(5,time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -596,12 +600,13 @@ public class PostControllerTests
     public async void GetQtyPostByOldestDateFromDb_Returns_Ok()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByDateOldestFromDb(5))
+            .Setup(x => x.GetQtyPostsByDateOldestFromDb(5, time))
             .ReturnsAsync(_fakeQtyPosts);
 
         //Act
-        var actionResult = await _postsController.GetPostsByDatesOldest(5);
+        var actionResult = await _postsController.GetPostsByDatesOldest(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -619,15 +624,15 @@ public class PostControllerTests
     public async void GetQtyPostByOldestDateFromDb_Returns_WrongNumberException_Bad_Request()
     {
         //Arrange
-        
+        DateTime time = DateTime.Now;
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
 
         _postRepositoryMock
-            .Setup(x => x.GetQtyPostsByDateOldestFromDb(5))
+            .Setup(x => x.GetQtyPostsByDateOldestFromDb(5, time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _postsController.GetPostsByDatesOldest(5);
+        var actionResult = await _postsController.GetPostsByDatesOldest(5, time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -645,11 +650,11 @@ public class PostControllerTests
     {
         //Arrange
         PostQtyDto nullValue = null;
-        
-        _postRepositoryMock.Setup(x => x.GetQtyPostsByDateOldestFromDb(5)).ReturnsAsync(nullValue);
+        DateTime time = DateTime.Now;
+        _postRepositoryMock.Setup(x => x.GetQtyPostsByDateOldestFromDb(5, time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _postsController.GetPostsByDatesOldest(5);
+        var actionResult = await _postsController.GetPostsByDatesOldest(5,time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;

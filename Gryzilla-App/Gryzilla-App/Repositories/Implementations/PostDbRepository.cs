@@ -56,7 +56,7 @@ public class PostDbRepository : IPostDbRepository
                                     .SelectMany(b => b.CommentPosts)
                                     .Count(),
                     CommentsDtos  = GetCommentPost(post.IdPost),
-                    CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(a.CreatedAt),
+                    CreatedAt     = a.CreatedAt,
                     Content       = a.Content,
                     Nick          = a.IdUserNavigation.Nick,
                     Tags          = _context
