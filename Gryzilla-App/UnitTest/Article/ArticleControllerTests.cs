@@ -28,7 +28,7 @@ public class ArticleControllerTests
             },
             Title = "Title1",
             Content = "Content1",
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            CreatedAt = DateTime.Now,
             LikesNum = 1
         },
         new()
@@ -41,7 +41,7 @@ public class ArticleControllerTests
             },
             Title = "Title2",
             Content = "Content2",
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            CreatedAt = DateTime.Now,
             LikesNum = 2
         },
         new()
@@ -54,7 +54,7 @@ public class ArticleControllerTests
             },
             Title = "Title3",
             Content = "Content3",
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            CreatedAt = DateTime.Now,
             LikesNum = 3
         }
     };
@@ -72,7 +72,7 @@ public class ArticleControllerTests
                 },
                 Title = "Title1",
                 Content = "Content1",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 LikesNum = 1
             },
             new()
@@ -85,7 +85,7 @@ public class ArticleControllerTests
                 },
                 Title = "Title2",
                 Content = "Content2",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 LikesNum = 2
             },
             new()
@@ -98,7 +98,7 @@ public class ArticleControllerTests
                 },
                 Title = "Title3",
                 Content = "Content3",
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+                CreatedAt = DateTime.Now,
                 LikesNum = 3
             }
         },
@@ -601,13 +601,14 @@ public class ArticleControllerTests
     [Fact]
     public async void GetQtyArticleByMostLikesFromDb_Returns_Ok()
     {
+        DateTime time = DateTime.Now;
         //Arrange
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByMostLikesFromDb(5))
+            .Setup(x => x.GetQtyArticlesByMostLikesFromDb(5, time))
             .ReturnsAsync(_fakeQtyArticles);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -624,15 +625,15 @@ public class ArticleControllerTests
     public async void GetQtyArticleByMostLikesFromDb_Returns_WrongNumberException_Bad_Request()
     {
         //Arrange
-        
+        DateTime time = DateTime.Now;
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
 
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByMostLikesFromDb(4))
+            .Setup(x => x.GetQtyArticlesByMostLikesFromDb(4, time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(4);
+        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(4, time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -649,13 +650,14 @@ public class ArticleControllerTests
     [Fact]
     public async void GetQtyArticleByMostLikesFromDb_Not_Found()
     {
+        DateTime time = DateTime.Now;
         //Arrange
         Func<ArticleQtyDto?> nullValue = null;
         
-        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByMostLikesFromDb(5)).ReturnsAsync(nullValue);
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByMostLikesFromDb(5, time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByMostLikesFromDb(5, time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -672,13 +674,14 @@ public class ArticleControllerTests
     [Fact]
     public async void GetQtyArticlesByCommentsFromDb_Returns_Ok()
     {
+        DateTime time = DateTime.Now;
         //Arrange
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByCommentsFromDb(5))
+            .Setup(x => x.GetQtyArticlesByCommentsFromDb(5, time))
             .ReturnsAsync(_fakeQtyArticles);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -695,15 +698,15 @@ public class ArticleControllerTests
     public async void GetQtyArticleByCommentsFromDb_Returns_WrongNumberException_Bad_Request()
     {
         //Arrange
-        
+        DateTime time = DateTime.Now;
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
 
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByCommentsFromDb(5))
+            .Setup(x => x.GetQtyArticlesByCommentsFromDb(5, time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5, time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -720,13 +723,14 @@ public class ArticleControllerTests
     [Fact]
     public async void GetQtyArticlesByCommentsFromDb_Not_Found()
     {
+        DateTime time = DateTime.Now;
         //Arrange
         Func<ArticleQtyDto?> nullValue = null;
         
-        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByCommentsFromDb(5)).ReturnsAsync(nullValue);
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByCommentsFromDb(5, time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByCommentsFromDb(5, time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -744,13 +748,14 @@ public class ArticleControllerTests
     [Fact]
     public async void GetQtyArticlesByLatestDateFromDb_Returns_Ok()
     {
+        DateTime time = DateTime.Now;
         //Arrange
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByEarliestDateFromDb(5))
+            .Setup(x => x.GetQtyArticlesByEarliestDateFromDb(5, time))
             .ReturnsAsync(_fakeQtyArticles);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(5, time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -768,15 +773,15 @@ public class ArticleControllerTests
     public async void GetQtyArticleByLatestDateFromDb_Returns_WrongNumberException_Bad_Request()
     {
         //Arrange
-        
+        DateTime time = DateTime.Now;
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
 
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByEarliestDateFromDb(4))
+            .Setup(x => x.GetQtyArticlesByEarliestDateFromDb(4, time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(4);
+        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(4, time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -794,11 +799,11 @@ public class ArticleControllerTests
     {
         //Arrange
         ArticleQtyDto? nullValue = null;
-        
-        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByEarliestDateFromDb(5)).ReturnsAsync(nullValue);
+        DateTime time = DateTime.Now;
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByEarliestDateFromDb(5,time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByEarliestDateFromDb(5, time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -816,12 +821,13 @@ public class ArticleControllerTests
     public async void GetQtyArticleByOldestDateFromDb_Returns_Ok()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByOldestDateFromDb(5))
+            .Setup(x => x.GetQtyArticlesByOldestDateFromDb(5,time))
             .ReturnsAsync(_fakeQtyArticles);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(5,time);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -841,13 +847,13 @@ public class ArticleControllerTests
         //Arrange
         
         var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
-
+        DateTime time = DateTime.Now;
         _articleRepositoryMock
-            .Setup(x => x.GetQtyArticlesByOldestDateFromDb(4))
+            .Setup(x => x.GetQtyArticlesByOldestDateFromDb(4,time))
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(4);
+        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(4,time);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -865,11 +871,11 @@ public class ArticleControllerTests
     {
         //Arrange
         ArticleQtyDto nullValue = null;
-        
-        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByOldestDateFromDb(5)).ReturnsAsync(nullValue);
+        DateTime time = DateTime.Now;
+        _articleRepositoryMock.Setup(x => x.GetQtyArticlesByOldestDateFromDb(5,time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(5);
+        var actionResult = await _articleController.GetQtyArticlesByOldestDateFromDb(5,time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -960,11 +966,11 @@ public class ArticleControllerTests
     {
         //Arrange
         IEnumerable<ArticleDto>? nullValue = null;
-        
-        _articleRepositoryMock.Setup(x => x.GetTopArticles()).ReturnsAsync(nullValue);
+        DateTime time = DateTime.Now;
+        _articleRepositoryMock.Setup(x => x.GetTopArticles(time)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _articleController.GetTopArticles();
+        var actionResult = await _articleController.GetTopArticles(time);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -982,12 +988,13 @@ public class ArticleControllerTests
     public async void GetTopArticle_Returns_Ok()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         _articleRepositoryMock
-            .Setup(x => x.GetTopArticles())
+            .Setup(x => x.GetTopArticles(time))
             .ReturnsAsync(_fakeArticles.OrderByDescending(x => x.LikesNum));
 
         //Act
-        var actionResult = await _articleController.GetTopArticles();
+        var actionResult = await _articleController.GetTopArticles(time);
         
         //Assert
         var result = actionResult as OkObjectResult;

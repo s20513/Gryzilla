@@ -1,5 +1,4 @@
 using Gryzilla_App.DTO.Responses;
-using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
@@ -65,7 +64,7 @@ public class ArticleDbRepository: IArticleDbRepository
                         },
                         Title = x.Title,
                         Content = x.Content,
-                        CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
+                        CreatedAt = x.CreatedAt,
 
                         Tags = _context
                             .Articles
@@ -131,7 +130,7 @@ public class ArticleDbRepository: IArticleDbRepository
                     },
                     Title     = x.Title,
                     Content   = x.Content,
-                    CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
+                    CreatedAt = x.CreatedAt,
                     Tags = _context
                         .Articles
                         .Where(t => t.IdArticle == idArticle)
@@ -152,6 +151,7 @@ public class ArticleDbRepository: IArticleDbRepository
 
         return article ?? null;
     }
+
     public async Task<ArticleQtyDto?> GetQtyArticlesFromDb(int qtyArticles)
     {
         bool next = false;
@@ -191,7 +191,7 @@ public class ArticleDbRepository: IArticleDbRepository
         };
     }
 
-    public async Task<ArticleQtyDto?> GetQtyArticlesByMostLikesFromDb(int qtyArticles)
+    public async Task<ArticleQtyDto?> GetQtyArticlesByMostLikesFromDb(int qtyArticles, DateTime time)
     {
         bool next = false;
         
@@ -212,6 +212,7 @@ public class ArticleDbRepository: IArticleDbRepository
         var articlesDto = await GetTableSort(allArticles);
 
         articlesDto = articlesDto
+            .Where(x =>x.CreatedAt < time)
             .OrderByDescending(x => x.LikesNum)
             .Skip(qtyArticles - 5)
             .Take(5)
@@ -219,6 +220,7 @@ public class ArticleDbRepository: IArticleDbRepository
         
         var nextArticle = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyArticles < nextArticle)
@@ -234,7 +236,7 @@ public class ArticleDbRepository: IArticleDbRepository
     }
 
 
-    public async Task<ArticleQtyDto?> GetQtyArticlesByEarliestDateFromDb(int qtyArticles)
+    public async Task<ArticleQtyDto?> GetQtyArticlesByEarliestDateFromDb(int qtyArticles, DateTime time)
     {
         bool next = false;
         
@@ -244,6 +246,7 @@ public class ArticleDbRepository: IArticleDbRepository
         }
         var allArticles = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
             .OrderByDescending(e => e.CreatedAt)
             .ToArrayAsync();
         
@@ -262,6 +265,7 @@ public class ArticleDbRepository: IArticleDbRepository
         
         var nextArticle = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyArticles < nextArticle)
@@ -276,7 +280,7 @@ public class ArticleDbRepository: IArticleDbRepository
         };
     }
 
-    public async Task<ArticleQtyDto?> GetQtyArticlesByOldestDateFromDb(int qtyArticles)
+    public async Task<ArticleQtyDto?> GetQtyArticlesByOldestDateFromDb(int qtyArticles, DateTime time)
     {
         bool next = false;
         
@@ -287,6 +291,7 @@ public class ArticleDbRepository: IArticleDbRepository
         
         var allArticles = await _context
             .Articles
+            .Where(e=>e.CreatedAt < time)
             .OrderBy(e => e.CreatedAt)
             .ToArrayAsync();
         
@@ -305,6 +310,7 @@ public class ArticleDbRepository: IArticleDbRepository
         
         var nextArticle = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyArticles < nextArticle)
@@ -318,7 +324,7 @@ public class ArticleDbRepository: IArticleDbRepository
             IsNext = next
         };
     }
-    public async Task<IEnumerable<ArticleDto>?> GetTopArticles()
+    public async Task<IEnumerable<ArticleDto>?> GetTopArticles(DateTime time)
     {
         var allArticles = await _context
             .Articles
@@ -339,7 +345,7 @@ public class ArticleDbRepository: IArticleDbRepository
 
         return articlesDtos;
     }
-    public async Task<ArticleQtyDto?> GetQtyArticlesByCommentsFromDb(int qtyArticles)
+    public async Task<ArticleQtyDto?> GetQtyArticlesByCommentsFromDb(int qtyArticles, DateTime time)
     {
         bool next = false;
         
@@ -359,6 +365,7 @@ public class ArticleDbRepository: IArticleDbRepository
         var articlesDto = await GetTableSort(allArticles);
 
         articlesDto = articlesDto
+            .Where(x=>x.CreatedAt < time)
             .OrderByDescending(x => x.CommentsNum)
             .Skip(qtyArticles - 5)
             .Take(5)
@@ -366,6 +373,7 @@ public class ArticleDbRepository: IArticleDbRepository
         
         var nextArticle = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyArticles < nextArticle)
@@ -453,7 +461,7 @@ public class ArticleDbRepository: IArticleDbRepository
             },
             Title      = article.Title,
             Content    = article.Content,
-            CreatedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
+            CreatedAt  = article.CreatedAt,
             Tags       = articleDto
                 .Tags
                 .ToArray(),
@@ -537,7 +545,7 @@ public class ArticleDbRepository: IArticleDbRepository
             },
             Title      = article.Title,
             Content    = article.Content,
-            CreatedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
+            CreatedAt  = article.CreatedAt,
         };
     }
 
@@ -587,7 +595,7 @@ public class ArticleDbRepository: IArticleDbRepository
             },
             Title       = article.Title,
             Content     = article.Content,
-            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(article.CreatedAt),
+            CreatedAt   = article.CreatedAt,
             Tags        = articleDbTags.
                 Select(x => x.NameTag)
                 .ToArray(),
@@ -628,7 +636,7 @@ public class ArticleDbRepository: IArticleDbRepository
                     },
                     Title = x.Title,
                     Content = x.Content,
-                    CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt),
+                    CreatedAt = x.CreatedAt,
 
                     Tags = _context
                         .Articles

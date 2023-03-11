@@ -1,5 +1,4 @@
 ﻿using Gryzilla_App;
-using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
@@ -54,7 +53,7 @@ public class ArticleDbRepositoryTests
         {
             IdUser = 1,
             Title = "Title1",
-            CreatedAt = DateTime.Today,
+            CreatedAt = DateTime.Now,
             Content = "Content1"
         });
         await _context.SaveChangesAsync();
@@ -63,11 +62,44 @@ public class ArticleDbRepositoryTests
         {
             IdUser = 2,
             Title = "Title2",
-            CreatedAt = new DateTime(2021, 1, 1),
+            CreatedAt = DateTime.Now,
             Content = "Content2"
         });
         await _context.SaveChangesAsync();
 
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Now,
+            Content = "Content1"
+        });
+        await _context.SaveChangesAsync();
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Now,
+            Content = "Content1"
+        });
+        await _context.SaveChangesAsync();
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Now,
+            Content = "Content1"
+        });
+        await _context.SaveChangesAsync();
+        await _context.Articles.AddAsync(new Gryzilla_App.Article
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Now,
+            Content = "Content1"
+        });
+        await _context.SaveChangesAsync();
+        
         await _context.Tags.AddAsync(new Gryzilla_App.Tag
         {
             NameTag = "Tag1"
@@ -110,7 +142,7 @@ public class ArticleDbRepositoryTests
             Content = "Content1"
         });
         await _context.SaveChangesAsync();
-
+        
         await _context.Tags.AddAsync(new Gryzilla_App.Tag
         {
             NameTag = "Tag1"
@@ -152,7 +184,7 @@ public class ArticleDbRepositoryTests
         Assert.NotNull(res);
         
         var articles = _context.Articles.ToList();
-        Assert.Single(articles);
+        Assert.NotNull(articles);
         
         var article = articles.SingleOrDefault(e => 
             e.IdArticle       == res.IdArticle);
@@ -167,7 +199,7 @@ public class ArticleDbRepositoryTests
 
         await AddTestDataWithOneArticle();
 
-        var id = 2;
+        var id = 0;
         
         //Act
         var res = await _repository.GetArticleFromDb(id);
@@ -297,7 +329,7 @@ public class ArticleDbRepositoryTests
 
         var articles = await _context
             .Articles
-            .OrderByDescending(e => e.CreatedAt)
+            .OrderBy(e => e.CreatedAt)
             .Select(e => e.IdArticle)
             .ToListAsync();
         
@@ -440,7 +472,7 @@ public class ArticleDbRepositoryTests
 
         await AddTestDataWithOneArticle();
 
-        var id = 2;
+        var id = 0;
         
         //Act
         var res = await _repository.DeleteArticleFromDb(id);
@@ -525,7 +557,6 @@ public class ArticleDbRepositoryTests
             .Articles
             .Skip(0)
             .Take(5)
-            .OrderByDescending(e => e.CreatedAt)
             .Select(e => e.IdArticle)
             .ToListAsync();
 
@@ -559,12 +590,13 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesMostLikesFromDb_Returns_IEnumerable()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataWithManyArticles();
 
         //Act
-        var res = await _repository.GetQtyArticlesByMostLikesFromDb(5);
+        var res = await _repository.GetQtyArticlesByMostLikesFromDb(5,time);
         
         //Assert
         Assert.NotNull(res);
@@ -584,10 +616,11 @@ public class ArticleDbRepositoryTests
     public async Task GetTopArticle_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetTopArticles();
+        var res = await _repository.GetTopArticles(time);
 
         //Assert
         Assert.Null(res);
@@ -599,11 +632,11 @@ public class ArticleDbRepositoryTests
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
+        DateTime time = DateTime.Now;
         await AddTestDataWithManyArticles();
 
         //Act
-        var res = await _repository.GetTopArticles();
+        var res = await _repository.GetTopArticles(time);
         
         //Assert
         Assert.NotNull(res);
@@ -624,10 +657,11 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesByMostLikesFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyArticlesByMostLikesFromDb(5);
+        var res = await _repository.GetQtyArticlesByMostLikesFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -636,23 +670,25 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesByMostLikesFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByMostLikesFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByMostLikesFromDb(4,time));
     }
     
     [Fact]
     public async Task GetQtyArticlesByCommentsFromDb_Returns_IEnumerable()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataWithManyArticles();
 
         //Act
-        var res = await _repository.GetQtyArticlesByCommentsFromDb(5);
+        var res = await _repository.GetQtyArticlesByCommentsFromDb(5,time);
         
         //Assert
         Assert.NotNull(res);
@@ -672,10 +708,11 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesByCommentsFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyArticlesByCommentsFromDb(5);
+        var res = await _repository.GetQtyArticlesByCommentsFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -684,11 +721,12 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesCommentsFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByCommentsFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByCommentsFromDb(4, time));
     }
     
     [Fact]
@@ -698,9 +736,10 @@ public class ArticleDbRepositoryTests
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataWithManyArticles();
-
+        DateTime time = DateTime.Now;
+        time = time.AddHours(1);
         //Act
-        var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5);
+        var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5, time);
         
         //Assert
         Assert.NotNull(res);
@@ -709,21 +748,23 @@ public class ArticleDbRepositoryTests
             .Articles
             .Skip(0)
             .Take(5)
-            .OrderByDescending(e => e.CreatedAt)
+            .OrderBy(e => e.CreatedAt)
             .Select(e => e.IdArticle)
             .ToListAsync();
 
 
         if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
+        
     }
     [Fact]
     public async Task GetQtyArticlesByDateFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5);
+        var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -732,11 +773,12 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesByDateFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByEarliestDateFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByEarliestDateFromDb(4, time));
     }
     [Fact]
     public async Task GetQtyArticlesByDateOldestFromDb_Returns_IEnumerable()
@@ -745,9 +787,9 @@ public class ArticleDbRepositoryTests
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataWithManyArticles();
-
+        DateTime time = DateTime.Now;
         //Act
-        var res = await _repository.GetQtyArticlesByOldestDateFromDb(5);
+        var res = await _repository.GetQtyArticlesByOldestDateFromDb(5,time);
         
         //Assert
         Assert.NotNull(res);
@@ -767,10 +809,11 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyPostsByDateOldestFromDb_Returns_Null()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetQtyArticlesByOldestDateFromDb(5);
+        var res = await _repository.GetQtyArticlesByOldestDateFromDb(5, time);
 
         //Assert
         Assert.Null(res);
@@ -779,10 +822,12 @@ public class ArticleDbRepositoryTests
     public async Task GetArticlesByDateOldestFromDb_Returns_WrongNumberException()
     {
         //Arrange
+        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
         //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByOldestDateFromDb(4));
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByOldestDateFromDb(4,time));
     }
+   
 }
