@@ -9,10 +9,10 @@ public interface IPostDbRepository
     public Task<IEnumerable<PostDto>?> GetPostsFromDb();
     public  Task<IEnumerable<PostDto>?> GetTopPosts();
     public Task<PostQtyDto?> GetQtyPostsFromDb(int qtyPosts);
-    public Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts);
-    public Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts);
-    public Task<PostQtyDto?> GetQtyPostsByDateFromDb(int qtyPosts);
-    public Task<PostQtyDto?> GetQtyPostsByDateOldestFromDb(int qtyPosts);
+    public Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts, DateTime time);
+    public Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts,DateTime time);
+    public Task<PostQtyDto?> GetQtyPostsByDateFromDb(int qtyPosts, DateTime time);
+    public Task<PostQtyDto?> GetQtyPostsByDateOldestFromDb(int qtyPosts, DateTime time);
     public Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByCommentsFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateFromDb();

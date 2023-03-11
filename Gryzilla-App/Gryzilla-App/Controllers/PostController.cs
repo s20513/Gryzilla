@@ -93,13 +93,13 @@ public class PostController : Controller
     /// Ok - return list of posts
     /// </returns>
     [HttpGet("qty/byCommentsDesc/{qtyPosts:int}")]
-    public async Task<IActionResult> GetPostsByComments(int qtyPosts)
+    public async Task<IActionResult> GetPostsByComments([FromRoute] int qtyPosts, [FromQuery] DateTime time)
     {
         PostQtyDto? posts;
         
         try
         {
-            posts = await _postsDbRepository.GetQtyPostsByCommentsFromDb(qtyPosts);
+            posts = await _postsDbRepository.GetQtyPostsByCommentsFromDb(qtyPosts, time);
             if (posts == null)
             {
                 return NotFound("No posts found");
@@ -120,12 +120,12 @@ public class PostController : Controller
     /// Ok - return list of posts
     /// </returns>
     [HttpGet("qty/byLikesDesc/{qtyPosts:int}")]
-    public async Task<IActionResult> GetPostsByLikesMost(int qtyPosts)
+    public async Task<IActionResult> GetPostsByLikesMost([FromRoute] int qtyPosts, [FromQuery] DateTime time)
     {
         PostQtyDto? posts;
         try
         {
-            posts = await _postsDbRepository.GetQtyPostsByLikesFromDb(qtyPosts);
+            posts = await _postsDbRepository.GetQtyPostsByLikesFromDb(qtyPosts, time);
             if (posts == null) 
             {
                 return NotFound("No posts found");
@@ -146,12 +146,12 @@ public class PostController : Controller
     /// Ok - return list of posts
     /// </returns>
     [HttpGet("qty/byDateDesc/{qtyPosts:int}")]
-    public async Task<IActionResult> GetPostsByDates(int qtyPosts)
+    public async Task<IActionResult> GetPostsByDates([FromRoute] int qtyPosts, [FromQuery] DateTime time)
     {
         PostQtyDto? posts;
         try
         {
-            posts = await _postsDbRepository.GetQtyPostsByDateFromDb(qtyPosts);
+            posts = await _postsDbRepository.GetQtyPostsByDateFromDb(qtyPosts, time);
             if (posts == null)
             {
                 return NotFound("No posts found");
@@ -173,12 +173,12 @@ public class PostController : Controller
     /// Ok - return list of posts
     /// </returns>
     [HttpGet("qty/byDateAsc/{qtyPosts:int}")]
-    public async Task<IActionResult> GetPostsByDatesOldest(int qtyPosts)
+    public async Task<IActionResult> GetPostsByDatesOldest([FromRoute] int qtyPosts, [FromQuery] DateTime time)
     {
         PostQtyDto? posts;
         try
         {
-            posts = await _postsDbRepository.GetQtyPostsByDateOldestFromDb(qtyPosts);
+            posts = await _postsDbRepository.GetQtyPostsByDateOldestFromDb(qtyPosts, time);
 
             if (posts == null)
             {

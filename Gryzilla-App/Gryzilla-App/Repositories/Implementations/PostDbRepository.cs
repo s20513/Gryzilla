@@ -168,7 +168,7 @@ public class PostDbRepository : IPostDbRepository
         return postDtos;
     }
     
-    public async Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts)
+    public async Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts, DateTime time)
     {
         var next = false;
         
@@ -178,6 +178,7 @@ public class PostDbRepository : IPostDbRepository
         }
         var allPosts = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .ToArrayAsync();
 
         if (allPosts.Length == 0)
@@ -195,6 +196,7 @@ public class PostDbRepository : IPostDbRepository
         
         var nextPost = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyPosts < nextPost)
@@ -209,7 +211,7 @@ public class PostDbRepository : IPostDbRepository
         };
     }
 
-    public async Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts)
+    public async Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts, DateTime time)
     {
         var next = false;
         
@@ -220,6 +222,7 @@ public class PostDbRepository : IPostDbRepository
         
         var allPosts = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .ToArrayAsync();
 
         if (allPosts.Length == 0)
@@ -237,6 +240,7 @@ public class PostDbRepository : IPostDbRepository
         
         var nextPost = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyPosts < nextPost)
@@ -251,7 +255,7 @@ public class PostDbRepository : IPostDbRepository
         };
     }
 
-    public async Task<PostQtyDto?> GetQtyPostsByDateFromDb(int qtyPosts)
+    public async Task<PostQtyDto?> GetQtyPostsByDateFromDb(int qtyPosts, DateTime time)
     {
         var next = false;
         if (qtyPosts < 5)
@@ -260,6 +264,7 @@ public class PostDbRepository : IPostDbRepository
         }
         var allPosts = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .OrderByDescending(e => e.CreatedAt)
             .ToArrayAsync();
 
@@ -277,6 +282,7 @@ public class PostDbRepository : IPostDbRepository
         
         var nextPost = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyPosts < nextPost)
@@ -291,7 +297,7 @@ public class PostDbRepository : IPostDbRepository
         };
     }
 
-    public async Task<PostQtyDto?> GetQtyPostsByDateOldestFromDb(int qtyPosts)
+    public async Task<PostQtyDto?> GetQtyPostsByDateOldestFromDb(int qtyPosts, DateTime time)
     {
         bool next = false;
         if (qtyPosts < 5)
@@ -301,6 +307,7 @@ public class PostDbRepository : IPostDbRepository
         
         var allPosts = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .OrderBy(e => e.CreatedAt)
             .ToArrayAsync();
 
@@ -317,6 +324,7 @@ public class PostDbRepository : IPostDbRepository
         
         var nextPost = await _context
             .Posts
+            .Where(x=>x.CreatedAt < time)
             .CountAsync();
 
         if (qtyPosts < nextPost)
