@@ -442,7 +442,7 @@ public class PostControllerTests
         //Arrange
         _postRepositoryMock
             .Setup(x => x.GetPostsByCommentsFromDb())
-            .ReturnsAsync(_fakePosts.OrderBy(x => x.Comments));
+            .ReturnsAsync(_fakePosts.OrderBy(x => x.CommentsNumber));
 
         //Act
         var actionResult = await _postsController.GetPostsByComments();
@@ -456,7 +456,7 @@ public class PostControllerTests
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(_fakePosts.OrderByDescending(x => x.Comments), resultValue);
+        Assert.Equal(_fakePosts.OrderByDescending(x => x.CommentsNumber), resultValue);
     }
     [Fact]
     public async void GetPostsByCommentsFromDb_Not_Found()
@@ -723,7 +723,7 @@ public class PostControllerTests
             .ThrowsAsync(new WrongNumberException(exceptionMessage));
 
         //Act
-        var actionResult = await _postsController.GetPosts(5);
+        var actionResult = await _postsController.GetQtyPosts(5);
         
         //Assert
         var result = actionResult as BadRequestObjectResult;
@@ -745,7 +745,7 @@ public class PostControllerTests
         _postRepositoryMock.Setup(x => x.GetQtyPostsFromDb(5)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _postsController.GetPosts(5);
+        var actionResult = await _postsController.GetQtyPosts(5);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -770,7 +770,7 @@ public class PostControllerTests
             .ReturnsAsync(_fakeQtyPost);
 
         //Act
-        var actionResult = await _postsController.GetPosts(5);
+        var actionResult = await _postsController.GetQtyPosts(5);
         
         //Assert
         var result = actionResult as OkObjectResult;

@@ -50,7 +50,7 @@ public class PostDbRepository : IPostDbRepository
                             .Where(c => c.IdPost == post.IdPost)
                             .SelectMany(b => b.IdUsers)
                             .Count(),
-                    Comments      = _context
+                    CommentsNumber      = _context
                                     .Posts
                                     .Where(c => c.IdPost == post.IdPost)
                                     .SelectMany(b => b.CommentPosts)
@@ -233,7 +233,7 @@ public class PostDbRepository : IPostDbRepository
         var postDtos = await GetTableSort(allPosts);
 
         postDtos = postDtos
-            .OrderByDescending(order => order.Comments)
+            .OrderByDescending(order => order.CommentsNumber)
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
@@ -369,7 +369,7 @@ public class PostDbRepository : IPostDbRepository
        
         var postDto = await GetTableSort(allPosts);
         
-        postDto = postDto.OrderByDescending(order => order.Comments).ToList();
+        postDto = postDto.OrderByDescending(order => order.CommentsNumber).ToList();
         return postDto;
     }
 
@@ -666,7 +666,11 @@ public class PostDbRepository : IPostDbRepository
                     .Where(c => c.IdPost == post.IdPost)
                     .SelectMany(b => b.IdUsers)
                     .Count(),
-                
+                CommentsNumber = _context
+                    .Posts
+                    .Where(c => c.IdPost == post.IdPost)
+                    .SelectMany(b => b.CommentPosts)
+                    .Count(),
                 Comments = _context
                     .CommentPosts
                     .Where(c => c.IdPost == post.IdPost)

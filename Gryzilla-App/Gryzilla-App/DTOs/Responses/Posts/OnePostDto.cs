@@ -9,6 +9,8 @@ public class OnePostDto
     public string Content { get; set; }
     public string CreatedAt { get; set; }
     public string? [] Tags { get; set; }
+    
+    public int? CommentsNumber{ get; set; }
     public PostCommentDto? [] Comments { get; set; }
     public int? Likes{ get; set; }
 }

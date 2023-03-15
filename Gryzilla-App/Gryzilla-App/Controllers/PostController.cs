@@ -64,7 +64,7 @@ public class PostController : Controller
     /// Return post list
     /// </returns>
     [HttpGet("qty/{qtyPosts:int}")]
-    public async Task<IActionResult> GetPosts(int qtyPosts)
+    public async Task<IActionResult> GetQtyPosts(int qtyPosts)
     {
         PostQtyDto? posts;
         
