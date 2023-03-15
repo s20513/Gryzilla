@@ -35,6 +35,27 @@ public class ArticleController: Controller
         
         return Ok(articles);
     }
+    
+    /// <summary>
+    /// Get user articles
+    /// </summary>
+    /// <param name="idUser">int - User Identifier</param>
+    /// <returns>
+    /// NotFound - user has no articles
+    /// Ok - return user articles
+    /// </returns>
+    [HttpGet("user/{idUser:int}")]
+    public async Task<IActionResult> GetUserArticles([FromRoute] int idUser)
+    {
+        var articles = await _articleDbRepository.GetUserArticlesFromDb(idUser);
+
+        if (articles is null)
+        {
+            return NotFound("User has no articles");
+        }
+        
+        return Ok(articles);
+    }
 
     /// <summary>
     /// Find all Articles from db sorted by Likes

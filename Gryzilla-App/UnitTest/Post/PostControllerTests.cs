@@ -1133,4 +1133,52 @@ public class PostControllerTests
         if (resultValue is null) return;
         Assert.Equal(_fakePosts.OrderByDescending(x => x.Likes), resultValue);
     }
+    
+    [Fact]
+    public async void GetUserPost_Returns_NotFound()
+    {
+        //Arrange
+        IEnumerable<PostDto>? nullValue = null;
+        var userId = 1;
+        
+        _postRepositoryMock.Setup(x => x.GetUserPostsFromDb(userId)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetUserPost(userId);
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("User has no posts", resultValue);
+    }
+    
+    [Fact]
+    public async void GetUserPost_Returns_Posts()
+    {
+        //Arrange
+        IEnumerable<PostDto> postDtos = new List<PostDto>();
+        var userId = 1;
+        
+        _postRepositoryMock.Setup(x => x.GetUserPostsFromDb(userId)).ReturnsAsync(postDtos);
+
+        //Act
+        var actionResult = await _postsController.GetUserPost(userId);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as IEnumerable<PostDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(postDtos, resultValue);
+    }
 }

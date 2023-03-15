@@ -697,6 +697,23 @@ public class PostDbRepository : IPostDbRepository
             }).SingleOrDefaultAsync();
         return newPost;
     }
+
+    public async Task<IEnumerable<PostDto>?> GetUserPostsFromDb(int idUser)
+    {
+        var userPosts = await _context
+            .Posts
+            .Where(e => e.IdUser == idUser)
+            .ToArrayAsync();
+
+        if (userPosts.Length == 0)
+        {
+            return null;
+        }
+        
+        var postDtos = await GetTableSort(userPosts);
+        
+        return postDtos;
+    }
 }
 
 

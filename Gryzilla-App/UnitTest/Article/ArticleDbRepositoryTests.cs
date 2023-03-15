@@ -829,5 +829,46 @@ public class ArticleDbRepositoryTests
         //Assert
         await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetQtyArticlesByOldestDateFromDb(4,time));
     }
+    
+    [Fact]
+    public async Task GetUserArticlesFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithManyArticles();
+
+        var idUser = 1;
+
+        //Act
+        var res = await _repository.GetUserArticlesFromDb(idUser);
+
+        //Assert
+        Assert.NotNull(res);
+
+        var articles = await _context.Articles
+            .Where(e => e.IdUser == idUser)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+        
+        if (res != null) Assert.Equal(articles, res.Select(e => e.IdArticle));
+    }
+    
+    [Fact]
+    public async Task GetUserArticlesFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithManyArticles();
+
+        var idUser = 10;
+
+        //Act
+        var res = await _repository.GetUserArticlesFromDb(idUser);
+
+        //Assert
+        Assert.Null(res);
+    }
    
 }

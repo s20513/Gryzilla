@@ -614,6 +614,23 @@ public class ArticleDbRepository: IArticleDbRepository
         };
     }
 
+    public async Task<IEnumerable<ArticleDto>?> GetUserArticlesFromDb(int idUser)
+    {
+        var userArticles = await _context
+            .Articles
+            .Where(e => e.IdUser == idUser)
+            .ToArrayAsync();
+
+        if (userArticles.Length == 0)
+        {
+            return null;
+        }
+
+        var articlesDtos = await GetTableSort(userArticles);
+
+        return articlesDtos;
+    }
+
     private async Task<IEnumerable<ArticleDto>?> GetAllArticlesFromDb()
     {
         var allArticles = await _context.Articles.ToArrayAsync();

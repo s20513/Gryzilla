@@ -22,4 +22,5 @@ public interface IPostDbRepository
     public Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag);
     public Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost);
     public Task<OnePostDto?> GetOnePostFromDb(int idPost);
+    public Task<IEnumerable<PostDto>?> GetUserPostsFromDb(int idUser);
 }

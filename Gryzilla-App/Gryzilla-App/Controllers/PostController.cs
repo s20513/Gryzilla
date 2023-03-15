@@ -38,6 +38,26 @@ public class PostController : Controller
     }
     
     /// <summary>
+    /// Get user posts
+    /// </summary>
+    /// <param name="idUser">int - User Identifier</param>
+    /// <returns>
+    /// NotFound - user has no posts
+    /// Ok - return user posts
+    /// </returns>
+    [HttpGet("user/{idUser:int}")]
+    public async Task<IActionResult> GetUserPost([FromRoute] int idUser)
+    {
+        var posts = await _postsDbRepository.GetUserPostsFromDb(idUser);
+        
+        if (posts is null)
+        {
+            return NotFound("User has no posts");
+        }
+        return Ok(posts);
+    }
+    
+    /// <summary>
     /// Get top posts 
     /// </summary>
     /// <returns>
@@ -369,4 +389,6 @@ public class PostController : Controller
         }
         return Ok(posts);
     }
+    
+    
 }
