@@ -1,5 +1,10 @@
 BEGIN TRAN
 
+TRUNCATE TABLE [GroupUserMessage]
+
+DELETE FROM [Message]
+    DBCC CHECKIDENT ([Message], RESEED, 0)
+    
 TRUNCATE TABLE [Friends]
 
 ALTER TABLE dbo.BlockedUser SET (SYSTEM_VERSIONING = OFF);
@@ -21,7 +26,7 @@ TRUNCATE TABLE [Notification]
 
 TRUNCATE TABLE [ProfileComment]
 
-TRUNCATE TABLE [GroupUser]
+DELETE FROM [GroupUser]
 
 DELETE FROM [Group]
 DBCC CHECKIDENT ([Group], RESEED, 0)

@@ -23,7 +23,8 @@ public class GroupDbRepository: IGroupDbRepository
         var group = await _context
             .Groups
             .Where(e => e.IdGroup == idGroup)
-            .Include(x=>x.IdUsers)
+            .Include(e => e.GroupUsers)
+            //.Include(x=>x.IdUsers)
             .SingleOrDefaultAsync();
         
         return group;
@@ -56,19 +57,21 @@ public class GroupDbRepository: IGroupDbRepository
                 GroupName     = e.GroupName,
                 Content   = e.Description,
                 CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(e.CreatedAt),
-                Users         = _context.Groups
+                Users         = _context.GroupUsers
                     .Where(g => g.IdGroup == idGroup)
-                    .SelectMany(g => g.IdUsers)
-                    .Include(g => g.IdRankNavigation)
+                    .Include(g => g.IdUserNavigation)
+                    .Include(g => g.IdUserNavigation.IdRankNavigation)
+                    //.SelectMany(g => g.IdUsers)
+                    //.Include(g => g.IdRankNavigation)
                     .Select(g => new UserDto
                     {
                         IdUser      = g.IdUser,
-                        IdRank      = g.IdRank,
-                        Nick        = g.Nick,
-                        Email       = g.Email,
-                        PhoneNumber = g.PhoneNumber,
-                        CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(g.CreatedAt),
-                        RankName    = g.IdRankNavigation.Name
+                        IdRank      = g.IdUserNavigation.IdRank,
+                        Nick        = g.IdUserNavigation.Nick,
+                        Email       = g.IdUserNavigation.Email,
+                        PhoneNumber = g.IdUserNavigation.PhoneNumber,
+                        CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(g.IdUserNavigation.CreatedAt),
+                        RankName    = g.IdUserNavigation.IdRankNavigation.Name
                     }).ToList()
                 
             }).SingleOrDefaultAsync();
@@ -88,17 +91,18 @@ public class GroupDbRepository: IGroupDbRepository
                 CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(e.CreatedAt),
                 Users         = _context.Groups
                     .Where(g => g.IdGroup == e.IdGroup)
-                    .SelectMany(g => g.IdUsers)
-                    .Include(g => g.IdRankNavigation)
+                    .SelectMany(g => g.GroupUsers)
+                    .Include(g => g.IdUserNavigation)
+                    .Include(g => g.IdUserNavigation.IdRankNavigation)
                     .Select(g => new UserDto
                     {
                         IdUser      = g.IdUser,
-                        IdRank      = g.IdRank,
-                        Nick        = g.Nick,
-                        Email       = g.Email,
-                        PhoneNumber = g.PhoneNumber,
-                        CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(g.CreatedAt),
-                        RankName    = g.IdRankNavigation.Name
+                        IdRank      = g.IdUserNavigation.IdRank,
+                        Nick        = g.IdUserNavigation.Nick,
+                        Email       = g.IdUserNavigation.Email,
+                        PhoneNumber = g.IdUserNavigation.PhoneNumber,
+                        CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(g.IdUserNavigation.CreatedAt),
+                        RankName    = g.IdUserNavigation.IdRankNavigation.Name
                     }).ToList()
             }).ToArrayAsync();
         
@@ -137,7 +141,6 @@ public class GroupDbRepository: IGroupDbRepository
         var group = await _context
             .Groups
             .Where(e => e.IdGroup == idGroup)
-            .Include(x=>x.IdUsers)
             .SingleOrDefaultAsync();
 
         if (group is null)
@@ -145,15 +148,11 @@ public class GroupDbRepository: IGroupDbRepository
             return null;
         }
 
-        var groupUsers = await _context.Groups
+        var groupUsers = await _context.GroupUsers
             .Where(e => e.IdGroup == idGroup)
-            .SelectMany(e => e.IdUsers)
             .ToListAsync();
         
-        foreach (var groupUser in groupUsers)
-        {
-            group.IdUsers.Remove(groupUser);
-        }
+        _context.GroupUsers.RemoveRange(groupUsers);
 
         var groupDto = await GetGroup(idGroup);
         
@@ -178,18 +177,17 @@ public class GroupDbRepository: IGroupDbRepository
             throw new UserCreatorException("The creator of the group cannot be removed");
         }
         
-        var groupUser = await _context.Groups
-            .Where(e => e.IdGroup == idGroup)
-            .SelectMany(e => e.IdUsers)
-            .Where(e => e.IdUser == userToGroupDto.IdUser)
+        var groupUser = await _context.GroupUsers
+            .Where(e => e.IdGroup == idGroup
+                            && e.IdUser == userToGroupDto.IdUser)
             .SingleOrDefaultAsync();
 
         if (groupUser is null)
         {
             return null;
         }
-        
-        group.IdUsers.Remove(user);
+
+        _context.GroupUsers.Remove(groupUser);
         await _context.SaveChangesAsync();
 
         return await GetGroup(idGroup);
@@ -222,12 +220,22 @@ public class GroupDbRepository: IGroupDbRepository
         await _context.Groups.AddAsync(newGroup);
         await _context.SaveChangesAsync();
         
-        var addUserToGroup = await GetGroupByName(groupRequestDto.GroupName);
+        var newCreatedGroup = await GetGroupByName(groupRequestDto.GroupName);
 
-        addUserToGroup.IdUsers.Add(user);
+        if (newCreatedGroup is null)
+        {
+            return null;
+        }
+
+        await _context.GroupUsers.AddAsync(new GroupUser
+        {
+            IdUser = user.IdUser,
+            IdGroup = newCreatedGroup.IdGroup
+        });
+
         await _context.SaveChangesAsync();
         
-        return await GetGroup(addUserToGroup.IdGroup);
+        return await GetGroup(newCreatedGroup.IdGroup);
     }
 
     public async Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDto)
@@ -240,10 +248,9 @@ public class GroupDbRepository: IGroupDbRepository
             return null; 
         }
 
-        var groupUser = await _context.Groups
-            .Where(e => e.IdGroup == userToGroupDto.IdGroup)
-            .SelectMany(e => e.IdUsers)
-            .Where(e => e.IdUser == userToGroupDto.IdUser)
+        var groupUser = await _context.GroupUsers
+            .Where(e => e.IdGroup == userToGroupDto.IdGroup
+                                && e.IdUser == userToGroupDto.IdUser)
             .SingleOrDefaultAsync();
 
         if (groupUser is not null)
@@ -251,18 +258,22 @@ public class GroupDbRepository: IGroupDbRepository
             return null; 
         }
 
-        group.IdUsers.Add(user);
+        await _context.AddAsync(new GroupUser
+        {
+            IdUser = userToGroupDto.IdUser,
+            IdGroup = userToGroupDto.IdGroup
+        });
+        
         await _context.SaveChangesAsync();
 
         return await GetGroup(group.IdGroup);
     }
 
-    public async Task<bool?> ExistUserInTheGroup(int idGroup, int idUser)
+    public async Task<bool?> UserIsInGroup(int idGroup, int idUser)
     {
-        var groupUser = await _context.Groups
-            .Where(e => e.IdGroup == idGroup)
-            .SelectMany(e => e.IdUsers)
-            .Where(e => e.IdUser == idUser)
+        var groupUser = await _context.GroupUsers
+            .Where(e => e.IdGroup == idGroup 
+                                && e.IdUser == idUser)
             .SingleOrDefaultAsync();
 
         return groupUser is not null;
@@ -278,16 +289,16 @@ public class GroupDbRepository: IGroupDbRepository
         }
 
         var groups = await _context
-                     .UserData
+                     .GroupUsers
                      .Where(x => x.IdUser == idUser)
-                     .SelectMany(x => x.IdGroups)
+                     .Include(e => e.IdGroupNavigation)
                      .Select(x => new UserGroupDto
                      { 
                          IdGroup       = x.IdGroup,
-                         IdUserCreator = x.IdUserCreator,
-                         GroupName     = x.GroupName,
-                         Content   = x.Description,
-                         CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
+                         IdUserCreator = x.IdGroupNavigation.IdUserCreator,
+                         GroupName     = x.IdGroupNavigation.GroupName,
+                         Content   = x.IdGroupNavigation.Description,
+                         CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(x.IdGroupNavigation.CreatedAt)
                      }).ToArrayAsync();
 
         return groups;

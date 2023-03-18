@@ -20,7 +20,7 @@ public class NotificationRepositoryTests
 
     private async Task AddTestDataWithManyUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "User",
             RankLevel = 4
@@ -37,7 +37,7 @@ public class NotificationRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Notifications.AddAsync(new Gryzilla_App.Notification
+        await _context.Notifications.AddAsync(new Gryzilla_App.Models.Notification
         {
             IdUser = 1,
             Content = "Content",

@@ -559,7 +559,7 @@ public class GroupsControllerTests
         var exist = true;
         
         _groupRepositoryMock
-            .Setup(x => x.ExistUserInTheGroup(idGroup, idUser))
+            .Setup(x => x.UserIsInGroup(idGroup, idUser))
             .ReturnsAsync(exist);
 
         //Act

@@ -20,7 +20,7 @@ public class LikesPostRepositoryTests
     
     private async Task AddTestDataWithOneLike()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -37,7 +37,7 @@ public class LikesPostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             Content = "content",

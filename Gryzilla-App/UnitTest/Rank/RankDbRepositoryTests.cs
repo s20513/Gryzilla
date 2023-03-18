@@ -22,7 +22,7 @@ public class RankDbRepositoryTests
 
     private async Task AddTestDataWithOneRank()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -30,7 +30,7 @@ public class RankDbRepositoryTests
 
         await _context.SaveChangesAsync();
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank2",
             RankLevel = 1

@@ -22,7 +22,7 @@ public class ReportUserDbRepositoryTests
     
     private async Task AddTestDataToDb()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -59,13 +59,13 @@ public class ReportUserDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
         {
             ReasonName = "Test2"
         });
         await _context.SaveChangesAsync();
 
-        await _context.ReportUsers.AddAsync(new Gryzilla_App.ReportUser
+        await _context.ReportUsers.AddAsync(new Gryzilla_App.Models.ReportUser
         {
             IdUserReported = 1,
             IdUserReporting = 2,

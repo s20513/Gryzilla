@@ -20,7 +20,7 @@ public class LinkRepositoryTests
     
     private async Task AddTestDataWithOneUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1

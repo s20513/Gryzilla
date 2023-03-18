@@ -22,7 +22,7 @@ public class GroupRepositoryTests
 
     private async Task AddTestDataWithManyGroup()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -70,9 +70,16 @@ public class GroupRepositoryTests
         await _context.SaveChangesAsync();
         
         var group = await _context.Groups.FirstAsync();
-        group.IdUsers.Add(user);
+
+
+        await _context.GroupUsers.AddAsync(new GroupUser
+        {
+            IdGroup = group.IdGroup,
+            IdUser = user.IdUser
+        });
         await _context.SaveChangesAsync();
-        
+
+
         await _context.Groups.AddAsync(new Group
         {
             GroupName = "test2",
@@ -85,7 +92,7 @@ public class GroupRepositoryTests
     
     private async Task AddTestDataWithOneGroup()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -454,7 +461,7 @@ public class GroupRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.ExistUserInTheGroup(idGroup, idUser);
+        var res = await _repository.UserIsInGroup(idGroup, idUser);
         
         //Assert
         Assert.NotNull(res);

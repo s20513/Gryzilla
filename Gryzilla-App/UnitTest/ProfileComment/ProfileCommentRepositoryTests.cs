@@ -21,7 +21,7 @@ public class ProfileCommentRepositoryTests
 
     private async Task AddTestDataWithManyUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "User",
             RankLevel = 4
@@ -58,7 +58,7 @@ public class ProfileCommentRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.ProfileComments.AddAsync(new Gryzilla_App.ProfileComment
+        await _context.ProfileComments.AddAsync(new Gryzilla_App.Models.ProfileComment
         {
             IdUser = 1,
             IdUserComment = 2,

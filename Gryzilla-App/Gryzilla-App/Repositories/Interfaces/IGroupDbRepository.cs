@@ -12,6 +12,6 @@ public interface IGroupDbRepository
     public Task<GroupDto?> AddNewGroup(int idGroup, NewGroupRequestDto groupRequestDtoDto);
     public Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDto);
     public Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDtoDto);
-    public Task<bool?> ExistUserInTheGroup(int idGroup, int idUser);
+    public Task<bool?> UserIsInGroup(int idGroup, int idUser);
     public Task<UserGroupDto[]?> GetUserGroups(int idUser);
 }

@@ -21,7 +21,7 @@ public class ReportCommentPostRepositoryTests
     }
      private async Task AddTestDataToDb()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -46,7 +46,7 @@ public class ReportCommentPostRepositoryTests
             CreatedAt = DateTime.Today
         });
         await _context.SaveChangesAsync();
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -55,7 +55,7 @@ public class ReportCommentPostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.CommentPost
+        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
         {
             IdUser = 1,
             IdPost = 1,
@@ -64,19 +64,19 @@ public class ReportCommentPostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
         {
             ReasonName = "Test2"
         });
         
         await _context.SaveChangesAsync();
-        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
         {
             ReasonName = "Test3"
         });
         
         await _context.SaveChangesAsync();
-        await _context.ReportCommentPosts.AddAsync(new Gryzilla_App.ReportCommentPost
+        await _context.ReportCommentPosts.AddAsync(new Gryzilla_App.Models.ReportCommentPost
         {
             IdUser = 1,
             IdComment = 1,

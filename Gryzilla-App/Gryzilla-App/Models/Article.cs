@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gryzilla_App
+namespace Gryzilla_App.Models
 {
     public partial class Article
     {
@@ -15,8 +15,8 @@ namespace Gryzilla_App
         public int IdArticle { get; set; }
         public int IdUser { get; set; }
         public string Title { get; set; } = null!;
-        public string Content { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
+        public string? Content { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public virtual UserDatum IdUserNavigation { get; set; } = null!;
         public virtual ICollection<CommentArticle> CommentArticles { get; set; }

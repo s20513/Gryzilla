@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gryzilla_App
+namespace Gryzilla_App.Models
 {
     public partial class ReportCommentArticle
     {
@@ -9,7 +9,7 @@ namespace Gryzilla_App
         public int IdCommentArticle { get; set; }
         public int IdReason { get; set; }
         public string Description { get; set; } = null!;
-        public DateTime ReportedAt { get; set; }
+        public DateTime? ReportedAt { get; set; }
         public bool Viewed { get; set; }
 
         public virtual CommentArticle IdCommentArticleNavigation { get; set; } = null!;

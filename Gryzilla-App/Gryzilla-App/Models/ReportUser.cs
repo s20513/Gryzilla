@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gryzilla_App
+namespace Gryzilla_App.Models
 {
     public partial class ReportUser
     {
@@ -13,7 +13,6 @@ namespace Gryzilla_App
         public int IdUserReported { get; set; }
         public int IdReason { get; set; }
 
-        public virtual Reason IdReasonNavigation { get; set; } = null!;
         public virtual UserDatum IdUserReportedNavigation { get; set; } = null!;
         public virtual UserDatum IdUserReportingNavigation { get; set; } = null!;
     }

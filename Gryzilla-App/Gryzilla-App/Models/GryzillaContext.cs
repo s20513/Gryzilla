@@ -1,7 +1,9 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
-using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
-
+using Microsoft.EntityFrameworkCore.Metadata;
+using Gryzilla_App.Models;
 
 namespace Gryzilla_App.Models
 {
@@ -47,6 +49,9 @@ namespace Gryzilla_App.Models
         public virtual DbSet<CommentArticle> CommentArticles { get; set; } = null!;
         public virtual DbSet<CommentPost> CommentPosts { get; set; } = null!;
         public virtual DbSet<Group> Groups { get; set; } = null!;
+        public virtual DbSet<GroupUser> GroupUsers { get; set; } = null!;
+        public virtual DbSet<GroupUserMessage> GroupUserMessages { get; set; } = null!;
+        public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<ProfileComment> ProfileComments { get; set; } = null!;
@@ -55,10 +60,9 @@ namespace Gryzilla_App.Models
         public virtual DbSet<ReportCommentArticle> ReportCommentArticles { get; set; } = null!;
         public virtual DbSet<ReportCommentPost> ReportCommentPosts { get; set; } = null!;
         public virtual DbSet<ReportPost> ReportPosts { get; set; } = null!;
+        public virtual DbSet<ReportUser> ReportUsers { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<UserDatum> UserData { get; set; } = null!;
-        
-        public virtual DbSet<ReportUser> ReportUsers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -130,12 +134,10 @@ namespace Gryzilla_App.Models
 
                 entity.Property(e => e.IdArticle).HasColumnName("idArticle");
 
-                entity.Property(e => e.Content)
-                    .IsUnicode(false)
-                    .HasColumnName("content");
+                entity.Property(e => e.Content).HasColumnName("content");
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("createdAt");
 
                 entity.Property(e => e.IdUser).HasColumnName("idUser");
@@ -168,7 +170,7 @@ namespace Gryzilla_App.Models
                             j.IndexerProperty<int>("IdTag").HasColumnName("idTag");
                         });
             });
-            
+
             modelBuilder.Entity<BlockedUser>(entity =>
             {
                 entity.HasKey(e => new { e.IdUser, e.IdUserBlocked })
@@ -196,9 +198,7 @@ namespace Gryzilla_App.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UserBlockedRankId)
-                    .IsRequired()
-                    .HasColumnName("userBlockedRankId");
+                entity.Property(e => e.UserBlockedRankId).HasColumnName("userBlockedRankId");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.BlockedUserIdUserNavigations)
@@ -221,6 +221,10 @@ namespace Gryzilla_App.Models
                 entity.ToTable("CommentArticle");
 
                 entity.Property(e => e.IdCommentArticle).HasColumnName("idCommentArticle");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdAt");
 
                 entity.Property(e => e.DescriptionArticle)
                     .HasMaxLength(200)
@@ -252,6 +256,10 @@ namespace Gryzilla_App.Models
                 entity.ToTable("CommentPost");
 
                 entity.Property(e => e.IdComment).HasColumnName("idComment");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdAt");
 
                 entity.Property(e => e.DescriptionPost)
                     .HasMaxLength(200)
@@ -305,23 +313,74 @@ namespace Gryzilla_App.Models
                     .HasForeignKey(d => d.IdUserCreator)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Group_User");
+            });
 
-                entity.HasMany(d => d.IdUsers)
-                    .WithMany(p => p.IdGroups)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "GroupUser",
-                        l => l.HasOne<UserDatum>().WithMany().HasForeignKey("IdUser").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("GroupUser_User"),
-                        r => r.HasOne<Group>().WithMany().HasForeignKey("IdGroup").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("GroupUser_Group"),
-                        j =>
-                        {
-                            j.HasKey("IdGroup", "IdUser").HasName("GroupUser_pk");
+            modelBuilder.Entity<GroupUser>(entity =>
+            {
+                entity.HasKey(e => new { e.IdGroup, e.IdUser })
+                    .HasName("GroupUser_pk");
 
-                            j.ToTable("GroupUser");
+                entity.ToTable("GroupUser");
 
-                            j.IndexerProperty<int>("IdGroup").HasColumnName("idGroup");
+                entity.Property(e => e.IdGroup).HasColumnName("idGroup");
 
-                            j.IndexerProperty<int>("IdUser").HasColumnName("idUser");
-                        });
+                entity.Property(e => e.IdUser).HasColumnName("idUser");
+
+                entity.HasOne(d => d.IdGroupNavigation)
+                    .WithMany(p => p.GroupUsers)
+                    .HasForeignKey(d => d.IdGroup)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("GroupUser_Group");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.GroupUsers)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("GroupUser_User");
+            });
+
+            modelBuilder.Entity<GroupUserMessage>(entity =>
+            {
+                entity.HasKey(e => new { e.IdMessage, e.IdUser, e.IdGroup })
+                    .HasName("GroupUserMessage_pk");
+
+                entity.ToTable("GroupUserMessage");
+
+                entity.Property(e => e.IdMessage).HasColumnName("idMessage");
+
+                entity.Property(e => e.IdUser).HasColumnName("idUser");
+
+                entity.Property(e => e.IdGroup).HasColumnName("idGroup");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdAt");
+
+                entity.HasOne(d => d.IdMessageNavigation)
+                    .WithMany(p => p.GroupUserMessages)
+                    .HasForeignKey(d => d.IdMessage)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("GroupUserMessage_Message");
+
+                entity.HasOne(d => d.Id)
+                    .WithMany(p => p.GroupUserMessages)
+                    .HasForeignKey(d => new { d.IdGroup, d.IdUser })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("GroupUserMessage_GroupUser");
+            });
+
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.HasKey(e => e.IdMessage)
+                    .HasName("Message_pk");
+
+                entity.ToTable("Message");
+
+                entity.Property(e => e.IdMessage).HasColumnName("idMessage");
+
+                entity.Property(e => e.MessageText)
+                    .HasMaxLength(200)
+                    .HasColumnName("messageText");
             });
 
             modelBuilder.Entity<Notification>(entity =>
@@ -571,7 +630,7 @@ namespace Gryzilla_App.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Table_20_User");
             });
-            
+
             modelBuilder.Entity<ReportUser>(entity =>
             {
                 entity.HasKey(e => e.IdReport)
@@ -579,8 +638,7 @@ namespace Gryzilla_App.Models
 
                 entity.ToTable("ReportUser");
 
-                entity.Property(e => e.IdReport)
-                    .HasColumnName("idReport");
+                entity.Property(e => e.IdReport).HasColumnName("idReport");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(200)
@@ -598,12 +656,6 @@ namespace Gryzilla_App.Models
                     .HasColumnName("reportedAt");
 
                 entity.Property(e => e.Viewed).HasColumnName("viewed");
-
-                entity.HasOne(d => d.IdReasonNavigation)
-                    .WithMany(p => p.ReportUsers)
-                    .HasForeignKey(d => d.IdReason)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ReportUser_Reason");
 
                 entity.HasOne(d => d.IdUserReportedNavigation)
                     .WithMany(p => p.ReportUserIdUserReportedNavigations)
@@ -661,6 +713,11 @@ namespace Gryzilla_App.Models
                     .HasColumnType("date")
                     .HasColumnName("createdAt");
 
+                entity.Property(e => e.DiscordLink)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("discordLink");
+
                 entity.Property(e => e.Email)
                     .HasMaxLength(30)
                     .IsUnicode(false)
@@ -682,6 +739,19 @@ namespace Gryzilla_App.Models
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("phoneNumber");
+
+                entity.Property(e => e.Photo)
+                    .HasColumnType("image")
+                    .HasColumnName("photo");
+
+                entity.Property(e => e.PhotoType)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SteamLink)
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("steamLink");
 
                 entity.Property(e => e.TokenExpire).HasColumnType("datetime");
 

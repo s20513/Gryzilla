@@ -26,28 +26,28 @@ public class UserRepositoryTests
 
     private async Task AddTestDataWithOneUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
         });
         await _context.SaveChangesAsync();
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Moderator",
             RankLevel = 2
         });
         await _context.SaveChangesAsync();
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Admin",
             RankLevel = 3
         });
         await _context.SaveChangesAsync();
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "User",
             RankLevel = 4
@@ -67,7 +67,7 @@ public class UserRepositoryTests
     
     private async Task AddTestDataWithManyUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1

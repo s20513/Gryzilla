@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gryzilla_App
+namespace Gryzilla_App.Models
 {
     public partial class Group
     {
         public Group()
         {
-            IdUsers = new HashSet<UserDatum>();
+            GroupUsers = new HashSet<GroupUser>();
         }
 
         public int IdGroup { get; set; }
@@ -17,7 +17,6 @@ namespace Gryzilla_App
         public DateTime CreatedAt { get; set; }
 
         public virtual UserDatum IdUserCreatorNavigation { get; set; } = null!;
-
-        public virtual ICollection<UserDatum> IdUsers { get; set; }
+        public virtual ICollection<GroupUser> GroupUsers { get; set; }
     }
 }

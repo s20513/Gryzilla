@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Gryzilla_App
+namespace Gryzilla_App.Models
 {
     public partial class UserDatum
     {
@@ -13,6 +13,7 @@ namespace Gryzilla_App
             BlockedUserIdUserNavigations = new HashSet<BlockedUser>();
             CommentArticles = new HashSet<CommentArticle>();
             CommentPosts = new HashSet<CommentPost>();
+            GroupUsers = new HashSet<GroupUser>();
             Groups = new HashSet<Group>();
             Notifications = new HashSet<Notification>();
             Posts = new HashSet<Post>();
@@ -21,13 +22,12 @@ namespace Gryzilla_App
             ReportCommentArticles = new HashSet<ReportCommentArticle>();
             ReportCommentPosts = new HashSet<ReportCommentPost>();
             ReportPosts = new HashSet<ReportPost>();
+            ReportUserIdUserReportedNavigations = new HashSet<ReportUser>();
+            ReportUserIdUserReportingNavigations = new HashSet<ReportUser>();
             IdArticles = new HashSet<Article>();
-            IdGroups = new HashSet<Group>();
             IdPosts = new HashSet<Post>();
             IdUserFriends = new HashSet<UserDatum>();
             IdUsers = new HashSet<UserDatum>();
-            ReportUserIdUserReportedNavigations = new HashSet<ReportUser>();
-            ReportUserIdUserReportingNavigations = new HashSet<ReportUser>();
         }
 
         public int IdUser { get; set; }
@@ -51,6 +51,7 @@ namespace Gryzilla_App
         public virtual ICollection<BlockedUser> BlockedUserIdUserNavigations { get; set; }
         public virtual ICollection<CommentArticle> CommentArticles { get; set; }
         public virtual ICollection<CommentPost> CommentPosts { get; set; }
+        public virtual ICollection<GroupUser> GroupUsers { get; set; }
         public virtual ICollection<Group> Groups { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
@@ -63,7 +64,6 @@ namespace Gryzilla_App
         public virtual ICollection<ReportUser> ReportUserIdUserReportingNavigations { get; set; }
 
         public virtual ICollection<Article> IdArticles { get; set; }
-        public virtual ICollection<Group> IdGroups { get; set; }
         public virtual ICollection<Post> IdPosts { get; set; }
         public virtual ICollection<UserDatum> IdUserFriends { get; set; }
         public virtual ICollection<UserDatum> IdUsers { get; set; }

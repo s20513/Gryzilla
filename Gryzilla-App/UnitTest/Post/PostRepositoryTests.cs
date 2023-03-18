@@ -23,7 +23,7 @@ public class PostRepositoryTests
     
     private async Task AddTestDataToDb()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -40,7 +40,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -49,7 +49,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -58,7 +58,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -67,7 +67,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -76,7 +76,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -85,7 +85,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -94,7 +94,7 @@ public class PostRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Tags.AddAsync(new Gryzilla_App.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
             NameTag = "Tag1"
         });
@@ -104,7 +104,7 @@ public class PostRepositoryTests
         var user = await _context.UserData.FirstAsync();
         var tag = await  _context.Tags.FirstAsync();
         
-        await _context.CommentPosts.AddAsync(new Gryzilla_App.CommentPost
+        await _context.CommentPosts.AddAsync(new Gryzilla_App.Models.CommentPost
         {
             IdUser = 1,
             DescriptionPost = "Description",
@@ -112,7 +112,7 @@ public class PostRepositoryTests
             CreatedAt = DateTime.Now
         });
 
-        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
         {
             ReasonName = "ReasonName"
         });
@@ -121,7 +121,7 @@ public class PostRepositoryTests
         post.IdTags.Add(tag);
         await _context.SaveChangesAsync();
         
-        await _context.ReportPosts.AddAsync(new Gryzilla_App.ReportPost
+        await _context.ReportPosts.AddAsync(new Gryzilla_App.Models.ReportPost
         {
             Description = "Description",
             ReportedAt = DateTime.Now,

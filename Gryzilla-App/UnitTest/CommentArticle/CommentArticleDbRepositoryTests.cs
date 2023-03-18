@@ -21,7 +21,7 @@ public class CommentArticleDbRepositoryTests
 
     private async Task CreateTestData()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -38,7 +38,7 @@ public class CommentArticleDbRepositoryTests
         });
         await _context.SaveChangesAsync();
 
-        await _context.Articles.AddAsync(new Gryzilla_App.Article
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
             Title = "Title1",
@@ -47,7 +47,7 @@ public class CommentArticleDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.CommentArticles.AddAsync(new Gryzilla_App.CommentArticle
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
         {
             IdUser = 1,
             IdArticle = 1,

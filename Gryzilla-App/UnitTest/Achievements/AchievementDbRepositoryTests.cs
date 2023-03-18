@@ -23,7 +23,7 @@ public class AchievementDbRepositoryTests
 
    private async Task AddTestData()
    {
-      await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+      await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank()
       {
          Name = "Rank1",
          RankLevel = 1

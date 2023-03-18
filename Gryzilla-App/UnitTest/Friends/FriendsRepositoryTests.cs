@@ -21,7 +21,7 @@ public class FriendsRepositoryTests
 
     private async Task AddTestDataWithManyUser()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "User",
             RankLevel = 4

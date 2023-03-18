@@ -207,7 +207,7 @@ public class GroupsController: Controller
     [HttpGet("{idUser:int}/{idGroup:int}")]
     public async Task<IActionResult>ExistUserInTheGroup([FromRoute] int idGroup, [FromRoute] int idUser)
     {
-        var result = await _groupDbRepository.ExistUserInTheGroup(idGroup, idUser);
+        var result = await _groupDbRepository.UserIsInGroup(idGroup, idUser);
         
         return Ok(result);
     }

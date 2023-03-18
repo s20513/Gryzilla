@@ -22,7 +22,7 @@ public class RepostPostDbRepositoryTests
 
     private async Task AddTestDataToDb()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Rank1",
             RankLevel = 1
@@ -59,7 +59,7 @@ public class RepostPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Posts.AddAsync(new Gryzilla_App.Post()
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post()
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
@@ -68,13 +68,13 @@ public class RepostPostDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.Reasons.AddAsync(new Gryzilla_App.Reason
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
         {
             ReasonName = "Test2"
         });
         await _context.SaveChangesAsync();
 
-        await _context.ReportPosts.AddAsync(new Gryzilla_App.ReportPost
+        await _context.ReportPosts.AddAsync(new Gryzilla_App.Models.ReportPost
         {
             IdUser = 2,
             IdPost = 1,

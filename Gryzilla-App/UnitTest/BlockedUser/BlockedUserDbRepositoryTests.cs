@@ -21,21 +21,21 @@ public class BlockedUserDbRepositoryTests
 
     private async Task AddTestDataWithBlockedAndPreviousBlocked()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "User",
             RankLevel = 1
         });
         await _context.SaveChangesAsync();
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Admin",
             RankLevel = 4
         });
         await _context.SaveChangesAsync();
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Blocked",
             RankLevel = 0
@@ -61,7 +61,7 @@ public class BlockedUserDbRepositoryTests
         });
         await _context.SaveChangesAsync();
         
-        await _context.BlockedUsers.AddAsync(new Gryzilla_App.BlockedUser
+        await _context.BlockedUsers.AddAsync(new Gryzilla_App.Models.BlockedUser
         {
             IdUser = 1,
             IdUserBlocked = 2,
@@ -74,7 +74,7 @@ public class BlockedUserDbRepositoryTests
         _context.BlockedUsers.Remove(blockedUser);
         await _context.SaveChangesAsync();
         
-        await _context.BlockedUsers.AddAsync(new Gryzilla_App.BlockedUser
+        await _context.BlockedUsers.AddAsync(new Gryzilla_App.Models.BlockedUser
         {
             IdUser = 1,
             IdUserBlocked = 2,
@@ -86,21 +86,21 @@ public class BlockedUserDbRepositoryTests
 
     private async Task AddTestDataWithNoBlocking()
     {
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "User",
             RankLevel = 1
         });
         await _context.SaveChangesAsync();
 
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Admin",
             RankLevel = 4
         });
         await _context.SaveChangesAsync();
         
-        await _context.Ranks.AddAsync(new Gryzilla_App.Rank
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
         {
             Name = "Blocked",
             RankLevel = 0

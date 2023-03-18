@@ -21,7 +21,7 @@ public class TagRepositoryTests
 
     private async Task AddTestDataWithOneTag()
     {
-        await _context.Tags.AddAsync(new Gryzilla_App.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
             NameTag = "Name1"
         });
@@ -30,17 +30,17 @@ public class TagRepositoryTests
     
     private async Task AddTestDataWithManyTags()
     {
-        await _context.Tags.AddAsync(new Gryzilla_App.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
             NameTag = "Call of duty"
         });
         
-        await _context.Tags.AddAsync(new Gryzilla_App.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
             NameTag = "Wiedźmin"
         });
         
-        await _context.Tags.AddAsync(new Gryzilla_App.Tag
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
             NameTag = "World of tanks"
         });
