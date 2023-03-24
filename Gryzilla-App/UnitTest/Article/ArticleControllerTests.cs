@@ -966,11 +966,10 @@ public class ArticleControllerTests
     {
         //Arrange
         IEnumerable<ArticleDto>? nullValue = null;
-        DateTime time = DateTime.Now;
-        _articleRepositoryMock.Setup(x => x.GetTopArticles(time)).ReturnsAsync(nullValue);
+        _articleRepositoryMock.Setup(x => x.GetTopArticles()).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _articleController.GetTopArticles(time);
+        var actionResult = await _articleController.GetTopArticles();
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -988,13 +987,12 @@ public class ArticleControllerTests
     public async void GetTopArticle_Returns_Ok()
     {
         //Arrange
-        DateTime time = DateTime.Now;
         _articleRepositoryMock
-            .Setup(x => x.GetTopArticles(time))
+            .Setup(x => x.GetTopArticles())
             .ReturnsAsync(_fakeArticles.OrderByDescending(x => x.LikesNum));
 
         //Act
-        var actionResult = await _articleController.GetTopArticles(time);
+        var actionResult = await _articleController.GetTopArticles();
         
         //Assert
         var result = actionResult as OkObjectResult;

@@ -324,7 +324,7 @@ public class ArticleDbRepository: IArticleDbRepository
             IsNext = next
         };
     }
-    public async Task<IEnumerable<ArticleDto>?> GetTopArticles(DateTime time)
+    public async Task<IEnumerable<ArticleDto>?> GetTopArticles()
     {
         var allArticles = await _context
             .Articles

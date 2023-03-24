@@ -639,6 +639,7 @@ public class PostDbRepository : IPostDbRepository
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
+            Tags = Array.Empty<string>()
         };
     }
 

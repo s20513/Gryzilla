@@ -616,11 +616,10 @@ public class ArticleDbRepositoryTests
     public async Task GetTopArticle_Returns_Null()
     {
         //Arrange
-        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetTopArticles(time);
+        var res = await _repository.GetTopArticles();
 
         //Assert
         Assert.Null(res);
@@ -632,11 +631,10 @@ public class ArticleDbRepositoryTests
     {
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        DateTime time = DateTime.Now;
         await AddTestDataWithManyArticles();
 
         //Act
-        var res = await _repository.GetTopArticles(time);
+        var res = await _repository.GetTopArticles();
         
         //Assert
         Assert.NotNull(res);

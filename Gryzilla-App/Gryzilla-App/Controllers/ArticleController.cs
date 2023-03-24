@@ -236,9 +236,9 @@ public class ArticleController: Controller
     /// Return articles list
     /// </returns>
     [HttpGet("top")]
-    public async Task<IActionResult> GetTopArticles([FromQuery] DateTime time)
+    public async Task<IActionResult> GetTopArticles()
     {
-        IEnumerable<ArticleDto>? posts = await _articleDbRepository.GetTopArticles(time);
+        IEnumerable<ArticleDto>? posts = await _articleDbRepository.GetTopArticles();
 
         if (posts is null)
         {

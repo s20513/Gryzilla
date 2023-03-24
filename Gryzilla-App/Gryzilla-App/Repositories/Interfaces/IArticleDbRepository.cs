@@ -12,7 +12,7 @@ public interface IArticleDbRepository
     public Task<IEnumerable<ArticleDto>?> GetArticlesByLeastLikesFromDb();
     public Task<IEnumerable<ArticleDto>?> GetArticlesByEarliestDateFromDb();
     public Task<IEnumerable<ArticleDto>?> GetArticlesByOldestDateFromDb();
-    public Task<IEnumerable<ArticleDto>?> GetTopArticles(DateTime time);
+    public Task<IEnumerable<ArticleDto>?> GetTopArticles();
     public Task<ArticleQtyDto?> GetQtyArticlesFromDb(int qtyArticles);
     public Task<ArticleQtyDto?> GetQtyArticlesByMostLikesFromDb(int qtyArticles, DateTime time);
     public Task<ArticleQtyDto?> GetQtyArticlesByCommentsFromDb(int qtyArticles, DateTime time);
