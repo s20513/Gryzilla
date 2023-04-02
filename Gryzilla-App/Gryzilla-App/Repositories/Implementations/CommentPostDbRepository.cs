@@ -62,13 +62,14 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = newPostCommentDto.IdPost,
             Content     = newCommentPost.DescriptionPost,
-            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(newCommentPost.CreatedAt)
+            CreatedAt   = newCommentPost.CreatedAt
         };
     }
 
     public async Task<PostCommentDto?> ModifyPostCommentFromDb(PutPostCommentDto putPostCommentDto, int idComment)
     {
         string nick;
+        
         var commentPost = await _context
             .CommentPosts
             .Where(x => 
@@ -98,13 +99,14 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = putPostCommentDto.IdUser,
             Content     = putPostCommentDto.Content,
-            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
+            CreatedAt   = commentPost.CreatedAt
         };
     }
 
     public async Task<PostCommentDto?> DeleteCommentFromDb(int idComment)
     {
         string nick;
+        
         var commentPost = await _context
             .CommentPosts
             .Where(x => x.IdComment == idComment)
@@ -131,7 +133,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdUser      = commentPost.IdUser,
             IdComment   = idComment,
             Content     = commentPost.DescriptionPost,
-            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(commentPost.CreatedAt)
+            CreatedAt   = commentPost.CreatedAt
         };
     }
     
@@ -158,7 +160,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
                     .Where(u=>u.IdUser == x.IdUser)
                     .Select(u=>u.Nick)
                     .SingleOrDefault(),
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
+                CreatedAt = x.CreatedAt
             }).ToArrayAsync();
 
         return new GetPostCommentDto

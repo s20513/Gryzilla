@@ -5,5 +5,5 @@ public class DeletePostDto
     public int IdPost { get; set; }
     public int IdUser { get; set; }
     public string Content { get; set; }
-    public string DeletedAt { get; set; }
+    public DateTime DeletedAt { get; set; }
 }

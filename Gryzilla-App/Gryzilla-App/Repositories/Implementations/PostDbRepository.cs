@@ -87,7 +87,7 @@ public class PostDbRepository : IPostDbRepository
                 IdPost = x.IdPost,
                 IdUser = x.IdUser,
                 Nick  =x.IdUserNavigation.Nick,
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
+                CreatedAt = x.CreatedAt
             })
             .ToList();
         List <PostCommentDto> list = postComment.Take(2).ToList();
@@ -458,7 +458,7 @@ public class PostDbRepository : IPostDbRepository
         {
             IdPost    = idNewPost,
             Nick      = user.Nick,
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(post.CreatedAt),
+            CreatedAt = post.CreatedAt,
             Content   = post.Content,
             IdUser    = post.IdUser,
             Tags      = await _context
@@ -534,7 +534,7 @@ public class PostDbRepository : IPostDbRepository
         
         return new DeletePostDto
         {
-            DeletedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            DeletedAt = DateTime.Now,
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
@@ -620,7 +620,7 @@ public class PostDbRepository : IPostDbRepository
             
             return new ModifyPostDto
             {
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(post.CreatedAt),
+                CreatedAt = post.CreatedAt,
                 Content   = post.Content,
                 IdPost    = post.IdPost,
                 IdUser    = post.IdUser,
@@ -635,7 +635,7 @@ public class PostDbRepository : IPostDbRepository
         await _context.SaveChangesAsync();
         return new ModifyPostDto
         {
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(post.CreatedAt),
+            CreatedAt = post.CreatedAt,
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
@@ -685,7 +685,7 @@ public class PostDbRepository : IPostDbRepository
                         Content = x.DescriptionPost
                     }).ToArray(),
                 
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(a.CreatedAt),
+                CreatedAt = a.CreatedAt,
                 Content   = a.Content,
                 Nick      = a.IdUserNavigation.Nick,
                 Tags      = _context

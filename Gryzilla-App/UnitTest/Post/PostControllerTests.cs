@@ -29,7 +29,7 @@ public class PostControllerTests
             idPost = 1,
             Nick ="Ola",
             Content = "XYZ",
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now),
+            CreatedAt = DateTime.Now,
             Likes = 1
         },
     };
