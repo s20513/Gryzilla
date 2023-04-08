@@ -51,7 +51,6 @@ namespace Gryzilla_App.Models
         public virtual DbSet<Group> Groups { get; set; } = null!;
         public virtual DbSet<GroupUser> GroupUsers { get; set; } = null!;
         public virtual DbSet<GroupUserMessage> GroupUserMessages { get; set; } = null!;
-        public virtual DbSet<Message> Messages { get; set; } = null!;
         public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<ProfileComment> ProfileComments { get; set; } = null!;
@@ -341,46 +340,31 @@ namespace Gryzilla_App.Models
 
             modelBuilder.Entity<GroupUserMessage>(entity =>
             {
-                entity.HasKey(e => new { e.IdMessage, e.IdUser, e.IdGroup })
+                entity.HasKey(e => e.IdMessage)
                     .HasName("GroupUserMessage_pk");
 
                 entity.ToTable("GroupUserMessage");
 
-                entity.Property(e => e.IdMessage).HasColumnName("idMessage");
-
-                entity.Property(e => e.IdUser).HasColumnName("idUser");
-
-                entity.Property(e => e.IdGroup).HasColumnName("idGroup");
+                entity.Property(e => e.IdMessage)
+                    .ValueGeneratedNever()
+                    .HasColumnName("idMessage");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")
                     .HasColumnName("createdAt");
 
-                entity.HasOne(d => d.IdMessageNavigation)
-                    .WithMany(p => p.GroupUserMessages)
-                    .HasForeignKey(d => d.IdMessage)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("GroupUserMessage_Message");
+                entity.Property(e => e.IdGroup).HasColumnName("idGroup");
+
+                entity.Property(e => e.IdUser).HasColumnName("idUser");
+
+                entity.Property(e => e.Message)
+                    .HasMaxLength(200)
+                    .HasColumnName("message");
 
                 entity.HasOne(d => d.Id)
                     .WithMany(p => p.GroupUserMessages)
                     .HasForeignKey(d => new { d.IdGroup, d.IdUser })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("GroupUserMessage_GroupUser");
-            });
-
-            modelBuilder.Entity<Message>(entity =>
-            {
-                entity.HasKey(e => e.IdMessage)
-                    .HasName("Message_pk");
-
-                entity.ToTable("Message");
-
-                entity.Property(e => e.IdMessage).HasColumnName("idMessage");
-
-                entity.Property(e => e.MessageText)
-                    .HasMaxLength(200)
-                    .HasColumnName("messageText");
             });
 
             modelBuilder.Entity<Notification>(entity =>

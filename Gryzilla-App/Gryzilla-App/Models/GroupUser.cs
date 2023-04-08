@@ -12,6 +12,7 @@ namespace Gryzilla_App.Models
 
         public int IdGroup { get; set; }
         public int IdUser { get; set; }
+        public int? Siema { get; set; }
 
         public virtual Group IdGroupNavigation { get; set; } = null!;
         public virtual UserDatum IdUserNavigation { get; set; } = null!;

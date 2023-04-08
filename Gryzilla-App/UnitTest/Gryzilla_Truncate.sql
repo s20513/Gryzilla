@@ -1,9 +1,6 @@
 BEGIN TRAN
 
 TRUNCATE TABLE [GroupUserMessage]
-
-DELETE FROM [Message]
-    DBCC CHECKIDENT ([Message], RESEED, 0)
     
 TRUNCATE TABLE [Friends]
 
