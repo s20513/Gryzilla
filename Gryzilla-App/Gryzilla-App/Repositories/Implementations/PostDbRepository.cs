@@ -158,8 +158,6 @@ public class PostDbRepository : IPostDbRepository
     
     public async Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts, DateTime time)
     {
-        var next = false;
-        
         if (qtyPosts < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
@@ -187,8 +185,6 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<PostQtyDto?> GetQtyPostsByCommentsFromDb(int qtyPosts, DateTime time)
     {
-        var next = false;
-        
         if (qtyPosts < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
@@ -216,7 +212,6 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<PostQtyDto?> GetQtyPostsByDateFromDb(int qtyPosts, DateTime time)
     {
-        var next = false;
         if (qtyPosts < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
@@ -244,7 +239,6 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<PostQtyDto?> GetQtyPostsByDateOldestFromDb(int qtyPosts, DateTime time)
     {
-        bool next = false;
         if (qtyPosts < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
