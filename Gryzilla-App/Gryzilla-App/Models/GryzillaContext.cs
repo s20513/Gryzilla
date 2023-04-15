@@ -346,7 +346,6 @@ namespace Gryzilla_App.Models
                 entity.ToTable("GroupUserMessage");
 
                 entity.Property(e => e.IdMessage)
-                    .ValueGeneratedNever()
                     .HasColumnName("idMessage");
 
                 entity.Property(e => e.CreatedAt)
