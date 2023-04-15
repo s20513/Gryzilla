@@ -31,82 +31,71 @@ public class PostDbRepository : IPostDbRepository
         
         return newTag;
     }
-    
-    private async Task<IEnumerable<PostDto>?> GetTableSort(Post[] allPosts)
+
+    private async Task<List<PostDto>> GetTableSort(int? userId = null)
     {
-        var postDto = new List<PostDto>();
-        
-        foreach (var post in allPosts)
-        {
-            var newPost = await _context
-                .Posts
-                .Where(x => x.IdPost == post.IdPost)
-                .Include(x => x.IdUserNavigation)
-                .Select(a => new PostDto
-                {
-                    idPost = post.IdPost,
-                    Likes  = _context
-                            .Posts
-                            .Where(c => c.IdPost == post.IdPost)
-                            .SelectMany(b => b.IdUsers)
-                            .Count(),
-                    CommentsNumber      = _context
-                                    .Posts
-                                    .Where(c => c.IdPost == post.IdPost)
-                                    .SelectMany(b => b.CommentPosts)
-                                    .Count(),
-                    CommentsDtos  = GetCommentPost(post.IdPost),
-                    CreatedAt     = a.CreatedAt,
-                    Content       = a.Content,
-                    Nick          = a.IdUserNavigation.Nick,
-                    Tags          = _context
-                        .Posts
-                        .Where(x => x.IdPost == post.IdPost)
-                        .SelectMany(x => x.IdTags)
-                        .Select(x => x.NameTag)
-                        .ToArray()
-                }).SingleOrDefaultAsync();
-
-            if (newPost != null)
-                postDto.Add(newPost);
-        }
-
-        return postDto;
-    }
-
-    private List<PostCommentDto> GetCommentPost(int idPost)
-    {
-        var postComment =  _context
-            .CommentPosts
-            .Where(x => x.IdPost == idPost)
-            .Include(c => c.IdUserNavigation)
-            .Select(x => new PostCommentDto
+        var posts = await _context
+            .Posts
+            .Include(x => x.IdUserNavigation)
+            .Where(e => (userId != null && e.IdUser == userId) || userId == null)
+            .Select(a => new PostDto
             {
-                Content = x.DescriptionPost,
-                IdComment = x.IdComment,
-                IdPost = x.IdPost,
-                IdUser = x.IdUser,
-                Nick  =x.IdUserNavigation.Nick,
-                CreatedAt = x.CreatedAt
-            })
-            .ToList();
-        List <PostCommentDto> list = postComment.Take(2).ToList();
-        return list;
+                idPost = a.IdPost,
+                Likes  = _context
+                    .Posts
+                    .Where(c => c.IdPost == a.IdPost)
+                    .SelectMany(b => b.IdUsers)
+                    .Count(),
+                CommentsNumber      = _context
+                    .Posts
+                    .Where(c => c.IdPost == a.IdPost)
+                    .SelectMany(b => b.CommentPosts)
+                    .Count(),
+                CommentsDtos  = _context.CommentPosts
+                    .Where(x => x.IdPost == a.IdPost)
+                    .Include(x => x.IdUserNavigation)
+                    .Select(x => new PostCommentDto
+                    {
+                        Content = x.DescriptionPost,
+                        IdComment = x.IdComment,
+                        IdPost = x.IdPost,
+                        IdUser = x.IdUser,
+                        Nick  =x.IdUserNavigation.Nick,
+                        CreatedAt = x.CreatedAt
+                    })
+                    .Take(2)
+                    .ToList(),
+                CreatedAt     = a.CreatedAt,
+                Content       = a.Content,
+                Nick          = a.IdUserNavigation.Nick,
+                Tags          = _context
+                    .Posts
+                    .Where(x => x.IdPost == a.IdPost)
+                    .SelectMany(x => x.IdTags)
+                    .Select(x => x.NameTag)
+                    .ToArray()
+            }).ToListAsync();
+        
+        return posts;
     }
+
+    private async Task<bool> AreThereMorePostsInDb(int qtyPosts, DateTime time)
+    {
+        var nextPost = await _context
+            .Posts
+            .Where(x=>x.CreatedAt < time)
+            .CountAsync();
+        
+        return qtyPosts < nextPost;
+    }
+    
     public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
     {
-        var allPosts = await _context
-            .Posts
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
-        {
-            return null;
-        }
+        var postsFromDb = allPosts.ToList();
         
-        var postDto = await GetTableSort(allPosts);
-        
-        return postDto;
+        return !postsFromDb.Any() ? null : postsFromDb;
     }
 
     public async Task<PostQtyDto?> GetQtyPostsFromDb(int qtyPosts)
@@ -117,14 +106,10 @@ public class PostDbRepository : IPostDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        var allPosts = await _context
-            .Posts
-            .OrderBy(x => x.IdPost)
-            .Skip(qtyPosts-5)
-            .Take(5)
-            .ToArrayAsync();
-        
-        if (allPosts.Length == 0)
+
+        var allPosts = await GetTableSort();
+
+        if (!allPosts.Any())
         {
             return null;
         }
@@ -138,11 +123,14 @@ public class PostDbRepository : IPostDbRepository
             next = true;
         }
         
-        var postDto = await GetTableSort(allPosts);
+        var filteredPostDtos = allPosts.OrderBy(x => x.idPost)
+            .Skip(qtyPosts-5)
+            .Take(5)
+            .ToArray();;
         
         return new PostQtyDto()
         {
-            Posts = postDto,
+            Posts = filteredPostDtos,
             IsNext = next
         };
     }
@@ -157,15 +145,15 @@ public class PostDbRepository : IPostDbRepository
             return null;
         }
 
-        var postDtos = await GetTableSort(allPosts);
+        var postDtos = await GetTableSort();
 
-        postDtos = postDtos
+        var filteredPostDtos = postDtos
             .OrderByDescending(order => order.Likes)
             .Skip(0)
             .Take(3)
             .ToList();
 
-        return postDtos;
+        return filteredPostDtos;
     }
     
     public async Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts, DateTime time)
@@ -176,38 +164,24 @@ public class PostDbRepository : IPostDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        var allPosts = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .ToArrayAsync();
 
-        if (allPosts.Length == 0)
+        var allPosts = await GetTableSort();
+
+        if (!allPosts.Any())
         {
             return null;
         }
 
-        var postDtos = await GetTableSort(allPosts);
-
-        postDtos = postDtos
+        var filteredPostDtos = allPosts
             .OrderByDescending(order => order.Likes)
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
-        
-        var nextPost = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
 
-        if (qtyPosts < nextPost)
-        {
-            next = true;
-        }
-        
         return new PostQtyDto()
         {
-            Posts = postDtos,
-            IsNext = next
+            Posts = filteredPostDtos,
+            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
         };
     }
 
@@ -220,38 +194,23 @@ public class PostDbRepository : IPostDbRepository
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
         
-        var allPosts = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
+        if (!allPosts.Any())
         {
             return null;
         }
 
-        var postDtos = await GetTableSort(allPosts);
-
-        postDtos = postDtos
+        var filteredPostDtos = allPosts
             .OrderByDescending(order => order.CommentsNumber)
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
         
-        var nextPost = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
-
-        if (qtyPosts < nextPost)
-        {
-            next = true;
-        }
-        
         return new PostQtyDto()
         {
-            Posts = postDtos,
-            IsNext = next
+            Posts = filteredPostDtos,
+            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
         };
     }
 
@@ -262,38 +221,24 @@ public class PostDbRepository : IPostDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        var allPosts = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .OrderByDescending(e => e.CreatedAt)
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
+        if (!allPosts.Any())
         {
             return null;
         }
 
-        var postDtos = await GetTableSort(allPosts);
-
-        postDtos = postDtos
+        var filteredPostDtos = allPosts
+            .Where(x=>x.CreatedAt < time)
+            .OrderByDescending(e => e.CreatedAt)
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
-        
-        var nextPost = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
 
-        if (qtyPosts < nextPost)
-        {
-            next = true;
-        }
-        
         return new PostQtyDto()
         {
-            Posts = postDtos,
-            IsNext = next
+            Posts = filteredPostDtos,
+            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
         };
     }
 
@@ -304,107 +249,88 @@ public class PostDbRepository : IPostDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        
-        var allPosts = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .OrderBy(e => e.CreatedAt)
-            .ToArrayAsync();
 
-        if (allPosts.Length == 0)
+        var allPosts = await GetTableSort();
+
+        if (!allPosts.Any())
         {
             return null;
         }
-
-        var postDtos = await GetTableSort(allPosts);
-        postDtos = postDtos
+        
+        var filteredPostDtos = allPosts
+            .Where(x=>x.CreatedAt < time)
+            .OrderBy(e => e.CreatedAt)
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
-        
-        var nextPost = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
 
-        if (qtyPosts < nextPost)
-        {
-            next = true;
-        }
-        
         return new PostQtyDto()
         {
-            Posts = postDtos,
-            IsNext = next
+            Posts = filteredPostDtos,
+            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
         };
         
     }
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb()
     {
-        var allPosts = await _context
-            .Posts
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
+        if (!allPosts.Any())
         {
             return null;
         }
 
-        var postDtos = await GetTableSort(allPosts);
-
-        postDtos = postDtos.OrderByDescending(order => order.Likes).ToList();
-        return postDtos;
+        var orderedPostDtos = allPosts.OrderByDescending(order => order.Likes).ToList();
+        
+        return orderedPostDtos;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByCommentsFromDb()
     {
-        var allPosts = await _context
-            .Posts
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
+        if (!allPosts.Any())
         {
             return null;
         }
-       
-        var postDto = await GetTableSort(allPosts);
+
+        var orderedPostDtos = allPosts
+            .OrderByDescending(order => order.CommentsNumber)
+            .ToList();
         
-        postDto = postDto.OrderByDescending(order => order.CommentsNumber).ToList();
-        return postDto;
+        return orderedPostDtos;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByDateFromDb()
     {
-        var allPosts = await _context
-            .Posts
-            .OrderByDescending(e => e.CreatedAt)
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
+        if (!allPosts.Any())
         {
             return null;
         }
         
-        var postDto = await GetTableSort(allPosts);
+        var orderedPostDtos = allPosts
+            .OrderByDescending(order => order.CreatedAt)
+            .ToList();
         
-        return postDto;
+        return orderedPostDtos;
     }
 
     public async Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb()
     {
-        var allPosts = await _context
-            .Posts
-            .OrderBy(e => e.CreatedAt)
-            .ToArrayAsync();
+        var allPosts = await GetTableSort();
 
-        if (allPosts.Length == 0)
+        if (!allPosts.Any())
         {
             return null;
         }
         
-        var postDto = await GetTableSort(allPosts);
+        var orderedPostDtos = allPosts
+            .OrderBy(order => order.CreatedAt)
+            .ToList();
         
-        return postDto;
+        return orderedPostDtos;
     }
 
     public async Task<NewPostDto?> AddNewPostToDb(AddPostDto addPostDto)
@@ -575,7 +501,6 @@ public class PostDbRepository : IPostDbRepository
             NameTag = tagFromPost.NameTag
         };
     }
-    
 
     public async Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost)
     {
@@ -701,19 +626,14 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<IEnumerable<PostDto>?> GetUserPostsFromDb(int idUser)
     {
-        var userPosts = await _context
-            .Posts
-            .Where(e => e.IdUser == idUser)
-            .ToArrayAsync();
+        var userPosts = await GetTableSort(idUser);
 
-        if (userPosts.Length == 0)
+        if (!userPosts.Any())
         {
             return null;
         }
-        
-        var postDtos = await GetTableSort(userPosts);
-        
-        return postDtos;
+
+        return userPosts;
     }
 }
 
