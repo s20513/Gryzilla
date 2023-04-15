@@ -15,11 +15,11 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<ProfileCommentDto>?> GetProfileCommentFromDb(int idUser)
+    public async Task<IEnumerable<ProfileCommentDto>?> GetProfileCommentFromDb(int idUserComment)
     {
         var user = await _context
             .UserData
-            .Where(x => x.IdUser == idUser)
+            .Where(x => x.IdUser == idUserComment)
             .SingleOrDefaultAsync();
 
         if (user is null)
@@ -28,23 +28,27 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         }
         
         var profileComments = await _context
-            .ProfileComments.Where(x => x.IdUser == idUser)
+            .ProfileComments.Where(x => x.IdUserComment == idUserComment)
             .Select(x => new ProfileCommentDto
             {
-                IdUser        = x.IdUser,
-                IdUserAccount = x.IdProfileComment,
-                Nick          = _context.UserData.SingleOrDefault(y=>y.IdUser == x.IdProfileComment).Nick,
-                Description   = x.Description
+                idProfileComment = x.IdProfileComment,
+                IdUser           = x.IdUser,
+                IdUserComment    = x.IdUserComment,
+                Nick             = _context.UserData
+                    .Where(e => e.IdUser == x.IdUser)
+                    .Select(e => e.Nick).SingleOrDefault(),
+                Content          = x.Description,
+                CreatedAt        = x.CreatedAt
             }).ToArrayAsync();
         
         return profileComments;
     }
 
-    public async Task <ProfileCommentDto?> AddProfileCommentToDb(int idUser, NewProfileComment newProfileComment)
+    public async Task <ProfileCommentDto?> AddProfileCommentToDb(NewProfileComment newProfileComment)
     {
         var user = await _context
             .UserData
-            .Where(x => x.IdUser == idUser)
+            .Where(x => x.IdUser == newProfileComment.IdUser)
             .SingleOrDefaultAsync();
 
         if (user is null)
@@ -64,19 +68,24 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
 
         var profileComment = new ProfileComment
         {
-            IdUser        = idUser,
+            IdUser        = newProfileComment.IdUser,
             IdUserComment = newProfileComment.IdUserComment,
-            Description   = newProfileComment.Content
+            Description   = newProfileComment.Content,
+            CreatedAt     = DateTime.Now
         };
 
         await _context.ProfileComments.AddAsync(profileComment);
         await _context.SaveChangesAsync();
+        
+        int profileCommentId = _context.ProfileComments.Max(e => e.IdProfileComment);
         return new ProfileCommentDto
         {
-            IdUser        = idUser,
-            IdUserAccount = newProfileComment.IdUserComment,
-            Nick          = userComment.Nick,
-            Description   = newProfileComment.Content
+            idProfileComment = profileCommentId,
+            IdUser           = newProfileComment.IdUser,
+            IdUserComment    = newProfileComment.IdUserComment,
+            Nick             = user.Nick,
+            Content          = newProfileComment.Content,
+            CreatedAt        = profileComment.CreatedAt
         };
     }
 
@@ -94,10 +103,13 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
 
         var deleteProfileComment = new ProfileCommentDto
         {
-            IdUser = profileComment.IdUser,
-            IdUserAccount = profileComment.IdUserComment,
-            Nick = _context.UserData.SingleOrDefault(x => x.IdUser == profileComment.IdUserComment).Nick,
-            Description = profileComment.Description
+            idProfileComment = profileComment.IdProfileComment,
+            IdUser           = profileComment.IdUser,
+            IdUserComment    = profileComment.IdUserComment,
+            Nick             = _context.UserData
+                .Where(e => e.IdUser == profileComment.IdUser)
+                .Select(e => e.Nick).SingleOrDefault(),
+            Content          = profileComment.Description
         };
         
         _context.ProfileComments.Remove(profileComment);
@@ -122,10 +134,14 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         
        return new ProfileCommentDto
         {
-            IdUser = profileComment.IdUser,
-            IdUserAccount = profileComment.IdUserComment,
-            Nick = _context.UserData.SingleOrDefault(x => x.IdUser == profileComment.IdUserComment).Nick,
-            Description = profileComment.Description
+            idProfileComment = profileComment.IdProfileComment,
+            IdUser           = profileComment.IdUser,
+            IdUserComment    = profileComment.IdUserComment,
+            Nick             = _context.UserData
+                .Where(e => e.IdUser == profileComment.IdUser)
+                .Select(e => e.Nick).SingleOrDefault(),
+            Content         = profileComment.Description,
+            CreatedAt       = profileComment.CreatedAt
         };
         
     }

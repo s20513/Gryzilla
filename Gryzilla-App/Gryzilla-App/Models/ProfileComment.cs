@@ -9,6 +9,7 @@ namespace Gryzilla_App.Models
         public int IdUser { get; set; }
         public int IdUserComment { get; set; }
         public string Description { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
 
         public virtual UserDatum IdUserCommentNavigation { get; set; } = null!;
         public virtual UserDatum IdUserNavigation { get; set; } = null!;

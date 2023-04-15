@@ -84,7 +84,7 @@ public class ProfileCommentRepositoryTests
         
         
         //Act
-        var res = await _repository.AddProfileCommentToDb(idUser, newProfileCommentRequestDto);
+        var res = await _repository.AddProfileCommentToDb(newProfileCommentRequestDto);
         
         //Assert
         Assert.NotNull(res);
@@ -107,7 +107,7 @@ public class ProfileCommentRepositoryTests
         };
         
         //Act
-        var res = await _repository.AddProfileCommentToDb(idUser, newProfileCommentRequestDto);
+        var res = await _repository.AddProfileCommentToDb(newProfileCommentRequestDto);
         
         //Assert
         Assert.Null(res);
@@ -127,7 +127,7 @@ public class ProfileCommentRepositoryTests
         };
         
         //Act
-        var res = await _repository.AddProfileCommentToDb(idUser, newProfileCommentRequestDto);
+        var res = await _repository.AddProfileCommentToDb(newProfileCommentRequestDto);
         
         //Assert
         Assert.Null(res);

@@ -15,10 +15,10 @@ public class ProfileCommentController : Controller
     }
     
     
-    [HttpGet("{idUser:int}")]
-    public async Task<IActionResult> GetProfileComments([FromRoute] int idUser)
+    [HttpGet("{idUserComments:int}")]
+    public async Task<IActionResult> GetProfileComments([FromRoute] int idUserComments)
     {
-        var profileComment = await _profileCommentDbRepository.GetProfileCommentFromDb(idUser);
+        var profileComment = await _profileCommentDbRepository.GetProfileCommentFromDb(idUserComments);
 
         if (profileComment is null)
         {
@@ -28,11 +28,11 @@ public class ProfileCommentController : Controller
         return Ok(profileComment);
     }
     
-    [HttpPut("{idUser:int}")]
-    public async Task<IActionResult> ModifyProfileComment([FromRoute] int idUser, [FromBody] ModifyProfileComment modifyProfileComment)
+    [HttpPut("{idProfileComment:int}")]
+    public async Task<IActionResult> ModifyProfileComment([FromRoute] int idProfileComment, [FromBody] ModifyProfileComment modifyProfileComment)
     {
         
-        var profileComment = await _profileCommentDbRepository.ModifyProfileCommentFromDb(idUser, modifyProfileComment);
+        var profileComment = await _profileCommentDbRepository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileComment);
     
         if (profileComment == null)
         { 
@@ -42,10 +42,10 @@ public class ProfileCommentController : Controller
         return Ok(profileComment);
         
     }
-    [HttpPost("{idUser:int}")]
-    public async Task<IActionResult> PostProfileComment([FromBody] NewProfileComment newProfileComment, [FromRoute] int idUser)
+    [HttpPost]
+    public async Task<IActionResult> PostProfileComment([FromBody] NewProfileComment newProfileComment)
     {
-        var profileComment = await _profileCommentDbRepository.AddProfileCommentToDb(idUser, newProfileComment);
+        var profileComment = await _profileCommentDbRepository.AddProfileCommentToDb(newProfileComment);
     
         if (profileComment == null)
         { 

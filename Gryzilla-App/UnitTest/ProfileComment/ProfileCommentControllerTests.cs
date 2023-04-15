@@ -71,11 +71,11 @@ public class ProfileCommentControllerTests
         var returnedProfileComment = new ProfileCommentDto();
         
         _profileRepositoryMock
-            .Setup(x => x.AddProfileCommentToDb(1, newProfileCommentDto))
+            .Setup(x => x.AddProfileCommentToDb(newProfileCommentDto))
             .ReturnsAsync(returnedProfileComment);
 
         //Act
-        var actionResult = await _profileCommentController.PostProfileComment(newProfileCommentDto, 1);
+        var actionResult = await _profileCommentController.PostProfileComment(newProfileCommentDto);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -97,11 +97,11 @@ public class ProfileCommentControllerTests
         ProfileCommentDto? nullValue = null;
         
         _profileRepositoryMock
-            .Setup(x => x.AddProfileCommentToDb(1, newProfileCommentDto))
+            .Setup(x => x.AddProfileCommentToDb(newProfileCommentDto))
             .ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _profileCommentController.PostProfileComment(newProfileCommentDto, 1);
+        var actionResult = await _profileCommentController.PostProfileComment(newProfileCommentDto);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
