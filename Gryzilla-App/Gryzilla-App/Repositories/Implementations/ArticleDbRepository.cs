@@ -80,6 +80,7 @@ public class ArticleDbRepository: IArticleDbRepository
                         .CommentArticles
                         .Where(c => c.IdArticle == x.IdArticle)
                         .Include(c => c.IdUserNavigation)
+                        .OrderByDescending(c => c.CreatedAt)
                         .Select(c => new ArticleCommentDto()
                         {
                             Content = c.DescriptionArticle,
@@ -102,16 +103,6 @@ public class ArticleDbRepository: IArticleDbRepository
         var articleDto = await GetTableSort();
 
         return articleDto.Any() ? articleDto : null;
-    }
-    
-    private async Task<bool> AreThereMoreArticlesInDb(int qtyArticle, DateTime time)
-    {
-        var nextPost = await _context
-            .Articles
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
-        
-        return qtyArticle < nextPost;
     }
 
     public async Task<ArticleDto?> GetArticleFromDb(int idArticle)
@@ -228,7 +219,7 @@ public class ArticleDbRepository: IArticleDbRepository
         return new ArticleQtyDto()
         {
             Articles = filteredPostDtos,
-            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
+            IsNext = qtyArticles < allArticles.Count
         };
     }
 
@@ -257,7 +248,7 @@ public class ArticleDbRepository: IArticleDbRepository
         return new ArticleQtyDto()
         {
             Articles = filteredArticleDtos,
-            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
+            IsNext = qtyArticles < allArticles.Count
         };
     }
 
@@ -285,7 +276,7 @@ public class ArticleDbRepository: IArticleDbRepository
         return new ArticleQtyDto()
         {
             Articles = filteredArticleDtos,
-            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
+            IsNext = qtyArticles < allArticles.Count
         };
     }
     public async Task<IEnumerable<ArticleDto>?> GetTopArticles()
@@ -329,7 +320,7 @@ public class ArticleDbRepository: IArticleDbRepository
         return new ArticleQtyDto()
         {
             Articles = articlesDto,
-            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
+            IsNext = qtyArticles < allArticles.Count
         };
     }
     public async Task<IEnumerable<ArticleDto>?> GetArticlesFromDb()

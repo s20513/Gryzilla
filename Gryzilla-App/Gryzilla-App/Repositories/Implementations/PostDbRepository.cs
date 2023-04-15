@@ -54,6 +54,7 @@ public class PostDbRepository : IPostDbRepository
                 CommentsDtos  = _context.CommentPosts
                     .Where(x => x.IdPost == a.IdPost)
                     .Include(x => x.IdUserNavigation)
+                    .OrderByDescending(c => c.CreatedAt)
                     .Select(x => new PostCommentDto
                     {
                         Content = x.DescriptionPost,
@@ -79,16 +80,6 @@ public class PostDbRepository : IPostDbRepository
         return posts;
     }
 
-    private async Task<bool> AreThereMorePostsInDb(int qtyPosts, DateTime time)
-    {
-        var nextPost = await _context
-            .Posts
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
-        
-        return qtyPosts < nextPost;
-    }
-    
     public async Task<IEnumerable<PostDto>?> GetPostsFromDb()
     {
         var allPosts = await GetTableSort();
@@ -179,7 +170,7 @@ public class PostDbRepository : IPostDbRepository
         return new PostQtyDto()
         {
             Posts = filteredPostDtos,
-            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
+            IsNext = qtyPosts < allPosts.Count
         };
     }
 
@@ -206,7 +197,7 @@ public class PostDbRepository : IPostDbRepository
         return new PostQtyDto()
         {
             Posts = filteredPostDtos,
-            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
+            IsNext = qtyPosts < allPosts.Count
         };
     }
 
@@ -233,7 +224,7 @@ public class PostDbRepository : IPostDbRepository
         return new PostQtyDto()
         {
             Posts = filteredPostDtos,
-            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
+            IsNext = qtyPosts < allPosts.Count
         };
     }
 
@@ -261,7 +252,7 @@ public class PostDbRepository : IPostDbRepository
         return new PostQtyDto()
         {
             Posts = filteredPostDtos,
-            IsNext = await AreThereMorePostsInDb(qtyPosts, time)
+            IsNext = qtyPosts < allPosts.Count
         };
         
     }
