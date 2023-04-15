@@ -43,80 +43,80 @@ public class ArticleDbRepository: IArticleDbRepository
             article.IdTags.Add(tag);
         }
     }
-    private async Task<IEnumerable<ArticleDto>?> GetTableSort(Article[] allArticles)
+    private async Task<List<ArticleDto>> GetTableSort(int? userId = null)
     {
-        var articleDto = new List<ArticleDto>();
-
-        foreach (var article in allArticles)
-        {
-            var newArticle =
-                await _context
-                    .Articles
-                    .Where(x => x.IdArticle == article.IdArticle)
-                    .Include(x => x.IdUserNavigation)
-                    .Select(x => new ArticleDto
+        var articles = await _context
+                .Articles
+                .Include(x => x.IdUserNavigation)
+                .Where(e => (userId != null && e.IdUser == userId) || userId == null)
+                .Select(x => new ArticleDto
+                {
+                    IdArticle = x.IdArticle,
+                    Author = new ReducedUserResponseDto
                     {
-                        IdArticle = x.IdArticle,
-                        Author = new ReducedUserResponseDto
+                        IdUser = x.IdUser,
+                        Nick = x.IdUserNavigation.Nick
+                    },
+                    Title = x.Title,
+                    Content = x.Content,
+                    CreatedAt = x.CreatedAt,
+
+                    Tags = _context
+                        .Articles
+                        .Where(t => t.IdArticle == x.IdArticle)
+                        .SelectMany(t => x.IdTags)
+                        .Select(t => t.NameTag)
+                        .ToArray(),
+
+                    LikesNum = _context
+                        .Articles
+                        .Where(l => l.IdArticle == x.IdArticle)
+                        .SelectMany(l => l.IdUsers)
+                        .Count(),
+                    CommentsNum = _context
+                        .CommentArticles
+                        .Count(c => c.IdArticle == x.IdArticle),
+                    Comments = _context
+                        .CommentArticles
+                        .Where(c => c.IdArticle == x.IdArticle)
+                        .Include(c => c.IdUserNavigation)
+                        .Select(c => new ArticleCommentDto()
                         {
-                            IdUser = x.IdUser,
-                            Nick = x.IdUserNavigation.Nick
-                        },
-                        Title = x.Title,
-                        Content = x.Content,
-                        CreatedAt = x.CreatedAt,
+                            Content = c.DescriptionArticle,
+                            IdComment = c.IdCommentArticle,
+                            IdArticle = c.IdArticle,
+                            IdUser = c.IdUser,
+                            Nick   = c.IdUserNavigation.Nick,
+                            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(c.CreatedAt)
+                        })
+                        .Take(2)
+                        .ToList(),
+                })
+                .ToListAsync();
 
-                        Tags = _context
-                            .Articles
-                            .Where(t => t.IdArticle ==article.IdArticle)
-                            .SelectMany(t => x.IdTags)
-                            .Select(x => x.NameTag)
-                            .ToArray(),
-
-                        LikesNum = _context
-                            .Articles
-                            .Where(l => l.IdArticle == x.IdArticle)
-                            .SelectMany(l => l.IdUsers)
-                            .Count(),
-                        CommentsNum = _context
-                            .CommentArticles
-                            .Count(c => c.IdArticle == x.IdArticle),
-                        Comments = GetCommentArticle(article.IdArticle),
-                    })
-                    .SingleOrDefaultAsync();
-            
-            if (newArticle != null)
-            {
-                articleDto.Add(newArticle);
-            }
-        }
-
-        return articleDto;
+        return articles;
     }
     
-    private List<ArticleCommentDto> GetCommentArticle(int idArticle)
+    private async Task<IEnumerable<ArticleDto>?> GetAllArticlesFromDb()
     {
-        var articleComment =  _context
-            .CommentArticles
-            .Where(x => x.IdArticle == idArticle)
-            .Include(c => c.IdUserNavigation)
-            .Select(x => new ArticleCommentDto()
-            {
-                Content = x.DescriptionArticle,
-                IdComment = x.IdCommentArticle,
-                IdArticle = x.IdArticle,
-                IdUser = x.IdUser,
-                Nick   = x.IdUserNavigation.Nick,
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
-            })
-            .ToList();
-        List <ArticleCommentDto> list = articleComment.Take(2).ToList();
-        return list;
+        var articleDto = await GetTableSort();
+
+        return articleDto.Any() ? articleDto : null;
     }
+    
+    private async Task<bool> AreThereMoreArticlesInDb(int qtyArticle, DateTime time)
+    {
+        var nextPost = await _context
+            .Articles
+            .Where(x=>x.CreatedAt < time)
+            .CountAsync();
+        
+        return qtyArticle < nextPost;
+    }
+
     public async Task<ArticleDto?> GetArticleFromDb(int idArticle)
     {
-        var article = 
-            await _context
+        var article = await _context
                 .Articles
                 .Where(x => x.IdArticle == idArticle)
                 .Include(x => x.IdUserNavigation)
@@ -145,7 +145,21 @@ public class ArticleDbRepository: IArticleDbRepository
                     CommentsNum = _context
                        .CommentArticles
                        .Count(c => c.IdArticle == x.IdArticle),
-                    Comments = GetCommentArticle(idArticle),
+                    Comments = _context
+                        .CommentArticles
+                        .Where(c => c.IdArticle == x.IdArticle)
+                        .Include(c => c.IdUserNavigation)
+                        .Select(c => new ArticleCommentDto()
+                        {
+                            Content = c.DescriptionArticle,
+                            IdComment = c.IdCommentArticle,
+                            IdArticle = c.IdArticle,
+                            IdUser = c.IdUser,
+                            Nick   = c.IdUserNavigation.Nick,
+                            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(c.CreatedAt)
+                        })
+                        .Take(2)
+                        .ToList(),
                 })
                 .SingleOrDefaultAsync();
 
@@ -160,18 +174,19 @@ public class ArticleDbRepository: IArticleDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
+
+        var allArticles = await GetTableSort();
         
-        var allArticles = await _context
-            .Articles
-            .OrderBy(x => x.IdArticle)
-            .Skip(qtyArticles-5)
-            .Take(5)
-            .ToArrayAsync();
-        
-        if (allArticles.Length == 0)
+        if (!allArticles.Any())
         {
             return null;
         }
+
+        var filteredArticleDtos = allArticles
+            .OrderBy(x => x.IdArticle)
+            .Skip(qtyArticles-5)
+            .Take(5)
+            .ToArray();
 
         var nextArticle = await _context
             .Articles
@@ -181,163 +196,108 @@ public class ArticleDbRepository: IArticleDbRepository
         {
             next = true;
         }
-        
-        var articleDto = await GetTableSort(allArticles);
-        
+
         return new ArticleQtyDto()
         {
-            Articles = articleDto,
+            Articles = filteredArticleDtos,
             IsNext = next
         };
     }
 
     public async Task<ArticleQtyDto?> GetQtyArticlesByMostLikesFromDb(int qtyArticles, DateTime time)
     {
-        bool next = false;
-        
         if (qtyArticles < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
         
-        var allArticles = await _context
-            .Articles
-            .ToArrayAsync();
-        
-        if (allArticles.Length == 0)
+        var allArticles = await GetTableSort();
+
+        if (!allArticles.Any())
         {
             return null;
         }
-        
-        var articlesDto = await GetTableSort(allArticles);
 
-        articlesDto = articlesDto
-            .Where(x =>x.CreatedAt < time)
-            .OrderByDescending(x => x.LikesNum)
+        var filteredPostDtos = allArticles
+            .Where(x => x.CreatedAt < time)
+            .OrderByDescending(order => order.LikesNum)
             .Skip(qtyArticles - 5)
             .Take(5)
-            .ToArray();
-        
-        var nextArticle = await _context
-            .Articles
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
+            .ToList();
 
-        if (qtyArticles < nextArticle)
-        {
-            next = true;
-        }
-        
         return new ArticleQtyDto()
         {
-            Articles = articlesDto,
-            IsNext = next
+            Articles = filteredPostDtos,
+            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
         };
     }
 
 
     public async Task<ArticleQtyDto?> GetQtyArticlesByEarliestDateFromDb(int qtyArticles, DateTime time)
     {
-        bool next = false;
-        
         if (qtyArticles < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        var allArticles = await _context
-            .Articles
-            .Where(x=>x.CreatedAt < time)
-            .OrderByDescending(e => e.CreatedAt)
-            .ToArrayAsync();
         
-        if (allArticles.Length == 0)
+        var allArticles = await GetTableSort();
+
+        if (!allArticles.Any())
         {
             return null;
         }
         
-        var articlesDto = await GetTableSort(allArticles);
-
-        
-        articlesDto = articlesDto
+        var filteredArticleDtos = allArticles
+            .Where(x=>x.CreatedAt < time)
+            .OrderByDescending(e => e.CreatedAt)
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();
-        
-        var nextArticle = await _context
-            .Articles
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
 
-        if (qtyArticles < nextArticle)
-        {
-            next = true;
-        }
-        
         return new ArticleQtyDto()
         {
-            Articles = articlesDto,
-            IsNext = next
+            Articles = filteredArticleDtos,
+            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
         };
     }
 
     public async Task<ArticleQtyDto?> GetQtyArticlesByOldestDateFromDb(int qtyArticles, DateTime time)
     {
-        bool next = false;
-        
         if (qtyArticles < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
         
-        var allArticles = await _context
-            .Articles
-            .Where(e=>e.CreatedAt < time)
-            .OrderBy(e => e.CreatedAt)
-            .ToArrayAsync();
-        
-        if (allArticles.Length == 0)
+        var allArticles = await GetTableSort();
+
+        if (!allArticles.Any())
         {
             return null;
         }
         
-        var articlesDto = await GetTableSort(allArticles);
-
-        
-        articlesDto = articlesDto
+        var filteredArticleDtos = allArticles
+            .Where(x=>x.CreatedAt < time)
+            .OrderBy(e => e.CreatedAt)
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();
-        
-        var nextArticle = await _context
-            .Articles
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
 
-        if (qtyArticles < nextArticle)
-        {
-            next = true;
-        }
-        
         return new ArticleQtyDto()
         {
-            Articles = articlesDto,
-            IsNext = next
+            Articles = filteredArticleDtos,
+            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
         };
     }
     public async Task<IEnumerable<ArticleDto>?> GetTopArticles()
     {
-        var allArticles = await _context
-            .Articles
-            .ToArrayAsync();
+        var allArticles = await GetTableSort();
 
-        if (allArticles.Length == 0)
+        if (!allArticles.Any())
         {
             return null;
         }
 
-        var articlesDtos = await GetTableSort(allArticles);
-
-        articlesDtos = articlesDtos
+        var articlesDtos = allArticles
             .OrderByDescending(order => order.LikesNum)
             .Skip(0)
             .Take(3)
@@ -347,44 +307,29 @@ public class ArticleDbRepository: IArticleDbRepository
     }
     public async Task<ArticleQtyDto?> GetQtyArticlesByCommentsFromDb(int qtyArticles, DateTime time)
     {
-        bool next = false;
-        
         if (qtyArticles < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        var allArticles = await _context
-            .Articles
-            .ToArrayAsync();
         
-        if (allArticles.Length == 0)
+        var allArticles = await GetTableSort();
+
+        if (!allArticles.Any())
         {
             return null;
         }
-        
-        var articlesDto = await GetTableSort(allArticles);
 
-        articlesDto = articlesDto
+        var articlesDto = allArticles
             .Where(x=>x.CreatedAt < time)
             .OrderByDescending(x => x.CommentsNum)
             .Skip(qtyArticles - 5)
             .Take(5)
             .ToArray();
-        
-        var nextArticle = await _context
-            .Articles
-            .Where(x=>x.CreatedAt < time)
-            .CountAsync();
 
-        if (qtyArticles < nextArticle)
-        {
-            next = true;
-        }
-        
         return new ArticleQtyDto()
         {
             Articles = articlesDto,
-            IsNext = next
+            IsNext = await AreThereMoreArticlesInDb(qtyArticles, time)
         };
     }
     public async Task<IEnumerable<ArticleDto>?> GetArticlesFromDb()
@@ -490,7 +435,6 @@ public class ArticleDbRepository: IArticleDbRepository
              return null;
         }
 
-        
         likes = await _context
             .Articles
             .Where(e => e.IdArticle == idArticle)
@@ -610,76 +554,34 @@ public class ArticleDbRepository: IArticleDbRepository
                 .Where(e => e.IdArticle == article.IdArticle)
                 .SelectMany(e => e.CommentArticles)
                 .Count(),
-            Comments = GetCommentArticle(article.IdArticle),
+            Comments = _context
+                        .CommentArticles
+                        .Where(c => c.IdArticle == article.IdArticle)
+                        .Include(c => c.IdUserNavigation)
+                        .Select(c => new ArticleCommentDto()
+                        {
+                            Content = c.DescriptionArticle,
+                            IdComment = c.IdCommentArticle,
+                            IdArticle = c.IdArticle,
+                            IdUser = c.IdUser,
+                            Nick   = c.IdUserNavigation.Nick,
+                            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(c.CreatedAt)
+                        })
+                        .Take(2)
+                        .ToList(),
         };
     }
 
     public async Task<IEnumerable<ArticleDto>?> GetUserArticlesFromDb(int idUser)
     {
-        var userArticles = await _context
-            .Articles
-            .Where(e => e.IdUser == idUser)
-            .ToArrayAsync();
+        var userArticles = await GetTableSort(idUser);
 
-        if (userArticles.Length == 0)
+        if (!userArticles.Any())
         {
             return null;
         }
 
-        var articlesDtos = await GetTableSort(userArticles);
-
-        return articlesDtos;
-    }
-
-    private async Task<IEnumerable<ArticleDto>?> GetAllArticlesFromDb()
-    {
-        var allArticles = await _context.Articles.ToArrayAsync();
-        
-        var articleDto = new List<ArticleDto>();
-        
-        foreach (var article in allArticles)
-        {
-            var newArticle = await _context
-                .Articles
-                .Include(x => x.IdUserNavigation)
-                .Where(x=>x.IdArticle == article.IdArticle)
-                .Select(x => new ArticleDto
-                {
-                    IdArticle = x.IdArticle,
-                    Author = new ReducedUserResponseDto
-                    {
-                        IdUser = x.IdUser,
-                        Nick = x.IdUserNavigation.Nick
-                    },
-                    Title = x.Title,
-                    Content = x.Content,
-                    CreatedAt = x.CreatedAt,
-
-                    Tags = _context
-                        .Articles
-                        .Where(t => t.IdArticle == x.IdArticle)
-                        .SelectMany(t => x.IdTags)
-                        .Select(x => x.NameTag)
-                        .ToArray(),
-
-                    LikesNum = _context
-                        .Articles
-                        .Where(l => l.IdArticle == x.IdArticle)
-                        .SelectMany(l => l.IdUsers)
-                        .Count(),
-                    CommentsNum = _context
-                        .CommentArticles
-                        .Count(c => c.IdArticle == x.IdArticle),
-                    Comments = GetCommentArticle(article.IdArticle),
-                }).SingleOrDefaultAsync();
-            
-            if (newArticle != null)
-            {
-                articleDto.Add(newArticle);
-            }
-        }
-
-        return articleDto.Any() ? articleDto : null;
+        return userArticles;
     }
 
 

@@ -329,7 +329,7 @@ public class ArticleDbRepositoryTests
 
         var articles = await _context
             .Articles
-            .OrderBy(e => e.CreatedAt)
+            .OrderByDescending(e => e.CreatedAt)
             .Select(e => e.IdArticle)
             .ToListAsync();
         
@@ -590,10 +590,11 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesMostLikesFromDb_Returns_IEnumerable()
     {
         //Arrange
-        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
         
         await AddTestDataWithManyArticles();
+        
+        DateTime time = DateTime.Now;
 
         //Act
         var res = await _repository.GetQtyArticlesByMostLikesFromDb(5,time);
@@ -693,6 +694,7 @@ public class ArticleDbRepositoryTests
         
         var articles = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
             .Skip(0)
             .Take(5)
             .OrderByDescending(e => e.IdUsers.Count)
@@ -706,8 +708,8 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesByCommentsFromDb_Returns_Null()
     {
         //Arrange
-        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        DateTime time = DateTime.Now;
 
         //Act
         var res = await _repository.GetQtyArticlesByCommentsFromDb(5, time);
@@ -735,21 +737,20 @@ public class ArticleDbRepositoryTests
         
         await AddTestDataWithManyArticles();
         DateTime time = DateTime.Now;
-        time = time.AddHours(1);
         //Act
         var res = await _repository.GetQtyArticlesByEarliestDateFromDb(5, time);
         
         //Assert
         Assert.NotNull(res);
-        
+
         var articles = await _context
             .Articles
+            .Where(x=>x.CreatedAt < time)
+            .OrderByDescending(e => e.CreatedAt)
             .Skip(0)
             .Take(5)
-            .OrderBy(e => e.CreatedAt)
             .Select(e => e.IdArticle)
             .ToListAsync();
-
 
         if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
         
