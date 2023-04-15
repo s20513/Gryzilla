@@ -52,21 +52,16 @@ public class GroupUserMessageController : Controller
         {
             return BadRequest("Id from route and Id in body have to be same");
         }
-        try
+        
+        var result = await _groupUserMessageDbRepository.ModifyMessage(idMessage, updateGroupUserMessage);
+        
+        if (result is null)
         {
-            var result = await _groupUserMessageDbRepository.ModifyMessage(idMessage, updateGroupUserMessage);
-            
-            if (result is null)
-            {
-                return NotFound("There is no message with given id");
-            }
-            
-            return Ok(result);
+            return NotFound("There is no message with given id");
         }
-        catch (SameNameException e)
-        {
-            return BadRequest(e.Message);
-        }
+        
+        return Ok(result);
+    
     }
     /// <summary>
     /// Delete message

@@ -2,6 +2,7 @@
 using Gryzilla_App.DTOs.Responses.GroupUserMessageDto;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gryzilla_App.Repositories.Implementations;
@@ -69,8 +70,13 @@ public class GroupUserMessageDbRepository : IGroupUserMessageDbRepository
         
         var group  = await _context.Groups
             .SingleOrDefaultAsync(x => x.IdGroup == addGroupUserMessage.IdGroup);
+
+        var userGroup = await _context.GroupUsers
+            .Where(x => x.IdGroup == addGroupUserMessage.IdGroup)
+            .Where(x => x.IdUser == addGroupUserMessage.IdUser)
+            .SingleOrDefaultAsync();
         
-        if (group is null || user is null)
+        if (group is null || user is null || userGroup is null)
         {
             return null;
         }
