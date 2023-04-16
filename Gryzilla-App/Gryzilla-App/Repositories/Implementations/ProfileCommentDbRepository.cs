@@ -29,6 +29,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         
         var profileComments = await _context
             .ProfileComments.Where(x => x.IdUserComment == idUserComment)
+            .OrderByDescending(e => e.CreatedAt)
             .Select(x => new ProfileCommentDto
             {
                 idProfileComment = x.IdProfileComment,
