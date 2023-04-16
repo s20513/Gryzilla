@@ -2,7 +2,6 @@
 using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
-using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +55,7 @@ public class GroupDbRepository: IGroupDbRepository
                 IdUserCreator = e.IdUserCreator,
                 GroupName     = e.GroupName,
                 Content   = e.Description,
-                CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(e.CreatedAt),
+                CreatedAt     = e.CreatedAt,
                 Users         = _context.GroupUsers
                     .Where(g => g.IdGroup == idGroup)
                     .Include(g => g.IdUserNavigation)
@@ -70,7 +69,7 @@ public class GroupDbRepository: IGroupDbRepository
                         Nick        = g.IdUserNavigation.Nick,
                         Email       = g.IdUserNavigation.Email,
                         PhoneNumber = g.IdUserNavigation.PhoneNumber,
-                        CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(g.IdUserNavigation.CreatedAt),
+                        CreatedAt   = g.IdUserNavigation.CreatedAt,
                         RankName    = g.IdUserNavigation.IdRankNavigation.Name
                     }).ToList()
                 
@@ -88,7 +87,7 @@ public class GroupDbRepository: IGroupDbRepository
                 IdUserCreator = e.IdUserCreator,
                 GroupName     = e.GroupName,
                 Content   = e.Description,
-                CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(e.CreatedAt),
+                CreatedAt     = e.CreatedAt,
                 Users         = _context.Groups
                     .Where(g => g.IdGroup == e.IdGroup)
                     .SelectMany(g => g.GroupUsers)
@@ -101,7 +100,7 @@ public class GroupDbRepository: IGroupDbRepository
                         Nick        = g.IdUserNavigation.Nick,
                         Email       = g.IdUserNavigation.Email,
                         PhoneNumber = g.IdUserNavigation.PhoneNumber,
-                        CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(g.IdUserNavigation.CreatedAt),
+                        CreatedAt   = g.IdUserNavigation.CreatedAt,
                         RankName    = g.IdUserNavigation.IdRankNavigation.Name
                     }).ToList()
             }).ToArrayAsync();
@@ -298,7 +297,7 @@ public class GroupDbRepository: IGroupDbRepository
                          IdUserCreator = x.IdGroupNavigation.IdUserCreator,
                          GroupName     = x.IdGroupNavigation.GroupName,
                          Content   = x.IdGroupNavigation.Description,
-                         CreatedAt     = DateTimeConverter.GetDateTimeToStringWithFormat(x.IdGroupNavigation.CreatedAt)
+                         CreatedAt     = x.IdGroupNavigation.CreatedAt
                      }).ToArrayAsync();
 
         return groups;

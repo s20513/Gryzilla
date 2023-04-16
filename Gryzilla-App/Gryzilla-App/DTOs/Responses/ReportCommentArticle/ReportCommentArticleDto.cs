@@ -10,7 +10,7 @@ public class ReportCommentArticleDto
     
     public string Content{ get; set; }
     
-    public string ReportedAt { get; set; }
+    public DateTime? ReportedAt { get; set; }
     
     public bool Viewed { get; set; }
 }

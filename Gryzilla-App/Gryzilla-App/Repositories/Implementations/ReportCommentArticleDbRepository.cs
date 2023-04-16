@@ -1,7 +1,6 @@
 ﻿using Gryzilla_App.DTOs.Requests.ReportCommentArticle;
 using Gryzilla_App.DTOs.Responses.ReportCommentArticle;
 using Gryzilla_App.Exceptions;
-using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +61,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdReason    = newReportCommentDto.IdReason,
             Content = newReportCommentDto.Content,
             Viewed      = false,
-            ReportedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now)
+            ReportedAt  = DateTime.Now
         };
     }
 
@@ -107,7 +106,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdReason           = deleteReportCommentDto.IdReason,
             Content        = reportCommentArticle.Description,
             Viewed             = reportCommentArticle.Viewed,
-            ReportedAt         = DateTimeConverter.GetDateTimeToStringWithFormat(reportCommentArticle.ReportedAt)
+            ReportedAt         = reportCommentArticle.ReportedAt
         };
 
         return newReportCommentPost;
@@ -155,7 +154,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdReason    = updateReportCommentDto.IdReason,
             Content = updateReportCommentDto.Content,
             Viewed      = updateReportCommentDto.Viewed,
-            ReportedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(reportCommentDto.ReportedAt)
+            ReportedAt  = reportCommentDto.ReportedAt
         };
     }
 
@@ -180,7 +179,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdReason    = reportCommentDto.IdReason,
             Content = reportCommentDto.Description,
             Viewed      = reportCommentDto.Viewed,
-            ReportedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(reportCommentDto.ReportedAt)
+            ReportedAt  = reportCommentDto.ReportedAt
         };
     }
 
@@ -194,7 +193,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
                 IdReason    = e.IdReason,
                 Content = e.Description,
                 Viewed      = e.Viewed,
-                ReportedAt  = DateTimeConverter.GetDateTimeToStringWithFormat(e.ReportedAt)
+                ReportedAt  = e.ReportedAt
             }).ToListAsync();
 
         return reportCommentArticle;

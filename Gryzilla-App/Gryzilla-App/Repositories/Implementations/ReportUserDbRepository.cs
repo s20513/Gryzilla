@@ -1,6 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.ReportUser;
 using Gryzilla_App.Exceptions;
-using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +59,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdUserReporting = newReportUserDto.IdUserReporting,
             Content     = newReportUserDto.Content,
             Viewed          = false,
-            ReportedAt      = DateTimeConverter.GetDateTimeToStringWithFormat(DateTime.Now)
+            ReportedAt      = DateTime.Now
         };
     }
 
@@ -89,7 +88,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdUserReporting = reportUser.IdUserReporting,
             Content     = reportUser.Description,
             Viewed          = reportUser.Viewed,
-            ReportedAt      = DateTimeConverter.GetDateTimeToStringWithFormat(reportUser.ReportedAt)
+            ReportedAt      = reportUser.ReportedAt
         };
     }
 
@@ -105,7 +104,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
                 IdUserReporting = e.IdUserReporting,
                 Content     = e.Description,
                 Viewed          = e.Viewed,
-                ReportedAt      = DateTimeConverter.GetDateTimeToStringWithFormat(e.ReportedAt)
+                ReportedAt      = e.ReportedAt
             }).ToListAsync();
 
         return reportUsers;

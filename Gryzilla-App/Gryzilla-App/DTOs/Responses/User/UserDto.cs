@@ -10,7 +10,7 @@ public class UserDto
     public string? PhoneNumber {get; set;}
     public int IdRank {get; set;}
     public string RankName {get; set;} = null!;
-    public string CreatedAt {get; set;}
+    public DateTime CreatedAt {get; set;}
     public string? LinkDiscord { get; set; }
     public string? LinkSteam { get; set; }
 }

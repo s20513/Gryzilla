@@ -1,6 +1,5 @@
 using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
-using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +60,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = user.IdUser,
             IdArticle   = newArticleCommentDto.IdArticle,
             Content     = newArticleCommentDto.Content,
-            CreatedAt   = DateTimeConverter.GetDateTimeToStringWithFormat(articleComment.CreatedAt)
+            CreatedAt   = articleComment.CreatedAt
         };
     }
     
@@ -96,7 +95,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = putArticleCommentDto.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
             Content     = putArticleCommentDto.Content,
-            CreatedAt    = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
+            CreatedAt    = comment.CreatedAt
         };
     }
 
@@ -128,7 +127,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = comment.IdUser,
             IdArticle   = comment.IdArticle,
             Content     = comment.DescriptionArticle,
-            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(comment.CreatedAt)
+            CreatedAt = comment.CreatedAt
         };
     }
     public async Task<GetArticleCommentDto> GetArticleCommentsFromDb(int idArticle)
@@ -154,7 +153,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
                     .Where(u=>u.IdUser == x.IdUser)
                     .Select(u=>u.Nick)
                     .SingleOrDefault(),
-                CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(x.CreatedAt)
+                CreatedAt = x.CreatedAt
             }).ToArrayAsync();
 
         return new GetArticleCommentDto

@@ -3,7 +3,6 @@ using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Exceptions;
-using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -88,7 +87,7 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick   = c.IdUserNavigation.Nick,
-                            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(c.CreatedAt)
+                            CreatedAt = c.CreatedAt
                         })
                         .Take(2)
                         .ToList(),
@@ -147,7 +146,7 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick   = c.IdUserNavigation.Nick,
-                            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(c.CreatedAt)
+                            CreatedAt = c.CreatedAt
                         })
                         .Take(2)
                         .ToList(),
@@ -556,7 +555,7 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick   = c.IdUserNavigation.Nick,
-                            CreatedAt = DateTimeConverter.GetDateTimeToStringWithFormat(c.CreatedAt)
+                            CreatedAt = c.CreatedAt
                         })
                         .Take(2)
                         .ToList(),

@@ -6,5 +6,5 @@ public class UserGroupDto
     public int IdUserCreator { get; set; }
     public string GroupName { get; set; }
     public string Content { get; set; }
-    public string CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
