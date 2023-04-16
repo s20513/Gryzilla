@@ -920,20 +920,4 @@ public class PostRepositoryTests
         if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
     }
     
-    [Fact]
-    public async Task GetUserPostsFromDb_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        await AddTestDataToDb();
-
-        var idUser = 10;
-
-        //Act
-        var res = await _repository.GetUserPostsFromDb(idUser);
-
-        //Assert
-        Assert.Null(res);
-    }
 }

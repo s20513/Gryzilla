@@ -50,10 +50,6 @@ public class PostController : Controller
     {
         var posts = await _postsDbRepository.GetUserPostsFromDb(idUser);
         
-        if (posts is null)
-        {
-            return NotFound("User has no posts");
-        }
         return Ok(posts);
     }
     

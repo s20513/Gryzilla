@@ -49,11 +49,6 @@ public class ArticleController: Controller
     {
         var articles = await _articleDbRepository.GetUserArticlesFromDb(idUser);
 
-        if (articles is null)
-        {
-            return NotFound("User has no articles");
-        }
-        
         return Ok(articles);
     }
 

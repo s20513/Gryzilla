@@ -852,22 +852,5 @@ public class ArticleDbRepositoryTests
         
         if (res != null) Assert.Equal(articles, res.Select(e => e.IdArticle));
     }
-    
-    [Fact]
-    public async Task GetUserArticlesFromDb_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        await AddTestDataWithManyArticles();
-
-        var idUser = 10;
-
-        //Act
-        var res = await _repository.GetUserArticlesFromDb(idUser);
-
-        //Assert
-        Assert.Null(res);
-    }
-   
 }

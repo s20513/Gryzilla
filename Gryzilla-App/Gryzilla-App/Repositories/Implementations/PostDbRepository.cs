@@ -608,14 +608,9 @@ public class PostDbRepository : IPostDbRepository
         return newPost;
     }
 
-    public async Task<IEnumerable<PostDto>?> GetUserPostsFromDb(int idUser)
+    public async Task<IEnumerable<PostDto>> GetUserPostsFromDb(int idUser)
     {
         var userPosts = await GetTableSort(idUser);
-
-        if (!userPosts.Any())
-        {
-            return null;
-        }
 
         return userPosts;
     }

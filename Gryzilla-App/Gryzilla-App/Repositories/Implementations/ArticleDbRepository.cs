@@ -562,14 +562,9 @@ public class ArticleDbRepository: IArticleDbRepository
         };
     }
 
-    public async Task<IEnumerable<ArticleDto>?> GetUserArticlesFromDb(int idUser)
+    public async Task<IEnumerable<ArticleDto>> GetUserArticlesFromDb(int idUser)
     {
         var userArticles = await GetTableSort(idUser);
-
-        if (!userArticles.Any())
-        {
-            return null;
-        }
 
         return userArticles;
     }

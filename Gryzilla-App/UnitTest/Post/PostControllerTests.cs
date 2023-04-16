@@ -4,7 +4,6 @@ using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
-using Gryzilla_App.Helpers;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -1133,31 +1132,7 @@ public class PostControllerTests
         if (resultValue is null) return;
         Assert.Equal(_fakePosts.OrderByDescending(x => x.Likes), resultValue);
     }
-    
-    [Fact]
-    public async void GetUserPost_Returns_NotFound()
-    {
-        //Arrange
-        IEnumerable<PostDto>? nullValue = null;
-        var userId = 1;
-        
-        _postRepositoryMock.Setup(x => x.GetUserPostsFromDb(userId)).ReturnsAsync(nullValue);
 
-        //Act
-        var actionResult = await _postsController.GetUserPost(userId);
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as string;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("User has no posts", resultValue);
-    }
-    
     [Fact]
     public async void GetUserPost_Returns_Posts()
     {
