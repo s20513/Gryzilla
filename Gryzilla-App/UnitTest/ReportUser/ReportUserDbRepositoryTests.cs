@@ -88,7 +88,7 @@ public class ReportUserDbRepositoryTests
         var newReportUser = new NewReportUserDto
         {
             IdUserReported = 1,
-            IdUserReporting = 3,
+            IdUser = 3,
             IdReason = 1,
             Content = "test"
         };
@@ -116,7 +116,7 @@ public class ReportUserDbRepositoryTests
         var newReportUser = new NewReportUserDto
         {
             IdUserReported = 1,
-            IdUserReporting = 4,
+            IdUser = 4,
             IdReason = 1,
             Content = "test"
         };
@@ -139,7 +139,7 @@ public class ReportUserDbRepositoryTests
         var newReportUser = new NewReportUserDto
         {
             IdUserReported = 1,
-            IdUserReporting = 1,
+            IdUser = 1,
             IdReason = 1,
             Content = "test"
         };

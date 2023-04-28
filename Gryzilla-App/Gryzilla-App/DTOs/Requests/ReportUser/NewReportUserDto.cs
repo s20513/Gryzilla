@@ -7,7 +7,7 @@ public class NewReportUserDto
     [Required]
     public int IdUserReported { get; set; }
     [Required]
-    public int IdUserReporting{ get; set; }
+    public int IdUser{ get; set; }
     [Required]
     public int IdReason { get; set; }
     [Required]

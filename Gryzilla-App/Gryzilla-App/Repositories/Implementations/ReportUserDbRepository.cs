@@ -23,7 +23,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
 
         var userReporting = await _context
             .UserData
-            .SingleOrDefaultAsync(e => e.IdUser == newReportUserDto.IdUserReporting);
+            .SingleOrDefaultAsync(e => e.IdUser == newReportUserDto.IdUser);
 
         var reason = await _context
             .Reasons
@@ -43,7 +43,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
         {
             IdReason        = newReportUserDto.IdReason,
             IdUserReported  = newReportUserDto.IdUserReported,
-            IdUserReporting = newReportUserDto.IdUserReporting,
+            IdUserReporting = newReportUserDto.IdUser,
             Description     = newReportUserDto.Content,
             Viewed          = false,
             ReportedAt      = DateTime.Now
@@ -56,7 +56,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
         {
             IdReason        = newReportUserDto.IdReason,
             IdUserReported  = newReportUserDto.IdUserReported,
-            IdUserReporting = newReportUserDto.IdUserReporting,
+            IdUserReporting = newReportUserDto.IdUser,
             Content     = newReportUserDto.Content,
             Viewed          = false,
             ReportedAt      = DateTime.Now
