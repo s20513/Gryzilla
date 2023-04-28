@@ -344,7 +344,7 @@ public class PostDbRepository : IPostDbRepository
             var newTag = await _context
                 .Tags
                 .Where(x => x.NameTag == tag)
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
             
             if (newTag is not null)
             {
