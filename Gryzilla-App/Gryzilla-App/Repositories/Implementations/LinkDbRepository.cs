@@ -45,6 +45,49 @@ public class LinkDbRepository : ILinkDbRepository
         return "Link removed";
     }
 
+    public async Task<string?> DeleteLinkXbox(int idUser)
+    {
+        var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        user.XboxLink = null;
+        await _context.SaveChangesAsync();
+
+        return "Link removed";
+    }
+    
+    public async Task<string?> DeleteLinkPs(int idUser)
+    {
+        var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        user.PsLink = null;
+        await _context.SaveChangesAsync();
+
+        return "Link removed";
+    }
+    public async Task<string?> DeleteLinkEpic(int idUser)
+    {
+        var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        user.EpicLink = null;
+        await _context.SaveChangesAsync();
+
+        return "Link removed";
+    }
     public async Task<string?> PutLinkDiscord(LinkDto linkDto)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == linkDto.IdUser).SingleOrDefaultAsync();
@@ -75,6 +118,49 @@ public class LinkDbRepository : ILinkDbRepository
         return "Link changed";
     }
 
+    public async Task<string?> PutLinkXbox(LinkDto linkDto)
+    {
+        var user = await _context.UserData.Where(x=>x.IdUser == linkDto.IdUser).SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        user.XboxLink = linkDto.Link;
+        await _context.SaveChangesAsync();
+
+        return "Link changed";
+    }
+    
+    public async Task<string?> PutLinkPs(LinkDto linkDto)
+    {
+        var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        user.PsLink = linkDto.Link;
+        await _context.SaveChangesAsync();
+
+        return "Link changed";
+    }
+    public async Task<string?> PutLinkEpic(LinkDto linkDto)
+    {
+        var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
+
+        if (user is null)
+        {
+            return null;
+        }
+        
+        user.EpicLink = linkDto.Link;
+        await _context.SaveChangesAsync();
+
+        return "Link changed";
+    }
     public async Task<LinksDto?> GetUserLinks(int idUser)
     {
         var user = await _context.UserData.SingleOrDefaultAsync(x => x.IdUser == idUser);
@@ -87,7 +173,10 @@ public class LinkDbRepository : ILinkDbRepository
         return new LinksDto
         {
             SteamLink   = user.SteamLink,
-            DiscordLink = user.DiscordLink
+            DiscordLink = user.DiscordLink,
+            EpicLink    = user.EpicLink,
+            XboxLink    = user.XboxLink,
+            PsLink      = user.PsLink
         };
     }
 }

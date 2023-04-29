@@ -44,7 +44,7 @@ public class ProfileCommentRepositoryTests
             Nick = "Nick2",
             Password = "Pass2",
             Email = "email2",
-            CreatedAt = DateTime.Today
+            CreatedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
 
@@ -54,7 +54,7 @@ public class ProfileCommentRepositoryTests
             Nick = "Nick3",
             Password = "Pass3",
             Email = "email3",
-            CreatedAt = DateTime.Today
+            CreatedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
         
@@ -62,7 +62,8 @@ public class ProfileCommentRepositoryTests
         {
             IdUser = 1,
             IdUserComment = 2,
-            Description = "Description"
+            Description = "Description",
+            CreatedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
     }
@@ -75,13 +76,13 @@ public class ProfileCommentRepositoryTests
 
         await AddTestDataWithManyUser();
 
-        var idUser = 1;
+        
         var newProfileCommentRequestDto = new NewProfileComment
         {
             IdUserComment = 3,
+            IdUser = 1,
             Content = "Komentarz"
         };
-        
         
         //Act
         var res = await _repository.AddProfileCommentToDb(newProfileCommentRequestDto);
@@ -225,13 +226,13 @@ public class ProfileCommentRepositoryTests
         await AddTestDataWithManyUser();
 
         //Act
-        var res = await _repository.GetProfileCommentFromDb(1);
+        var res = await _repository.GetProfileCommentFromDb(2);
         
         //Assert
         Assert.NotNull(res);
         
         var profileComments = await _context.ProfileComments.Select(e => e.IdUser).ToListAsync();
-        Assert.Equal(profileComments, res.Select(e => e.IdUser));
+        Assert.Equal(profileComments, res.Select(e => e.IdUser).ToList());
     }
     
     [Fact]

@@ -43,6 +43,9 @@ namespace Gryzilla_App.Models
         public string? PhotoType { get; set; }
         public string? SteamLink { get; set; }
         public string? DiscordLink { get; set; }
+        public string? PsLink { get; set; }
+        public string? XboxLink { get; set; }
+        public string? EpicLink { get; set; }
 
         public virtual Rank IdRankNavigation { get; set; } = null!;
         public virtual ICollection<AchievementUser> AchievementUsers { get; set; }
