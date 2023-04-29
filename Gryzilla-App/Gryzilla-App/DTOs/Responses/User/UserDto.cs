@@ -13,4 +13,7 @@ public class UserDto
     public DateTime CreatedAt {get; set;}
     public string? LinkDiscord { get; set; }
     public string? LinkSteam { get; set; }
+    public string? LinkEpic { get; set; }
+    public string? LinkXbox { get; set; }
+    public string? LinkPs { get; set; }
 }

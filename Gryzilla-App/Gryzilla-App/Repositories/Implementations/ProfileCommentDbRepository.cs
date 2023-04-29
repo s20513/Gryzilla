@@ -28,16 +28,18 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         }
         
         var profileComments = await _context
-            .ProfileComments.Where(x => x.IdUserComment == idUserComment)
+            .ProfileComments
+            .Include(x=>x.IdUserNavigation)
+            .Where(x => x.IdUserComment == idUserComment)
             .OrderByDescending(e => e.CreatedAt)
             .Select(x => new ProfileCommentDto
             {
                 idProfileComment = x.IdProfileComment,
                 IdUser           = x.IdUser,
                 IdUserComment    = x.IdUserComment,
-                Nick             = _context.UserData
-                    .Where(e => e.IdUser == x.IdUser)
-                    .Select(e => e.Nick).SingleOrDefault(),
+                Nick             = x.IdUserNavigation.Nick,
+                Type             = x.IdUserNavigation.PhotoType,
+                base64PhotoData  = Convert.ToBase64String(x.IdUserNavigation.Photo), 
                 Content          = x.Description,
                 CreatedAt        = x.CreatedAt
             }).ToArrayAsync();
