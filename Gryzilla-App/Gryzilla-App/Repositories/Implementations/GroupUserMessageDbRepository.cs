@@ -106,14 +106,17 @@ public class GroupUserMessageDbRepository : IGroupUserMessageDbRepository
 
     public async Task<GroupUserMessageDto []?> GetMessages(int idGroup)
     {
-        var groups = await _context.GroupUserMessages.Select(
-            x => new GroupUserMessageDto
+        var groups = await _context.GroupUserMessages
+            .Include(x=>x.Id)
+            .ThenInclude(x=>x.IdUserNavigation)
+            .Where(x=>x.IdGroup== idGroup)
+            .Select(x => new GroupUserMessageDto
             {
                 IdMessage = x.IdMessage,
                 IdUser    = x.IdUser,
-                Nick      = _context.UserData
-                    .Where(e => e.IdUser == x.IdUser)
-                    .Select(e => e.Nick).SingleOrDefault(),
+                Nick      = x.Id.IdUserNavigation.Nick,
+                Type      = x.Id.IdUserNavigation.PhotoType,
+                base64PhotoData = Convert.ToBase64String(x.Id!.IdUserNavigation.Photo ?? Array.Empty<byte>()),
                 Content   = x.Message,
                 CreatedAt = x.CreatedAt,
                 IdGroup   = x.IdGroup

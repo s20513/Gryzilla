@@ -65,10 +65,12 @@ public class PostDbRepository : IPostDbRepository
                     })
                     .Take(2)
                     .ToList(),
-                CreatedAt     = a.CreatedAt,
-                Content       = a.Content,
-                Nick          = a.IdUserNavigation.Nick,
-                Tags          = _context
+                CreatedAt       = a.CreatedAt,
+                Content         = a.Content,
+                Nick            = a.IdUserNavigation.Nick,
+                Type            = a.IdUserNavigation.PhotoType,
+                base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()),
+                Tags            = _context
                     .Posts
                     .Where(x => x.IdPost == a.IdPost)
                     .SelectMany(x => x.IdTags)
@@ -593,7 +595,8 @@ public class PostDbRepository : IPostDbRepository
                         Nick        = x.IdUserNavigation.Nick,
                         Content = x.DescriptionPost
                     }).ToArray(),
-                
+                Type            = a.IdUserNavigation.PhotoType,                                            
+                base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
                 CreatedAt = a.CreatedAt,
                 Content   = a.Content,
                 Nick      = a.IdUserNavigation.Nick,

@@ -204,7 +204,7 @@ public class GroupUserMessageRepositoryTests
         //Assert
         Assert.NotNull(res);
         
-        var messages = await _context.GroupUserMessages.Select(e => e.IdGroup).ToListAsync();
+        var messages = await _context.GroupUserMessages.Select(e => e.IdGroup).ToArrayAsync();
         Assert.Equal(messages, res.Select(e => e.IdGroup));
     }
 }
