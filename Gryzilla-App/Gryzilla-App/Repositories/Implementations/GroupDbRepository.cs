@@ -56,6 +56,8 @@ public class GroupDbRepository: IGroupDbRepository
                 GroupName     = e.GroupName,
                 Content   = e.Description,
                 CreatedAt     = e.CreatedAt,
+                Type          = e.PhotoType,
+                base64PhotoData = Convert.ToBase64String(e.Photo ?? Array.Empty<byte>()),
                 Users         = _context.GroupUsers
                     .Where(g => g.IdGroup == idGroup)
                     .Include(g => g.IdUserNavigation)
@@ -88,6 +90,8 @@ public class GroupDbRepository: IGroupDbRepository
                 GroupName     = e.GroupName,
                 Content   = e.Description,
                 CreatedAt     = e.CreatedAt,
+                Type          = e.PhotoType,
+                base64PhotoData = Convert.ToBase64String(e.Photo ?? Array.Empty<byte>()),
                 Users         = _context.Groups
                     .Where(g => g.IdGroup == e.IdGroup)
                     .SelectMany(g => g.GroupUsers)
@@ -301,5 +305,58 @@ public class GroupDbRepository: IGroupDbRepository
                      }).ToArrayAsync();
 
         return groups;
+    }
+    public async Task<GroupDto?> SetGroupPhoto(IFormFile photo, int idGroup)
+    {
+        var group = await GetGroupById(idGroup);
+        
+        if (group is null)
+        {
+            return null;
+        }
+        
+        byte[]? photoBytes = null;
+        if (photo.Length > 0)
+        {
+            using var ms = new MemoryStream();
+            await photo.CopyToAsync(ms);
+            photoBytes = ms.ToArray();
+            
+            ms.Close();
+            await ms.DisposeAsync();
+        }
+
+        if (photoBytes is null)
+        {
+            return null;
+        }
+        group.Photo = photoBytes;
+        group.PhotoType = Path.GetExtension(photo.FileName).Remove(0,1);
+        await _context.SaveChangesAsync();
+
+        return await GetGroup(idGroup);
+    }
+
+    public async Task<GroupPhotoResponseDto?> GetGroupPhoto(int idGroup)
+    {
+        var group = await _context.Groups
+            .Where(x => x.IdGroup == idGroup)
+            .Select(e => new
+            {
+                e.Photo,
+                e.PhotoType
+            })
+            .SingleOrDefaultAsync();
+
+        if (group?.PhotoType is null || group.Photo is null)
+        {
+            return null;
+        }
+        
+        return new GroupPhotoResponseDto
+        {
+            Type = group.PhotoType,
+            base64PhotoData = Convert.ToBase64String(group.Photo)
+        };
     }
 }

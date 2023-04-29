@@ -231,4 +231,20 @@ public class GroupsController: Controller
         }
         return Ok(group);
     }
+    
+    [HttpPost("photo/{idGroup:int}")]
+    public async Task<IActionResult> SetGroupPhoto([FromForm] IFormFile file,[FromRoute] int idGroup)
+    {
+        var res = await _groupDbRepository.SetGroupPhoto(file, idGroup);
+        
+        return Ok(res);
+    }
+    
+    [HttpGet("photo/{idGroup:int}")]
+    public async Task<IActionResult> GetGroupPhoto([FromRoute] int idGroup)
+    {
+        var res = await _groupDbRepository.GetGroupPhoto(idGroup);
+        
+        return Ok(res);
+    }
 }

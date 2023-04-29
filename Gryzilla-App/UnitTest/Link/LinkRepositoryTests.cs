@@ -365,7 +365,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkSteam(linkDto);
+        var res = await _repository.PutLinkEpic(linkDto);
         
         //Assert
         Assert.Null(res);
@@ -406,7 +406,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkSteam(linkDto);
+        var res = await _repository.PutLinkEpic(linkDto);
         
         //Assert
         Assert.NotNull(res);
@@ -466,7 +466,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkEpic(linkDto);
+        var res = await _repository.PutLinkXbox(linkDto);
         
         //Assert
         Assert.NotNull(res);

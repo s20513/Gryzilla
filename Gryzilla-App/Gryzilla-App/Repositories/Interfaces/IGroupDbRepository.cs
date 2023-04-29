@@ -14,4 +14,6 @@ public interface IGroupDbRepository
     public Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDtoDto);
     public Task<bool?> UserIsInGroup(int idGroup, int idUser);
     public Task<UserGroupDto[]?> GetUserGroups(int idUser);
+    public Task<GroupDto?> SetGroupPhoto(IFormFile photo, int idGroup);
+    public Task<GroupPhotoResponseDto?> GetGroupPhoto(int idGroup);
 }

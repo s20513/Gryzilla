@@ -15,6 +15,8 @@ namespace Gryzilla_App.Models
         public string GroupName { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+        public byte[]? Photo { get; set; }
+        public string? PhotoType { get; set; }
 
         public virtual UserDatum IdUserCreatorNavigation { get; set; } = null!;
         public virtual ICollection<GroupUser> GroupUsers { get; set; }
