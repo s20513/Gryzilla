@@ -8,6 +8,6 @@ public class GroupUserMessageDto
     public string? Nick { get; set; }
     public string Content { get; set; }
     public string Type { get; set; }
-    public string base64PhotoData { get; set; }
+    public string? base64PhotoData { get; set; }
     public DateTime CreatedAt { get; set; }
 }

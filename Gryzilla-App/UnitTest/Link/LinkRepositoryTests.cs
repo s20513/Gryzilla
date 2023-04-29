@@ -1,5 +1,4 @@
-﻿using Gryzilla_App;
-using Gryzilla_App.DTOs.Requests.Link;
+﻿using Gryzilla_App.DTOs.Requests.Link;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +38,102 @@ public class LinkRepositoryTests
         });
         await _context.SaveChangesAsync();
     }
+    [Fact]
+    public async Task DeleteEpicLinkFromDb_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.DeleteLinkEpic(idUser);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link removed"));
+    }
     
+    [Fact]
+    public async Task DeleteLinkEpic_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.DeleteLinkEpic(idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task DeletePsLinkFromDb_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.DeleteLinkPs(idUser);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link removed"));
+    }
+    
+    [Fact]
+    public async Task DeleteLinkPs_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.DeleteLinkPs(idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    [Fact]
+    public async Task DeleteXboxLinkFromDb_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.DeleteLinkXbox(idUser);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link removed"));
+    }
+    
+    [Fact]
+    public async Task DeleteLinkXbox_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        var idUser = 1;
+        
+        //Act
+        var res = await _repository.DeleteLinkXbox(idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
     [Fact]
     public async Task DeleteSteamLinkFromDb_Returns_String()
     {
@@ -55,7 +149,7 @@ public class LinkRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.Equals("Link removed"));
+        Assert.True(res != null && res.Equals("Link removed"));
     }
     
     [Fact]
@@ -102,7 +196,7 @@ public class LinkRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.Equals("Link removed"));
+        Assert.True(res != null && res.Equals("Link removed"));
     }
     
     [Fact]
@@ -134,6 +228,27 @@ public class LinkRepositoryTests
         var linkDto = new LinkDto
         {
             IdUser = 1,
+            Link = "https://discord.gg/QTpcZBbx"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkDiscord(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link changed"));
+    }
+    
+    [Fact]
+    public async Task ModifyDiscordLinkFromDb_Returns_Invalid()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
             Link = "DiscordLink"
         };
         
@@ -142,9 +257,8 @@ public class LinkRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.Equals("Link changed"));
+        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
     }
-    
     
     [Fact]
     public async Task ModifyLinkSteam_Returns_Null()
@@ -175,7 +289,7 @@ public class LinkRepositoryTests
         var linkDto = new LinkDto
         {
             IdUser = 1,
-            Link = "DiscordLink"
+            Link = "https://steamcommunity.com/profiles/76561198204817567"
         };
         
         //Act
@@ -183,9 +297,29 @@ public class LinkRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.Equals("Link changed"));
+        Assert.True(res != null && res.Equals("Link changed"));
     }
     
+    [Fact]
+    public async Task ModifySteamLinkFromDb_Returns_Invalid()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "https://steamcommunity.com/76561198204817567"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkSteam(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+    }
     [Fact]
     public async Task GetUsersLinkFromDb_Returns_String()
     {
@@ -200,7 +334,7 @@ public class LinkRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.DiscordLink.Equals("DiscordLink"));
+        Assert.True(res.DiscordLink != null && res != null && res.DiscordLink.Equals("DiscordLink"));
     }
     
     [Fact]
@@ -213,6 +347,165 @@ public class LinkRepositoryTests
         
         //Act
         var res = await _repository.GetUserLinks(idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task ModifyLinkEpic_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        var linkDto = new LinkDto
+        {
+            IdUser = 2,
+            Link = "EpicLink"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkSteam(linkDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task ModifyEpicLinkFromDb_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "https://launcher.store.epicgames.com/u/0e11160b58cd413cab6dc5c80105aaec"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkEpic(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link changed"));
+    }
+    
+    [Fact]
+    public async Task ModifyEpicLinkFromDb_Returns_Invalid()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "EpicLink"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkSteam(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+    }
+    
+    
+    [Fact]
+    public async Task ModifyXboxLinkFromDb_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "https://account.xbox.com/pl-pl/Profile?xr=mebarnav&rtc=1&csrf=eNX57RWU3bPJbnFgQUCMtkUZTq0Mtvg"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkXbox(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link changed"));
+    }
+    
+    [Fact]
+    public async Task ModifyXboxLinkFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        var linkDto = new LinkDto
+        {
+            IdUser = 2,
+            Link = "https://account.xbox.com/pl-pl/Profile?xr=mebarnav&rtc=1&csrf=eNX57RWU3bPJbnFgQUCMtkUZTq0Mtvg"
+        };
+        //Act
+        var res = await _repository.PutLinkXbox(linkDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task ModifyXboxLinkFromDb_Returns_Invalid()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "https://account.xbox.com/pl-pl/xr=mebarnav&rtc=1&csrf=eNX57RWU3bPJbnFgQUCMtkUZTq0Mtvg"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkEpic(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+    }
+
+    [Fact]
+    public async Task ModifyPsLinkFromDb_Returns_String()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "PsLink"
+        };
+        
+        //Act
+        var res = await _repository.PutLinkPs(linkDto);
+        
+        //Assert
+        Assert.NotNull(res);
+        Assert.True(res != null && res.Equals("Link changed"));
+    }
+    
+    [Fact]
+    public async Task ModifyPsLinkFromDb_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        var linkDto = new LinkDto
+        {
+            IdUser = 1,
+            Link = "PsLink"
+        };
+        //Act
+        var res = await _repository.PutLinkPs(linkDto);
         
         //Assert
         Assert.Null(res);

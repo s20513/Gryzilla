@@ -23,7 +23,6 @@ public class LinkDbRepository : ILinkDbRepository
         {
             return null;
         }
-        
         user.SteamLink = null;
         await _context.SaveChangesAsync();
 
@@ -96,11 +95,14 @@ public class LinkDbRepository : ILinkDbRepository
         {
             return null;
         }
-        
-        user.DiscordLink = linkDto.Link;
-        await _context.SaveChangesAsync();
+        if (linkDto.Link.Contains("https://discord.gg/"))
+        {
+            user.DiscordLink = linkDto.Link;
+            await _context.SaveChangesAsync();
+            return "Link changed";
+        }
 
-        return "Link changed";
+        return "Cannot change the link. Invalid link!";
     }
     
     public async Task<string?> PutLinkSteam(LinkDto linkDto)
@@ -111,11 +113,15 @@ public class LinkDbRepository : ILinkDbRepository
         {
             return null;
         }
-        
-        user.SteamLink = linkDto.Link;
-        await _context.SaveChangesAsync();
 
-        return "Link changed";
+        if (linkDto.Link.Contains("https://steamcommunity.com/profiles/"))
+        {
+            user.SteamLink = linkDto.Link;
+            await _context.SaveChangesAsync();
+            return "Link changed";
+        }
+        
+        return "Cannot change the link. Invalid link!";
     }
 
     public async Task<string?> PutLinkXbox(LinkDto linkDto)
@@ -126,11 +132,14 @@ public class LinkDbRepository : ILinkDbRepository
         {
             return null;
         }
+        if (linkDto.Link.Contains("https://account.xbox.com/pl-pl/Profile?"))
+        {
+            user.XboxLink = linkDto.Link;
+            await _context.SaveChangesAsync();
+            return "Link changed";
+        }
         
-        user.XboxLink = linkDto.Link;
-        await _context.SaveChangesAsync();
-
-        return "Link changed";
+        return "Cannot change the link. Invalid link!";
     }
     
     public async Task<string?> PutLinkPs(LinkDto linkDto)
@@ -156,11 +165,16 @@ public class LinkDbRepository : ILinkDbRepository
             return null;
         }
         
-        user.EpicLink = linkDto.Link;
-        await _context.SaveChangesAsync();
-
-        return "Link changed";
+        if (linkDto.Link.Contains("https://launcher.store.epicgames.com/"))
+        {
+            user.EpicLink = linkDto.Link;
+            await _context.SaveChangesAsync();
+            return "Link changed";
+        }
+        
+        return "Cannot change the link. Invalid link!";
     }
+    
     public async Task<LinksDto?> GetUserLinks(int idUser)
     {
         var user = await _context.UserData.SingleOrDefaultAsync(x => x.IdUser == idUser);
