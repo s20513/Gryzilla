@@ -56,7 +56,11 @@ public class ReportUserDbRepository : IReportUserDbRepository
         {
             IdReason        = newReportUserDto.IdReason,
             IdUserReported  = newReportUserDto.IdUserReported,
-            IdUserReporting = newReportUserDto.IdUser,
+            IdUser = newReportUserDto.IdUser,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== newReportUserDto.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content     = newReportUserDto.Content,
             Viewed          = false,
             ReportedAt      = DateTime.Now
@@ -85,7 +89,11 @@ public class ReportUserDbRepository : IReportUserDbRepository
             idReport        = modifyReportUser.IdReport,
             IdReason        = modifyReportUser.IdReason,
             IdUserReported  = reportUser.IdUserReported,
-            IdUserReporting = reportUser.IdUserReporting,
+            IdUser = reportUser.IdUserReporting,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== modifyReportUser.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content     = reportUser.Description,
             Viewed          = reportUser.Viewed,
             ReportedAt      = reportUser.ReportedAt
@@ -101,7 +109,11 @@ public class ReportUserDbRepository : IReportUserDbRepository
                 idReport        = e.IdReport,
                 IdReason        = e.IdReason,
                 IdUserReported  = e.IdUserReported,
-                IdUserReporting = e.IdUserReporting,
+                IdUser = e.IdUserReporting,
+                ReasonName =  _context.Reasons
+                    .Where(x=>x.IdReason== e.IdReason)
+                    .Select(x=>x.ReasonName)
+                    .SingleOrDefault(),
                 Content     = e.Description,
                 Viewed          = e.Viewed,
                 ReportedAt      = e.ReportedAt
@@ -127,7 +139,11 @@ public class ReportUserDbRepository : IReportUserDbRepository
             idReport        = idReport,
             IdReason        = report.IdReason,
             IdUserReported  = report.IdUserReported,
-            IdUserReporting = report.IdUserReporting,
+            IdUser = report.IdUserReporting,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== report.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content     = report.Description,
             Viewed          = report.Viewed
         };
@@ -153,7 +169,11 @@ public class ReportUserDbRepository : IReportUserDbRepository
             idReport        = idReport,
             IdReason        = report.IdReason,
             IdUserReported  = report.IdUserReported,
-            IdUserReporting = report.IdUserReporting,
+            IdUser = report.IdUserReporting,
+            ReasonName =  _context.Reasons
+                            .Where(x=>x.IdReason== report.IdReason)
+                            .Select(x=>x.ReasonName)
+                            .SingleOrDefault(),
             Content     = report.Description,
             Viewed          = report.Viewed
         };

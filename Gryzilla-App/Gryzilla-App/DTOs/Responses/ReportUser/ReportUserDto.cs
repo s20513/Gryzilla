@@ -5,10 +5,10 @@ public class ReportUserDto
     public int idReport { get; set; }
     public int IdUserReported { get; set; }
     
-    public int IdUserReporting{ get; set; }
+    public int IdUser{ get; set; }
     
     public int IdReason { get; set; }
-    public string ReasonName { get; set; }
+    public string? ReasonName { get; set; }
     
     public string Content{ get; set; }
     
