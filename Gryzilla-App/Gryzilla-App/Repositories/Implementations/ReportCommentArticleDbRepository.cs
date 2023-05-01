@@ -59,7 +59,11 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser      = newReportCommentDto.IdUser,
             IdComment   = newReportCommentDto.IdCommentArticle,
             IdReason    = newReportCommentDto.IdReason,
-            Content = newReportCommentDto.Content,
+            ReasonName  = _context.Reasons
+                .Where(x=>x.IdReason == newReportCommentDto.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
+            Content     = newReportCommentDto.Content,
             Viewed      = false,
             ReportedAt  = DateTime.Now
         };
@@ -104,6 +108,10 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser             = deleteReportCommentDto.IdUser,
             IdComment          = deleteReportCommentDto.IdCommentArticle,
             IdReason           = deleteReportCommentDto.IdReason,
+            ReasonName = _context.Reasons
+                .Where(x=>x.IdReason ==  deleteReportCommentDto.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content        = reportCommentArticle.Description,
             Viewed             = reportCommentArticle.Viewed,
             ReportedAt         = reportCommentArticle.ReportedAt
@@ -152,6 +160,10 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             IdUser      = updateReportCommentDto.IdUser,
             IdComment   = updateReportCommentDto.IdCommentArticle,
             IdReason    = updateReportCommentDto.IdReason,
+            ReasonName = _context.Reasons
+                .Where(x=>x.IdReason ==  updateReportCommentDto.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content = updateReportCommentDto.Content,
             Viewed      = updateReportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
@@ -170,13 +182,16 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         {
             return null;
         }
-
         
         return new ReportCommentArticleDto
         {
             IdUser      = reportCommentDto.IdUser,
             IdComment   = reportCommentDto.IdCommentArticle,
             IdReason    = reportCommentDto.IdReason,
+            ReasonName = _context.Reasons
+                .Where(x=>x.IdReason ==  idReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content = reportCommentDto.Description,
             Viewed      = reportCommentDto.Viewed,
             ReportedAt  = reportCommentDto.ReportedAt
@@ -191,6 +206,10 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
                 IdUser      = e.IdUser,
                 IdComment   = e.IdCommentArticle,
                 IdReason    = e.IdReason,
+                ReasonName  = _context.Reasons
+                    .Where(x=>x.IdReason ==  e.IdReason)
+                    .Select(x=>x.ReasonName)
+                    .SingleOrDefault(),
                 Content = e.Description,
                 Viewed      = e.Viewed,
                 ReportedAt  = e.ReportedAt

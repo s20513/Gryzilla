@@ -7,6 +7,7 @@ public class ReportPostResponseDto
     public int IdPost{ get; set; }
     
     public int IdReason { get; set; }
+    public string? ReasonName { get; set; }
     
     public string Content{ get; set; }
     

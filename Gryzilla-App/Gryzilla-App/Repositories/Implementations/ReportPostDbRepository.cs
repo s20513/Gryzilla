@@ -58,6 +58,10 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = newReportPostRequestDto.IdUser,
             IdPost = newReportPostRequestDto.IdPost,
             IdReason = newReportPostRequestDto.IdReason,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== newReportPostRequestDto.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content = newReportPostRequestDto.Content,
             Viewed = false,
             ReportedAt = newReportPost.ReportedAt
@@ -86,6 +90,10 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = reportPost.IdUser,
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== reportPost.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content = reportPost.Description,
             Viewed = reportPost.Viewed,
             ReportedAt = reportPost.ReportedAt
@@ -115,6 +123,10 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = reportPost.IdUser,
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== reportPost.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content = reportPost.Description,
             Viewed = reportPost.Viewed,
             ReportedAt = reportPost.ReportedAt
@@ -140,6 +152,10 @@ public class ReportPostDbRepository: IReportPostDbRepository
             IdUser = reportPost.IdUser,
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
+            ReasonName =  _context.Reasons
+                .Where(x=>x.IdReason== reportPost.IdReason)
+                .Select(x=>x.ReasonName)
+                .SingleOrDefault(),
             Content = reportPost.Description,
             Viewed = reportPost.Viewed,
             ReportedAt = reportPost.ReportedAt
@@ -155,6 +171,10 @@ public class ReportPostDbRepository: IReportPostDbRepository
                 IdUser = e.IdUser,
                 IdPost = e.IdPost,
                 IdReason = e.IdReason,
+                ReasonName =  _context.Reasons
+                    .Where(x=>x.IdReason== e.IdReason)
+                    .Select(x=>x.ReasonName)
+                    .SingleOrDefault(),
                 Content = e.Description,
                 Viewed = e.Viewed,
                 ReportedAt = e.ReportedAt

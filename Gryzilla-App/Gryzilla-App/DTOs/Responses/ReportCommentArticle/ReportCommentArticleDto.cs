@@ -7,6 +7,7 @@ public class ReportCommentArticleDto
     public int IdComment{ get; set; }
     
     public int IdReason { get; set; }
+    public string? ReasonName { get; set; }
     
     public string Content{ get; set; }
     
