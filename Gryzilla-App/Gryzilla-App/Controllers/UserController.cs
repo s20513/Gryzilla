@@ -164,6 +164,12 @@ public class UserController : Controller
         return Ok(res);
     }
     
+    /// <summary>
+    /// Changes user rank
+    /// </summary>
+    /// <param name="userRank"> UserRank - user and new rank id </param>
+    /// <returns> Return Status OK - User has new rank</returns>
+    /// <returns> Return Status NotFound - Rank or user does not exists</returns>
     [HttpPost("rank")]
     public async Task<IActionResult> ChangeUserRank([FromBody] UserRank userRank)
     {
@@ -177,7 +183,12 @@ public class UserController : Controller
         return Ok(res);
     }
     
-
+    /// <summary>
+    /// Sets user photo
+    /// </summary>
+    /// <param name="file"> IFormFile - photo file </param>
+    /// <param name="idUser"> int - user id </param>
+    /// <returns> Return Status OK - UseDto - data of the user</returns>
     [HttpPost("photo/{idUser:int}")]
     public async Task<IActionResult> SetUserPhoto([FromForm] IFormFile file,[FromRoute] int idUser)
     {
@@ -186,11 +197,57 @@ public class UserController : Controller
         return Ok(res);
     }
     
+    /// <summary>
+    /// Gets user photo
+    /// </summary>
+    /// <param name="idUser"> int - user id </param>
+    /// <returns> Return Status OK - UseDto - data of the user</returns>
     [HttpGet("photo/{idUser:int}")]
     public async Task<IActionResult> GetUserPhoto([FromRoute] int idUser)
     {
         var res = await _userDbRepository.GetUserPhoto(idUser);
         
         return Ok(res);
+    }
+
+    /// <summary>
+    /// ChangeUserPassword
+    /// </summary>
+    /// <param name="changePasswordDto"> ChangePasswordDto - old and new password </param>
+    /// <param name="idUser"> int - user id </param>
+    /// <returns> Return Status NotFound - User was not found</returns>
+    /// <returns> Return Status BadRequest - Wrong old password</returns>
+    /// <returns> Return Status OK - new password was set</returns>
+    [HttpPut("password/{idUser:int}")]
+    public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordDto changePasswordDto, [FromRoute] int idUser)
+    {
+        var res = await _userDbRepository.ChangePassword(changePasswordDto, idUser);
+
+        return res switch
+        {
+            null => NotFound(),
+            false => BadRequest(),
+            _ => Ok()
+        };
+    }
+    
+    /// <summary>
+    /// ChangeUserPassword
+    /// </summary>
+    /// <param name="changePasswordShortDto"> ChangePasswordDto - new password </param>
+    /// <param name="idUser"> int - user id </param>
+    /// <returns> Return Status NotFound - User was not found</returns>
+    /// <returns> Return Status OK - new password was set</returns>
+    [HttpPut("password/admin/{idUser:int}")]
+    public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordShortDto changePasswordShortDto, [FromRoute] int idUser)
+    {
+        var res = await _userDbRepository.ChangePassword(changePasswordShortDto, idUser);
+
+        if (res)
+        {
+            return Ok();
+        }
+
+        return NotFound();
     }
 }

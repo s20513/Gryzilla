@@ -17,4 +17,6 @@ public interface IUserDbRepository
      public Task<UserDto?> ChangeUserRank(UserRank userRank);
      public Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser);
      public Task<UserPhotoResponseDto?> GetUserPhoto(int idUser);
+     public Task<bool?> ChangePassword(ChangePasswordDto changePasswordDto, int idUser);
+     public Task<bool> ChangePassword(ChangePasswordShortDto changePasswordShortDto, int idUser);
 }

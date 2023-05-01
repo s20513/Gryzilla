@@ -58,7 +58,7 @@ public class UserRepositoryTests
         {
             IdRank = 1,
             Nick = "Nick1",
-            Password = "Pass1",
+            Password = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
             Email = "email1",
             CreatedAt = DateTime.Today
         });
@@ -78,7 +78,7 @@ public class UserRepositoryTests
         {
             IdRank = 1,
             Nick = "Nick1",
-            Password = "Pass1",
+            Password = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
             Email = "email1",
             CreatedAt = DateTime.Today
         });
@@ -88,7 +88,7 @@ public class UserRepositoryTests
         {
             IdRank = 1,
             Nick = "Nick2",
-            Password = "Pass1",
+            Password = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
             Email = "email1",
             CreatedAt = DateTime.Today
         });
@@ -389,5 +389,105 @@ public class UserRepositoryTests
         
         //Assert
         Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task ChangePassword_WithCheckingOldPassword_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 100;
+        var changePasswordDto = new ChangePasswordDto();
+
+        //Act
+        var res = await _repository.ChangePassword(changePasswordDto, idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task ChangePassword_WithCheckingOldPassword_Returns_false()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+        var changePasswordDto = new ChangePasswordDto
+        {
+            OldPassword = "1234"
+        };
+
+        //Act
+        var res = await _repository.ChangePassword(changePasswordDto, idUser);
+        
+        //Assert
+        Assert.False(res);
+    }
+    
+    [Fact]
+    public async Task ChangePassword_WithCheckingOldPassword_Returns_true()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+        var changePasswordDto = new ChangePasswordDto
+        {
+            OldPassword = "123",
+            NewPassword = "321"
+        };
+
+        //Act
+        var res = await _repository.ChangePassword(changePasswordDto, idUser);
+        
+        //Assert
+        Assert.True(res);
+    }
+    
+    [Fact]
+    public async Task ChangePassword_WithoutCheckingOldPassword_Returns_false()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 100;
+        var changePasswordShortDto = new ChangePasswordShortDto();
+
+        //Act
+        var res = await _repository.ChangePassword(changePasswordShortDto, idUser);
+        
+        //Assert
+        Assert.False(res);
+    }
+    
+    [Fact]
+    public async Task ChangePassword_WithoutCheckingOldPassword_Returns_true()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+        var changePasswordShortDto = new ChangePasswordShortDto
+        {
+            NewPassword = "321"
+        };
+
+        //Act
+        var res = await _repository.ChangePassword(changePasswordShortDto, idUser);
+        
+        //Assert
+        Assert.True(res);
     }
 }

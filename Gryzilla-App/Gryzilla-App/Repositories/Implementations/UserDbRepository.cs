@@ -347,6 +347,41 @@ public class UserDbRepository : IUserDbRepository
         };
     }
 
+    public async Task<bool?> ChangePassword(ChangePasswordDto changePasswordDto, int idUser)
+    {
+        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == idUser);
+        
+        if (user is null)
+        {
+            return null;
+        }
+
+        if (!CheckPassword(changePasswordDto.OldPassword, user.Password))
+        {
+            return false;
+        }
+
+        user.Password = HashPassword(changePasswordDto.NewPassword);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> ChangePassword(ChangePasswordShortDto changePasswordShortDto, int idUser)
+    {
+        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == idUser);
+        
+        if (user is null)
+        {
+            return false;
+        }
+        
+        user.Password = HashPassword(changePasswordShortDto.NewPassword);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     private string GenerateToken(UserDatum user)
     {
         var handler = new JwtSecurityTokenHandler();
