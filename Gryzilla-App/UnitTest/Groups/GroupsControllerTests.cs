@@ -1,8 +1,10 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.DTOs.Responses.Group;
+using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -626,5 +628,54 @@ public class GroupsControllerTests
         
         if (resultValue is null) return;
         Assert.Equal("There is no groups", resultValue);
+    }
+    
+    [Fact]
+    public async void SetGroupPhoto_Returns_Ok()
+    {
+        //Arrange
+        var file = new Mock<IFormFile>();
+        var idGroup = 1;
+        var groupDto = new GroupDto();
+
+        _groupRepositoryMock.Setup(x => x.SetGroupPhoto(file.Object, idGroup)).ReturnsAsync(groupDto);
+
+        //Act
+        var actionResult = await _groupsController.SetGroupPhoto(file.Object, idGroup);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as GroupDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(groupDto, resultValue);
+    }
+    
+    [Fact]
+    public async void GetGroupPhoto_Returns_Ok()
+    {
+        //Arrange
+        var idGroup= 1;
+        var groupPhotoResponseDto = new GroupPhotoResponseDto();
+
+        _groupRepositoryMock.Setup(x => x.GetGroupPhoto(idGroup)).ReturnsAsync(groupPhotoResponseDto);
+
+        //Act
+        var actionResult = await _groupsController.GetGroupPhoto(idGroup);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as GroupPhotoResponseDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(groupPhotoResponseDto, resultValue);
     }
 }

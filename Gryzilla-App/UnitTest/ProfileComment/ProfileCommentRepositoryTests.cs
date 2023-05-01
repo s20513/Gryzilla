@@ -100,7 +100,6 @@ public class ProfileCommentRepositoryTests
         //Arrange
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
-        var idUser = 2;
         var newProfileCommentRequestDto = new NewProfileComment
         {
             IdUserComment = 1,
@@ -114,6 +113,7 @@ public class ProfileCommentRepositoryTests
         Assert.Null(res);
     }
     
+
     [Fact]
     public async Task AddNewProfileCommentToDb_Returns_NullUserComment()
     {

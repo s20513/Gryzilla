@@ -1080,4 +1080,27 @@ public class ArticleControllerTests
         if (resultValue is null) return;
         Assert.Equal("No articles found", resultValue);
     }
+    
+    [Fact]
+    public async void GetUserArticlesFromDb_Returns_Ok()
+    {
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetUserArticlesFromDb(1))
+            .ReturnsAsync(_fakeArticles);
+
+        //Act
+        var actionResult = await _articleController.GetUserArticles(1);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as List<ArticleDto>;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeArticles.FirstOrDefault().IdArticle, resultValue.FirstOrDefault().IdArticle);
+    }
 }
