@@ -64,6 +64,10 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = newReportCommentDto.IdUser,
             IdComment   = newReportCommentDto.IdComment,
             IdReason    = newReportCommentDto.IdReason,
+            IdPost      =  _context.CommentPosts
+                .Where(x => x.IdComment == newReportCommentDto.IdComment)
+                .Select(x => x.IdPost)
+                .SingleOrDefault(),
             ReasonName =  _context.Reasons
                 .Where(x=>x.IdReason ==  newReportCommentDto.IdReason)
                 .Select(x=>x.ReasonName)
@@ -117,6 +121,10 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = deleteReportCommentDto.IdUser,
             IdComment   = deleteReportCommentDto.IdComment,
             IdReason    = deleteReportCommentDto.IdReason,
+            IdPost      =  _context.CommentPosts
+                .Where(x => x.IdComment == reportCommentDto.IdComment)
+                .Select(x => x.IdPost)
+                .SingleOrDefault(),
             ReasonName  = _context.Reasons
                 .Where(x=>x.IdReason ==  deleteReportCommentDto.IdReason)
                 .Select(x=>x.ReasonName)
@@ -171,6 +179,10 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = updateReportCommentDto.IdUser,
             IdComment   = updateReportCommentDto.IdComment,
             IdReason    = updateReportCommentDto.IdReason,
+            IdPost   =  _context.CommentPosts
+                .Where(x => x.IdComment == reportCommentDto.IdComment)
+                .Select(x => x.IdPost)
+                .SingleOrDefault(),
             ReasonName  = _context.Reasons
                 .Where(x=>x.IdReason ==  updateReportCommentDto.IdReason)
                 .Select(x=>x.ReasonName)
@@ -206,6 +218,10 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             IdUser      = reportCommentDto.IdUser,
             IdComment   = reportCommentDto.IdComment,
             IdReason    = reportCommentDto.IdReason,
+            IdPost   =  _context.CommentPosts
+                    .Where(x => x.IdComment == reportCommentDto.IdComment)
+                    .Select(x => x.IdPost)
+                    .SingleOrDefault(),
             ReasonName = _context.Reasons
                 .Where(x=>x.IdReason ==  idReason)
                 .Select(x=>x.ReasonName)
@@ -228,6 +244,10 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
                 IdUser      = e.IdUser,
                 IdComment   = e.IdComment,
                 IdReason    = e.IdReason,
+                IdPost      =  _context.CommentPosts
+                    .Where(x => x.IdComment == e.IdComment)
+                    .Select(x => x.IdPost)
+                    .SingleOrDefault(),
                 ReasonName  = _context.Reasons
                     .Where(x=>x.IdReason ==  e.IdReason)
                     .Select(x=>x.ReasonName)
