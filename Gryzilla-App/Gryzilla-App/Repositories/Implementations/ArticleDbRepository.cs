@@ -570,5 +570,109 @@ public class ArticleDbRepository: IArticleDbRepository
     }
 
 
+    public async Task<ArticleQtyDto> GetArticlesByTagFromDb(int qtyArticles, DateTime time,string nameTag)
+    {
+        var next = false;
+        
+        if (qtyArticles < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
 
+        var articles = await GetArticlesByTag(nameTag);
+        
+        if (!articles.Any())
+        {
+            return null;
+        }
+
+        var filteredArticleDtos = articles
+            .OrderBy(x => x.IdArticle)
+            .Skip(qtyArticles-5)
+            .Take(5)
+            .ToArray();
+
+        var nextArticle = articles.Count();
+
+        if (qtyArticles < nextArticle)
+        {
+            next = true;
+        }
+
+        return new ArticleQtyDto()
+        {
+            Articles = filteredArticleDtos,
+            IsNext = next
+        };
+    }
+
+    private async Task<List<ArticleDto>?> GetArticlesByTag(string nameTag)
+    {
+        List<ArticleDto> articles = new List<ArticleDto>();
+        
+        var tags = await _context.Tags
+            .Where(x => x.NameTag == nameTag)
+            .SelectMany(x => x.IdArticles)
+            .Select(x => x.IdArticle).ToArrayAsync();
+
+
+        for (var i = 0; i < tags.Length; i++)
+        {
+            var article = await _context
+                .Articles
+                .Where(x=>x.IdArticle == (int)tags.GetValue(i))
+                .Include(x => x.IdUserNavigation)
+                .Select(x => new ArticleDto
+                {
+                    IdArticle = x.IdArticle,
+                    Author = new ReducedUserResponseDto
+                    {
+                        IdUser = x.IdUser,
+                        Nick = x.IdUserNavigation.Nick
+                    },
+                    Title = x.Title,
+                    Content = x.Content,
+                    CreatedAt = x.CreatedAt,
+
+                    Tags = _context
+                        .Articles
+                        .Where(t => t.IdArticle == x.IdArticle)
+                        .SelectMany(t => x.IdTags)
+                        .Select(t => t.NameTag)
+                        .ToArray(),
+
+                    LikesNum = _context
+                        .Articles
+                        .Where(l => l.IdArticle == x.IdArticle)
+                        .SelectMany(l => l.IdUsers)
+                        .Count(),
+                    CommentsNum = _context
+                        .CommentArticles
+                        .Count(c => c.IdArticle == x.IdArticle),
+                    Comments = _context
+                        .CommentArticles
+                        .Where(c => c.IdArticle == x.IdArticle)
+                        .Include(c => c.IdUserNavigation)
+                        .OrderByDescending(c => c.CreatedAt)
+                        .Select(c => new ArticleCommentDto()
+                        {
+                            Content = c.DescriptionArticle,
+                            IdComment = c.IdCommentArticle,
+                            IdArticle = c.IdArticle,
+                            IdUser = c.IdUser,
+                            Nick = c.IdUserNavigation.Nick,
+                            CreatedAt = c.CreatedAt
+                        })
+                        .Take(2)
+                        .ToList(),
+                })
+                .SingleOrDefaultAsync();
+
+            if (article is not null)
+            {
+                articles.Add(article);
+            }
+        }
+        return articles;
+    }
 }

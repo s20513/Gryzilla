@@ -386,5 +386,33 @@ public class PostController : Controller
         return Ok(posts);
     }
     
+    /// <summary>
+    /// Get posts by tag
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
+    [HttpGet("getPostsByTag/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPostsByTag([FromRoute] int qtyPosts, [FromQuery] DateTime time, [FromQuery] string nameTag)
+    {
+        PostQtyDto? posts;
+        
+        try
+        {
+            posts = await _postsDbRepository
+                .GetPostsByTagFromDb(qtyPosts, time, nameTag);
+
+            if (posts is null)
+            {
+                return NotFound("No posts found");
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok(posts);
+    }
     
 }

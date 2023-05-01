@@ -98,7 +98,8 @@ public class ArticleControllerTests
                 Title = "Title3",
                 Content = "Content3",
                 CreatedAt = DateTime.Now,
-                LikesNum = 3
+                LikesNum = 3,
+                Tags = new[] { "samochody" }
             }
         },
         IsNext = false
@@ -1003,5 +1004,80 @@ public class ArticleControllerTests
         
         if (resultValue is null) return;
         Assert.Equal(_fakeArticles.OrderByDescending(x => x.LikesNum), resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyArticleByTagsFromDb_Returns_Ok()
+    {
+        DateTime time = DateTime.Now;
+        //Arrange
+        _articleRepositoryMock
+            .Setup(x => x.GetArticlesByTagFromDb(5, time, "samochody"))
+            .ReturnsAsync(_fakeQtyArticles);
+
+        //Act
+        var actionResult = await _articleController.GetArticlesByTag(5, time, "samochody");
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ArticleQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyArticles, resultValue);
+    }
+    [Fact]
+    public async void GetQtyArticleByTagsFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        //Arrange
+        DateTime time = DateTime.Now;
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+
+        _articleRepositoryMock
+            .Setup(x => x.GetArticlesByTagFromDb(4, time, "samochody"))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+
+        //Act
+        var actionResult = await _articleController.GetArticlesByTag(4, time, "samochody");
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    
+    [Fact]
+    public async void GetQtyArticleByTagFromDb_Not_Found()
+    {
+        DateTime time = DateTime.Now;
+        //Arrange
+        Func<ArticleQtyDto?> nullValue = null;
+        
+        _articleRepositoryMock
+            .Setup(x => x.GetArticlesByTagFromDb(5, time, "samochody"))
+            .ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _articleController.GetArticlesByTag(5, time, "samochody");
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No articles found", resultValue);
     }
 }

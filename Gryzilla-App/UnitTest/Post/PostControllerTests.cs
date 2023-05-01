@@ -110,7 +110,8 @@ public class PostControllerTests
                 },
                 Content = "XYZ",
                 CreatedAt = DateTime.Now,
-                Likes = 1 
+                Likes = 1,
+                Tags = new[] { "samochody" }
             },
             new PostDto
             {
@@ -201,7 +202,8 @@ public class PostControllerTests
             },
             Content = "XYZ",
             CreatedAt = DateTime.Now,
-            Likes = 1
+            Likes = 1,
+            Tags = new []{"samochody"}
         }
     };
     [Fact]
@@ -1155,5 +1157,75 @@ public class PostControllerTests
         
         if (resultValue is null) return;
         Assert.Equal(postDtos, resultValue);
+    }
+    
+     [Fact] 
+    public async void GetQtyPostsByTagFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+        
+        DateTime time = DateTime.Now;
+        
+        _postRepositoryMock
+            .Setup(x => x.GetPostsByTagFromDb(4, time, "Samochody"))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+        //Act
+        var actionResult = await _postsController.GetPostsByTag(4, time, "Samochody");
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostsByTagFromDb_Returns_Null()
+    {
+        //Arrange
+        PostQtyDto nullValue = null;
+        
+        _postRepositoryMock.Setup(x => x.GetPostsByTagFromDb(5, DateTime.Now, "Samochody")).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _postsController.GetPostsByTag(5,DateTime.Now, "Samochody1");
+        
+        //Assert
+        var result = actionResult as NotFoundObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as string;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal("No posts found", resultValue);
+    }
+    [Fact]
+    public async void GetQtyPostsByTagFromDb_Returns_ListOfPosts()
+    {
+        DateTime time = DateTime.Now;
+        //Arrange
+        _postRepositoryMock
+            .Setup(x => x.GetPostsByTagFromDb(5, time, "samochody"))
+            .ReturnsAsync(_fakeQtyPosts);
+
+        //Act
+        var actionResult = await _postsController.GetPostsByTag(5, time, "samochody");
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as PostQtyDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyPosts, resultValue);
     }
 }

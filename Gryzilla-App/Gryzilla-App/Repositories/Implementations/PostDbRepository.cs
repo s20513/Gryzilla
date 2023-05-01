@@ -617,6 +617,102 @@ public class PostDbRepository : IPostDbRepository
 
         return userPosts;
     }
+
+    public async Task<PostQtyDto?> GetPostsByTagFromDb(int qtyPosts, DateTime time,string nameTag)
+    {
+        if (qtyPosts < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        var allPosts = await GetPostsByTag(nameTag);
+
+        if (!allPosts.Any())
+        {
+            return null;
+        }
+        
+        var filteredPostDtos = allPosts
+            .Where(x=>x.CreatedAt < time)
+            .OrderBy(e => e.CreatedAt)
+            .Skip(qtyPosts - 5)
+            .Take(5)
+            .ToList();
+
+        return new PostQtyDto()
+        {
+            Posts = filteredPostDtos,
+            IsNext = qtyPosts < allPosts.Count
+        };
+        
+    }
+
+    private async Task<List<PostDto>?> GetPostsByTag(string nameTag)
+    {
+        List<PostDto> posts = new List<PostDto>();
+        
+        var tags = await _context.Tags
+            .Where(x => x.NameTag == nameTag)
+            .SelectMany(x => x.IdPosts)
+            .Select(x => x.IdPost).ToArrayAsync();
+
+        if (tags is null)
+        {
+            return null;
+        }
+
+        for (var i = 0; i < tags.Length; i++)
+        {
+            var post = await _context
+                .Posts
+                .Where(x=>x.IdPost == (int)tags.GetValue(i))
+                .Select(a => new PostDto
+                {
+                    idPost = a.IdPost,
+                    Likes  = _context
+                        .Posts
+                        .Where(c => c.IdPost == a.IdPost)
+                        .SelectMany(b => b.IdUsers)
+                        .Count(),
+                    CommentsNumber = _context
+                        .Posts
+                        .Where(c => c.IdPost == a.IdPost)
+                        .SelectMany(b => b.CommentPosts)
+                        .Count(),
+                    CommentsDtos  = _context.CommentPosts
+                        .Where(x => x.IdPost == a.IdPost)
+                        .Include(x => x.IdUserNavigation)
+                        .OrderByDescending(c => c.CreatedAt)
+                        .Select(x => new PostCommentDto
+                        {
+                            Content = x.DescriptionPost,
+                            IdComment = x.IdComment,
+                            IdPost = x.IdPost,
+                            IdUser = x.IdUser,
+                            Nick  =x.IdUserNavigation.Nick,
+                            CreatedAt = x.CreatedAt
+                        })
+                        .Take(2)
+                        .ToList(),
+                    CreatedAt       = a.CreatedAt,
+                    Content         = a.Content,
+                    Nick            = a.IdUserNavigation.Nick,
+                    Type            = a.IdUserNavigation.PhotoType,
+                    base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()),
+                    Tags            = _context
+                        .Posts
+                        .Where(x => x.IdPost == a.IdPost)
+                        .SelectMany(x => x.IdTags)
+                        .Select(x => x.NameTag)
+                        .ToArray()
+                }).SingleOrDefaultAsync();
+
+            if (post is not null)
+            {
+                posts.Add(post);
+            }
+        }    
+        return posts;
+    }
 }
 
 

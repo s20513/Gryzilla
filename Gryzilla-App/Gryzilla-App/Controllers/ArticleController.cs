@@ -353,4 +353,33 @@ public class ArticleController: Controller
         
         return Ok(result);
     }
+    
+    /// <summary>
+    /// Get articles by tag
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
+    [HttpGet("getArticlesByTag/{qtyArticles:int}")]
+    public async Task<IActionResult> GetArticlesByTag([FromRoute] int qtyArticles, [FromQuery] DateTime time, [FromQuery] string nameTag)
+    {
+        ArticleQtyDto? articles;
+        
+        try
+        {
+            articles = await _articleDbRepository
+                .GetArticlesByTagFromDb(qtyArticles, time, nameTag);
+
+            if (articles is null)
+            {
+                return NotFound("No articles found");
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+
+        return Ok(articles);
+    }
 }

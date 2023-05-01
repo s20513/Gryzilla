@@ -39,7 +39,7 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
                 IdUserComment    = x.IdUserComment,
                 Nick             = x.IdUserNavigation.Nick,
                 Type             = x.IdUserNavigation.PhotoType,
-                base64PhotoData  = Convert.ToBase64String(x.IdUserNavigation.Photo), 
+                base64PhotoData  = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
                 Content          = x.Description,
                 CreatedAt        = x.CreatedAt
             }).ToArrayAsync();
