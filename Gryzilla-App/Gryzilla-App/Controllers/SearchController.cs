@@ -1,4 +1,8 @@
-﻿using Gryzilla_App.Repositories.Interfaces;
+﻿using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.DTOs.Responses.Posts;
+using Gryzilla_App.DTOs.Responses.User;
+using Gryzilla_App.Exceptions;
+using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -22,15 +26,21 @@ public class SearchController : Controller
     [HttpGet("getUsersByName/{qtyUsers:int}")]
     public async Task<IActionResult> GetUsers([FromRoute] int qtyUsers, [FromQuery] DateTime time, [FromQuery] string nickName)
     {
-        var user = 
-            await _searchDbRepository.GetUsersByNameFromDb(qtyUsers, time, nickName);
-
-        if (user == null)
-        {
-            return NotFound("No users found"); 
-        }
+        UsersQtyDto users;
         
-        return Ok(user);
+        try
+        {
+            users = await _searchDbRepository.GetUsersByNameFromDb(qtyUsers, time, nickName);
+            if (users == null)
+            {
+                return NotFound("No users found"); 
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+        return Ok(users);
     }
     
     /// <summary>
@@ -42,15 +52,22 @@ public class SearchController : Controller
     [HttpGet("getPostsByWord/{qtyPosts:int}")]
     public async Task<IActionResult> GetPosts([FromRoute] int qtyPosts, [FromQuery] DateTime time, [FromQuery] string word)
     {
-        var user = 
-            await _searchDbRepository.GetPostByWordFromDb(qtyPosts, time, word);
-
-        if (user == null)
-        {
-            return NotFound("No posts found"); 
-        }
+        PostQtySearchDto? posts;
         
-        return Ok(user);
+        try
+        {
+            posts = await _searchDbRepository.GetPostByWordFromDb(qtyPosts, time, word);
+
+            if (posts == null)
+            {
+                return NotFound("No posts found"); 
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
+        }
+        return Ok(posts);
     }
     
     /// <summary>
@@ -62,14 +79,22 @@ public class SearchController : Controller
     [HttpGet("getArticlesByWord/{qtyArticles:int}")]
     public async Task<IActionResult> GetArticles([FromRoute] int qtyArticles, [FromQuery] DateTime time, [FromQuery] string word)
     {
-        var user = 
-            await _searchDbRepository.GetArticleByWordFromDb(qtyArticles, time, word);
-
-        if (user == null)
+        ArticleQtySearchDto? articles;
+        
+        try
         {
-            return NotFound("No articles found"); 
+            articles = await _searchDbRepository.GetArticleByWordFromDb(qtyArticles, time, word);
+
+            if (articles == null)
+            {
+                return NotFound("No articles found"); 
+            }
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(e.Message);
         }
         
-        return Ok(user);
+        return Ok(articles);
     }
 }

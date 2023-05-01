@@ -1,8 +1,5 @@
 ﻿using Gryzilla_App.DTO.Responses;
-using Gryzilla_App.DTO.Responses.Posts;
-using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
-using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
