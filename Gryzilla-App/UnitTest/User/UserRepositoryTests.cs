@@ -1,10 +1,13 @@
-﻿using Gryzilla_App;
+﻿using System.Drawing;
+using Gryzilla_App;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moq;
 
 namespace UnitTest.User;
 
@@ -92,6 +95,24 @@ public class UserRepositoryTests
             Email = "email1",
             CreatedAt = DateTime.Today
         });
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task AddPhotoToUser(int idUser)
+    {
+        var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == idUser);
+
+        var desktopPath = Directory.GetCurrentDirectory();
+        var imagePath = Path.Combine(desktopPath, @"..\..\..\Images\test.png");
+        var image = Image.FromFile(imagePath);
+        
+        byte[] byteArray;
+        using MemoryStream stream = new MemoryStream();
+        image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+        byteArray = stream.ToArray();
+
+        user.Photo = byteArray;
+        user.PhotoType = "png";
         await _context.SaveChangesAsync();
     }
     
@@ -489,5 +510,104 @@ public class UserRepositoryTests
         
         //Assert
         Assert.True(res);
+    }
+    
+    [Fact]
+    public async Task GetUserPhoto_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+
+        var idUser = 1;
+
+        //Act
+        var res = await _repository.GetUserPhoto(idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetUserPhoto_Returns_UserPhotoResponseDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var idUser = 1;
+
+        await AddPhotoToUser(idUser);
+        
+        //Act
+        var res = await _repository.GetUserPhoto(idUser);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
+    
+    [Fact]
+    public async Task SetUserPhoto_WithNoExistingUser_Returns_null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var idUser = 100;
+
+        var fileMock = new Mock<IFormFile>();
+
+        //Act
+        var res = await _repository.SetUserPhoto(fileMock.Object,idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task SetUserPhoto_WithNullPhoto_Returns_null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var idUser = 1;
+
+        var fileMock = new Mock<IFormFile>();
+
+        //Act
+        var res = await _repository.SetUserPhoto(fileMock.Object,idUser);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task SetUserPhoto_Returns_UserDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var idUser = 1;
+        
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var filePath = Path.Combine(currentDirectory, @"..\..\..\Images\test.png");
+        FileStream fileStream = new FileStream(filePath, FileMode.Open);
+        
+        IFormFile formFile = new FormFile(fileStream, 0, fileStream.Length, null, Path.GetFileName(filePath));
+
+        //Act
+        var res = await _repository.SetUserPhoto(formFile,idUser);
+        
+        await fileStream.DisposeAsync();
+        
+        //Assert
+        Assert.NotNull(res);
     }
 }
