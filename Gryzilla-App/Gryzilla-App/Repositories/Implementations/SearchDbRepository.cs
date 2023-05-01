@@ -175,7 +175,7 @@ public class SearchDbRepository : ISearchDbRepository
             .Where(x => x.Content.ToLower().Contains(word))
             .Select(x=>x.IdArticle)
             .ToArrayAsync();
-
+        
         for (int i = 0; i < articles.Length; i++)
         {
             var article = await GetArticles(articles, i);

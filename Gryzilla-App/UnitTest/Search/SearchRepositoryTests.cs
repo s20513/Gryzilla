@@ -41,9 +41,27 @@ public class SearchRepositoryTests
         {
             IdUser = 1,
             CreatedAt = DateTime.Today,
+            Content = "Content2",
+            HighLight = false
+        });
+        await _context.SaveChangesAsync();
+        await _context.Posts.AddAsync(new Gryzilla_App.Models.Post
+        {
+            IdUser = 1,
+            CreatedAt = DateTime.Today,
             Content = "Content1",
             HighLight = false
         });
+        await _context.SaveChangesAsync();
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        {
+            NameTag = "1"
+        });
+        await _context.SaveChangesAsync();
+
+        var tag = await _context.Tags.FirstAsync();
+        var post = await _context.Posts.FirstAsync();
+        post.IdTags.Add(tag);
         await _context.SaveChangesAsync();
     }
     
@@ -100,8 +118,28 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Now,
+            Content = "Content2"
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        {
+            IdUser = 1,
+            Title = "Title2",
+            CreatedAt = DateTime.Now,
             Content = "Content1"
         });
+        await _context.SaveChangesAsync();
+        
+        await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
+        {
+            NameTag = "1"
+        });
+        await _context.SaveChangesAsync();
+
+        var tag = await _context.Tags.FirstAsync();
+        var article = await _context.Articles.FirstAsync();
+        article.IdTags.Add(tag);
         await _context.SaveChangesAsync();
     }
     
@@ -150,10 +188,14 @@ public class SearchRepositoryTests
             .Posts
             .Where(x=>x.Content.ToLower().Contains("1"))
             .Select(e => e.IdPost)
-            .SingleOrDefaultAsync();
+            .CountAsync();
 
+        var tags =  await _context.Tags
+            .Where(x => x.NameTag.ToLower().Contains("1"))
+            .SelectMany(x => x.IdPosts)
+            .Select(x => x.IdPost).CountAsync();
 
-        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost).SingleOrDefault());
+        if (res != null) Assert.Equal(posts+tags, res.Posts.Count());
     }
     
     [Fact]
@@ -191,22 +233,23 @@ public class SearchRepositoryTests
         DateTime time = DateTime.Now;
 
         //Act
-        var res = await _repository.GetArticleByWordFromDb(5,time, "Content1");
+        var res = await _repository.GetArticleByWordFromDb(5,time, "1");
         
         //Assert
         Assert.NotNull(res);
         
         var articles = await _context
             .Articles
-            .Where(x=>x.Content.ToLower().Contains("Content1"))
-            .Skip(0)
-            .Take(5)
-            .OrderByDescending(e => e.IdUsers.Count)
+            .Where(x=>x.Content.ToLower().Contains("1"))
             .Select(e => e.IdArticle)
-            .ToListAsync();
+            .CountAsync();
 
-
-        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
+        var tags =  await _context.Tags
+            .Where(x => x.NameTag.ToLower().Contains("1"))
+            .SelectMany(x => x.IdArticles)
+            .Select(x => x.IdArticle).CountAsync();
+        
+        if (res != null) Assert.Equal(articles +tags, res.Articles.Count());
     }
     
     [Fact]
@@ -216,7 +259,7 @@ public class SearchRepositoryTests
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
 
         //Act
-        var res = await _repository.GetArticleByWordFromDb(5, DateTime.Now, "samochody");
+        var res = await _repository.GetUsersByNameFromDb(5, DateTime.Now, "samochody");
 
         //Assert
         Assert.Null(res);
