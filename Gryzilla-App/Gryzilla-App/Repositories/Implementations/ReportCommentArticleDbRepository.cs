@@ -24,7 +24,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
 
         var comment = await _context
             .CommentArticles
-            .SingleOrDefaultAsync(x => x.IdCommentArticle == newReportCommentDto.IdCommentArticle);
+            .SingleOrDefaultAsync(x => x.IdCommentArticle == newReportCommentDto.IdComment);
 
         var reason = await _context
             .Reasons
@@ -44,7 +44,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         var newReportCommentPost = new ReportCommentArticle
         {
             IdUser             = newReportCommentDto.IdUser,
-            IdCommentArticle   = newReportCommentDto.IdCommentArticle,
+            IdCommentArticle   = newReportCommentDto.IdComment,
             IdReason           = newReportCommentDto.IdReason,
             Description        = newReportCommentDto.Content,
             Viewed             = false,
@@ -58,10 +58,10 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         {
             IdUser      = newReportCommentDto.IdUser,
             IdArticle   =  _context.CommentArticles
-                .Where(x => x.IdCommentArticle == newReportCommentDto.IdCommentArticle)
+                .Where(x => x.IdCommentArticle == newReportCommentDto.IdComment)
                 .Select(x => x.IdArticle)
                 .SingleOrDefault(),
-            IdComment   = newReportCommentDto.IdCommentArticle,
+            IdComment   = newReportCommentDto.IdComment,
             IdReason    = newReportCommentDto.IdReason,
             ReasonName  = _context.Reasons
                 .Where(x=>x.IdReason == newReportCommentDto.IdReason)
@@ -81,7 +81,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
 
         var comment = await _context
             .CommentArticles
-            .SingleOrDefaultAsync(x => x.IdCommentArticle == deleteReportCommentDto.IdCommentArticle);
+            .SingleOrDefaultAsync(x => x.IdCommentArticle == deleteReportCommentDto.IdComment);
 
         var reason = await _context
             .Reasons
@@ -95,7 +95,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         
         var reportCommentArticle = await _context
             .ReportCommentArticles.Where(x => x.IdUser == deleteReportCommentDto.IdUser)
-            .Where(x => x.IdCommentArticle == deleteReportCommentDto.IdCommentArticle)
+            .Where(x => x.IdCommentArticle == deleteReportCommentDto.IdComment)
             .Where(x => x.IdReason == deleteReportCommentDto.IdReason)
             .SingleOrDefaultAsync();
 
@@ -111,10 +111,10 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         {
             IdUser             = deleteReportCommentDto.IdUser,
             IdArticle          =  _context.CommentArticles
-                .Where(x => x.IdCommentArticle == deleteReportCommentDto.IdCommentArticle)
+                .Where(x => x.IdCommentArticle == deleteReportCommentDto.IdComment)
                 .Select(x => x.IdArticle)
                 .SingleOrDefault(),
-            IdComment          = deleteReportCommentDto.IdCommentArticle,
+            IdComment          = deleteReportCommentDto.IdComment,
             IdReason           = deleteReportCommentDto.IdReason,
             ReasonName = _context.Reasons
                 .Where(x=>x.IdReason ==  deleteReportCommentDto.IdReason)
@@ -136,7 +136,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
 
         var comment = await _context
             .CommentArticles
-            .SingleOrDefaultAsync(x => x.IdCommentArticle == updateReportCommentDto.IdCommentArticle);
+            .SingleOrDefaultAsync(x => x.IdCommentArticle == updateReportCommentDto.IdComment);
 
         var reason = await _context
             .Reasons
@@ -150,7 +150,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         
         var reportCommentDto = await _context
             .ReportCommentArticles.Where(x => x.IdUser == updateReportCommentDto.IdUser)
-            .Where(x => x.IdCommentArticle == updateReportCommentDto.IdCommentArticle)
+            .Where(x => x.IdCommentArticle == updateReportCommentDto.IdComment)
             .Where(x => x.IdReason == updateReportCommentDto.IdReason)
             .SingleOrDefaultAsync();
 
@@ -170,7 +170,7 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
                 .Where(x => x.IdCommentArticle == reportCommentDto.IdCommentArticle)
                 .Select(x => x.IdArticle)
                 .SingleOrDefault(),
-            IdComment   = updateReportCommentDto.IdCommentArticle,
+            IdComment   = updateReportCommentDto.IdComment,
             IdReason    = updateReportCommentDto.IdReason,
             ReasonName = _context.Reasons
                 .Where(x=>x.IdReason ==  updateReportCommentDto.IdReason)

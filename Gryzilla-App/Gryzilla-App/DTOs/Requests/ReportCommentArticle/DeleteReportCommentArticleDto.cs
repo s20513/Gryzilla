@@ -8,7 +8,7 @@ public class DeleteReportCommentArticleDto
     public int IdUser { get; set; }
     
     [Required]
-    public int IdCommentArticle{ get; set; }
+    public int IdComment{ get; set; }
     
     [Required]
     public int IdReason { get; set; }

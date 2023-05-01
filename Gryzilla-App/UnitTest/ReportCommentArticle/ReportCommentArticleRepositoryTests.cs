@@ -178,7 +178,7 @@ public class ReportCommentArticleRepositoryTests
         var newReasonDto = new NewReportCommentArticleDto
         {
             IdUser = 2,
-            IdCommentArticle = 1,
+            IdComment = 1,
             IdReason = 2,
             Content = "Description"
         };
@@ -207,7 +207,7 @@ public class ReportCommentArticleRepositoryTests
         var newReasonDto = new NewReportCommentArticleDto
         {
             IdUser = 1,
-            IdCommentArticle = 1,
+            IdComment = 1,
             IdReason = 1,
             Content = "Description"
         };
@@ -227,7 +227,7 @@ public class ReportCommentArticleRepositoryTests
         var newReportDto = new NewReportCommentArticleDto
         {
             IdUser = 1,
-            IdCommentArticle = 1,
+            IdComment = 1,
             IdReason = 1,
             Content = "Description"
         };
@@ -252,7 +252,7 @@ public class ReportCommentArticleRepositoryTests
         var deleteReportDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
-            IdCommentArticle = 1,
+            IdComment = 1,
             IdReason = 1,
         };
         
@@ -277,7 +277,7 @@ public class ReportCommentArticleRepositoryTests
         var deleteReportDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
-            IdCommentArticle = 2,
+            IdComment= 2,
             IdReason = 1,
         };
         
@@ -298,7 +298,7 @@ public class ReportCommentArticleRepositoryTests
         var deleteReportDto = new DeleteReportCommentArticleDto()
         {
             IdUser = 1,
-            IdCommentArticle = 1,
+            IdComment = 1,
             IdReason = 2,
         };
         
@@ -318,7 +318,7 @@ public class ReportCommentArticleRepositoryTests
         var modifyReportRequestDto = new UpdateReportCommentArticleDto()
         {
             IdUser = 1,
-            IdCommentArticle = 2,
+            IdComment = 2,
             IdReason = 1,
             Content = "Description1",
             Viewed = false
@@ -339,7 +339,7 @@ public class ReportCommentArticleRepositoryTests
         var modifyReportRequestDto = new UpdateReportCommentArticleDto
         {
             IdUser = 1,
-            IdCommentArticle = 1,
+            IdComment= 1,
             IdReason = 2,
             Content = "Description1",
             Viewed = false
@@ -361,7 +361,7 @@ public class ReportCommentArticleRepositoryTests
         var modifyReportRequestDto = new UpdateReportCommentArticleDto()
         {
             IdUser = 1,
-            IdCommentArticle = 1,
+            IdComment = 1,
             IdReason = 1,
             Content = "Description1",
             Viewed = false

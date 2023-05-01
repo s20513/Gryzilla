@@ -265,7 +265,7 @@ public class ReportCommentArticleControllerTests
         {
             IdUser = 1,
             IdReason = 1,
-            IdCommentArticle = 1
+            IdComment = 1
         };
         _reportRepositoryMock
             .Setup(x => x.DeleteReportCommentArticleFromDb(deleteReportArticleCommentDto))
@@ -294,7 +294,7 @@ public class ReportCommentArticleControllerTests
         {
             IdUser = 1,
             IdReason = 1,
-            IdCommentArticle = 1
+            IdComment = 1
         };
         ReportCommentArticleDto? nullValue = null;
         
