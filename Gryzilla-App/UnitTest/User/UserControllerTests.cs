@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -402,6 +403,140 @@ public class UserControllerTests
         
         if (resultValue is null) return;
         Assert.Equal("Rank or user does not exists!", resultValue);
+    }
+    
+    [Fact]
+    public async void SetUserPhoto_Returns_Ok()
+    {
+        //Arrange
+        var file = new Mock<IFormFile>();
+        var idUser = 1;
+        var userDto = new UserDto();
+
+        _userRepositoryMock.Setup(x => x.SetUserPhoto(file.Object, idUser)).ReturnsAsync(userDto);
+
+        //Act
+        var actionResult = await _usersController.SetUserPhoto(file.Object, idUser);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as UserDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(userDto, resultValue);
+    }
+    
+    [Fact]
+    public async void GetUserPhoto_Returns_Ok()
+    {
+        //Arrange
+        var idUser = 1;
+        var userPhotoResponseDto = new UserPhotoResponseDto();
+
+        _userRepositoryMock.Setup(x => x.GetUserPhoto(idUser)).ReturnsAsync(userPhotoResponseDto);
+
+        //Act
+        var actionResult = await _usersController.GetUserPhoto(idUser);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as UserPhotoResponseDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(userPhotoResponseDto, resultValue);
+    }
+    
+    [Fact]
+    public async void ChangeUserPassword_WithCheckingOldPassword_Returns_NotFound()
+    {
+        //Arrange
+        var idUser = 1;
+        var changePasswordDto = new ChangePasswordDto();
+        bool? nullValue = null;
+
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser)).ReturnsAsync(nullValue);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
+        
+        //Assert
+        Assert.IsType<NotFoundResult>(actionResult);
+    }
+    
+    [Fact]
+    public async void ChangeUserPassword_WithCheckingOldPassword_Returns_BadRequest()
+    {
+        //Arrange
+        var idUser = 1;
+        var changePasswordDto = new ChangePasswordDto();
+        var res = false;
+
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser)).ReturnsAsync(res);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
+        
+        //Assert
+        Assert.IsType<BadRequestResult>(actionResult);
+    }
+    
+    [Fact]
+    public async void ChangeUserPassword_WithCheckingOldPassword_Returns_Ok()
+    {
+        //Arrange
+        var idUser = 1;
+        var changePasswordDto = new ChangePasswordDto();
+        var res = true;
+
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser)).ReturnsAsync(res);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
+        
+        //Assert
+        Assert.IsType<OkResult>(actionResult);
+    }
+    
+    [Fact]
+    public async void ChangeUserPassword_WithoutCheckingOldPassword_Returns_NotFound()
+    {
+        //Arrange
+        var idUser = 1;
+        var changePasswordShortDto = new ChangePasswordShortDto();
+        var res = false;
+
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordShortDto, idUser)).ReturnsAsync(res);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserPassword(changePasswordShortDto, idUser);
+        
+        //Assert
+        Assert.IsType<NotFoundResult>(actionResult);
+    }
+    
+    [Fact]
+    public async void ChangeUserPassword_WithoutCheckingOldPassword_Returns_Ok()
+    {
+        //Arrange
+        var idUser = 1;
+        var changePasswordShortDto = new ChangePasswordShortDto();
+        var res = true;
+
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordShortDto, idUser)).ReturnsAsync(res);
+
+        //Act
+        var actionResult = await _usersController.ChangeUserPassword(changePasswordShortDto, idUser);
+        
+        //Assert
+        Assert.IsType<OkResult>(actionResult);
     }
 
 }
