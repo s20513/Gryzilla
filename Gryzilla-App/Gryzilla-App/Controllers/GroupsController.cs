@@ -47,10 +47,6 @@ public class GroupsController: Controller
     {
         var group = await _groupDbRepository.GetGroups();
 
-        if (group.Length < 1)
-        {
-            return NotFound("There is no groups");
-        }
         return Ok(group);
     }
     /// <summary>
@@ -224,11 +220,7 @@ public class GroupsController: Controller
     public async Task<IActionResult> GetUserGroups([FromRoute] int idUser)
     {
         var group = await _groupDbRepository.GetUserGroups(idUser);
-
-        if (group != null && group.Length < 1)
-        {
-            return NotFound("There is no groups");
-        }
+        
         return Ok(group);
     }
     
