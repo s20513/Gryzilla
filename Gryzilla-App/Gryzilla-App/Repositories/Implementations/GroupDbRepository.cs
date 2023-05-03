@@ -23,7 +23,6 @@ public class GroupDbRepository: IGroupDbRepository
             .Groups
             .Where(e => e.IdGroup == idGroup)
             .Include(e => e.GroupUsers)
-            //.Include(x=>x.IdUsers)
             .SingleOrDefaultAsync();
         
         return group;
@@ -53,6 +52,10 @@ public class GroupDbRepository: IGroupDbRepository
             {
                 IdGroup       = e.IdGroup,
                 IdUserCreator = e.IdUserCreator,
+                Nick          = _context.UserData
+                    .Where(x => x.IdUser == e.IdUserCreator)
+                    .Select(x=>x.Nick)
+                    .SingleOrDefault(),
                 GroupName     = e.GroupName,
                 Content   = e.Description,
                 CreatedAt     = e.CreatedAt,
@@ -87,6 +90,10 @@ public class GroupDbRepository: IGroupDbRepository
             {
                 IdGroup       = e.IdGroup,
                 IdUserCreator = e.IdUserCreator,
+                Nick          = _context.UserData
+                    .Where(x => x.IdUser == e.IdUserCreator)
+                    .Select(x=>x.Nick)
+                    .SingleOrDefault(),
                 GroupName     = e.GroupName,
                 Content   = e.Description,
                 CreatedAt     = e.CreatedAt,
@@ -302,6 +309,10 @@ public class GroupDbRepository: IGroupDbRepository
                      { 
                          IdGroup       = x.IdGroup,
                          IdUserCreator = x.IdGroupNavigation.IdUserCreator,
+                         Nick          = _context.UserData
+                             .Where(e => e.IdUser == x.IdGroupNavigation.IdUserCreator)
+                             .Select(e=>e.Nick)
+                             .SingleOrDefault(),
                          GroupName     = x.IdGroupNavigation.GroupName,
                          Content   = x.IdGroupNavigation.Description,
                          CreatedAt     = x.IdGroupNavigation.CreatedAt
@@ -362,4 +373,6 @@ public class GroupDbRepository: IGroupDbRepository
             base64PhotoData = Convert.ToBase64String(group.Photo)
         };
     }
+    
+    
 }

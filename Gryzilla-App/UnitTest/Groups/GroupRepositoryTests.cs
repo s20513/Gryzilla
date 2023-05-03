@@ -1,9 +1,12 @@
-﻿using Gryzilla_App;
+﻿using System.Drawing;
+using Gryzilla_App;
 using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.Groups;
 
@@ -20,6 +23,24 @@ public class GroupRepositoryTests
         _repository = new GroupDbRepository(_context);
     }
 
+    private async Task AddPhotoToGroup(int idGroup)
+    {
+        var group = await _context.Groups.SingleOrDefaultAsync(e => e.IdGroup == idGroup);
+
+        var desktopPath = Directory.GetCurrentDirectory();
+        var imagePath = Path.Combine(desktopPath, @"..\..\..\Images\test.png");
+        var image = Image.FromFile(imagePath);
+        
+        byte[] byteArray;
+        using MemoryStream stream = new MemoryStream();
+        image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+        byteArray = stream.ToArray();
+
+        group.Photo = byteArray;
+        group.PhotoType = "png";
+        await _context.SaveChangesAsync();
+    }
+    
     private async Task AddTestDataWithManyGroup()
     {
         await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
@@ -465,7 +486,7 @@ public class GroupRepositoryTests
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res);
+        Assert.True(res.Member);
     }
     [Fact]
     public async Task AddUserToGroup_Returns_GroupDto()
@@ -597,5 +618,102 @@ public class GroupRepositoryTests
         //Assert
         Assert.Null(res);
     }
+    [Fact]
+    public async Task SetGroupPhoto_WithNoExistingGroup_Returns_null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneGroup();
+        
+        var idGroup = 100;
+
+        var fileMock = new Mock<IFormFile>();
+
+        //Act
+        var res = await _repository.SetGroupPhoto(fileMock.Object,idGroup);
+        
+        //Assert
+        Assert.Null(res);
+    }
     
+    [Fact]
+    public async Task SetGroupPhoto_WithNullPhoto_Returns_null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneGroup();
+        
+        var idGroup = 1;
+
+        var fileMock = new Mock<IFormFile>();
+
+        //Act
+        var res = await _repository.SetGroupPhoto(fileMock.Object, idGroup);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task SetGroupPhoto_Returns_GroupDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneGroup();
+        
+        var idGroup = 1;
+        
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var filePath = Path.Combine(currentDirectory, @"..\..\..\Images\test.png");
+        FileStream fileStream = new FileStream(filePath, FileMode.Open);
+        
+        IFormFile formFile = new FormFile(fileStream, 0, fileStream.Length, null, Path.GetFileName(filePath));
+
+        //Act
+        var res = await _repository.SetGroupPhoto(formFile,idGroup);
+        
+        await fileStream.DisposeAsync();
+        
+        //Assert
+        Assert.NotNull(res);
+    }
+    
+    [Fact]
+    public async Task GetGroupPhoto_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneGroup();
+
+        var idGroup = 1;
+
+        //Act
+        var res = await _repository.GetGroupPhoto(idGroup);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task GetGroupPhoto_Returns_GroupPhotoResponseDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneGroup();
+
+        var idGroup = 1;
+
+        await AddPhotoToGroup(idGroup);
+        
+        //Act
+        var res = await _repository.GetGroupPhoto(idGroup);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
 }

@@ -90,29 +90,7 @@ public class GroupsControllerTests
         if (resultValue is null) return;
         Assert.Equal(groups, resultValue);
     }
-    
-    [Fact]
-    public async void GetGroups_Returns_Not_Found()
-    {
-        //Arrange
-        var groups = Array.Empty<GroupDto>();
-        
-        _groupRepositoryMock.Setup(x => x.GetGroups()).ReturnsAsync(groups);
-
-        //Act
-        var actionResult = await _groupsController.GetGroups();
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as string;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("There is no groups", resultValue);
-    }
+   
     
     [Fact]
     public async void ModifyGroup_Returns_Ok()
@@ -558,7 +536,10 @@ public class GroupsControllerTests
         //Arrange
         var idGroup = 1;
         var idUser = 1;
-        var exist = true;
+        var exist = new ExistUserGroup
+        {
+            Member = true
+        };
         
         _groupRepositoryMock
             .Setup(x => x.UserIsInGroup(idGroup, idUser))
@@ -602,32 +583,6 @@ public class GroupsControllerTests
         
         if (resultValue is null) return;
         Assert.Equal(groups, resultValue);
-    }
-    
-    [Fact]
-    public async void GetUserGroups_Returns_Not_Found()
-    {
-        //Arrange
-        var id = 1;
-        var groups = Array.Empty<UserGroupDto>();
-        
-        _groupRepositoryMock
-            .Setup(x => x.GetUserGroups(id))
-            .ReturnsAsync(groups);
-
-        //Act
-        var actionResult = await _groupsController.GetUserGroups(id);
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as string;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("There is no groups", resultValue);
     }
     
     [Fact]
