@@ -1,6 +1,6 @@
 ﻿namespace Gryzilla_App.DTOs.Responses.Group;
 
-public class ExistUserGroup
+public class ExistUserGroupDto
 {
     public bool Member { get; set; }
 }
