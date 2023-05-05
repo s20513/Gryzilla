@@ -601,6 +601,8 @@ public class PostDbRepository : IPostDbRepository
                         IdComment   = x.IdComment,
                         IdUser      = x.IdUser,
                         Nick        = x.IdUserNavigation.Nick,
+                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                        Type = x.IdUserNavigation.PhotoType,
                         Content = x.DescriptionPost
                     }).ToArray(),
                 Type            = a.IdUserNavigation.PhotoType,                                            
