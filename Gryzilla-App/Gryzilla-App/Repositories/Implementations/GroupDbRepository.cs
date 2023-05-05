@@ -279,14 +279,14 @@ public class GroupDbRepository: IGroupDbRepository
         return await GetGroup(group.IdGroup);
     }
 
-    public async Task<ExistUserGroup> UserIsInGroup(int idGroup, int idUser)
+    public async Task<ExistUserGroupDto> UserIsInGroup(int idGroup, int idUser)
     {
         var groupUser = await _context.GroupUsers
             .Where(e => e.IdGroup == idGroup 
                                 && e.IdUser == idUser)
             .SingleOrDefaultAsync();
 
-        return new ExistUserGroup
+        return new ExistUserGroupDto
         {
             Member = groupUser is not null
         };
