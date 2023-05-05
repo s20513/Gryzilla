@@ -536,7 +536,7 @@ public class GroupsControllerTests
         //Arrange
         var idGroup = 1;
         var idUser = 1;
-        var exist = new ExistUserGroup
+        var exist = new ExistUserGroupDto
         {
             Member = true
         };
