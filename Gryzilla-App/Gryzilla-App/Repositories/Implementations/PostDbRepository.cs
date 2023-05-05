@@ -424,6 +424,14 @@ public class PostDbRepository : IPostDbRepository
             .CommentPosts
             .Where(x => x.IdPost == idPost)
             .ToArrayAsync();
+
+        var commentIds = comments.Select(e => e.IdComment).ToList();
+
+        var reportCommentPosts = await _context.ReportCommentPosts
+            .Where(e => commentIds.Contains(e.IdComment))
+            .ToListAsync();
+        
+        _context.ReportCommentPosts.RemoveRange(reportCommentPosts);
         
         foreach (var comment in comments)
         {
