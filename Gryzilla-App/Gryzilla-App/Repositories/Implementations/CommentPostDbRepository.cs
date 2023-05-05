@@ -146,14 +146,18 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         {
             return null;
         }
+        
+        
 
         var comments = await _context
             .CommentPosts
             .Where(x => x.IdPost == idPost).
             Select(x=> new PostCommentDto
             {
+                IdComment = x.IdComment,
                 IdPost = idPost,
                 Content = x.DescriptionPost,
+                IdUser = x.IdUser,
                 Nick    = _context
                     .UserData
                     .Where(u=>u.IdUser == x.IdUser)
