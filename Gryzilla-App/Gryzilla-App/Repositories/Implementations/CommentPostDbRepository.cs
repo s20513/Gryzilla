@@ -73,7 +73,6 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             .CommentPosts
             .Where(x => 
                 x.IdComment == idComment &&
-                x.IdUser    == putPostCommentDto.IdUser &&
                 x.IdPost    == putPostCommentDto.IdPost)
             .SingleOrDefaultAsync();
         
@@ -87,7 +86,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         
         nick = await _context
             .UserData
-            .Where(x => x.IdUser == putPostCommentDto.IdUser)
+            .Where(x => x.IdUser == commentPost.IdUser)
             .Select(x => x.Nick)
             .SingleAsync();
         
@@ -96,7 +95,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             Nick        = nick,
             IdComment   = idComment,
             IdPost      = putPostCommentDto.IdPost,
-            IdUser      = putPostCommentDto.IdUser,
+            IdUser      = commentPost.IdUser,
             Content     = putPostCommentDto.Content,
             CreatedAt   = commentPost.CreatedAt
         };

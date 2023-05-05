@@ -146,7 +146,6 @@ public class CommentArticleDbRepositoryTests
         var putArticleCommentDto = new PutArticleCommentDto
         {
             IdComment = idComment,
-            IdUser = 1,
             IdArticle = 1,
             Content = "NewDescArticle1"
         };
@@ -181,7 +180,6 @@ public class CommentArticleDbRepositoryTests
         var putArticleCommentDto = new PutArticleCommentDto
         {
             IdComment = idComment,
-            IdUser = 1,
             IdArticle = 1,
             Content = "NewDescArticle1"
         };

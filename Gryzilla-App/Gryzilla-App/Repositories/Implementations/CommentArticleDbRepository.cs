@@ -70,8 +70,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         var comment = await _context
             .CommentArticles
             .SingleOrDefaultAsync(e => 
-                e.IdCommentArticle == putArticleCommentDto.IdComment && 
-                e.IdUser           == putArticleCommentDto.IdUser &&
+                e.IdCommentArticle == putArticleCommentDto.IdComment &&
                 e.IdArticle        == putArticleCommentDto.IdArticle);
 
         if (comment is null)
@@ -84,7 +83,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         
         nick = await _context
             .UserData
-            .Where(x => x.IdUser == putArticleCommentDto.IdUser)
+            .Where(x => x.IdUser == comment.IdUser)
             .Select(x => x.Nick)
             .SingleAsync();
 
@@ -92,7 +91,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         {
             Nick        = nick,
             IdComment   = comment.IdCommentArticle,
-            IdUser      = putArticleCommentDto.IdUser,
+            IdUser      = comment.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
             Content     = putArticleCommentDto.Content,
             CreatedAt    = comment.CreatedAt

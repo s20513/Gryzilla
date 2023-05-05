@@ -144,7 +144,6 @@ public class CommentPostDbRepositoryTests
         var putPostCommentDto = new PutPostCommentDto
         {
             IdComment = idComment,
-            IdUser = 1,
             IdPost = 1,
             Content = "NewDescPost1"
         };
@@ -179,7 +178,6 @@ public class CommentPostDbRepositoryTests
         var putPostCommentDto = new PutPostCommentDto
         {
             IdComment = idComment,
-            IdUser = 1,
             IdPost = 1,
             Content = "NewDescPost1"
         };

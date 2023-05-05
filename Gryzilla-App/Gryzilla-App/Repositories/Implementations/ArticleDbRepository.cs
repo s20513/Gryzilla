@@ -116,7 +116,9 @@ public class ArticleDbRepository: IArticleDbRepository
                     Author     = new ReducedUserResponseDto
                     {
                         IdUser = x.IdUser,
-                        Nick   = x.IdUserNavigation.Nick
+                        Nick   = x.IdUserNavigation.Nick,
+                        Type            = x.IdUserNavigation.PhotoType,                                            
+                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
                     },
                     Title     = x.Title,
                     Content   = x.Content,
@@ -146,7 +148,9 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick   = c.IdUserNavigation.Nick,
-                            CreatedAt = c.CreatedAt
+                            CreatedAt = c.CreatedAt,
+                            base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                            Type = x.IdUserNavigation.PhotoType,
                         })
                         .Take(2)
                         .ToList(),

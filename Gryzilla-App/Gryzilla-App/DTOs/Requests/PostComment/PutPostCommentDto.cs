@@ -6,10 +6,7 @@ public class PutPostCommentDto
 {
     [Required]
     public int IdComment { get; set; }
-    
-    [Required]
-    public int IdUser { get; set; }
-    
+
     [Required]
     public int IdPost { get; set; }
     
