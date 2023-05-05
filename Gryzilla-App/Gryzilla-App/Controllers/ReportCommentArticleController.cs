@@ -28,10 +28,6 @@ public class ReportCommentArticleController: Controller
     {
         var reports = await _reportCommentArticleDbRepository.GetReportCommentArticlesFromDb();
         
-        if (reports.IsNullOrEmpty())
-        {
-            return NotFound("No reports");
-        }
         return Ok(reports);
     }
 

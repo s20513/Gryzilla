@@ -95,28 +95,7 @@ public class ReportCommentArticleControllerTests
         if (resultValue is null) return;
         Assert.Equal("No report with given id found", resultValue);
     }
-    [Fact]
-    public async void GetReports_Returns_NotFound()
-    {
-        //Arrange
-        List<ReportCommentArticleDto>? reports = new List<ReportCommentArticleDto>();
-
-        _reportRepositoryMock.Setup(e => e.GetReportCommentArticlesFromDb()).ReturnsAsync(reports);
-
-        //Act
-        var actionResult = await _reportController.GetReports();
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as string;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("No reports", resultValue);
-    }
+    
     [Fact]
     public async void CreateReportArticleComment_Returns_Ok()
     {

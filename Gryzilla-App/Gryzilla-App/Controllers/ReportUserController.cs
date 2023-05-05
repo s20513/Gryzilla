@@ -23,10 +23,6 @@ public class ReportUserController: Controller
     {
         var reports = await _reportUserDbRepository.GetUsersReportsFromDb();
         
-        if (reports.IsNullOrEmpty())
-        {
-            return NotFound("No reports");
-        }
         return Ok(reports);
     }
     

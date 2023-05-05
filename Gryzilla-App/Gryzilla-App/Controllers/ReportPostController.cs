@@ -27,10 +27,6 @@ public class ReportPostController: Controller
     {
         var reports = await _reportPostDbRepository.GetReportPostsFromDb();
         
-        if (reports.IsNullOrEmpty())
-        {
-            return NotFound("No reports");
-        }
         return Ok(reports);
     }
     
