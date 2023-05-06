@@ -583,6 +583,7 @@ public class PostDbRepository : IPostDbRepository
             .Select(a => new OnePostDto
             {
                 idPost = post.IdPost,
+                idUser = a.IdUser,
                 Likes = _context
                     .Posts
                     .Where(c => c.IdPost == post.IdPost)
