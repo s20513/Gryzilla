@@ -87,7 +87,9 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick   = c.IdUserNavigation.Nick,
-                            CreatedAt = c.CreatedAt
+                            CreatedAt = c.CreatedAt,
+                            base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                            Type = x.IdUserNavigation.PhotoType,
                         })
                         .Take(2)
                         .ToList(),
@@ -559,7 +561,9 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick   = c.IdUserNavigation.Nick,
-                            CreatedAt = c.CreatedAt
+                            CreatedAt = c.CreatedAt,
+                            base64PhotoData = Convert.ToBase64String(c.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                            Type = c.IdUserNavigation.PhotoType,
                         })
                         .Take(2)
                         .ToList(),
@@ -665,7 +669,9 @@ public class ArticleDbRepository: IArticleDbRepository
                             IdArticle = c.IdArticle,
                             IdUser = c.IdUser,
                             Nick = c.IdUserNavigation.Nick,
-                            CreatedAt = c.CreatedAt
+                            CreatedAt = c.CreatedAt,
+                            base64PhotoData = Convert.ToBase64String(c.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                            Type = c.IdUserNavigation.PhotoType,
                         })
                         .Take(2)
                         .ToList(),

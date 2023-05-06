@@ -46,7 +46,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdUser          = newPostCommentDto.IdUser,
             IdPost          = newPostCommentDto.IdPost,
             DescriptionPost = newPostCommentDto.Content,
-            CreatedAt       = DateTime.Now
+            CreatedAt       = DateTime.Now,
         };
         
         await _context.CommentPosts.AddAsync(newCommentPost);
@@ -61,14 +61,14 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             IdComment   = idComment,
             IdPost      = newPostCommentDto.IdPost,
             Content     = newCommentPost.DescriptionPost,
-            CreatedAt   = newCommentPost.CreatedAt
+            CreatedAt   = newCommentPost.CreatedAt,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()), 
+            Type = user.PhotoType,
         };
     }
 
     public async Task<PostCommentDto?> ModifyPostCommentFromDb(PutPostCommentDto putPostCommentDto, int idComment)
     {
-        string nick;
-        
         var commentPost = await _context
             .CommentPosts
             .Where(x => 
@@ -84,27 +84,26 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         commentPost.DescriptionPost = putPostCommentDto.Content;
         await _context.SaveChangesAsync();
         
-        nick = await _context
+        var user = await _context
             .UserData
             .Where(x => x.IdUser == commentPost.IdUser)
-            .Select(x => x.Nick)
             .SingleAsync();
         
         return new PostCommentDto
         {
-            Nick        = nick,
+            Nick        = user.Nick,
             IdComment   = idComment,
             IdPost      = putPostCommentDto.IdPost,
             IdUser      = commentPost.IdUser,
             Content     = putPostCommentDto.Content,
-            CreatedAt   = commentPost.CreatedAt
+            CreatedAt   = commentPost.CreatedAt,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()), 
+            Type = user.PhotoType,
         };
     }
 
     public async Task<PostCommentDto?> DeleteCommentFromDb(int idComment)
     {
-        string nick;
-        
         var commentPost = await _context
             .CommentPosts
             .Where(x => x.IdComment == idComment)
@@ -118,20 +117,21 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         _context.CommentPosts.Remove(commentPost);
         await _context.SaveChangesAsync();
         
-        nick = await _context
+        var user = await _context
             .UserData
             .Where(x => x.IdUser == commentPost.IdUser)
-            .Select(x => x.Nick)
             .SingleAsync();
         
         return new PostCommentDto
         {
-            Nick        = nick,
+            Nick        = user.Nick,
             IdPost      = commentPost.IdPost,
             IdUser      = commentPost.IdUser,
             IdComment   = idComment,
             Content     = commentPost.DescriptionPost,
-            CreatedAt   = commentPost.CreatedAt
+            CreatedAt   = commentPost.CreatedAt,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()), 
+            Type = user.PhotoType,
         };
     }
     
@@ -146,8 +146,6 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             return null;
         }
         
-        
-
         var comments = await _context
             .CommentPosts
             .Where(x => x.IdPost == idPost).
@@ -162,7 +160,9 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
                     .Where(u=>u.IdUser == x.IdUser)
                     .Select(u=>u.Nick)
                     .SingleOrDefault(),
-                CreatedAt = x.CreatedAt
+                CreatedAt = x.CreatedAt,
+                base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                Type = x.IdUserNavigation.PhotoType,
             }).ToArrayAsync();
 
         return new GetPostCommentDto

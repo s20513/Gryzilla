@@ -60,8 +60,10 @@ public class PostDbRepository : IPostDbRepository
                         IdComment = x.IdComment,
                         IdPost = x.IdPost,
                         IdUser = x.IdUser,
-                        Nick  =x.IdUserNavigation.Nick,
-                        CreatedAt = x.CreatedAt
+                        Nick  = x.IdUserNavigation.Nick,
+                        CreatedAt = x.CreatedAt,
+                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                        Type = x.IdUserNavigation.PhotoType,
                     })
                     .Take(2)
                     .ToList(),
@@ -699,7 +701,9 @@ public class PostDbRepository : IPostDbRepository
                             IdPost = x.IdPost,
                             IdUser = x.IdUser,
                             Nick  =x.IdUserNavigation.Nick,
-                            CreatedAt = x.CreatedAt
+                            CreatedAt = x.CreatedAt,
+                            base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                            Type = x.IdUserNavigation.PhotoType,
                         })
                         .Take(2)
                         .ToList(),

@@ -60,13 +60,14 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             IdUser      = user.IdUser,
             IdArticle   = newArticleCommentDto.IdArticle,
             Content     = newArticleCommentDto.Content,
-            CreatedAt   = articleComment.CreatedAt
+            CreatedAt   = articleComment.CreatedAt,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()), 
+            Type = user.PhotoType,
         };
     }
     
     public async Task<ArticleCommentDto?> ModifyArticleCommentFromDb(PutArticleCommentDto putArticleCommentDto, int idComment)
     {
-        string nick;
         var comment = await _context
             .CommentArticles
             .SingleOrDefaultAsync(e => 
@@ -81,26 +82,26 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         comment.DescriptionArticle = putArticleCommentDto.Content;
         await _context.SaveChangesAsync();
         
-        nick = await _context
+        var user = await _context
             .UserData
             .Where(x => x.IdUser == comment.IdUser)
-            .Select(x => x.Nick)
             .SingleAsync();
 
         return new ArticleCommentDto
         {
-            Nick        = nick,
+            Nick        = user.Nick,
             IdComment   = comment.IdCommentArticle,
             IdUser      = comment.IdUser,
             IdArticle   = putArticleCommentDto.IdArticle,
             Content     = putArticleCommentDto.Content,
-            CreatedAt    = comment.CreatedAt
+            CreatedAt    = comment.CreatedAt,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()), 
+            Type = user.PhotoType,
         };
     }
 
     public async Task<ArticleCommentDto?> DeleteArticleCommentFromDb(int idComment)
     {
-        string nick;
         var comment = await _context
             .CommentArticles
             .SingleOrDefaultAsync(e => e.IdCommentArticle == idComment);
@@ -113,20 +114,21 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         _context.CommentArticles.Remove(comment);
         await _context.SaveChangesAsync();
 
-        nick = await _context
+        var user = await _context
             .UserData
             .Where(x => x.IdUser == comment.IdUser)
-            .Select(x => x.Nick)
             .SingleAsync();
         
         return new ArticleCommentDto
         {
-            Nick        = nick,
+            Nick        = user.Nick,
             IdComment   = idComment,
             IdUser      = comment.IdUser,
             IdArticle   = comment.IdArticle,
             Content     = comment.DescriptionArticle,
-            CreatedAt = comment.CreatedAt
+            CreatedAt = comment.CreatedAt,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()), 
+            Type = user.PhotoType,
         };
     }
     public async Task<GetArticleCommentDto> GetArticleCommentsFromDb(int idArticle)
@@ -152,7 +154,9 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
                     .Where(u=>u.IdUser == x.IdUser)
                     .Select(u=>u.Nick)
                     .SingleOrDefault(),
-                CreatedAt = x.CreatedAt
+                CreatedAt = x.CreatedAt,
+                base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                Type = x.IdUserNavigation.PhotoType,
             }).ToArrayAsync();
 
         return new GetArticleCommentDto
