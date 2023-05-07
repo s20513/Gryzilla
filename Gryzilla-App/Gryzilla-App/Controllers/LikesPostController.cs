@@ -35,7 +35,7 @@ public class LikesPostController : Controller
             return BadRequest(new StringMessageDto{ Message = likes });
         }
         
-        return Ok(likes);
+        return Ok(new StringMessageDto{Message = likes});
     }
     
     /// <summary>
@@ -58,7 +58,7 @@ public class LikesPostController : Controller
             return BadRequest(new StringMessageDto{ Message = likes });
         }
 
-        return Ok(likes);
+        return Ok(new StringMessageDto{Message = likes});
     }
     
     /// <summary>

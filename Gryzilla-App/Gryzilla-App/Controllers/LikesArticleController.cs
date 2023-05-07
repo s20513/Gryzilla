@@ -55,7 +55,7 @@ public class LikesArticleController : Controller
         
         if (likes is not "Deleted like")
         {
-            return BadRequest(likes);
+            return BadRequest(new StringMessageDto{ Message = likes });
         }
 
         return Ok(new StringMessageDto{ Message = likes });

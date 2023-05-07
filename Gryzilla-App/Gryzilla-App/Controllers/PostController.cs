@@ -375,7 +375,7 @@ public class PostController : Controller
     /// NotFound - if tag has not been assigned or cannot delete tag from post
     /// OK - return Post
     /// </returns>
-    [HttpDelete("/tag/{idPost:int}/{idTag:int}")]
+    [HttpDelete("tag/{idPost:int}/{idTag:int}")]
     public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
     {
         var posts = await _postsDbRepository.DeleteTagFromPost(idPost,idTag);
