@@ -1,4 +1,5 @@
 using Gryzilla_App.DTOs.Requests.User;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -30,7 +31,7 @@ public class UserController : Controller
 
         if (user == null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist"}); 
         }
         
         return Ok(user);
@@ -48,7 +49,7 @@ public class UserController : Controller
 
         if (user is null)
         {
-            return NotFound("Users don't exist");
+            return NotFound(new StringMessageDto{ Message = "Users don't exist"});
         }
 
         return Ok(user);
@@ -64,7 +65,7 @@ public class UserController : Controller
     {
         if (idUser != putUserDto.IdUser)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same"});
         }
         try
         {
@@ -72,14 +73,14 @@ public class UserController : Controller
         
             if (user == null)
             { 
-                return NotFound("User doesn't exist");
+                return NotFound(new StringMessageDto{ Message = "User doesn't exist"});
             }
         
             return Ok(user);
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
     }
 
@@ -98,14 +99,14 @@ public class UserController : Controller
         
             if (user == null)
             { 
-                return NotFound("User doesn't exist");
+                return NotFound(new StringMessageDto{ Message = "User doesn't exist"});
             }
         
             return Ok(user);
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
     }
     
@@ -121,7 +122,7 @@ public class UserController : Controller
         
         if (user == null)
         { 
-            return NotFound("User doesn't exist");
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist"});
         }
         
         return Ok(user);
@@ -177,7 +178,7 @@ public class UserController : Controller
         
         if (res == null)
         { 
-            return NotFound("Rank or user does not exists!");
+            return NotFound(new StringMessageDto{ Message = "Rank or user does not exists!"});
         }
         
         return Ok(res);

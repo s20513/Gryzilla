@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.ReportCommentArticle;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportCommentArticle;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -89,11 +90,11 @@ public class ReportCommentArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No report with given id found", resultValue);
+        Assert.Equal("No report with given id found", resultValue.Message);
     }
     
     [Fact]
@@ -140,11 +141,11 @@ public class ReportCommentArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(message, resultValue);
+        Assert.Equal(message, resultValue.Message);
     }
 
     [Fact]
@@ -166,11 +167,11 @@ public class ReportCommentArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User, comment or reason is wrong", resultValue);
+        Assert.Equal("User, comment or reason is wrong", resultValue.Message);
     }
     
     
@@ -227,11 +228,11 @@ public class ReportCommentArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No report with given id found", resultValue);
+        Assert.Equal("No report with given id found", resultValue.Message);
     }
     
     [Fact]
@@ -289,11 +290,11 @@ public class ReportCommentArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No report with given id found", resultValue);
+        Assert.Equal("No report with given id found", resultValue.Message);
     }
 
 }

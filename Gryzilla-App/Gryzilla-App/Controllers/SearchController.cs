@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTOs.Responses.Articles;
+﻿using Gryzilla_App.DTOs.Responses;
+using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
@@ -26,19 +27,19 @@ public class SearchController : Controller
     [HttpGet("getUsersByName/{qtyUsers:int}")]
     public async Task<IActionResult> GetUsers([FromRoute] int qtyUsers, [FromQuery] DateTime time, [FromQuery] string nickName)
     {
-        UsersQtyDto users;
+        UsersQtyDto? users;
         
         try
         {
             users = await _searchDbRepository.GetUsersByNameFromDb(qtyUsers, time, nickName);
             if (users == null)
             {
-                return NotFound("No users found"); 
+                return NotFound(new StringMessageDto{ Message = "No users found"}); 
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         return Ok(users);
     }
@@ -60,12 +61,12 @@ public class SearchController : Controller
 
             if (posts == null)
             {
-                return NotFound("No posts found"); 
+                return NotFound(new StringMessageDto{ Message = "No posts found"}); 
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         return Ok(posts);
     }
@@ -87,12 +88,12 @@ public class SearchController : Controller
 
             if (articles == null)
             {
-                return NotFound("No articles found"); 
+                return NotFound(new StringMessageDto{ Message = "No articles found"}); 
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         
         return Ok(articles);

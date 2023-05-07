@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Rank;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -65,11 +66,11 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot add new rank", resultValue);
+        Assert.Equal("Cannot add new rank", resultValue.Message);
     }
     
     [Fact]
@@ -90,11 +91,11 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Rank with given name already exists!", resultValue);
+        Assert.Equal("Rank with given name already exists!", resultValue.Message);
     }
     
     
@@ -144,11 +145,11 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot delete rank", resultValue);
+        Assert.Equal("Cannot delete rank", resultValue.Message);
     }
     [Fact]
     public async void DeleteRank_Returns_Bad_Request()
@@ -169,11 +170,11 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -231,11 +232,11 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot modify rank", resultValue);
+        Assert.Equal("Cannot modify rank", resultValue.Message);
     }
     
     [Fact]
@@ -262,11 +263,11 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void ModifyRank_Returns_Bad_Request()
@@ -286,10 +287,10 @@ public class RankControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
 }

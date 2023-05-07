@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Tag;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -60,11 +61,11 @@ public class TagControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no tag with given id", resultValue);
+        Assert.Equal("There is no tag with given id", resultValue.Message);
     }
     
     [Fact]
@@ -106,11 +107,11 @@ public class TagControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No tags found", resultValue);
+        Assert.Equal("No tags found", resultValue.Message);
     }
   [Fact]
     public async void CreateNewTag_Returns_Ok()
@@ -158,11 +159,11 @@ public class TagControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot add new tag", resultValue);
+        Assert.Equal("Cannot add new tag", resultValue.Message);
     }
     
     [Fact]
@@ -183,11 +184,11 @@ public class TagControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Tag with given name already exists!", resultValue);
+        Assert.Equal("Tag with given name already exists!", resultValue.Message);
     }
     
     [Fact]

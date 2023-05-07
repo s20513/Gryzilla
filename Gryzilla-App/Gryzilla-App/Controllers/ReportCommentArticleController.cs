@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.ReportCommentArticle;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportCommentArticle;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -45,7 +46,7 @@ public class ReportCommentArticleController: Controller
 
         if (report is null)
         {
-            return NotFound("No report with given id found");
+            return NotFound(new StringMessageDto{ Message = "No report with given id found"});
         }
         
         return Ok(report);
@@ -66,12 +67,12 @@ public class ReportCommentArticleController: Controller
 
             if (report is null)
             {
-                return NotFound("User, comment or reason is wrong");
+                return NotFound(new StringMessageDto{ Message = "User, comment or reason is wrong"});
             } 
         }
         catch (UserCreatorException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         return Ok(report);
     }
@@ -88,7 +89,7 @@ public class ReportCommentArticleController: Controller
 
         if (report is null)
         {
-            return NotFound("No report with given id found");
+            return NotFound(new StringMessageDto{ Message = "No report with given id found"});
         }
 
         return Ok(report);
@@ -106,7 +107,7 @@ public class ReportCommentArticleController: Controller
 
         if (report is null)
         {
-            return NotFound("No report with given id found");
+            return NotFound(new StringMessageDto{ Message = "No report with given id found"});
         }
 
         return Ok(report);

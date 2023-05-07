@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.Tag;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ public class TagController: Controller
         
         if (tags is null)
         {
-            return NotFound("No tags found");
+            return NotFound(new StringMessageDto{ Message = "No tags found"});
         }
 
         return Ok(tags);
@@ -51,7 +52,7 @@ public class TagController: Controller
         
         if (tag is null)
         {
-            return NotFound("There is no tag with given id");
+            return NotFound(new StringMessageDto{ Message = "There is no tag with given id"});
         }
 
         return Ok(tag);
@@ -74,14 +75,14 @@ public class TagController: Controller
             
             if (tag is null)
             {
-                return NotFound("Cannot add new tag");
+                return NotFound(new StringMessageDto{ Message = "Cannot add new tag"});
             }
             
             return Ok(tag);
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
     }
     

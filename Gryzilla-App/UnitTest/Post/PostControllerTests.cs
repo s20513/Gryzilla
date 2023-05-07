@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
@@ -243,11 +244,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     
     [Fact]
@@ -292,11 +293,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -315,11 +316,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetPostByMostLikesFromDb_Returns_Ok()
@@ -360,11 +361,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostsByCommentsFromDb_Returns_Ok()
@@ -408,11 +409,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
 
     [Fact]
@@ -431,11 +432,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetPostsByCommentsFromDb_Returns_Ok()
@@ -475,11 +476,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     
     [Fact]
@@ -525,11 +526,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostByLatestDateFromDb_Not_Found()
@@ -547,11 +548,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetPostByLatestDateFromDb_Returns_Ok()
@@ -591,11 +592,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostByOldestDateFromDb_Returns_Ok()
@@ -640,11 +641,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostByOldestDateFromDb_Not_Found()
@@ -662,11 +663,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetPostByOldestDateFromDb_Returns_Ok()
@@ -706,11 +707,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     
     [Fact] 
@@ -731,11 +732,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostsFromDb_Returns_Null()
@@ -753,11 +754,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostsFromDb_Returns_ListOfPosts()
@@ -828,11 +829,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Post with this Id doesn't exist", resultValue);
+        Assert.Equal("Post with this Id doesn't exist", resultValue.Message);
     }
     [Fact]
     public async void AddNewPostToDb_Returns_Ok()
@@ -883,11 +884,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot add new post", resultValue);
+        Assert.Equal("Cannot add new post", resultValue.Message);
     }
       [Fact]
     public async void ModifyPostFromDb_Returns_Ok()
@@ -946,11 +947,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot modify post", resultValue);
+        Assert.Equal("Cannot modify the post", resultValue.Message);
     }
     
     [Fact]
@@ -971,11 +972,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     [Fact]
     public async void DeletePostFromDb_Returns_Ok()
@@ -1025,11 +1026,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot delete new post", resultValue);
+        Assert.Equal("Cannot delete new post", resultValue.Message);
     }
     [Fact]
     public async void DeleteTagFromPost_Returns_Ok()
@@ -1082,11 +1083,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot delete tag", resultValue);
+        Assert.Equal("Cannot delete tag", resultValue.Message);
     }
     
     [Fact]
@@ -1105,11 +1106,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     
     [Fact]
@@ -1177,11 +1178,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostsByTagFromDb_Returns_Null()
@@ -1199,11 +1200,11 @@ public class PostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     [Fact]
     public async void GetQtyPostsByTagFromDb_Returns_ListOfPosts()

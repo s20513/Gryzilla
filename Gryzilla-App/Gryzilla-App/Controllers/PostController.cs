@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -31,7 +32,7 @@ public class PostController : Controller
         
         if (posts is null)
         {
-            return NotFound("No posts found");
+            return NotFound(new StringMessageDto { Message = "No posts found" });
         }
         
         return Ok(posts);
@@ -67,7 +68,7 @@ public class PostController : Controller
 
         if (posts is null)
         {
-            return NotFound("No posts found");
+            return NotFound(new StringMessageDto { Message = "No posts found" });
         }
         
         return Ok(posts);
@@ -91,12 +92,12 @@ public class PostController : Controller
 
             if (posts is null)
             {
-                return NotFound("No posts found");
+                return NotFound(new StringMessageDto { Message = "No posts found" });
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
 
         return Ok(posts);
@@ -118,12 +119,12 @@ public class PostController : Controller
             posts = await _postsDbRepository.GetQtyPostsByCommentsFromDb(qtyPosts, time);
             if (posts == null)
             {
-                return NotFound("No posts found");
+                return NotFound(new StringMessageDto { Message = "No posts found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
 
         return Ok(posts);
@@ -144,12 +145,12 @@ public class PostController : Controller
             posts = await _postsDbRepository.GetQtyPostsByLikesFromDb(qtyPosts, time);
             if (posts == null) 
             {
-                return NotFound("No posts found");
+                return NotFound(new StringMessageDto { Message = "No posts found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
        
         return Ok(posts);
@@ -170,12 +171,12 @@ public class PostController : Controller
             posts = await _postsDbRepository.GetQtyPostsByDateFromDb(qtyPosts, time);
             if (posts == null)
             {
-                return NotFound("No posts found");
+                return NotFound(new StringMessageDto { Message = "No posts found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
 
         return Ok(posts);
@@ -198,12 +199,12 @@ public class PostController : Controller
 
             if (posts == null)
             {
-                return NotFound("No posts found");
+                return NotFound(new StringMessageDto { Message = "No posts found" });
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         
         return Ok(posts);
@@ -222,7 +223,7 @@ public class PostController : Controller
         var posts = await _postsDbRepository.GetPostsByCommentsFromDb();
         if (posts.IsNullOrEmpty())
         {
-            return NotFound("No posts found");
+            return NotFound(new StringMessageDto { Message = "No posts found" });
         }
         return Ok(posts);
     }
@@ -239,7 +240,7 @@ public class PostController : Controller
         var posts = await _postsDbRepository.GetPostsByLikesFromDb();
         if (posts is null)
         {
-            return NotFound("No posts found");
+            return NotFound(new StringMessageDto { Message = "No posts found" });
         }
         return Ok(posts);
     }
@@ -256,7 +257,7 @@ public class PostController : Controller
         var posts = await _postsDbRepository.GetPostsByDateFromDb();
         if (posts is null)
         {
-            return NotFound("No posts found");
+            return NotFound(new StringMessageDto { Message = "No posts found" });
         }
         return Ok(posts);
     }
@@ -274,7 +275,7 @@ public class PostController : Controller
         
         if (posts is null)
         {
-            return NotFound("No posts found");
+            return NotFound(new StringMessageDto { Message = "No posts found" });
         }
         return Ok(posts);
     }
@@ -293,7 +294,7 @@ public class PostController : Controller
         
         if (posts is null)
         {
-            return NotFound("Post with this Id doesn't exist");
+            return NotFound(new StringMessageDto { Message = "Post with this Id doesn't exist"});
         }
         return Ok(posts);
     }
@@ -313,7 +314,7 @@ public class PostController : Controller
         
         if (posts is null)
         {
-            return NotFound("Cannot add new post");
+            return NotFound(new StringMessageDto { Message = "Cannot add new post" });
         }
         return Ok(posts);
     }
@@ -332,14 +333,14 @@ public class PostController : Controller
     {
         if (putPostDto.IdPost != idPost)
         {
-            return BadRequest("Id from route and Id in body have to be same"); 
+            return BadRequest(new StringMessageDto { Message = "Id from route and Id in body have to be same"}); 
         }
         
         var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto, idPost);
         
         if (posts is null)
         {
-            return NotFound("Cannot modify post");
+            return NotFound(new StringMessageDto { Message = "Cannot modify the post" });
         }
         
         return Ok(posts);
@@ -359,7 +360,7 @@ public class PostController : Controller
         
         if (posts is null)
         {
-            return NotFound("Cannot delete new post");
+            return NotFound(new StringMessageDto { Message ="Cannot delete new post"});
         }
         
         return Ok(posts);
@@ -381,7 +382,7 @@ public class PostController : Controller
         
         if (posts is null)
         {
-            return NotFound("Cannot delete tag");
+            return NotFound(new StringMessageDto { Message ="Cannot delete tag"});
         }
         return Ok(posts);
     }
@@ -404,12 +405,12 @@ public class PostController : Controller
 
             if (posts is null)
             {
-                return NotFound("No posts found");
+                return NotFound(new StringMessageDto { Message ="No posts found"});
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
 
         return Ok(posts);

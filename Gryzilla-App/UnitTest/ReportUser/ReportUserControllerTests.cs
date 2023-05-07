@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.ReportUser;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -81,11 +82,11 @@ public class ReportUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
 
         if (resultValue is null) return;
-        Assert.Equal("No report with given data found", resultValue);
+        Assert.Equal("No report with given data found", resultValue.Message);
     }
     
     [Fact]
@@ -129,11 +130,11 @@ public class ReportUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
 
         if (resultValue is null) return;
-        Assert.Equal("Users or reason does not exist", resultValue);
+        Assert.Equal("Users or reason does not exist", resultValue.Message);
     }
     
     [Fact]
@@ -154,11 +155,11 @@ public class ReportUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
 
         if (resultValue is null) return;
-        Assert.Equal(text, resultValue);
+        Assert.Equal(text, resultValue.Message);
     }
     
     [Fact]
@@ -202,11 +203,11 @@ public class ReportUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
 
         if (resultValue is null) return;
-        Assert.Equal("No report with given data found", resultValue);
+        Assert.Equal("No report with given data found", resultValue.Message);
     }
     
     [Fact]
@@ -250,11 +251,11 @@ public class ReportUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
 
         if (resultValue is null) return;
-        Assert.Equal("No report with given data found", resultValue);
+        Assert.Equal("No report with given data found", resultValue.Message);
     }
     
 }

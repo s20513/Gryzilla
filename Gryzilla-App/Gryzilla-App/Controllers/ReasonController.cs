@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Reason;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ public class ReasonController: Controller
 
         if (reason is null)
         {
-            return NotFound("No reason with given id found");
+            return NotFound(new StringMessageDto{ Message ="No reason with given id found"});
         }
         
         return Ok(reason);
@@ -65,7 +66,7 @@ public class ReasonController: Controller
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         
         return Ok(reason);
@@ -84,7 +85,7 @@ public class ReasonController: Controller
 
         if (reason is null)
         {
-            return NotFound("No reason with given id found");
+            return NotFound(new StringMessageDto{ Message = "No reason with given id found"});
         }
 
         return Ok(reason);

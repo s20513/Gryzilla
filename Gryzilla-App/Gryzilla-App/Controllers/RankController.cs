@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -32,14 +33,14 @@ public class RankController : Controller
 
             if (rank is null)
             {
-                return NotFound("Cannot add new rank");
+                return NotFound(new StringMessageDto{ Message ="Cannot add new rank"});
             }
 
             return Ok(rank);
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message =e.Message});
         }
     }
     
@@ -61,13 +62,13 @@ public class RankController : Controller
         
             if (rank is null)
             {
-                return NotFound("Cannot delete rank");
+                return NotFound(new StringMessageDto{ Message ="Cannot delete rank"});
             }
             return Ok(rank);
         }
         catch (ReferenceException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message =e.Message});
         }
        
     }
@@ -86,7 +87,7 @@ public class RankController : Controller
     public async Task<IActionResult> ModifyRank([FromBody] PutRankDto putRankDto, [FromRoute] int idRank)
     {
         if (idRank != putRankDto.IdRank)
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message ="Id from route and Id in body have to be same"});
 
         try
         {
@@ -94,14 +95,14 @@ public class RankController : Controller
         
             if (rank is null)
             {
-                return NotFound("Cannot modify rank");
+                return NotFound(new StringMessageDto{ Message ="Cannot modify rank"});
             }
         
             return Ok(rank);
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message =e.Message});
         }
     }
 }

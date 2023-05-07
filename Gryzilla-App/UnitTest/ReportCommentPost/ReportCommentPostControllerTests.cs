@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.ReportCommentPost;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportCommentPost;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -89,11 +90,11 @@ public class ReportCommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No report with given id found", resultValue);
+        Assert.Equal("No report with given id found", resultValue.Message);
     }
     
     [Fact]
@@ -105,7 +106,7 @@ public class ReportCommentPostControllerTests
 
         _reportRepositoryMock
             .Setup(e => e.AddReportCommentPostToDb(newReason))
-            .ThrowsAsync(new UserCreatorException("The creator of the comment cannot report"));
+            .ThrowsAsync(new UserCreatorException(message));
         
         //Act
         var actionResult = await _reportController.AddReportPostComment(newReason);
@@ -115,11 +116,11 @@ public class ReportCommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(message, resultValue);
+        Assert.Equal(message, resultValue.Message);
     }
     [Fact]
     public async void CreateReportPostComment_Returns_Ok()
@@ -166,11 +167,11 @@ public class ReportCommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User, comment or reason is wrong", resultValue);
+        Assert.Equal("User, comment or reason is wrong", resultValue.Message);
     }
     
     
@@ -227,11 +228,11 @@ public class ReportCommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No report with given id found", resultValue);
+        Assert.Equal("No report with given id found", resultValue.Message);
     }
     
     [Fact]
@@ -289,10 +290,10 @@ public class ReportCommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No report with given id found", resultValue);
+        Assert.Equal("No report with given id found", resultValue.Message);
     }
 }

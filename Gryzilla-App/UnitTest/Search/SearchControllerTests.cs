@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
@@ -140,11 +141,11 @@ public class SearchControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -167,11 +168,11 @@ public class SearchControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue);
+        Assert.Equal("No posts found", resultValue.Message);
     }
     
     [Fact]
@@ -218,11 +219,11 @@ public class SearchControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -245,11 +246,11 @@ public class SearchControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -293,11 +294,11 @@ public class SearchControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No users found", resultValue);
+        Assert.Equal("No users found", resultValue.Message);
     }
     
     [Fact]
@@ -319,11 +320,11 @@ public class SearchControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
 
 }

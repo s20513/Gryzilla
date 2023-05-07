@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.User;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -62,11 +63,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User doesn't exist", resultValue);
+        Assert.Equal("User doesn't exist", resultValue.Message);
     }
     
     [Fact]
@@ -108,11 +109,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Users don't exist", resultValue);
+        Assert.Equal("Users don't exist", resultValue.Message);
     }
     
      [Fact]
@@ -169,11 +170,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User doesn't exist", resultValue);
+        Assert.Equal("User doesn't exist", resultValue.Message);
     }
     
     [Fact]
@@ -199,11 +200,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void ModifyUser_Returns_Bad_Request()
@@ -223,11 +224,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     
@@ -277,11 +278,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User doesn't exist", resultValue);
+        Assert.Equal("User doesn't exist", resultValue.Message);
     }
     
     [Fact]
@@ -302,11 +303,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Nick with given name already exists!", resultValue);
+        Assert.Equal("Nick with given name already exists!", resultValue.Message);
     }
     
     [Fact]
@@ -350,11 +351,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User doesn't exist", resultValue);
+        Assert.Equal("User doesn't exist", resultValue.Message);
     }
     
     [Fact]
@@ -398,11 +399,11 @@ public class UserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Rank or user does not exists!", resultValue);
+        Assert.Equal("Rank or user does not exists!", resultValue.Message);
     }
     
     [Fact]

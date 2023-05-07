@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.ReportPost;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportPost;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -42,7 +43,7 @@ public class ReportPostController: Controller
         
         if (report is null)
         {
-            return NotFound("No report with given data found");
+            return NotFound(new StringMessageDto{ Message = "No report with given data found"});
         }
         
         return Ok(report);
@@ -63,13 +64,13 @@ public class ReportPostController: Controller
 
             if (report is null)
             {
-                return NotFound("User, post or reason does not exist");
+                return NotFound(new StringMessageDto{ Message = "User, post or reason does not exist"});
             }
 
         }
         catch (UserCreatorException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message});
         }
        
         return Ok(report);
@@ -87,7 +88,7 @@ public class ReportPostController: Controller
 
         if (report is null)
         {
-            return NotFound("No report with given data found");
+            return NotFound(new StringMessageDto{ Message = "No report with given data found"});
         }
         
         return Ok(report);
@@ -105,7 +106,7 @@ public class ReportPostController: Controller
 
         if (report is null)
         {
-            return NotFound("No report with given data found");
+            return NotFound(new StringMessageDto{ Message = "No report with given data found"});
         }
         
         return Ok(report);
