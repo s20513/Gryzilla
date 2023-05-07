@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.Controllers;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.LikesArticle;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Added like";
+        var objectResult = "Added like";
         
         _likesArticleDbRepositoryMock
             .Setup(x => x.AddLikeToArticle(idUser, idArticle))
@@ -36,11 +37,11 @@ public class LikesArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(objectResult, resultValue.Message);
     }
     
     [Fact]
@@ -49,7 +50,7 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Article or user doesn't exist";
+        var objectResult = "Article or user doesn't exist";
         
         _likesArticleDbRepositoryMock
             .Setup(x => x.AddLikeToArticle(idUser, idArticle))
@@ -63,11 +64,11 @@ public class LikesArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(objectResult, resultValue.Message);
     }
     
     [Fact]
@@ -76,7 +77,7 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Deleted like";
+        var objectResult = "Deleted like";
         
         _likesArticleDbRepositoryMock
             .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle))
@@ -90,11 +91,11 @@ public class LikesArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(objectResult, resultValue.Message);
     }
     
     [Fact]
@@ -103,7 +104,7 @@ public class LikesArticleControllerTests
         //Arrange
         var idUser = 1;
         var idArticle = 1;
-        object objectResult = "Article or user doesn't exist";
+        var objectResult = "Article or user doesn't exist";
         
         _likesArticleDbRepositoryMock
             .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle))
@@ -117,11 +118,11 @@ public class LikesArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(objectResult, resultValue);
+        Assert.Equal(objectResult, resultValue.Message);
     }
     
     [Fact]
@@ -170,14 +171,14 @@ public class LikesArticleControllerTests
         var actionResult = await _likesArticleController.ExistLike(idUser, idArticle);
         
         //Assert
-        var result = actionResult as BadRequestObjectResult;
+        var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Article or user doesn't exist", resultValue);
+        Assert.Equal("Article or user doesn't exist", resultValue.Message);
     }
 }

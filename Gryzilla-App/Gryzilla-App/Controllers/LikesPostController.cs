@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Repositories.Interfaces;
+﻿using Gryzilla_App.DTOs.Responses;
+using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -31,7 +32,7 @@ public class LikesPostController : Controller
         
         if (likes != null && !likes.Equals("Added like"))
         {
-            return BadRequest(likes);
+            return BadRequest(new StringMessageDto{ Message = likes });
         }
         
         return Ok(likes);
@@ -54,7 +55,7 @@ public class LikesPostController : Controller
         
         if (likes != null && !likes.Equals("Deleted like"))
         {
-            return BadRequest(likes);
+            return BadRequest(new StringMessageDto{ Message = likes });
         }
 
         return Ok(likes);
@@ -76,7 +77,7 @@ public class LikesPostController : Controller
         
         if (likes is null)
         {
-            return BadRequest("Post or user doesn't exist"); 
+            return BadRequest(new StringMessageDto{ Message = "Post or user doesn't exist" }); 
         }
         return Ok(likes);
     }

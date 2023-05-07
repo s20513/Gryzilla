@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.Notification;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,10 +23,10 @@ public class NotificationController : Controller
        var notification = await _notificationDbRepository.AddNotificationToDb(newNotificationDto);
        if (notification is null)
        {
-           return NotFound("No user with given id found");
+           return NotFound(new StringMessageDto{ Message = "No user with given id found" });
        }
         
-        return Ok(notification);
+       return Ok(notification);
     }
     
     
@@ -35,7 +36,7 @@ public class NotificationController : Controller
         var notification = await _notificationDbRepository.DeleteNotificationFromDb(idNotification);
         if (notification is null)
         {
-            return NotFound("No notification with given id found");
+            return NotFound(new StringMessageDto{ Message = "No notification with given id found" });
         }
         
         return Ok(notification);
@@ -47,7 +48,7 @@ public class NotificationController : Controller
         var notification = await _notificationDbRepository.ModifyNotificationFromDb(idNotification, modifyNotificationDto);
         if (notification is null)
         {
-            return NotFound("No notification with given id found");
+            return NotFound(new StringMessageDto{ Message = "No notification with given id found" });
         }
         return Ok(notification);
     }

@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.Link;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ public class LinkController : Controller
         var link = await _linkDbRepository.GetUserLinks(idUser);
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         return Ok(link);
     }
@@ -42,10 +43,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -60,10 +61,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -78,10 +79,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -96,10 +97,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -114,10 +115,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -132,10 +133,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -150,10 +151,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -168,10 +169,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -186,10 +187,10 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
     
     /// <summary>
@@ -204,9 +205,9 @@ public class LinkController : Controller
         
         if (link is null)
         {
-            return NotFound("User doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
         }
         
-        return Ok(link);
+        return Ok(new StringMessageDto{ Message = link });
     }
 }

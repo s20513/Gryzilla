@@ -237,7 +237,7 @@ public class CommentPostDbRepositoryTests
         var id = 1;
         
         //Act
-        var res = await _repository.GetArticleCommentsFromDb(id);
+        var res = await _repository.GetPostCommentsFromDb(id);
         
         //Assert
         Assert.NotNull(res);
@@ -256,7 +256,7 @@ public class CommentPostDbRepositoryTests
 
         var id = 1;
         //Act
-        var res = await _repository.GetArticleCommentsFromDb(id);
+        var res = await _repository.GetPostCommentsFromDb(id);
         
         //Assert
         Assert.Null(res);

@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.GroupUserMessage;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.GroupUserMessageDto;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -57,11 +58,11 @@ public class GroupUserMessageControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no messages for this group", resultValue);
+        Assert.Equal("There is no messages for this group", resultValue.Message);
     }
     
     [Fact]
@@ -117,11 +118,11 @@ public class GroupUserMessageControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no message with given id", resultValue);
+        Assert.Equal("There is no message with given id", resultValue.Message);
     }
     
     [Fact]
@@ -147,11 +148,11 @@ public class GroupUserMessageControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     
@@ -197,11 +198,11 @@ public class GroupUserMessageControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no message with given id", resultValue);
+        Assert.Equal("There is no message with given id", resultValue.Message);
     }
     
     [Fact]
@@ -249,11 +250,11 @@ public class GroupUserMessageControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Wrong userId or groupId", resultValue);
+        Assert.Equal("Wrong userId or groupId", resultValue.Message);
     }
 
 }

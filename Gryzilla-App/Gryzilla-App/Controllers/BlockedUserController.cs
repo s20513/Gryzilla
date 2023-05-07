@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Gryzilla_App.DTOs.Requests.BlockedUser;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,7 +43,7 @@ public class BlockedUserController: Controller
 
         if (blockedUser is null)
         {
-            return NotFound("One of the users does not exist");
+            return NotFound(new StringMessageDto{ Message = "One of the users does not exist" });
         }
 
         return Ok(blockedUser);
@@ -61,7 +62,7 @@ public class BlockedUserController: Controller
 
         if (blockedUser is null)
         {
-            return NotFound("Users does not exist");
+            return NotFound(new StringMessageDto{ Message = "Users does not exist" });
         }
 
         return Ok(blockedUser);
@@ -80,7 +81,7 @@ public class BlockedUserController: Controller
 
         if (userBlockingHistory is null)
         {
-            return NotFound("Users does not exist");
+            return NotFound(new StringMessageDto{ Message = "Users does not exist" });
         }
 
         return Ok(userBlockingHistory);
@@ -99,7 +100,7 @@ public class BlockedUserController: Controller
 
         if (blockedUser is null)
         {
-            return NotFound("Users does not exist");
+            return NotFound(new StringMessageDto{ Message = "Users does not exist" });
         }
 
         return Ok(blockedUser);

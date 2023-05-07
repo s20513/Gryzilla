@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.Group;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ public class GroupsController: Controller
 
         if (group is null)
         {
-            return NotFound("There is no group with given id");
+            return NotFound(new StringMessageDto{ Message = "There is no group with given id" });
         }
 
         return Ok(group);
@@ -64,7 +65,7 @@ public class GroupsController: Controller
     {
         if (idGroup != groupRequestDto.IdGroup)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
 
         try
@@ -73,7 +74,7 @@ public class GroupsController: Controller
             
             if (result is null)
             {
-                return NotFound("There is no group with given id");
+                return NotFound(new StringMessageDto{ Message = "There is no group with given id" });
             }
             
             return Ok(result);
@@ -81,7 +82,7 @@ public class GroupsController: Controller
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
     /// <summary>
@@ -99,7 +100,7 @@ public class GroupsController: Controller
 
         if (result is null)
         {
-            return NotFound("There is no group with given id");
+            return NotFound(new StringMessageDto{ Message = "There is no group with given id" });
         }
 
         return Ok(result);
@@ -122,13 +123,13 @@ public class GroupsController: Controller
 
             if (result is null)
             {
-                return NotFound("Cannot add group or wrong userId");
+                return NotFound(new StringMessageDto{ Message = "Cannot add group or wrong userId" });
             }
             return Ok(result);
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
     /// <summary>
@@ -146,7 +147,7 @@ public class GroupsController: Controller
     {
         if (idGroup != userToGroupDto.IdGroup)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
 
         try
@@ -155,14 +156,14 @@ public class GroupsController: Controller
 
             if (result is null)
             {
-                return NotFound("Group or user was not found"); 
+                return NotFound(new StringMessageDto{ Message = "Group or user was not found" }); 
             }
 
             return Ok(result);
         }
         catch (UserCreatorException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
     /// <summary>
@@ -180,14 +181,14 @@ public class GroupsController: Controller
     {
         if (idGroup != userToGroupDto.IdGroup)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
 
         var result = await _groupDbRepository.AddUserToGroup(idGroup, userToGroupDto);
 
         if (result is null)
         {
-            return NotFound("User or Group not found"); 
+            return NotFound(new StringMessageDto{ Message = "User or Group not found" }); 
         }
 
         return Ok(result);

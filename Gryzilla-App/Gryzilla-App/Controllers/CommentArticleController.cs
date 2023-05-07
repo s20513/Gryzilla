@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.ArticleComment;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +29,7 @@ public class CommentArticleController: Controller
         
         if (result is null)
         {
-            return NotFound("User or article not found");
+            return NotFound(new StringMessageDto{ Message = "User or article not found" });
         }
             
         return Ok(result);
@@ -47,7 +48,7 @@ public class CommentArticleController: Controller
     {
         if (putArticleCommentDto.IdComment != idComment)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
         
         var result = await _commentArticleDbRepository
@@ -55,7 +56,7 @@ public class CommentArticleController: Controller
 
         if (result is null)
         {
-            return NotFound("Comment not found");
+            return NotFound(new StringMessageDto{ Message = "Comment not found" });
         }
             
         return Ok(result);
@@ -74,7 +75,7 @@ public class CommentArticleController: Controller
 
         if (result is null)
         {
-            return NotFound("Comment not found");
+            return NotFound(new StringMessageDto{ Message = "Comment not found" });
         }
             
         return Ok(result);
@@ -93,7 +94,7 @@ public class CommentArticleController: Controller
 
         if (result is null)
         {
-            return NotFound("Comments not found");
+            return NotFound(new StringMessageDto{ Message = "Comments not found" });
         }
             
         return Ok(result);

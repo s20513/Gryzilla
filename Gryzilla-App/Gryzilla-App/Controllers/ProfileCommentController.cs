@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.ProfileComment;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ public class ProfileCommentController : Controller
 
         if (profileComment is null)
         {
-            return NotFound("There are no comments for the profile");
+            return NotFound(new StringMessageDto{ Message = "There are no comments for the profile" });
         }
 
         return Ok(profileComment);
@@ -36,7 +37,7 @@ public class ProfileCommentController : Controller
     
         if (profileComment == null)
         { 
-            return NotFound("There is no comment for the profile");
+            return NotFound(new StringMessageDto{ Message = "There is no comment for the profile" });
         }
     
         return Ok(profileComment);
@@ -49,7 +50,7 @@ public class ProfileCommentController : Controller
     
         if (profileComment == null)
         { 
-            return NotFound("User doesn't exist");
+            return NotFound(new StringMessageDto{ Message = "User doesn't exist" });
         }
     
         return Ok(profileComment);
@@ -64,7 +65,7 @@ public class ProfileCommentController : Controller
         
         if (user == null)
         { 
-            return NotFound("Profile comment doesn't exist");
+            return NotFound(new StringMessageDto{ Message = "Profile comment doesn't exist" });
         }
         
         return Ok(user);

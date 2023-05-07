@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +30,7 @@ public class CommentPostController : Controller
         
         if (comment is null)
         {
-            return NotFound("User or post not found");
+            return NotFound(new StringMessageDto{ Message = "User or post not found" });
         }
         
         return Ok(comment);
@@ -48,14 +49,14 @@ public class CommentPostController : Controller
     {
         if (idComment != putPostCommentDto.IdComment)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
         
         var comment = await _commentPostDbRepository.ModifyPostCommentFromDb(putPostCommentDto, idComment);
         
         if (comment is null)
         {
-            return NotFound("Comment not found");
+            return NotFound(new StringMessageDto{ Message = "Comment not found" });
         }
         return Ok(comment);
     }
@@ -73,7 +74,7 @@ public class CommentPostController : Controller
         
         if (comment is null)
         {
-            return NotFound("Comment not found");
+            return NotFound(new StringMessageDto{ Message = "Comment not found" });
         }
         
         return Ok(comment);
@@ -88,11 +89,11 @@ public class CommentPostController : Controller
     [HttpGet("{idPost:int}")]
     public async Task<IActionResult> GetPostComments([FromRoute] int idPost)
     {
-        var comment = await _commentPostDbRepository.GetArticleCommentsFromDb(idPost);
+        var comment = await _commentPostDbRepository.GetPostCommentsFromDb(idPost);
         
         if (comment is null)
         {
-            return NotFound("Comments not found");
+            return NotFound(new StringMessageDto{ Message = "Comments not found" });
         }
         
         return Ok(comment);

@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.Group;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
@@ -61,11 +62,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no group with given id", resultValue);
+        Assert.Equal("There is no group with given id", resultValue.Message);
     }
 
     [Fact]
@@ -141,11 +142,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no group with given id", resultValue);
+        Assert.Equal("There is no group with given id", resultValue.Message);
     }
     
     [Fact]
@@ -166,11 +167,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     [Fact]
@@ -195,11 +196,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("This name of group is already taken", resultValue);
+        Assert.Equal("This name of group is already taken", resultValue.Message);
     }
 
     [Fact]
@@ -243,11 +244,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no group with given id", resultValue);
+        Assert.Equal("There is no group with given id", resultValue.Message);
     }
     
     [Fact]
@@ -295,11 +296,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot add group or wrong userId", resultValue);
+        Assert.Equal("Cannot add group or wrong userId", resultValue.Message);
     }
     
     [Fact]
@@ -320,11 +321,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("The name of the group is already taken", resultValue);
+        Assert.Equal("The name of the group is already taken", resultValue.Message);
     }
 
     [Fact]
@@ -380,11 +381,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Group or user was not found", resultValue);
+        Assert.Equal("Group or user was not found", resultValue.Message);
     }
     
     [Fact]
@@ -407,11 +408,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     [Fact]
@@ -436,11 +437,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("The creator of the group cannot be removed", resultValue);
+        Assert.Equal("The creator of the group cannot be removed", resultValue.Message);
     }
     
     [Fact]
@@ -496,11 +497,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User or Group not found", resultValue);
+        Assert.Equal("User or Group not found", resultValue.Message);
     }
     
     [Fact]
@@ -523,11 +524,11 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     [Fact]

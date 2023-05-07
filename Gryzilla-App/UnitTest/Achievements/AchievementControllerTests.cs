@@ -1,6 +1,7 @@
 using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Requests;
 using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Achievement;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
@@ -87,11 +88,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Not found any achievements", resultValue);
+        Assert.Equal("Not found any achievements", resultValue.Message);
     }
 
     [Fact]
@@ -146,11 +147,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     [Fact]
@@ -177,11 +178,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Achievement not found", resultValue);
+        Assert.Equal("Achievement not found", resultValue.Message);
     }
 
     [Fact]
@@ -234,11 +235,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -291,11 +292,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Achievement not found", resultValue);
+        Assert.Equal("Achievement not found", resultValue.Message);
     }
     
     [Fact]
@@ -317,11 +318,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -376,11 +377,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot find user or achievement", resultValue);
+        Assert.Equal("Cannot find user or achievement", resultValue.Message);
     }
     
     [Fact]
@@ -404,11 +405,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -463,11 +464,11 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Cannot delete achievement from user", resultValue);
+        Assert.Equal("Cannot delete achievement from user", resultValue.Message);
     }
     
     [Fact]
@@ -514,10 +515,10 @@ public class AchievementControllerTests
         Assert.NotNull(result);
         
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User not found", resultValue);
+        Assert.Equal("User not found", resultValue.Message);
     }
 }

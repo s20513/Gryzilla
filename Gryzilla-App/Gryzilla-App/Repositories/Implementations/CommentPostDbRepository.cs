@@ -135,10 +135,8 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         };
     }
     
-    public async Task<GetPostCommentDto> GetArticleCommentsFromDb(int idPost)
+    public async Task<GetPostCommentDto?> GetPostCommentsFromDb(int idPost)
     {
-        string nick;
-
         var posts = await _context.Posts.SingleOrDefaultAsync(x => x.IdPost == idPost);
 
         if (posts is null)

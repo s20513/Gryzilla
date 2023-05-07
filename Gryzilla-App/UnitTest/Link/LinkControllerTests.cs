@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.Link;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Link;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -41,11 +42,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -73,11 +74,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -104,11 +105,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -135,11 +136,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -166,11 +167,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -198,11 +199,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     [Fact]
     public async void ModifyPsLink_Returns_Ok()
@@ -228,11 +229,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -260,11 +261,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -291,11 +292,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -323,11 +324,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     [Fact]
     public async void DeleteDiscordLink_Returns_Ok()
@@ -347,11 +348,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -374,11 +375,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     [Fact]
     public async void DeleteSteamLink_Returns_Ok()
@@ -398,11 +399,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -425,11 +426,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     [Fact]
     public async void DeleteEpicLink_Returns_Ok()
@@ -449,11 +450,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -476,11 +477,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -501,11 +502,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -528,11 +529,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     [Fact]
     public async void DeletePsLink_Returns_Ok()
@@ -552,11 +553,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -579,11 +580,11 @@ public class LinkControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     [Fact]
     public async void GetUserLinks_Returns_Ok()
@@ -633,9 +634,9 @@ public class LinkControllerTests
         var result = actionResult as NotFoundObjectResult;
         Assert.NotNull(result);
 
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
-        Assert.Equal("User doesn't exist", resultValue);
+        Assert.Equal("User doesn't exist", resultValue.Message);
     }
 }

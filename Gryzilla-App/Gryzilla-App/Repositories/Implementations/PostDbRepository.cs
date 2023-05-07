@@ -375,6 +375,8 @@ public class PostDbRepository : IPostDbRepository
             CreatedAt = post.CreatedAt,
             Content   = post.Content,
             IdUser    = post.IdUser,
+            Type            = user.PhotoType,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()),
             Tags      = await _context
                 .Posts
                 .Where(x => x.IdPost == idNewPost)
@@ -545,6 +547,8 @@ public class PostDbRepository : IPostDbRepository
                 Content   = post.Content,
                 IdPost    = post.IdPost,
                 IdUser    = post.IdUser,
+                base64PhotoData = Convert.ToBase64String(post.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                Type = post.IdUserNavigation.PhotoType,
                 Tags      = await _context
                     .Posts
                     .Where(x=>x.IdPost==idPost)
@@ -560,6 +564,8 @@ public class PostDbRepository : IPostDbRepository
             Content   = post.Content,
             IdPost    = post.IdPost,
             IdUser    = post.IdUser,
+            base64PhotoData = Convert.ToBase64String(post.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+            Type = post.IdUserNavigation.PhotoType,
             Tags = Array.Empty<string>()
         };
     }

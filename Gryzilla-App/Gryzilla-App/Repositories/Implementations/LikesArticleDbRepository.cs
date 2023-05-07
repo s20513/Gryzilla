@@ -63,7 +63,7 @@ public class LikesArticleDbRepository : ILikesArticleDbRepository
         };
     }
 
-    public async Task<object?> DeleteLikeFromArticle(int idUser, int idArticle)
+    public async Task<string?> DeleteLikeFromArticle(int idUser, int idArticle)
     {
         var user = await GetUser(idUser);
         var article = await GetArticle(idArticle);
@@ -86,7 +86,7 @@ public class LikesArticleDbRepository : ILikesArticleDbRepository
         return "Deleted like";   
     }
 
-    public async Task<object?> AddLikeToArticle(int idUser, int idArticle)
+    public async Task<string?> AddLikeToArticle(int idUser, int idArticle)
     {
         var user = await GetUser(idUser);
         var article = await GetArticle(idArticle);

@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.DTOs.Requests.GroupUserMessage;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ public class GroupUserMessageController : Controller
 
         if (group.Length < 1)
         {
-            return NotFound("There is no messages for this group");
+            return NotFound(new StringMessageDto{ Message = "There is no messages for this group" });
         }
         
         return Ok(group);
@@ -50,14 +51,14 @@ public class GroupUserMessageController : Controller
     {
         if (idMessage != updateGroupUserMessage.IdMessage)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
         
         var result = await _groupUserMessageDbRepository.ModifyMessage(idMessage, updateGroupUserMessage);
         
         if (result is null)
         {
-            return NotFound("There is no message with given id");
+            return NotFound(new StringMessageDto{ Message = "There is no message with given id" });
         }
         
         return Ok(result);
@@ -78,7 +79,7 @@ public class GroupUserMessageController : Controller
 
         if (result is null)
         {
-            return NotFound("There is no message with given id");
+            return NotFound(new StringMessageDto{ Message = "There is no message with given id" });
         }
 
         return Ok(result);
@@ -98,7 +99,7 @@ public class GroupUserMessageController : Controller
 
         if (result is null)
         {
-            return NotFound("Wrong userId or groupId");
+            return NotFound(new StringMessageDto{ Message = "Wrong userId or groupId" });
         }
         return Ok(result);
     }

@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Repositories.Interfaces;
+﻿using Gryzilla_App.DTOs.Responses;
+using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -29,12 +30,12 @@ public class LikesArticleController : Controller
     {
         var likes = await _likesArticleDbRepository.AddLikeToArticle(idUser, idArticle);
         
-        if (likes != null && !likes.Equals("Added like"))
+        if (likes is not "Added like")
         {
-            return BadRequest(likes);
+            return BadRequest(new StringMessageDto{ Message = likes });
         }
         
-        return Ok(likes);
+        return Ok(new StringMessageDto{ Message = likes });
     }
     
     /// <summary>
@@ -52,12 +53,12 @@ public class LikesArticleController : Controller
     {
         var likes = await _likesArticleDbRepository.DeleteLikeFromArticle(idUser, idArticle);
         
-        if (likes != null && !likes.Equals("Deleted like"))
+        if (likes is not "Deleted like")
         {
             return BadRequest(likes);
         }
 
-        return Ok(likes);
+        return Ok(new StringMessageDto{ Message = likes });
     }
     
     /// <summary>
@@ -76,7 +77,7 @@ public class LikesArticleController : Controller
 
         if (likes is null)
         {
-            return BadRequest("Article or user doesn't exist"); 
+            return NotFound(new StringMessageDto{ Message = "Article or user doesn't exist" }); 
         }
         
         return Ok(likes);

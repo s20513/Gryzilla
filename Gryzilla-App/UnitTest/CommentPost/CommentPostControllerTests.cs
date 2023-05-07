@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -62,11 +63,11 @@ public class CommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User or post not found", resultValue);
+        Assert.Equal("User or post not found", resultValue.Message);
     }
 
     [Fact]
@@ -122,11 +123,11 @@ public class CommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Comment not found", resultValue);
+        Assert.Equal("Comment not found", resultValue.Message);
     }
 
     [Fact]
@@ -149,11 +150,11 @@ public class CommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     [Fact]
@@ -201,11 +202,11 @@ public class CommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Comment not found", resultValue);
+        Assert.Equal("Comment not found", resultValue.Message);
     }
     
     [Fact]
@@ -215,7 +216,7 @@ public class CommentPostControllerTests
         var returnedComment = new GetPostCommentDto();
         
         _commentPostRepositoryMock
-            .Setup(x => x.GetArticleCommentsFromDb(1))
+            .Setup(x => x.GetPostCommentsFromDb(1))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -240,7 +241,7 @@ public class CommentPostControllerTests
         GetPostCommentDto? nullValue = null;
         
         _commentPostRepositoryMock
-            .Setup(x => x.GetArticleCommentsFromDb(1))
+            .Setup(x => x.GetPostCommentsFromDb(1))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -251,10 +252,10 @@ public class CommentPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Comments not found", resultValue);
+        Assert.Equal("Comments not found", resultValue.Message);
     }
 }

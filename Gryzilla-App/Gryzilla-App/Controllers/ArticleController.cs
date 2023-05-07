@@ -1,5 +1,6 @@
 using Gryzilla_App.DTOs.Requests.Article;
 using Gryzilla_App.DTOs.Requests.Post;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -30,7 +31,7 @@ public class ArticleController: Controller
         
         if (articles is null)
         {
-            return NotFound("No articles found");
+            return NotFound(new StringMessageDto{ Message = "No articles found" });
         }
         
         return Ok(articles);
@@ -64,7 +65,7 @@ public class ArticleController: Controller
         
         if (articles is null)
         {
-            return NotFound("No articles found");
+            return NotFound(new StringMessageDto{ Message = "No articles found" });
         }
         
         return Ok(articles);
@@ -82,7 +83,7 @@ public class ArticleController: Controller
         
         if (articles is null)
         {
-            return NotFound("No articles found");
+            return NotFound(new StringMessageDto{ Message = "No articles found" });
         }
         
         return Ok(articles);
@@ -100,7 +101,7 @@ public class ArticleController: Controller
         
         if (articles is null)
         {
-            return NotFound("No articles found");
+            return NotFound(new StringMessageDto{ Message = "No articles found" });
         }
         
         return Ok(articles);
@@ -118,7 +119,7 @@ public class ArticleController: Controller
         
         if (articles is null)
         {
-            return NotFound("No articles found");
+            return NotFound(new StringMessageDto{ Message = "No articles found" });
         }
         
         return Ok(articles);
@@ -138,12 +139,12 @@ public class ArticleController: Controller
             articles = await _articleDbRepository.GetQtyArticlesFromDb(qtyArticles);
             if (articles is null)
             {
-                return NotFound("No articles found");
+                return NotFound(new StringMessageDto{ Message = "No articles found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
        
         
@@ -163,12 +164,12 @@ public class ArticleController: Controller
             articles = await _articleDbRepository.GetQtyArticlesByMostLikesFromDb(qtyArticles, time);
             if (articles is null)
             {
-                return NotFound("No articles found");
+                return NotFound(new StringMessageDto{ Message = "No articles found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
         
         return Ok(articles);
@@ -188,12 +189,12 @@ public class ArticleController: Controller
             articles = await _articleDbRepository.GetQtyArticlesByCommentsFromDb(qtyArticles, time);
             if (articles is null)
             {
-                return NotFound("No articles found");
+                return NotFound(new StringMessageDto{ Message = "No articles found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
         
         return Ok(articles);
@@ -214,12 +215,12 @@ public class ArticleController: Controller
         
             if (articles is null)
             {
-                return NotFound("No articles found");
+                return NotFound(new StringMessageDto{ Message = "No articles found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
         
         return Ok(articles);
@@ -237,7 +238,7 @@ public class ArticleController: Controller
 
         if (posts is null)
         {
-            return NotFound("No articles found");
+            return NotFound(new StringMessageDto{ Message = "No articles found" });
         }
         
         return Ok(posts);
@@ -250,7 +251,6 @@ public class ArticleController: Controller
     [HttpGet("/articles/qty/byDate/oldest/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByOldestDateFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
-        DateTime timeNow  = DateTime.Now;
         ArticleQtyDto? articles;
         try
         { 
@@ -258,12 +258,12 @@ public class ArticleController: Controller
         
             if (articles is null)
             {
-                return NotFound("No articles found");
+                return NotFound(new StringMessageDto{ Message = "No articles found" });
             }
         }
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
         
         return Ok(articles);
@@ -282,7 +282,7 @@ public class ArticleController: Controller
         
         if (article is null)
         {
-            return NotFound("Article not found");
+            return NotFound(new StringMessageDto{ Message = "Article not found" });
         }
         
         return Ok(article);
@@ -301,7 +301,7 @@ public class ArticleController: Controller
         
         if (result is null)
         {
-            return NotFound("User not found");
+            return NotFound(new StringMessageDto{ Message = "User not found" });
         }
         
         return Ok(result);
@@ -322,14 +322,14 @@ public class ArticleController: Controller
     {
         if (putArticleRequestDto.IdArticle != idArticle)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
         
         var result = await _articleDbRepository.ModifyArticleFromDb(putArticleRequestDto, idArticle);
         
         if (result is null)
         {
-            return NotFound("Article not found");
+            return NotFound(new StringMessageDto{ Message = "Article not found" });
         }
         
         return Ok(result);
@@ -348,7 +348,7 @@ public class ArticleController: Controller
         
         if (result is null)
         {
-            return NotFound("Article not found");
+            return NotFound(new StringMessageDto{ Message = "Article not found" });
         }
         
         return Ok(result);
@@ -372,12 +372,12 @@ public class ArticleController: Controller
 
             if (articles is null)
             {
-                return NotFound("No articles found");
+                return NotFound(new StringMessageDto{ Message = "No articles found" });
             }
         } 
         catch (WrongNumberException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
 
         return Ok(articles);

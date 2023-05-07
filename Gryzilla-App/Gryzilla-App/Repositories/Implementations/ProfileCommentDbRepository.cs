@@ -87,6 +87,8 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
             IdUser           = newProfileComment.IdUser,
             IdUserComment    = newProfileComment.IdUserComment,
             Nick             = user.Nick,
+            Type             = user.PhotoType,
+            base64PhotoData  = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()),
             Content          = newProfileComment.Content,
             CreatedAt        = profileComment.CreatedAt
         };
@@ -104,14 +106,17 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
             return null;
         }
 
+        var creator = _context.UserData
+            .Single(e => e.IdUser == profileComment.IdUser);
+
         var deleteProfileComment = new ProfileCommentDto
         {
             idProfileComment = profileComment.IdProfileComment,
             IdUser           = profileComment.IdUser,
             IdUserComment    = profileComment.IdUserComment,
-            Nick             = _context.UserData
-                .Where(e => e.IdUser == profileComment.IdUser)
-                .Select(e => e.Nick).SingleOrDefault(),
+            Nick             = creator.Nick,
+            Type             = creator.PhotoType,
+            base64PhotoData  = Convert.ToBase64String(creator.Photo ?? Array.Empty<byte>()),
             Content          = profileComment.Description
         };
         
@@ -135,14 +140,17 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         profileComment.Description = modifyProfileComment.Content;
         await _context.SaveChangesAsync();
         
+        var creator = _context.UserData
+            .Single(e => e.IdUser == profileComment.IdUser);
+        
        return new ProfileCommentDto
         {
             idProfileComment = profileComment.IdProfileComment,
             IdUser           = profileComment.IdUser,
             IdUserComment    = profileComment.IdUserComment,
-            Nick             = _context.UserData
-                .Where(e => e.IdUser == profileComment.IdUser)
-                .Select(e => e.Nick).SingleOrDefault(),
+            Nick             = creator.Nick,
+            Type             = creator.PhotoType,
+            base64PhotoData  = Convert.ToBase64String(creator.Photo ?? Array.Empty<byte>()),
             Content         = profileComment.Description,
             CreatedAt       = profileComment.CreatedAt
         };

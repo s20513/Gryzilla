@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Friends;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -63,11 +64,11 @@ public class FriendsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User does not exists!", resultValue);
+        Assert.Equal("User does not exists!", resultValue.Message);
     }
 
     [Fact]
@@ -117,11 +118,11 @@ public class FriendsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("One of the users does not exists!", resultValue);
+        Assert.Equal("One of the users does not exists!", resultValue.Message);
     }
     
     [Fact]
@@ -144,11 +145,11 @@ public class FriendsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Ids must have different values!", resultValue);
+        Assert.Equal("Ids must have different values!", resultValue.Message);
     }
     
     [Fact]
@@ -198,11 +199,11 @@ public class FriendsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("One of the users does not exists!", resultValue);
+        Assert.Equal("One of the users does not exists!", resultValue.Message);
     }
     
     [Fact]
@@ -224,11 +225,11 @@ public class FriendsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User1 is already user2s friend!", resultValue);
+        Assert.Equal("User1 is already user2s friend!", resultValue.Message);
     }
     
     [Fact]
@@ -251,11 +252,11 @@ public class FriendsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Ids must have different values!", resultValue);
+        Assert.Equal("Ids must have different values!", resultValue.Message);
     }
     
 }

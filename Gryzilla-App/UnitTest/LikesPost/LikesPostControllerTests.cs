@@ -1,4 +1,5 @@
 ﻿using Gryzilla_App.Controllers;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.LikesPost;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +37,11 @@ public class LikesPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(stringResult, resultValue);
+        Assert.Equal(stringResult, resultValue.Message);
     }
     
     [Fact]
@@ -63,11 +64,11 @@ public class LikesPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(stringResult, resultValue);
+        Assert.Equal(stringResult, resultValue.Message);
     }
     
     [Fact]
@@ -90,11 +91,11 @@ public class LikesPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(stringResult, resultValue);
+        Assert.Equal(stringResult, resultValue.Message);
     }
     
     [Fact]
@@ -117,11 +118,11 @@ public class LikesPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(stringResult, resultValue);
+        Assert.Equal(stringResult, resultValue.Message);
     }
     
     [Fact]
@@ -174,10 +175,10 @@ public class LikesPostControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Post or user doesn't exist", resultValue);
+        Assert.Equal("Post or user doesn't exist", resultValue.Message);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Exceptions;
+﻿using Gryzilla_App.DTOs.Responses;
+using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,7 @@ public class FriendsController : Controller
         
         if (friends is null)
         {
-            return NotFound("User does not exists!");
+            return NotFound(new StringMessageDto{ Message = "User does not exists!" });
         }
         
         return Ok(friends);
@@ -46,14 +47,14 @@ public class FriendsController : Controller
     {
         if (idUser == idUserFriend)
         {
-            return BadRequest("Ids must have different values!");
+            return BadRequest(new StringMessageDto{ Message = "Ids must have different values!" });
         }
         
         var friend = await _friendsDbRepository.DeleteFriendFromDb(idUser, idUserFriend);
         
         if (friend is null)
         {
-            return NotFound("One of the users does not exists!");
+            return NotFound(new StringMessageDto{ Message = "One of the users does not exists!" });
         }
         return Ok(friend);
     }
@@ -71,7 +72,7 @@ public class FriendsController : Controller
     {
         if (idUser == idUserFriend)
         {
-            return BadRequest("Ids must have different values!");
+            return BadRequest(new StringMessageDto{ Message = "Ids must have different values!" });
         }
         
         try
@@ -80,14 +81,14 @@ public class FriendsController : Controller
             
             if (friend is null)
             {
-                return NotFound("One of the users does not exists!");
+                return NotFound(new StringMessageDto{ Message = "One of the users does not exists!" });
             }
 
             return Ok(friend);
         }
         catch (ReferenceException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
 }

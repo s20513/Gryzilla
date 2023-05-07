@@ -56,11 +56,11 @@ public class ProfileCommentControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There are no comments for the profile", resultValue);
+        Assert.Equal("There are no comments for the profile", resultValue.Message);
     }
     
     [Fact]
@@ -108,11 +108,11 @@ public class ProfileCommentControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User doesn't exist", resultValue);
+        Assert.Equal("User doesn't exist", resultValue.Message);
     }
     
     [Fact]
@@ -168,11 +168,11 @@ public class ProfileCommentControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("There is no comment for the profile", resultValue);
+        Assert.Equal("There is no comment for the profile", resultValue.Message);
     }
     
     [Fact]
@@ -218,11 +218,11 @@ public class ProfileCommentControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Profile comment doesn't exist", resultValue);
+        Assert.Equal("Profile comment doesn't exist", resultValue.Message);
     }
 }
 

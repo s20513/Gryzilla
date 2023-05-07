@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.Notification;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Notification;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -62,11 +63,11 @@ public class NotificationControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No user with given id found", resultValue);
+        Assert.Equal("No user with given id found", resultValue.Message);
     }
     
     [Fact]
@@ -123,11 +124,11 @@ public class NotificationControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No notification with given id found", resultValue);
+        Assert.Equal("No notification with given id found", resultValue.Message);
     }
     
     [Fact]
@@ -175,10 +176,10 @@ public class NotificationControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No notification with given id found", resultValue);
+        Assert.Equal("No notification with given id found", resultValue.Message);
     }
 }

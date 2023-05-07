@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.BlockedUser;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.BlockedUser;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -87,11 +88,11 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("One of the users does not exist", resultValue);
+        Assert.Equal("One of the users does not exist", resultValue.Message);
     }
 
     [Fact]
@@ -113,11 +114,11 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -139,11 +140,11 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Users does not exist", resultValue);
+        Assert.Equal("Users does not exist", resultValue.Message);
     }
     
     [Fact]
@@ -191,11 +192,11 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Users does not exist", resultValue);
+        Assert.Equal("Users does not exist", resultValue.Message);
     }
     
     [Fact]
@@ -243,10 +244,10 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Users does not exist", resultValue);
+        Assert.Equal("Users does not exist", resultValue.Message);
     }
 }

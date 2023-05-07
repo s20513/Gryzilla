@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTO.Requests;
 using Gryzilla_App.DTO.Requests.Rank;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public class AchievementController : Controller
 
         if (achievements is null)
         {
-            return NotFound("Not found any achievements");
+            return NotFound(new StringMessageDto { Message = "Not found any achievements" });
         }
         
         return Ok(achievements);
@@ -46,14 +47,14 @@ public class AchievementController : Controller
     {
         if (idAchievement != putAchievementDto.IdAchievement)
         {
-            return BadRequest("Id from route and Id in body have to be same");
+            return BadRequest(new StringMessageDto{ Message ="Id from route and Id in body have to be same" });
         }
             
         var modifiedAchievement= await _achievementDbRepository.ModifyAchievement(idAchievement, putAchievementDto);
 
         if (modifiedAchievement is null)
         {
-            return NotFound("Achievement not found");
+            return NotFound(new StringMessageDto{ Message = "Achievement not found" });
         }
         
         return Ok(modifiedAchievement);
@@ -76,7 +77,7 @@ public class AchievementController : Controller
         }
         catch (SameNameException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
     
@@ -96,14 +97,14 @@ public class AchievementController : Controller
 
             if (achievement is null)
             {
-                return NotFound("Achievement not found");
+                return NotFound(new StringMessageDto{ Message ="Achievement not found" });
             }
 
             return Ok(achievement);
         }
         catch (ReferenceException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
 
@@ -124,14 +125,14 @@ public class AchievementController : Controller
             
             if (achievement is null)
             {
-                return NotFound("Cannot find user or achievement");
+                return NotFound(new StringMessageDto{ Message = "Cannot find user or achievement" });
             }
         
             return Ok(achievement);
         }
         catch (ReferenceException e)
         {
-            return BadRequest(e.Message);
+            return BadRequest(new StringMessageDto{ Message = e.Message });
         }
     }
     
@@ -149,7 +150,7 @@ public class AchievementController : Controller
 
         if (achievement is null)
         {
-            return NotFound("Cannot delete achievement from user");
+            return NotFound(new StringMessageDto{ Message = "Cannot delete achievement from user" });
         }
         
         return Ok(achievement);
@@ -168,7 +169,7 @@ public class AchievementController : Controller
 
         if (achievements is null)
         {
-            return NotFound("User not found");
+            return NotFound(new StringMessageDto{ Message = "User not found" });
         }
         
         return Ok(achievements);

@@ -2,6 +2,7 @@
 using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Article;
+using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
@@ -147,11 +148,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
 
     [Fact]
@@ -195,11 +196,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -243,11 +244,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -291,11 +292,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -339,11 +340,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -390,11 +391,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Article not found", resultValue);
+        Assert.Equal("Article not found", resultValue.Message);
     }
     
     [Fact]
@@ -446,11 +447,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("User not found", resultValue);
+        Assert.Equal("User not found", resultValue.Message);
     }
     
     [Fact]
@@ -510,11 +511,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Article not found", resultValue);
+        Assert.Equal("Article not found", resultValue.Message);
     }
     
     [Fact]
@@ -535,11 +536,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Id from route and Id in body have to be same", resultValue);
+        Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
     
     [Fact]
@@ -590,11 +591,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("Article not found", resultValue);
+        Assert.Equal("Article not found", resultValue.Message);
     }
     
     
@@ -640,11 +641,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -664,11 +665,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -713,11 +714,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
 
     [Fact]
@@ -737,11 +738,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     
@@ -788,11 +789,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyArticleByLatestDateFromDb_Not_Found()
@@ -810,11 +811,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -860,17 +861,17 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyArticlesByOldestDateFromDb_Not_Found()
     {
         //Arrange
-        ArticleQtyDto nullValue = null;
+        ArticleQtyDto? nullValue = null;
         DateTime time = DateTime.Now;
         _articleRepositoryMock.Setup(x => x.GetQtyArticlesByOldestDateFromDb(5,time)).ReturnsAsync(nullValue);
 
@@ -882,11 +883,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact] 
@@ -907,17 +908,17 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
     public async void GetQtyArticlesFromDb_Returns_Null()
     {
         //Arrange
-        ArticleQtyDto nullValue = null;
+        ArticleQtyDto? nullValue = null;
         
         _articleRepositoryMock.Setup(x => x.GetQtyArticlesFromDb(5)).ReturnsAsync(nullValue);
 
@@ -929,18 +930,15 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     [Fact]
     public async void GetQtyArticlesFromDb_Returns_ListOfArticles()
     {
-        //Arrange
-        IEnumerable<PostDto>? nullValue = null;
-        
         //Arrange
         _articleRepositoryMock
             .Setup(x => x.GetQtyArticlesFromDb(5))
@@ -976,11 +974,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
@@ -1048,11 +1046,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(exceptionMessage, resultValue);
+        Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
     [Fact]
@@ -1060,7 +1058,7 @@ public class ArticleControllerTests
     {
         DateTime time = DateTime.Now;
         //Arrange
-        Func<ArticleQtyDto?> nullValue = null;
+        Func<ArticleQtyDto?>? nullValue = null;
         
         _articleRepositoryMock
             .Setup(x => x.GetArticlesByTagFromDb(5, time, "samochody"))
@@ -1074,11 +1072,11 @@ public class ArticleControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue);
+        Assert.Equal("No articles found", resultValue.Message);
     }
     
     [Fact]
