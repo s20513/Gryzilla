@@ -58,7 +58,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by most Likes</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/byLikes/most")]
+    [HttpGet("byLikes/most")]
     public async Task<IActionResult> GetAllArticlesByMostLikesFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByMostLikesFromDb();
@@ -76,7 +76,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by least Likes</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/byLikes/least")]
+    [HttpGet("byLikes/least")]
     public async Task<IActionResult> GetAllArticlesByLeastLikesFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByLeastLikesFromDb();
@@ -94,7 +94,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by earliest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/byDate/earliest")]
+    [HttpGet("byDate/earliest")]
     public async Task<IActionResult> GetAllArticlesByEarliestDateFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByEarliestDateFromDb();
@@ -112,7 +112,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/byDate/oldest")]
+    [HttpGet("byDate/oldest")]
     public async Task<IActionResult> GetAllArticlesByOldestDateFromDb()
     {
         var articles = await _articleDbRepository.GetArticlesByOldestDateFromDb();
@@ -130,7 +130,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/qty/{qtyArticles:int}")]
+    [HttpGet("qty/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyAllArticlesFromDb([FromRoute] int qtyArticles)
     {
         ArticleQtyDto? articles;
@@ -155,7 +155,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by most Likes</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/qty/byLikes/{qtyArticles:int}")]
+    [HttpGet("qty/byLikes/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByMostLikesFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
@@ -180,7 +180,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by comments</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/qty/byComments/{qtyArticles:int}")]
+    [HttpGet("qty/byComments/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByCommentsFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
@@ -205,7 +205,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by earliest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/qty/byDate/earliest/{qtyArticles:int}")]
+    [HttpGet("qty/byDate/earliest/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByEarliestDateFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
@@ -248,7 +248,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("/articles/qty/byDate/oldest/{qtyArticles:int}")]
+    [HttpGet("qty/byDate/oldest/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByOldestDateFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
