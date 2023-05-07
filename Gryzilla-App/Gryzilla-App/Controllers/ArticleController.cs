@@ -155,7 +155,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by most Likes</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("qty/byLikes/{qtyArticles:int}")]
+    [HttpGet("qty/byLikesDesc/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByMostLikesFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
@@ -180,7 +180,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by comments</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("qty/byComments/{qtyArticles:int}")]
+    [HttpGet("qty/byCommentsDesc/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByCommentsFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
@@ -205,7 +205,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by earliest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("qty/byDate/earliest/{qtyArticles:int}")]
+    [HttpGet("qty/byDateDesc/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByEarliestDateFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
@@ -248,7 +248,7 @@ public class ArticleController: Controller
     /// </summary>
     /// <returns>Return Status OK - if any Article exists, return Articles sorted by oldest date</returns>
     /// <returns>Return Status Not Found - no Articles in db</returns>
-    [HttpGet("qty/byDate/oldest/{qtyArticles:int}")]
+    [HttpGet("qty/byDateAsc/{qtyArticles:int}")]
     public async Task<IActionResult> GetQtyArticlesByOldestDateFromDb([FromRoute] int qtyArticles, [FromQuery] DateTime time)
     {
         ArticleQtyDto? articles;
