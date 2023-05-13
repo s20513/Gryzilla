@@ -148,32 +148,6 @@ public class SearchControllerTests
         Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
-    [Fact]
-    public async void GetQtyPostByWordFromDb_Not_Found()
-    {
-        DateTime time = DateTime.Now;
-        //Arrange
-        Func<PostQtySearchDto?> nullValue = null;
-        
-        //Arrange
-        _searchRepositoryMock
-            .Setup(x => x.GetPostByWordFromDb(5, time, "XYZ"))
-            .ReturnsAsync(nullValue);
-
-        //Act
-        var actionResult = await _searchController.GetPosts(5, time, "XYZ");
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue.Message);
-    }
     
     [Fact]
     public async void GetArticlesByWordFromDb_Returns_ListOfArticles()
@@ -226,32 +200,6 @@ public class SearchControllerTests
         Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
-    [Fact]
-    public async void GetQtyArticleByTagFromDb_Not_Found()
-    {
-        DateTime time = DateTime.Now;
-        //Arrange
-        Func<ArticleQtySearchDto?> nullValue = null;
-        
-        //Arrange
-        _searchRepositoryMock
-            .Setup(x => x.GetArticleByWordFromDb(5, time, "Content4"))
-            .ReturnsAsync(nullValue);
-
-        //Act
-        var actionResult = await _searchController.GetArticles(5, time, "Content4");
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue.Message);
-    }
     
     [Fact]
     public async void GetUsers_Returns_Ok()
@@ -277,29 +225,6 @@ public class SearchControllerTests
         Assert.Equal(_fakeQtyUsers, resultValue);
     }
     
-    [Fact]
-    public async void GetUsers_Returns_Not_Found()
-    {
-        //Arrange
-        Func<UsersQtyDto?> nullValue = null;
-        
-        _searchRepositoryMock.Setup(x => x.GetUsersByNameFromDb(5, DateTime.Now, "Name"))
-            .ReturnsAsync(nullValue);
-
-        //Act
-        var actionResult = await _searchController.GetUsers(5, DateTime.Now, "Name");
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("No users found", resultValue.Message);
-    }
     
     [Fact]
     public async void GetQtyUsersByNameFromDb_Returns_WrongNumberException_Bad_Request()

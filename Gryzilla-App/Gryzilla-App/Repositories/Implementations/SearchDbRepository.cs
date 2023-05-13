@@ -45,11 +45,6 @@ public class SearchDbRepository : ISearchDbRepository
             })
             .ToArrayAsync();
 
-        if (!users.Any())
-        {
-            return null;
-        }
-        
         var filteredUserDtos = users
             .OrderBy(e => e.CreatedAt)
             .Skip(qtyUsers - 5)
@@ -106,11 +101,6 @@ public class SearchDbRepository : ISearchDbRepository
                     allSearchPosts.Add(post);
                 }
             }
-        }
-        
-        if (!allSearchPosts.Any())
-        {
-            return null;
         }
         
         var filteredPostDtos = allSearchPosts
@@ -206,10 +196,6 @@ public class SearchDbRepository : ISearchDbRepository
             }
         }
         
-        if (!allSearchArticles.Any())
-        {
-            return null;
-        }
         
         var filteredArticlesDtos = allSearchArticles
             .OrderBy(e => e.CreatedAt)

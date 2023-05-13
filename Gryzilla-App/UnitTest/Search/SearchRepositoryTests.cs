@@ -144,19 +144,6 @@ public class SearchRepositoryTests
     }
     
 
-    [Fact]
-    public async Task GetQtyPostsByWordFromDb_Returns_Null()
-    {
-        //Arrange
-        DateTime time = DateTime.Now;
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        var res = await _repository.GetPostByWordFromDb(5, time, "samochody1");
-
-        //Assert
-        Assert.Null(res);
-    }
     
     [Fact]
     public async Task GetQtyPostsByWordFromDb_Returns_WrongNumberException()
@@ -198,18 +185,6 @@ public class SearchRepositoryTests
         if (res != null) Assert.Equal(posts+tags, res.Posts.Count());
     }
     
-    [Fact]
-    public async Task GetQtyArticlesByWordFromDb_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        var res = await _repository.GetArticleByWordFromDb(5, DateTime.Now, "samochody");
-
-        //Assert
-        Assert.Null(res);
-    }
     
     [Fact]
     public async Task GetQtyArticlesByWordFromDb_Returns_WrongNumberException()
@@ -252,18 +227,6 @@ public class SearchRepositoryTests
         if (res != null) Assert.Equal(articles +tags, res.Articles.Count());
     }
     
-    [Fact]
-    public async Task GetQtyUsersByNameFromDb_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        var res = await _repository.GetUsersByNameFromDb(5, DateTime.Now, "samochody");
-
-        //Assert
-        Assert.Null(res);
-    }
     
     [Fact]
     public async Task GetQtyUserByNickNameFromDb_Returns_WrongNumberException()

@@ -32,10 +32,6 @@ public class SearchController : Controller
         try
         {
             users = await _searchDbRepository.GetUsersByNameFromDb(qtyUsers, time, nickName);
-            if (users == null)
-            {
-                return NotFound(new StringMessageDto{ Message = "No users found"}); 
-            }
         } 
         catch (WrongNumberException e)
         {
@@ -59,10 +55,6 @@ public class SearchController : Controller
         {
             posts = await _searchDbRepository.GetPostByWordFromDb(qtyPosts, time, word);
 
-            if (posts == null)
-            {
-                return NotFound(new StringMessageDto{ Message = "No posts found"}); 
-            }
         } 
         catch (WrongNumberException e)
         {
@@ -86,10 +78,6 @@ public class SearchController : Controller
         {
             articles = await _searchDbRepository.GetArticleByWordFromDb(qtyArticles, time, word);
 
-            if (articles == null)
-            {
-                return NotFound(new StringMessageDto{ Message = "No articles found"}); 
-            }
         } 
         catch (WrongNumberException e)
         {
