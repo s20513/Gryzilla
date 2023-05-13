@@ -852,18 +852,7 @@ public class ArticleDbRepositoryTests
         
         if (res != null) Assert.Equal(articles, res.Select(e => e.IdArticle));
     }
-    [Fact]
-    public async Task GetQtyArticlesByTagFromDb_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        var res = await _repository.GetArticlesByTagFromDb(5, DateTime.Now, "samochody");
-
-        //Assert
-        Assert.Null(res);
-    }
+  
     [Fact]
     public async Task GetQtyArticlesByTagFromDb_Returns_WrongNumberException()
     {

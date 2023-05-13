@@ -369,11 +369,6 @@ public class ArticleController: Controller
         {
             articles = await _articleDbRepository
                 .GetArticlesByTagFromDb(qtyArticles, time, nameTag);
-
-            if (articles is null)
-            {
-                return NotFound(new StringMessageDto{ Message = "No articles found" });
-            }
         } 
         catch (WrongNumberException e)
         {

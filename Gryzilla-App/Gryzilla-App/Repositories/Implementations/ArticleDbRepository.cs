@@ -593,11 +593,6 @@ public class ArticleDbRepository: IArticleDbRepository
 
         var articles = await GetArticlesByTag(nameTag);
         
-        if (!articles.Any())
-        {
-            return null;
-        }
-
         var filteredArticleDtos = articles
             .OrderBy(x => x.IdArticle)
             .Skip(qtyArticles-5)
@@ -626,7 +621,6 @@ public class ArticleDbRepository: IArticleDbRepository
             .Where(x => x.NameTag == nameTag)
             .SelectMany(x => x.IdArticles)
             .Select(x => x.IdArticle).ToArrayAsync();
-
 
         for (var i = 0; i < tags.Length; i++)
         {

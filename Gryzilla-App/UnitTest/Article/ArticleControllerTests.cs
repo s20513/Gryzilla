@@ -1053,31 +1053,6 @@ public class ArticleControllerTests
         Assert.Equal(exceptionMessage, resultValue.Message);
     }
     
-    [Fact]
-    public async void GetQtyArticleByTagFromDb_Not_Found()
-    {
-        DateTime time = DateTime.Now;
-        //Arrange
-        Func<ArticleQtyDto?>? nullValue = null;
-        
-        _articleRepositoryMock
-            .Setup(x => x.GetArticlesByTagFromDb(5, time, "samochody"))
-            .ReturnsAsync(nullValue);
-
-        //Act
-        var actionResult = await _articleController.GetArticlesByTag(5, time, "samochody");
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("No articles found", resultValue.Message);
-    }
     
     [Fact]
     public async void GetUserArticlesFromDb_Returns_Ok()

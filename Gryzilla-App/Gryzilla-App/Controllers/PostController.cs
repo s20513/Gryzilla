@@ -403,10 +403,6 @@ public class PostController : Controller
             posts = await _postsDbRepository
                 .GetPostsByTagFromDb(qtyPosts, time, nameTag);
 
-            if (posts is null)
-            {
-                return NotFound(new StringMessageDto { Message ="No posts found"});
-            }
         } 
         catch (WrongNumberException e)
         {

@@ -919,19 +919,7 @@ public class PostRepositoryTests
         
         if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
     }
-    [Fact]
-    public async Task GetQtyPostsByTagsFromDb_Returns_Null()
-    {
-        //Arrange
-        DateTime time = DateTime.Now;
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        var res = await _repository.GetPostsByTagFromDb(5, time, "samochody1");
-
-        //Assert
-        Assert.Null(res);
-    }
+    
     [Fact]
     public async Task GetQtyPostsByTagFromDb_Returns_WrongNumberException()
     {

@@ -645,11 +645,6 @@ public class PostDbRepository : IPostDbRepository
         }
         var allPosts = await GetPostsByTag(nameTag);
 
-        if (!allPosts.Any())
-        {
-            return null;
-        }
-        
         var filteredPostDtos = allPosts
             .Where(x=>x.CreatedAt < time)
             .OrderBy(e => e.CreatedAt)
@@ -674,10 +669,6 @@ public class PostDbRepository : IPostDbRepository
             .SelectMany(x => x.IdPosts)
             .Select(x => x.IdPost).ToArrayAsync();
 
-        if (tags is null)
-        {
-            return null;
-        }
 
         for (var i = 0; i < tags.Length; i++)
         {

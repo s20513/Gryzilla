@@ -1185,28 +1185,6 @@ public class PostControllerTests
         Assert.Equal(exceptionMessage, resultValue.Message);
     }
     [Fact]
-    public async void GetQtyPostsByTagFromDb_Returns_Null()
-    {
-        //Arrange
-        PostQtyDto nullValue = null;
-        
-        _postRepositoryMock.Setup(x => x.GetPostsByTagFromDb(5, DateTime.Now, "Samochody")).ReturnsAsync(nullValue);
-
-        //Act
-        var actionResult = await _postsController.GetPostsByTag(5,DateTime.Now, "Samochody1");
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("No posts found", resultValue.Message);
-    }
-    [Fact]
     public async void GetQtyPostsByTagFromDb_Returns_ListOfPosts()
     {
         DateTime time = DateTime.Now;
