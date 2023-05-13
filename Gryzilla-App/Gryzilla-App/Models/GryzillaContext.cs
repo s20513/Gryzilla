@@ -41,9 +41,7 @@ namespace Gryzilla_App.Models
                 _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["GryzillaDatabase"].ConnectionString;
             }
         }
-
-        public virtual DbSet<Achievement> Achievements { get; set; } = null!;
-        public virtual DbSet<AchievementUser> AchievementUsers { get; set; } = null!;
+        
         public virtual DbSet<Article> Articles { get; set; } = null!;
         public virtual DbSet<BlockedUser> BlockedUsers { get; set; } = null!;
         public virtual DbSet<CommentArticle> CommentArticles { get; set; } = null!;
@@ -72,58 +70,6 @@ namespace Gryzilla_App.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Achievement>(entity =>
-            {
-                entity.HasKey(e => e.IdAchievement)
-                    .HasName("Achievement_pk");
-
-                entity.ToTable("Achievement");
-
-                entity.Property(e => e.IdAchievement).HasColumnName("idAchievement");
-
-                entity.Property(e => e.AchievementName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("achievementName");
-
-                entity.Property(e => e.Descripion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasColumnName("descripion");
-
-                entity.Property(e => e.Points)
-                    .HasColumnType("decimal(5, 2)")
-                    .HasColumnName("points");
-            });
-
-            modelBuilder.Entity<AchievementUser>(entity =>
-            {
-                entity.HasKey(e => new { e.IdAchievement, e.IdUser })
-                    .HasName("AchievementUser_pk");
-
-                entity.ToTable("AchievementUser");
-
-                entity.Property(e => e.IdAchievement).HasColumnName("idAchievement");
-
-                entity.Property(e => e.IdUser).HasColumnName("idUser");
-
-                entity.Property(e => e.ReceivedAt)
-                    .HasColumnType("date")
-                    .HasColumnName("receivedAt");
-
-                entity.HasOne(d => d.IdAchievementNavigation)
-                    .WithMany(p => p.AchievementUsers)
-                    .HasForeignKey(d => d.IdAchievement)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("AchievementUser_Achievement");
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.AchievementUsers)
-                    .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("AchievementUser_User");
-            });
-
             modelBuilder.Entity<Article>(entity =>
             {
                 entity.HasKey(e => e.IdArticle)

@@ -7,7 +7,6 @@ namespace Gryzilla_App.Models
     {
         public UserDatum()
         {
-            AchievementUsers = new HashSet<AchievementUser>();
             Articles = new HashSet<Article>();
             BlockedUserIdUserBlockedNavigations = new HashSet<BlockedUser>();
             BlockedUserIdUserNavigations = new HashSet<BlockedUser>();
@@ -48,7 +47,6 @@ namespace Gryzilla_App.Models
         public string? EpicLink { get; set; }
 
         public virtual Rank IdRankNavigation { get; set; } = null!;
-        public virtual ICollection<AchievementUser> AchievementUsers { get; set; }
         public virtual ICollection<Article> Articles { get; set; }
         public virtual ICollection<BlockedUser> BlockedUserIdUserBlockedNavigations { get; set; }
         public virtual ICollection<BlockedUser> BlockedUserIdUserNavigations { get; set; }

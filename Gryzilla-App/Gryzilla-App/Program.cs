@@ -89,7 +89,6 @@ builder.Services.AddScoped<ICommentPostDbRepository, CommentPostDbRepository>();
 builder.Services.AddScoped<ILikesPostDbRepository, LikesPostDbRepository>();
 builder.Services.AddScoped<ILikesArticleDbRepository, LikesArticleDbRepository>();
 builder.Services.AddScoped<IRankDbRepository, RankDbRepository>();
-builder.Services.AddScoped<IAchievementDbRepository, AchievementDbRepository>();
 builder.Services.AddScoped<IGroupDbRepository, GroupDbRepository>();
 builder.Services.AddScoped<IArticleDbRepository, ArticleDbRepository>();
 builder.Services.AddScoped<ICommentArticleDbRepository, CommentArticleDbRepository>();
