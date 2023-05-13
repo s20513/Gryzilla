@@ -12,12 +12,7 @@ TRUNCATE TABLE BlockedUser_history
 ALTER TABLE dbo.BlockedUser
 SET(SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.BlockedUser_History, DATA_CONSISTENCY_CHECK = ON))
 
-TRUNCATE TABLE [AchievementUser]
-
 TRUNCATE TABLE [ReportUser]
-
-DELETE FROM [Achievement]
-DBCC CHECKIDENT ([Achievement], RESEED, 0)
 
 TRUNCATE TABLE [Notification]
 
