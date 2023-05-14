@@ -289,7 +289,7 @@ public class SearchRepositoryTests
         DateTime time = DateTime.Now;
 
         //Act
-        var res = await _repository.GetArticlesByTagFromDb(5,time, "Tag1");
+        var res = await _repository.GetArticlesByTagFromDb(5,time, "1");
         
         //Assert
         Assert.NotNull(res);
@@ -327,7 +327,7 @@ public class SearchRepositoryTests
         await AddPostDataToDb();
 
         //Act
-        var res = await _repository.GetPostsByTagFromDb(5,DateTime.Now, "Tag1");
+        var res = await _repository.GetPostsByTagFromDb(5,DateTime.Now, "1");
         
         //Assert
         Assert.NotNull(res);
