@@ -3,6 +3,7 @@ using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
@@ -38,7 +39,23 @@ public class SearchControllerTests
         },
         IsNext = false
     };
-    
+    private readonly GroupsQtySearchDto _fakeQtyGroup = new GroupsQtySearchDto
+    {
+        Groups = new GroupDto []
+        {
+            new GroupDto
+            {
+                IdGroup = 1,
+                Nick ="Ola",
+                Content = "XYZ to jest",
+                CreatedAt = DateTime.Now,
+                GroupName = "testowa",
+                IdUserCreator = 1,
+            }
+        },
+        IsNext = false
+    };
+
     private readonly PostQtyDto _fakeQtyPosts = new PostQtyDto
     {
         Posts = new PostDto []
@@ -510,5 +527,54 @@ public class SearchControllerTests
         
         if (resultValue is null) return;
         Assert.Equal(_fakeQtyPosts, resultValue);
+    }
+    
+    
+    [Fact] 
+    public async void GetQtyGroupsByWordFromDb_Returns_WrongNumberException_Bad_Request()
+    {
+        var exceptionMessage = "Wrong Number! Please insert number greater than 4!";
+        
+        DateTime time = DateTime.Now;
+        
+        _searchRepositoryMock
+            .Setup(x => x.GetGroupsByWordFromDb(4, time, "Samochody"))
+            .ThrowsAsync(new WrongNumberException(exceptionMessage));
+        //Act
+        var actionResult = await _searchController.GetGroups(4, time, "Samochody");
+        
+        //Assert
+        var result = actionResult as BadRequestObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as StringMessageDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(exceptionMessage, resultValue.Message);
+    }
+    [Fact]
+    public async void GetQtyGroupsByWordFromDb_Returns_ListOfPosts()
+    {
+        DateTime time = DateTime.Now;
+        //Arrange
+        _searchRepositoryMock
+            .Setup(x => x.GetGroupsByWordFromDb(5, time, "testowa"))
+            .ReturnsAsync(_fakeQtyGroup);
+
+        //Act
+        var actionResult = await _searchController.GetGroups(5, time, "testowa");
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as GroupsQtySearchDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(_fakeQtyGroup, resultValue);
     }
 }

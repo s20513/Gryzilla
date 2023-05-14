@@ -1,5 +1,6 @@
 ﻿using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
@@ -133,6 +134,31 @@ public class SearchController : Controller
             return BadRequest(new StringMessageDto{ Message = e.Message });
         }
 
+        return Ok(articles);
+    }
+    
+    
+    /// <summary>
+    /// Get articles by word
+    /// </summary>
+    /// <returns>
+    /// Return articles list
+    /// </returns>
+    [HttpGet("getGroupsByWord/{qtyGroups:int}")]
+    public async Task<IActionResult> GetGroups([FromRoute] int qtyGroups, [FromQuery] DateTime time, [FromQuery] string word)
+    {
+        GroupsQtySearchDto? articles;
+        
+        try
+        {
+            articles = await _searchDbRepository.GetGroupsByWordFromDb(qtyGroups, time, word);
+
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(new StringMessageDto{ Message = e.Message});
+        }
+        
         return Ok(articles);
     }
 }

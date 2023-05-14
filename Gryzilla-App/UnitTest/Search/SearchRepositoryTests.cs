@@ -17,7 +17,98 @@ public class SearchRepositoryTests
         _context = new GryzillaContext(options, true);
         _repository = new SearchDbRepository(_context);
     }
+    private async Task AddTestDataWithManyGroup()
+    {
+        await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
+        {
+            Name = "Rank1",
+            RankLevel = 1
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.UserData.AddAsync(new UserDatum
+        {
+            IdRank = 1,
+            Nick = "Nick1",
+            Password = "Pass1",
+            Email = "email1",
+            CreatedAt = DateTime.Today
+        });
 
+        await _context.UserData.AddAsync(new UserDatum
+        {
+            IdRank = 1,
+            Nick = "Nick2",
+            Password = "Pass1",
+            Email = "email1",
+            CreatedAt = DateTime.Today
+        });
+        await _context.SaveChangesAsync();
+        
+        var user = await _context.UserData.FirstAsync();
+        
+        await _context.UserData.AddAsync(new UserDatum
+        {
+            IdRank = 1,
+            Nick = "Nick2",
+            Password = "Pass2",
+            Email = "email2",
+            CreatedAt = DateTime.Today
+        });
+        await _context.SaveChangesAsync();
+
+        await _context.Groups.AddAsync(new Group
+        {
+            GroupName = "test",
+            CreatedAt = DateTime.Now,
+            IdUserCreator = 2,
+            Description = "Nowa grupa"
+        });
+        await _context.SaveChangesAsync();
+        
+        var group = await _context.Groups.FirstAsync();
+
+        await _context.GroupUsers.AddAsync(new GroupUser
+        {
+            IdGroup = group.IdGroup,
+            IdUser = user.IdUser
+        });
+        await _context.SaveChangesAsync();
+
+        await _context.Groups.AddAsync(new Group
+        {
+            GroupName = "nowa",
+            CreatedAt = DateTime.Now,
+            IdUserCreator = 1,
+            Description = "grupa"
+        });
+        await _context.SaveChangesAsync();
+
+        await _context.Groups.AddAsync(new Group
+        {
+            GroupName = "3",
+            CreatedAt = DateTime.Now,
+            IdUserCreator = 1,
+            Description = "Nowa grupa"
+        });
+        await _context.SaveChangesAsync();
+        await _context.Groups.AddAsync(new Group
+        {
+            GroupName = "4",
+            CreatedAt = DateTime.Now,
+            IdUserCreator = 1,
+            Description = "Nowa grupa"
+        });
+        await _context.SaveChangesAsync();
+        await _context.Groups.AddAsync(new Group
+        {
+            GroupName = "5",
+            CreatedAt = DateTime.Now,
+            IdUserCreator = 1,
+            Description = "Nowa grupa"
+        });
+        await _context.SaveChangesAsync();
+    }
     private async Task AddPostDataToDb()
     {
         await _context.Ranks.AddAsync(new Gryzilla_App.Models.Rank
@@ -116,7 +207,7 @@ public class SearchRepositoryTests
         await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
-            Title = "Title1",
+            Title = "Title",
             CreatedAt = DateTime.Now,
             Content = "Content2"
         });
@@ -127,13 +218,47 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title2",
             CreatedAt = DateTime.Now,
-            Content = "Content1"
+            Content = "Content"
         });
         await _context.SaveChangesAsync();
         
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Now,
+            Content = "Content"
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        {
+            IdUser = 1,
+            Title = "Title2",
+            CreatedAt = DateTime.Now,
+            Content = "Content"
+        });
+        await _context.SaveChangesAsync();
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        {
+            IdUser = 1,
+            Title = "Title1",
+            CreatedAt = DateTime.Now,
+            Content = "Content"
+        });
+        await _context.SaveChangesAsync();
+        
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        {
+            IdUser = 1,
+            Title = "Title2",
+            CreatedAt = DateTime.Now,
+            Content = "Content"
+        });
+        await _context.SaveChangesAsync();
         await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
-            NameTag = "1"
+            NameTag = "Content"
         });
         await _context.SaveChangesAsync();
 
@@ -289,7 +414,7 @@ public class SearchRepositoryTests
         DateTime time = DateTime.Now;
 
         //Act
-        var res = await _repository.GetArticlesByTagFromDb(5,time, "1");
+        var res = await _repository.GetArticlesByTagFromDb(5,time, "Content");
         
         //Assert
         Assert.NotNull(res);
@@ -341,5 +466,41 @@ public class SearchRepositoryTests
 
 
         if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost).SingleOrDefault());
+    }
+    
+    [Fact]
+    public async Task GetQtyGroupsByWordFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        DateTime time = DateTime.Now;
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetGroupsByWordFromDb(4, time, "samochody1"));
+    }
+    
+    [Fact]
+    public async Task GetQtyGroupsByWordFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyGroup();
+
+        //Act
+        var res = await _repository.GetGroupsByWordFromDb(5,DateTime.Now, "nowa");
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var groups = await _context
+            .Groups
+            .Where(x=>x.IdGroup==1)
+            .Select(e => e.IdGroup)
+            .SingleOrDefaultAsync();
+
+
+        if (res != null) Assert.Equal(groups, res.Groups.Select(e => e.IdGroup).FirstOrDefault());
     }
 }

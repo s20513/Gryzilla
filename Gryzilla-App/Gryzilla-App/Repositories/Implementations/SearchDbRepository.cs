@@ -2,6 +2,7 @@
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.DTOs.Responses.Articles;
+using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
@@ -251,7 +252,7 @@ public class SearchDbRepository : ISearchDbRepository
         return article;
     }
     
-      public async Task<ArticleQtyDto> GetArticlesByTagFromDb(int qtyArticles, DateTime time,string nameTag)
+      public async Task<ArticleQtyDto?> GetArticlesByTagFromDb(int qtyArticles, DateTime time,string nameTag)
     {
         var next = false;
         
@@ -442,5 +443,103 @@ public class SearchDbRepository : ISearchDbRepository
             }
         }    
         return posts;
+    }
+    
+    public async Task<GroupsQtySearchDto?> GetGroupsByWordFromDb(int qtyGroups, DateTime time,string word)
+    {
+        var idGroupsTable = new List<int>();
+        var allSearchGroups = new List<GroupDto>();
+        
+        if (qtyGroups < 5)
+        {
+            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
+        }
+        
+        var groups = await _context.Groups
+            .Where(x => x.Description.ToLower().Contains(word))
+            .Select(x=>x.IdGroup)
+            .ToArrayAsync();
+        
+        for (int i = 0; i < groups.Length; i++)
+        {
+            var group = await GetGroups(groups, i);
+
+            if (!idGroupsTable.Contains(group.IdGroup))
+            {
+                idGroupsTable.Add(group.IdGroup);
+                allSearchGroups.Add(group);
+            }
+        }
+
+        groups = await _context.Groups
+            .Where(x => x.GroupName.ToLower().Contains(word))
+            .Select(x=>x.IdGroup)
+            .ToArrayAsync();
+        
+        for (int i = 0; i < groups.Length; i++)
+        {
+            var group = await GetGroups(groups, i);
+
+            if (group is not null)
+            {
+                if (!idGroupsTable.Contains(group.IdGroup))
+                {
+                    idGroupsTable.Add(group.IdGroup);
+                    allSearchGroups.Add(group);
+                }
+            }
+        }
+        
+        var filteredGroupsDtos = allSearchGroups
+            .OrderBy(e => e.CreatedAt)
+            .Skip(qtyGroups - 5)
+            .Take(5)
+            .ToList();
+
+        return new GroupsQtySearchDto()
+        {
+            Groups = filteredGroupsDtos,
+            IsNext = qtyGroups < allSearchGroups.Count
+        };
+        
+    }
+    
+    private async Task<GroupDto?> GetGroups(int[] table, int i)
+    {
+        var article = await _context
+            .Groups
+            .Where(x => x.IdGroup == (int)table.GetValue(i))
+            .Include(x => x.IdUserCreatorNavigation)
+            .Select(e => new GroupDto
+            {
+                IdGroup       = e.IdGroup,
+                IdUserCreator = e.IdUserCreator,
+                Nick          = _context.UserData
+                    .Where(x => x.IdUser == e.IdUserCreator)
+                    .Select(x=>x.Nick)
+                    .SingleOrDefault(),
+                GroupName     = e.GroupName,
+                Content   = e.Description,
+                CreatedAt     = e.CreatedAt,
+                Type          = e.PhotoType,
+                base64PhotoData = Convert.ToBase64String(e.Photo ?? Array.Empty<byte>()),
+                Users         = _context.GroupUsers
+                    .Where(g => g.IdGroup == (int)table.GetValue(i))
+                    .Include(g => g.IdUserNavigation)
+                    .Include(g => g.IdUserNavigation.IdRankNavigation)
+                    .Select(g => new UserDto
+                    {
+                        IdUser      = g.IdUser,
+                        IdRank      = g.IdUserNavigation.IdRank,
+                        Nick        = g.IdUserNavigation.Nick,
+                        Email       = g.IdUserNavigation.Email,
+                        PhoneNumber = g.IdUserNavigation.PhoneNumber,
+                        CreatedAt   = g.IdUserNavigation.CreatedAt,
+                        RankName    = g.IdUserNavigation.IdRankNavigation.Name
+                    }).ToList()
+                
+            }).SingleOrDefaultAsync();
+
+        return article;
     }
 }

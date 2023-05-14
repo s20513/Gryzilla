@@ -15,5 +15,4 @@ public class GroupDto
     public string base64PhotoData { get; set; }
     public List<UserDto> Users { get; set; }
     
-    
 }
