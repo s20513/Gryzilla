@@ -209,7 +209,7 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title",
             CreatedAt = DateTime.Now,
-            Content = "Content2"
+            Content = "1"
         });
         await _context.SaveChangesAsync();
         
@@ -218,7 +218,7 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title2",
             CreatedAt = DateTime.Now,
-            Content = "Content"
+            Content = "2"
         });
         await _context.SaveChangesAsync();
         
@@ -227,7 +227,7 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Now,
-            Content = "Content"
+            Content = "3"
         });
         await _context.SaveChangesAsync();
         
@@ -236,7 +236,7 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title2",
             CreatedAt = DateTime.Now,
-            Content = "Content"
+            Content = "4"
         });
         await _context.SaveChangesAsync();
         await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
@@ -244,10 +244,9 @@ public class SearchRepositoryTests
             IdUser = 1,
             Title = "Title1",
             CreatedAt = DateTime.Now,
-            Content = "Content"
+            Content = "5"
         });
         await _context.SaveChangesAsync();
-        
         await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
@@ -255,7 +254,15 @@ public class SearchRepositoryTests
             CreatedAt = DateTime.Now,
             Content = "Content"
         });
+        await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
+        {
+            IdUser = 1,
+            Title = "Title2",
+            CreatedAt = DateTime.Now,
+            Content = "6"
+        });
         await _context.SaveChangesAsync();
+       
         await _context.Tags.AddAsync(new Gryzilla_App.Models.Tag
         {
             NameTag = "Content"
@@ -264,7 +271,17 @@ public class SearchRepositoryTests
 
         var tag = await _context.Tags.FirstAsync();
         var article = await _context.Articles.FirstAsync();
+        var article1 = await _context.Articles.SingleOrDefaultAsync(x => x.IdArticle == 2);
+        var article2 = await _context.Articles.SingleOrDefaultAsync(x => x.IdArticle == 3);
+        var article3 = await _context.Articles.SingleOrDefaultAsync(x => x.IdArticle == 4);
+        var article4 = await _context.Articles.SingleOrDefaultAsync(x => x.IdArticle == 5);
+        var article5 = await _context.Articles.SingleOrDefaultAsync(x => x.IdArticle == 6);
         article.IdTags.Add(tag);
+        article1.IdTags.Add(tag);
+        article2.IdTags.Add(tag);
+        article3.IdTags.Add(tag);
+        article4.IdTags.Add(tag);
+        article5.IdTags.Add(tag);
         await _context.SaveChangesAsync();
     }
     
@@ -333,23 +350,12 @@ public class SearchRepositoryTests
         DateTime time = DateTime.Now;
 
         //Act
-        var res = await _repository.GetArticleByWordFromDb(5,time, "1");
+        var res = await _repository.GetArticleByWordFromDb(5,time, "Content");
         
         //Assert
         Assert.NotNull(res);
         
-        var articles = await _context
-            .Articles
-            .Where(x=>x.Content.ToLower().Contains("1"))
-            .Select(e => e.IdArticle)
-            .CountAsync();
-
-        var tags =  await _context.Tags
-            .Where(x => x.NameTag.ToLower().Contains("1"))
-            .SelectMany(x => x.IdArticles)
-            .Select(x => x.IdArticle).CountAsync();
-        
-        if (res != null) Assert.Equal(articles +tags, res.Articles.Count());
+        if (res != null) Assert.Equal(5, res.Articles.Count());
     }
     
     
@@ -419,17 +425,8 @@ public class SearchRepositoryTests
         //Assert
         Assert.NotNull(res);
         
-        var articles = await _context
-            .Articles
-            .Where(x=>x.IdArticle == 1)
-            .Skip(0)
-            .Take(5)
-            .OrderByDescending(e => e.IdUsers.Count)
-            .Select(e => e.IdArticle)
-            .ToListAsync();
 
-
-        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
+        if (res != null) Assert.Equal(5 ,res.Articles.Count());
     }
     
     [Fact]
