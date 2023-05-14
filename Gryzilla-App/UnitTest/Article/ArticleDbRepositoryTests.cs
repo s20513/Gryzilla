@@ -852,44 +852,4 @@ public class ArticleDbRepositoryTests
         
         if (res != null) Assert.Equal(articles, res.Select(e => e.IdArticle));
     }
-  
-    [Fact]
-    public async Task GetQtyArticlesByTagFromDb_Returns_WrongNumberException()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetArticlesByTagFromDb(4, DateTime.Now, "Samochody"));
-    }
-    
-    [Fact]
-    public async Task GetQtyArticlesByTagFromDb_Returns_IEnumerable()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
-        await AddTestDataWithManyArticles();
-        
-        DateTime time = DateTime.Now;
-
-        //Act
-        var res = await _repository.GetArticlesByTagFromDb(5,time, "Tag1");
-        
-        //Assert
-        Assert.NotNull(res);
-        
-        var articles = await _context
-            .Articles
-            .Where(x=>x.IdArticle == 1)
-            .Skip(0)
-            .Take(5)
-            .OrderByDescending(e => e.IdUsers.Count)
-            .Select(e => e.IdArticle)
-            .ToListAsync();
-
-
-        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
-    }
 }

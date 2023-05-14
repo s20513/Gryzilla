@@ -22,5 +22,5 @@ public interface IArticleDbRepository
     public Task<ArticleDto?> DeleteArticleFromDb(int idArticle);
     public Task<ArticleDto?> ModifyArticleFromDb(PutArticleRequestDto putArticleRequestDto, int idArticle);
     public Task<IEnumerable<ArticleDto>> GetUserArticlesFromDb(int idUser);
-    public Task<ArticleQtyDto?> GetArticlesByTagFromDb(int qtyArticles, DateTime time, string nameTag);
+   
 }

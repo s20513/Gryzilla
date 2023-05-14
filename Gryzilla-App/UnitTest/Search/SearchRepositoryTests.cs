@@ -266,4 +266,80 @@ public class SearchRepositoryTests
 
         if (res != null) Assert.Equal(users, res.Users.Select(e => e.IdUser));
     }
+    
+    [Fact]
+    public async Task GetQtyArticlesByTagFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetArticlesByTagFromDb(4, DateTime.Now, "Samochody"));
+    }
+    
+    [Fact]
+    public async Task GetQtyArticlesByTagFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithManyArticles();
+        
+        DateTime time = DateTime.Now;
+
+        //Act
+        var res = await _repository.GetArticlesByTagFromDb(5,time, "Tag1");
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var articles = await _context
+            .Articles
+            .Where(x=>x.IdArticle == 1)
+            .Skip(0)
+            .Take(5)
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdArticle)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(articles, res.Articles.Select(e => e.IdArticle));
+    }
+    
+    [Fact]
+    public async Task GetQtyPostsByTagFromDb_Returns_WrongNumberException()
+    {
+        //Arrange
+        DateTime time = DateTime.Now;
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        //Act
+        //Assert
+        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetPostsByTagFromDb(4, time, "samochody1"));
+    }
+    [Fact]
+    public async Task GetPostsByTagsFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddPostDataToDb();
+
+        //Act
+        var res = await _repository.GetPostsByTagFromDb(5,DateTime.Now, "Tag1");
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var posts = await _context
+            .Posts
+            .Where(x=>x.IdPost==1)
+            .OrderByDescending(e => e.IdUsers.Count)
+            .Select(e => e.IdPost)
+            .SingleOrDefaultAsync();
+
+
+        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost).SingleOrDefault());
+    }
 }

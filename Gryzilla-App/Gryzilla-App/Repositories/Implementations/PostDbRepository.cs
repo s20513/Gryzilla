@@ -27,7 +27,7 @@ public class PostDbRepository : IPostDbRepository
 
         _context.Tags.Add(newTag);
         await _context.SaveChangesAsync();
-        
+
         return newTag;
     }
 
@@ -40,17 +40,17 @@ public class PostDbRepository : IPostDbRepository
             .Select(a => new PostDto
             {
                 idPost = a.IdPost,
-                Likes  = _context
+                Likes = _context
                     .Posts
                     .Where(c => c.IdPost == a.IdPost)
                     .SelectMany(b => b.IdUsers)
                     .Count(),
-                CommentsNumber      = _context
+                CommentsNumber = _context
                     .Posts
                     .Where(c => c.IdPost == a.IdPost)
                     .SelectMany(b => b.CommentPosts)
                     .Count(),
-                CommentsDtos  = _context.CommentPosts
+                CommentsDtos = _context.CommentPosts
                     .Where(x => x.IdPost == a.IdPost)
                     .Include(x => x.IdUserNavigation)
                     .OrderByDescending(c => c.CreatedAt)
@@ -60,26 +60,26 @@ public class PostDbRepository : IPostDbRepository
                         IdComment = x.IdComment,
                         IdPost = x.IdPost,
                         IdUser = x.IdUser,
-                        Nick  = x.IdUserNavigation.Nick,
+                        Nick = x.IdUserNavigation.Nick,
                         CreatedAt = x.CreatedAt,
-                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()),
                         Type = x.IdUserNavigation.PhotoType,
                     })
                     .Take(2)
                     .ToList(),
-                CreatedAt       = a.CreatedAt,
-                Content         = a.Content,
-                Nick            = a.IdUserNavigation.Nick,
-                Type            = a.IdUserNavigation.PhotoType,
+                CreatedAt = a.CreatedAt,
+                Content = a.Content,
+                Nick = a.IdUserNavigation.Nick,
+                Type = a.IdUserNavigation.PhotoType,
                 base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()),
-                Tags            = _context
+                Tags = _context
                     .Posts
                     .Where(x => x.IdPost == a.IdPost)
                     .SelectMany(x => x.IdTags)
                     .Select(x => x.NameTag)
                     .ToArray()
             }).ToListAsync();
-        
+
         return posts;
     }
 
@@ -88,14 +88,14 @@ public class PostDbRepository : IPostDbRepository
         var allPosts = await GetTableSort();
 
         var postsFromDb = allPosts.ToList();
-        
+
         return !postsFromDb.Any() ? null : postsFromDb;
     }
 
     public async Task<PostQtyDto?> GetQtyPostsFromDb(int qtyPosts)
     {
         bool next = false;
-        
+
         if (qtyPosts < 5)
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
@@ -116,18 +116,20 @@ public class PostDbRepository : IPostDbRepository
         {
             next = true;
         }
-        
+
         var filteredPostDtos = allPosts.OrderBy(x => x.idPost)
-            .Skip(qtyPosts-5)
+            .Skip(qtyPosts - 5)
             .Take(5)
-            .ToArray();;
-        
+            .ToArray();
+        ;
+
         return new PostQtyDto()
         {
             Posts = filteredPostDtos,
             IsNext = next
         };
     }
+
     public async Task<IEnumerable<PostDto>?> GetTopPosts()
     {
         var allPosts = await _context
@@ -149,7 +151,7 @@ public class PostDbRepository : IPostDbRepository
 
         return filteredPostDtos;
     }
-    
+
     public async Task<PostQtyDto?> GetQtyPostsByLikesFromDb(int qtyPosts, DateTime time)
     {
         if (qtyPosts < 5)
@@ -183,7 +185,7 @@ public class PostDbRepository : IPostDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
-        
+
         var allPosts = await GetTableSort();
 
         if (!allPosts.Any())
@@ -196,7 +198,7 @@ public class PostDbRepository : IPostDbRepository
             .Skip(qtyPosts - 5)
             .Take(5)
             .ToList();
-        
+
         return new PostQtyDto()
         {
             Posts = filteredPostDtos,
@@ -210,6 +212,7 @@ public class PostDbRepository : IPostDbRepository
         {
             throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
         }
+
         var allPosts = await GetTableSort();
 
         if (!allPosts.Any())
@@ -218,7 +221,7 @@ public class PostDbRepository : IPostDbRepository
         }
 
         var filteredPostDtos = allPosts
-            .Where(x=>x.CreatedAt < time)
+            .Where(x => x.CreatedAt < time)
             .OrderByDescending(e => e.CreatedAt)
             .Skip(qtyPosts - 5)
             .Take(5)
@@ -244,9 +247,9 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         var filteredPostDtos = allPosts
-            .Where(x=>x.CreatedAt < time)
+            .Where(x => x.CreatedAt < time)
             .OrderBy(e => e.CreatedAt)
             .Skip(qtyPosts - 5)
             .Take(5)
@@ -257,8 +260,9 @@ public class PostDbRepository : IPostDbRepository
             Posts = filteredPostDtos,
             IsNext = qtyPosts < allPosts.Count
         };
-        
+
     }
+
     public async Task<IEnumerable<PostDto>?> GetPostsByLikesFromDb()
     {
         var allPosts = await GetTableSort();
@@ -269,7 +273,7 @@ public class PostDbRepository : IPostDbRepository
         }
 
         var orderedPostDtos = allPosts.OrderByDescending(order => order.Likes).ToList();
-        
+
         return orderedPostDtos;
     }
 
@@ -285,7 +289,7 @@ public class PostDbRepository : IPostDbRepository
         var orderedPostDtos = allPosts
             .OrderByDescending(order => order.CommentsNumber)
             .ToList();
-        
+
         return orderedPostDtos;
     }
 
@@ -297,11 +301,11 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         var orderedPostDtos = allPosts
             .OrderByDescending(order => order.CreatedAt)
             .ToList();
-        
+
         return orderedPostDtos;
     }
 
@@ -313,11 +317,11 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         var orderedPostDtos = allPosts
             .OrderBy(order => order.CreatedAt)
             .ToList();
-        
+
         return orderedPostDtos;
     }
 
@@ -335,21 +339,21 @@ public class PostDbRepository : IPostDbRepository
 
         var post = new Post
         {
-            IdUser    = addPostDto.IdUser,
+            IdUser = addPostDto.IdUser,
             CreatedAt = DateTime.Now,
-            Content   = addPostDto.Content,
+            Content = addPostDto.Content,
             HighLight = false
         };
-        
+
         await _context.Posts.AddAsync(post);
-        
+
         foreach (var tag in addPostDto.Tags)
         {
             var newTag = await _context
                 .Tags
                 .Where(x => x.NameTag == tag)
                 .FirstOrDefaultAsync();
-            
+
             if (newTag is not null)
             {
                 post.IdTags.Add(newTag);
@@ -361,30 +365,30 @@ public class PostDbRepository : IPostDbRepository
         }
 
         await _context.SaveChangesAsync();
-        
+
         var idNewPost = await _context
             .Posts
             .Select(x => x.IdPost)
             .OrderByDescending(x => x)
             .FirstAsync();
-        
+
         return new NewPostDto()
         {
-            IdPost    = idNewPost,
-            Nick      = user.Nick,
+            IdPost = idNewPost,
+            Nick = user.Nick,
             CreatedAt = post.CreatedAt,
-            Content   = post.Content,
-            IdUser    = post.IdUser,
-            Type            = user.PhotoType,
+            Content = post.Content,
+            IdUser = post.IdUser,
+            Type = user.PhotoType,
             base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()),
-            Tags      = await _context
+            Tags = await _context
                 .Posts
                 .Where(x => x.IdPost == idNewPost)
                 .SelectMany(x => x.IdTags)
                 .Select(x => x.NameTag).ToArrayAsync(),
             Comments = 0,
-            Likes    = 0
-            
+            Likes = 0
+
         };
     }
 
@@ -401,13 +405,13 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         var tags = await _context
             .Posts
             .Where(x => x.IdPost == idPost)
             .SelectMany(x => x.IdTags)
             .ToArrayAsync();
-        
+
         foreach (var tag in tags)
         {
             post.IdTags.Remove(tag);
@@ -418,7 +422,7 @@ public class PostDbRepository : IPostDbRepository
             .Where(c => c.IdPost == idPost)
             .SelectMany(x => x.IdUsers)
             .ToArrayAsync();
-        
+
         foreach (var like in likes)
         {
             post.IdUsers.Remove(like);
@@ -434,9 +438,9 @@ public class PostDbRepository : IPostDbRepository
         var reportCommentPosts = await _context.ReportCommentPosts
             .Where(e => commentIds.Contains(e.IdComment))
             .ToListAsync();
-        
+
         _context.ReportCommentPosts.RemoveRange(reportCommentPosts);
-        
+
         foreach (var comment in comments)
         {
             _context.CommentPosts.Remove(comment);
@@ -455,13 +459,13 @@ public class PostDbRepository : IPostDbRepository
 
         _context.Posts.Remove(post);
         await _context.SaveChangesAsync();
-        
+
         return new DeletePostDto
         {
             DeletedAt = DateTime.Now,
-            Content   = post.Content,
-            IdPost    = post.IdPost,
-            IdUser    = post.IdUser,
+            Content = post.Content,
+            IdPost = post.IdPost,
+            IdUser = post.IdUser,
         };
     }
 
@@ -477,7 +481,7 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         var tagFromPost = await _context
             .Posts
             .Where(x => x.IdPost == idPost)
@@ -489,13 +493,13 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         post.IdTags.Remove(tagFromPost);
         await _context.SaveChangesAsync();
-        
+
         return new DeleteTagDto
         {
-            IdTag   = idTag,
+            IdTag = idTag,
             NameTag = tagFromPost.NameTag
         };
     }
@@ -512,16 +516,16 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         post.Content = putPostDto.Content;
-        
+
         if (putPostDto.Tags.Length > 0)
         {
             foreach (var tag in post.IdTags)
             {
                 post.IdTags.Remove(tag);
             }
-            
+
             foreach (var tag in putPostDto.Tags)
             {
                 var currentTag = await _context
@@ -538,22 +542,22 @@ public class PostDbRepository : IPostDbRepository
                     post.IdTags.Add(await AddNewTag(tag));
                 }
             }
-            
+
             await _context.SaveChangesAsync();
-            
+
             return new ModifyPostDto
             {
                 CreatedAt = post.CreatedAt,
-                Content   = post.Content,
-                IdPost    = post.IdPost,
-                IdUser    = post.IdUser,
-                base64PhotoData = Convert.ToBase64String(post.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                Content = post.Content,
+                IdPost = post.IdPost,
+                IdUser = post.IdUser,
+                base64PhotoData = Convert.ToBase64String(post.IdUserNavigation.Photo ?? Array.Empty<byte>()),
                 Type = post.IdUserNavigation.PhotoType,
-                Tags      = await _context
+                Tags = await _context
                     .Posts
-                    .Where(x=>x.IdPost==idPost)
-                    .SelectMany(x=>x.IdTags)
-                    .Select(x=>x.NameTag).ToArrayAsync()
+                    .Where(x => x.IdPost == idPost)
+                    .SelectMany(x => x.IdTags)
+                    .Select(x => x.NameTag).ToArrayAsync()
             };
         }
 
@@ -561,10 +565,10 @@ public class PostDbRepository : IPostDbRepository
         return new ModifyPostDto
         {
             CreatedAt = post.CreatedAt,
-            Content   = post.Content,
-            IdPost    = post.IdPost,
-            IdUser    = post.IdUser,
-            base64PhotoData = Convert.ToBase64String(post.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+            Content = post.Content,
+            IdPost = post.IdPost,
+            IdUser = post.IdUser,
+            base64PhotoData = Convert.ToBase64String(post.IdUserNavigation.Photo ?? Array.Empty<byte>()),
             Type = post.IdUserNavigation.PhotoType,
             Tags = Array.Empty<string>()
         };
@@ -581,7 +585,7 @@ public class PostDbRepository : IPostDbRepository
         {
             return null;
         }
-        
+
         var newPost = await _context
             .Posts
             .Where(x => x.IdPost == idPost)
@@ -603,29 +607,29 @@ public class PostDbRepository : IPostDbRepository
                 Comments = _context
                     .CommentPosts
                     .Where(c => c.IdPost == post.IdPost)
-                    .Include(b=>b.IdUserNavigation)
-                    .Select(x=> new PostCommentDto
+                    .Include(b => b.IdUserNavigation)
+                    .Select(x => new PostCommentDto
                     {
-                        IdPost      = idPost,
-                        IdComment   = x.IdComment,
-                        IdUser      = x.IdUser,
-                        Nick        = x.IdUserNavigation.Nick,
-                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                        IdPost = idPost,
+                        IdComment = x.IdComment,
+                        IdUser = x.IdUser,
+                        Nick = x.IdUserNavigation.Nick,
+                        base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()),
                         Type = x.IdUserNavigation.PhotoType,
                         Content = x.DescriptionPost
                     }).ToArray(),
-                Type            = a.IdUserNavigation.PhotoType,                                            
-                base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
+                Type = a.IdUserNavigation.PhotoType,
+                base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()),
                 CreatedAt = a.CreatedAt,
-                Content   = a.Content,
-                Nick      = a.IdUserNavigation.Nick,
-                Tags      = _context
+                Content = a.Content,
+                Nick = a.IdUserNavigation.Nick,
+                Tags = _context
                     .Posts
                     .Where(x => x.IdPost == post.IdPost)
                     .SelectMany(x => x.IdTags)
                     .Select(x => x.NameTag)
                     .ToArray()
-                
+
             }).SingleOrDefaultAsync();
         return newPost;
     }
@@ -637,94 +641,5 @@ public class PostDbRepository : IPostDbRepository
         return userPosts;
     }
 
-    public async Task<PostQtyDto?> GetPostsByTagFromDb(int qtyPosts, DateTime time,string nameTag)
-    {
-        if (qtyPosts < 5)
-        {
-            throw new WrongNumberException("Wrong Number! Please insert number greater than 4");
-        }
-        var allPosts = await GetPostsByTag(nameTag);
-
-        var filteredPostDtos = allPosts
-            .Where(x=>x.CreatedAt < time)
-            .OrderBy(e => e.CreatedAt)
-            .Skip(qtyPosts - 5)
-            .Take(5)
-            .ToList();
-
-        return new PostQtyDto()
-        {
-            Posts = filteredPostDtos,
-            IsNext = qtyPosts < allPosts.Count
-        };
-        
-    }
-
-    private async Task<List<PostDto>?> GetPostsByTag(string nameTag)
-    {
-        List<PostDto> posts = new List<PostDto>();
-        
-        var tags = await _context.Tags
-            .Where(x => x.NameTag == nameTag)
-            .SelectMany(x => x.IdPosts)
-            .Select(x => x.IdPost).ToArrayAsync();
-
-
-        for (var i = 0; i < tags.Length; i++)
-        {
-            var post = await _context
-                .Posts
-                .Where(x=>x.IdPost == (int)tags.GetValue(i))
-                .Select(a => new PostDto
-                {
-                    idPost = a.IdPost,
-                    Likes  = _context
-                        .Posts
-                        .Where(c => c.IdPost == a.IdPost)
-                        .SelectMany(b => b.IdUsers)
-                        .Count(),
-                    CommentsNumber = _context
-                        .Posts
-                        .Where(c => c.IdPost == a.IdPost)
-                        .SelectMany(b => b.CommentPosts)
-                        .Count(),
-                    CommentsDtos  = _context.CommentPosts
-                        .Where(x => x.IdPost == a.IdPost)
-                        .Include(x => x.IdUserNavigation)
-                        .OrderByDescending(c => c.CreatedAt)
-                        .Select(x => new PostCommentDto
-                        {
-                            Content = x.DescriptionPost,
-                            IdComment = x.IdComment,
-                            IdPost = x.IdPost,
-                            IdUser = x.IdUser,
-                            Nick  =x.IdUserNavigation.Nick,
-                            CreatedAt = x.CreatedAt,
-                            base64PhotoData = Convert.ToBase64String(x.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
-                            Type = x.IdUserNavigation.PhotoType,
-                        })
-                        .Take(2)
-                        .ToList(),
-                    CreatedAt       = a.CreatedAt,
-                    Content         = a.Content,
-                    Nick            = a.IdUserNavigation.Nick,
-                    Type            = a.IdUserNavigation.PhotoType,
-                    base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()),
-                    Tags            = _context
-                        .Posts
-                        .Where(x => x.IdPost == a.IdPost)
-                        .SelectMany(x => x.IdTags)
-                        .Select(x => x.NameTag)
-                        .ToArray()
-                }).SingleOrDefaultAsync();
-
-            if (post is not null)
-            {
-                posts.Add(post);
-            }
-        }    
-        return posts;
-    }
 }
-
 

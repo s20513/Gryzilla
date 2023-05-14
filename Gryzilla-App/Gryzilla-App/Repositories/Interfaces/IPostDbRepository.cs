@@ -23,5 +23,4 @@ public interface IPostDbRepository
     public Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost);
     public Task<OnePostDto?> GetOnePostFromDb(int idPost);
     public Task<IEnumerable<PostDto>> GetUserPostsFromDb(int idUser);
-    public Task<PostQtyDto?> GetPostsByTagFromDb(int qtyPosts, DateTime time,  string nameTag);
 }

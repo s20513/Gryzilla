@@ -25,13 +25,13 @@ public class SearchController : Controller
     /// Return users list
     /// </returns>
     [HttpGet("getUsersByName/{qtyUsers:int}")]
-    public async Task<IActionResult> GetUsers([FromRoute] int qtyUsers, [FromQuery] DateTime time, [FromQuery] string nickName)
+    public async Task<IActionResult> GetUsers([FromRoute] int qtyUsers, [FromQuery] DateTime time, [FromQuery] string word)
     {
         UsersQtyDto? users;
         
         try
         {
-            users = await _searchDbRepository.GetUsersByNameFromDb(qtyUsers, time, nickName);
+            users = await _searchDbRepository.GetUsersByNameFromDb(qtyUsers, time, word);
         } 
         catch (WrongNumberException e)
         {
@@ -84,6 +84,55 @@ public class SearchController : Controller
             return BadRequest(new StringMessageDto{ Message = e.Message});
         }
         
+        return Ok(articles);
+    }
+    
+    /// <summary>
+    /// Get posts by tag
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
+    [HttpGet("getPostsByTag/{qtyPosts:int}")]
+    public async Task<IActionResult> GetPostsByTag([FromRoute] int qtyPosts, [FromQuery] DateTime time, [FromQuery] string word)
+    {
+        PostQtyDto? posts;
+        
+        try
+        {
+            posts = await _searchDbRepository
+                .GetPostsByTagFromDb(qtyPosts, time, word);
+
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(new StringMessageDto{ Message = e.Message});
+        }
+
+        return Ok(posts);
+    }
+    
+    /// <summary>
+    /// Get articles by tag
+    /// </summary>
+    /// <returns>
+    /// Return post list
+    /// </returns>
+    [HttpGet("getArticlesByTag/{qtyArticles:int}")]
+    public async Task<IActionResult> GetArticlesByTag([FromRoute] int qtyArticles, [FromQuery] DateTime time, [FromQuery] string word)
+    {
+        ArticleQtyDto? articles;
+        
+        try
+        {
+            articles = await _searchDbRepository
+                .GetArticlesByTagFromDb(qtyArticles, time, word);
+        } 
+        catch (WrongNumberException e)
+        {
+            return BadRequest(new StringMessageDto{ Message = e.Message });
+        }
+
         return Ok(articles);
     }
 }

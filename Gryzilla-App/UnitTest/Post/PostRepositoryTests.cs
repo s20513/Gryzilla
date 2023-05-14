@@ -920,39 +920,4 @@ public class PostRepositoryTests
         if (res != null) Assert.Equal(posts, res.Select(e => e.idPost));
     }
     
-    [Fact]
-    public async Task GetQtyPostsByTagFromDb_Returns_WrongNumberException()
-    {
-        //Arrange
-        DateTime time = DateTime.Now;
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        //Act
-        //Assert
-        await Assert.ThrowsAsync<WrongNumberException>(() => _repository.GetPostsByTagFromDb(4, time, "samochody1"));
-    }
-    [Fact]
-    public async Task GetPostsByTagsFromDb_Returns_IEnumerable()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
-        await AddTestDataToDb();
-
-        //Act
-        var res = await _repository.GetPostsByTagFromDb(5,DateTime.Now, "Tag1");
-        
-        //Assert
-        Assert.NotNull(res);
-        
-        var posts = await _context
-            .Posts
-            .Where(x=>x.IdPost==1)
-            .OrderByDescending(e => e.IdUsers.Count)
-            .Select(e => e.IdPost)
-            .SingleOrDefaultAsync();
-
-
-        if (res != null) Assert.Equal(posts, res.Posts.Select(e => e.idPost).SingleOrDefault());
-    }
 }
