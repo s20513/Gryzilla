@@ -349,7 +349,7 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdPost).HasColumnName("idPost");
 
                 entity.Property(e => e.Content)
-                    .HasMaxLength(200)
+                    .HasMaxLength(2000)
                     .IsUnicode(false)
                     .HasColumnName("content");
 

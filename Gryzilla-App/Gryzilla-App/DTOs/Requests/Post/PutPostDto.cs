@@ -8,7 +8,8 @@ public class PutPostDto
     public int IdPost { get; set; }
 
     [Required]
-    [MaxLength(200,ErrorMessage = "Max length : 200")]
+    [MaxLength(2000,ErrorMessage = "Max length : 2000")]
+    [MinLength(2,ErrorMessage = "Min length : 2")]
     public string Content { get; set; }
     
     public string [] Tags { get; set; }
