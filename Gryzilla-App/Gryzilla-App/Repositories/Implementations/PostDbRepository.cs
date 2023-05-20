@@ -510,6 +510,7 @@ public class PostDbRepository : IPostDbRepository
             .Posts
             .Where(x => x.IdPost == putPostDto.IdPost)
             .Include(x => x.IdTags)
+            .Include(x => x.IdUserNavigation)
             .SingleOrDefaultAsync();
 
         if (post is null)
