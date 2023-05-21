@@ -156,7 +156,6 @@ public class ArticleDbRepository: IArticleDbRepository
                             base64PhotoData = Convert.ToBase64String(c.IdUserNavigation.Photo ?? Array.Empty<byte>()), 
                             Type = c.IdUserNavigation.PhotoType,
                         })
-                        .Take(2)
                         .ToList(),
                 })
                 .SingleOrDefaultAsync();
