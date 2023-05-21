@@ -443,7 +443,6 @@ public class ArticleDbRepository: IArticleDbRepository
             article.IdUsers.Remove(like);
         }
 
-        
         tags = await _context
             .Articles
             .Where(e => e.IdArticle == idArticle)
@@ -455,17 +454,23 @@ public class ArticleDbRepository: IArticleDbRepository
             article.IdTags.Remove(tag);
         }
         
-        
         comments = await _context
-                .CommentArticles
-                .Where(e => e.IdArticle == idArticle)
-                .ToListAsync();
+            .CommentArticles
+            .Where(e => e.IdArticle == idArticle)
+            .ToListAsync();
 
         foreach (var comment in comments)
         {
+            var reportComments = await _context.ReportCommentArticles
+                .Where(x => x.IdCommentArticle == comment.IdCommentArticle).ToListAsync();
+
+            foreach (var reportComment in reportComments)
+            {
+                _context.ReportCommentArticles.Remove(reportComment);
+            }
+            
             _context.CommentArticles.Remove(comment);
         }
-        
         
         _context.Articles.Remove(article);
         await _context.SaveChangesAsync();
