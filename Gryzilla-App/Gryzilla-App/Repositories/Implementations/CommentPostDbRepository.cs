@@ -114,6 +114,12 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
             return null;
         }
         
+        var reportCommentPosts = await _context.ReportCommentPosts
+            .Where(e => e.IdComment == idComment)
+            .ToListAsync();
+        
+        _context.ReportCommentPosts.RemoveRange(reportCommentPosts);
+        
         _context.CommentPosts.Remove(commentPost);
         await _context.SaveChangesAsync();
         

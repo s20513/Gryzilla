@@ -111,6 +111,11 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
             return null;
         }
 
+        var reportCommentArticles = await _context.ReportCommentArticles
+            .Where(e => e.IdCommentArticle == idComment)
+            .ToListAsync();
+        
+        _context.ReportCommentArticles.RemoveRange(reportCommentArticles);
         _context.CommentArticles.Remove(comment);
         await _context.SaveChangesAsync();
 
