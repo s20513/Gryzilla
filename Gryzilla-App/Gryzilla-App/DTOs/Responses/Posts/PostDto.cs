@@ -6,6 +6,7 @@ namespace Gryzilla_App.DTO.Responses.Posts;
 public class PostDto
 {
     public int idPost { get; set; }
+    public int idUser { get; set; }
     public string Nick { get; set; }
     public string? Type { get; set; }
     public string base64PhotoData { get; set; }
