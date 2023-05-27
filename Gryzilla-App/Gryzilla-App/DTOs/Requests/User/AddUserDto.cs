@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace Gryzilla_App.DTOs.Requests.User;
 
@@ -21,5 +22,5 @@ public class AddUserDto
     public string Email { get; set; } = null!;
 
     [Phone]
-    public string PhoneNumber { get; set; } = null!;
+    public string? PhoneNumber { get; set; }
 }
