@@ -251,4 +251,14 @@ public class UserController : Controller
 
         return NotFound();
     }
+    
+    
+    [HttpGet("exist")]
+    public async Task<IActionResult> NickExist([FromQuery] CheckNickDto checkNickDto)
+    {
+        var res = await _userDbRepository.ExistUserNick(checkNickDto.Nick);
+
+       return Ok(res);
+
+    }
 }

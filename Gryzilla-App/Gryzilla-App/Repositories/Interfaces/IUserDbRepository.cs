@@ -19,4 +19,5 @@ public interface IUserDbRepository
      public Task<UserPhotoResponseDto?> GetUserPhoto(int idUser);
      public Task<bool?> ChangePassword(ChangePasswordDto changePasswordDto, int idUser);
      public Task<bool> ChangePassword(ChangePasswordShortDto changePasswordShortDto, int idUser);
+     public Task<ExistNickDto> ExistUserNick(string nick);
 }

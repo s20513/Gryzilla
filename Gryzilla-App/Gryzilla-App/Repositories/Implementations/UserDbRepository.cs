@@ -9,6 +9,7 @@ using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Gryzilla_App.Repositories.Implementations;
@@ -380,6 +381,18 @@ public class UserDbRepository : IUserDbRepository
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    public async Task<ExistNickDto> ExistUserNick(string nick)
+    {
+        var existNick = await _context.UserData
+            .Where(x => x.Nick == nick)
+            .Select(x=>x.Nick).SingleOrDefaultAsync();
+
+        return new ExistNickDto
+        {
+            exists = existNick is not null
+        };
     }
 
     private string GenerateToken(UserDatum user)
