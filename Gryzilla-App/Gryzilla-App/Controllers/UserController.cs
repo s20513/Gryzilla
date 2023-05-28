@@ -9,7 +9,6 @@ namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/users")]
-//[Authorize]
 public class UserController : Controller
 {
     private readonly IUserDbRepository _userDbRepository;
@@ -61,6 +60,7 @@ public class UserController : Controller
     /// <param name="putUserDto">Dto to store new user information</param>
     /// <returns>Return Status Ok - information about user modified correctly, return user body, Not Found - User doesn't exist</returns>
     [HttpPut("{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyUser([FromRoute] int idUser, [FromBody] PutUserDto putUserDto)
     {
         if (idUser != putUserDto.IdUser)
@@ -90,7 +90,6 @@ public class UserController : Controller
     /// <param name="addUserDto">Dto - information about new user</param>
     /// <returns> Return Status Ok - New user added correctly, return user body</returns>
     [HttpPost("register")]
-    [AllowAnonymous]
     public async Task<IActionResult> PostNewUser([FromBody] AddUserDto addUserDto){
 
         try
@@ -116,6 +115,7 @@ public class UserController : Controller
     /// <param name="idUser"> int - User Identifier </param>
     /// <returns> Return Status OK - User deleted correctly - return user body. Return Status Not Found - if user doesn't exist</returns>
     [HttpDelete("{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteUser([FromRoute] int idUser)
     {
         var user = await _userDbRepository.DeleteUserFromDb(idUser);
@@ -134,7 +134,6 @@ public class UserController : Controller
     /// <param name="loginRequestDto"> LoginRequestDto - Nick and password given by user </param>
     /// <returns> Return Status OK - New token created. Return Status Forbid - given credentials are wrong</returns>
     [HttpPost("login")]
-    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {
         var res = await _userDbRepository.Login(loginRequestDto);
@@ -153,6 +152,7 @@ public class UserController : Controller
     /// <param name="refreshToken"> RefreshTokenDto - refresh token </param>
     /// <returns> Return Status OK - New token created. Return Status Forbid - token expired</returns>
     [HttpPost("refreshToken")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshToken)
     {
         var res = await _userDbRepository.RefreshToken(refreshToken);
@@ -172,6 +172,7 @@ public class UserController : Controller
     /// <returns> Return Status OK - User has new rank</returns>
     /// <returns> Return Status NotFound - Rank or user does not exists</returns>
     [HttpPost("rank")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ChangeUserRank([FromBody] UserRank userRank)
     {
         var res = await _userDbRepository.ChangeUserRank(userRank);
@@ -191,6 +192,7 @@ public class UserController : Controller
     /// <param name="idUser"> int - user id </param>
     /// <returns> Return Status OK - UseDto - data of the user</returns>
     [HttpPost("photo/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> SetUserPhoto([FromForm] IFormFile file,[FromRoute] int idUser)
     {
         var res = await _userDbRepository.SetUserPhoto(file, idUser);
@@ -220,6 +222,7 @@ public class UserController : Controller
     /// <returns> Return Status BadRequest - Wrong old password</returns>
     /// <returns> Return Status OK - new password was set</returns>
     [HttpPut("password/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordDto changePasswordDto, [FromRoute] int idUser)
     {
         var res = await _userDbRepository.ChangePassword(changePasswordDto, idUser);
@@ -240,6 +243,7 @@ public class UserController : Controller
     /// <returns> Return Status NotFound - User was not found</returns>
     /// <returns> Return Status OK - new password was set</returns>
     [HttpPut("password/admin/{idUser:int}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordShortDto changePasswordShortDto, [FromRoute] int idUser)
     {
         var res = await _userDbRepository.ChangePassword(changePasswordShortDto, idUser);

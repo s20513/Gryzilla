@@ -2,6 +2,7 @@
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -61,6 +62,7 @@ public class GroupsController: Controller
     /// Ok - return modified group
     /// </returns>
     [HttpPut("{idGroup:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyGroup([FromRoute] int idGroup, [FromBody] GroupRequestDto groupRequestDto)
     {
         if (idGroup != groupRequestDto.IdGroup)
@@ -94,6 +96,7 @@ public class GroupsController: Controller
     /// Ok - return body of group
     /// </returns>
     [HttpDelete("{idGroup:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteGroup([FromRoute] int idGroup)
     {
         var result = await _groupDbRepository.DeleteGroup(idGroup);
@@ -115,6 +118,7 @@ public class GroupsController: Controller
     /// Ok - return new post
     /// </returns>
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> CreateNewGroup([FromBody] NewGroupRequestDto newGroupRequestDto)
     {
         try
@@ -143,6 +147,7 @@ public class GroupsController: Controller
     /// Ok - Return group
     /// </returns>
     [HttpDelete("user/{idGroup:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> RemoveUserFromGroup([FromRoute] int idGroup, [FromBody] UserToGroupDto userToGroupDto)
     {
         if (idGroup != userToGroupDto.IdGroup)
@@ -177,6 +182,7 @@ public class GroupsController: Controller
     /// Ok - Return group
     /// </returns>
     [HttpPost("user/{idGroup:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddUserToGroup([FromRoute] int idGroup, [FromBody] UserToGroupDto userToGroupDto)
     {
         if (idGroup != userToGroupDto.IdGroup)
@@ -202,6 +208,7 @@ public class GroupsController: Controller
     /// return true - if exist
     /// </returns>
     [HttpGet("{idUser:int}/{idGroup:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult>ExistUserInTheGroup([FromRoute] int idGroup, [FromRoute] int idUser)
     {
         var result = await _groupDbRepository.UserIsInGroup(idGroup, idUser);
@@ -226,6 +233,7 @@ public class GroupsController: Controller
     }
     
     [HttpPost("photo/{idGroup:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> SetGroupPhoto([FromForm] IFormFile file,[FromRoute] int idGroup)
     {
         var res = await _groupDbRepository.SetGroupPhoto(file, idGroup);

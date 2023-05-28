@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -43,6 +44,7 @@ public class FriendsController : Controller
     /// <returns>Return Status Not Found - One of the users does not exists</returns>
     /// <returns>Return Bad Request - Given Ids are the same</returns>
     [HttpDelete("{idUser:int}/{idUserFriend:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
     {
         if (idUser == idUserFriend)
@@ -68,6 +70,7 @@ public class FriendsController : Controller
     /// <returns>Return Status Not Found - One of the users does not exists</returns>
     /// /// <returns>Return Bad Request - Given Ids are the same or users are already friends</returns>
     [HttpPost("{idUser:int}/{idUserFriend:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddNewFriend([FromRoute] int idUser, [FromRoute] int idUserFriend)
     {
         if (idUser == idUserFriend)

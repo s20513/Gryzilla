@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportPost;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -24,6 +25,7 @@ public class ReportPostController: Controller
     /// </summary>
     /// <returns> List of reports</returns>
     [HttpGet("all")]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReports()
     {
         var reports = await _reportPostDbRepository.GetReportPostsFromDb();
@@ -37,6 +39,7 @@ public class ReportPostController: Controller
     /// <param name="reportPostIdsRequestDto">ReportPostIdsRequestDto</param>
     /// <returns>ReportPostIdsRequestDto</returns>
     [HttpGet]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReport([FromQuery] ReportPostIdsRequestDto reportPostIdsRequestDto)
     {
         var report = await _reportPostDbRepository.GetReportPostFromDb(reportPostIdsRequestDto);
@@ -55,6 +58,7 @@ public class ReportPostController: Controller
     /// <param name="newReportPostRequestDto">NewReportPostRequestDto</param>
     /// <returns>ReportPostResponseDto</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddReport([FromBody] NewReportPostRequestDto newReportPostRequestDto)
     {
         ReportPostResponseDto? report;
@@ -82,6 +86,7 @@ public class ReportPostController: Controller
     /// <param name="updateReportPostRequestDto">UpdateReportPostRequestDto</param>
     /// <returns>ReportPostResponseDto</returns>
     [HttpPut]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> UpdateReport([FromBody] UpdateReportPostRequestDto updateReportPostRequestDto)
     {
         var report = await _reportPostDbRepository.UpdateReportPostFromDb(updateReportPostRequestDto);
@@ -100,6 +105,7 @@ public class ReportPostController: Controller
     /// <param name="reportPostIdsRequestDto">ReportPostIdsRequestDto</param>
     /// <returns>ReportPostIdsRequestDto</returns>
     [HttpDelete]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> DeleteReport([FromBody] ReportPostIdsRequestDto reportPostIdsRequestDto)
     {
         var report = await _reportPostDbRepository.DeleteReportPostFromDb(reportPostIdsRequestDto);

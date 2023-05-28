@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -24,6 +25,7 @@ public class CommentPostController : Controller
     /// <returns>Return Status Ok - Post Comment created correctly, returns  Post Comment body</returns>
     /// <returns>Return Status Not Found - Comment doesn't exist</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> CreatePostComment([FromBody] NewPostCommentDto newPostCommentDto)
     {
         var comment = await _commentPostDbRepository.AddCommentToPost(newPostCommentDto);
@@ -45,6 +47,7 @@ public class CommentPostController : Controller
     /// <returns>Return Status Not Found - Comment doesn't exist</returns>
     /// <returns>Return Status Bad Request - Id from route and Id in body are not some</returns>
     [HttpPut("{idComment:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyPostComment([FromBody] PutPostCommentDto putPostCommentDto, [FromRoute] int idComment)
     {
         if (idComment != putPostCommentDto.IdComment)
@@ -68,6 +71,7 @@ public class CommentPostController : Controller
     /// <returns> Return Status Ok - Post Comment deleted correctly, returns Post Comment body</returns>
     /// <returns>Return status Not Found - Post Comment not found</returns>
     [HttpDelete("{idComment:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeletePostComment([FromRoute] int idComment)
     {
         var comment = await _commentPostDbRepository.DeleteCommentFromDb(idComment);

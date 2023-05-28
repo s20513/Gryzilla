@@ -4,6 +4,7 @@ using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Articles;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -294,6 +295,7 @@ public class ArticleController: Controller
     /// <param name="newArticleRequestDto">Dto with new Article data</param>
     /// <returns>Return Status OK - Article added to Db</returns>
     /// <returns>Return Status Not Found - User (creator) not found</returns>
+    [Authorize(Roles = "Admin, Redactor")]
     [HttpPost]
     public async Task<IActionResult> AddNewArticleToDb([FromBody] NewArticleRequestDto newArticleRequestDto)
     {
@@ -315,6 +317,7 @@ public class ArticleController: Controller
     /// <returns>Return Status OK - Article modified</returns>
     /// <returns>Return Status Not Found - Article not found</returns>
     /// <returns>Return Status Bad Request - Id from route and Id in body were not same</returns>
+    [Authorize(Roles = "Admin, Redactor")]
     [HttpPut("{idArticle:int}")]
     public async Task<IActionResult> ModifyArticleFromDb(
         [FromBody] PutArticleRequestDto putArticleRequestDto, 
@@ -341,6 +344,7 @@ public class ArticleController: Controller
     /// <param name="idArticle">Article id</param>
     /// <returns>Return Status OK - Article deleted</returns>
     /// <returns>Return Status Not Found - Article not found</returns>
+    [Authorize(Roles = "Admin, Moderator, Redactor")]
     [HttpDelete("{idArticle:int}")]
     public async Task<IActionResult> DeleteArticleFromDb([FromRoute] int idArticle)
     {

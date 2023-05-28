@@ -2,12 +2,14 @@
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/tags")]
+[Authorize(Roles = "Admin, User, Moderator, Redactor")]
 public class TagController: Controller
 {
     private readonly ITagDbRepository _tagDbRepository;

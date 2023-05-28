@@ -4,6 +4,7 @@ using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportCommentPost;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +28,7 @@ public class ReportCommentPostController: Controller
     /// </summary>
     /// <returns> List of reports</returns>
     [HttpGet]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReports()
     {
         var reports = await _reportCommentPostDbRepository.GetReportCommentPostsFromDb();
@@ -42,6 +44,7 @@ public class ReportCommentPostController: Controller
     /// <param name="idReason">Reason identifier</param>
     /// <returns>Get one report</returns>
     [HttpGet("one/{idUser:int}/{idComment:int}/{idReason:int}")]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReport([FromRoute] int idUser, [FromRoute] int idComment, [FromRoute] int idReason)
     {
         var report = await _reportCommentPostDbRepository.GetOneReportCommentPostFromDb(idUser, idComment, idReason);
@@ -60,6 +63,7 @@ public class ReportCommentPostController: Controller
     /// <param name="newReportCommentPost">NewReportCommentPostDto</param>
     /// <returns>NewReportCommentPostDto</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddReportPostComment([FromBody] NewReportCommentPostDto newReportCommentPost)
     {
         ReportCommentPostDto? report;
@@ -85,6 +89,7 @@ public class ReportCommentPostController: Controller
     /// <param name="reportCommentPost">DeleteReportPostComment</param>
     /// <returns>DeleteReportPostComment</returns>
     [HttpDelete]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> DeleteReportPostComment([FromBody] DefaultReportCommentPostDto reportCommentPost)
     {
         var report = await _reportCommentPostDbRepository.DeleteReportCommentPostFromDb(reportCommentPost);
@@ -103,6 +108,7 @@ public class ReportCommentPostController: Controller
     /// <param name="reportCommentPost">UpdateReportCommentPostDto</param>
     /// <returns>UpdateReportCommentPostDto</returns>
     [HttpPut]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> UpdateReportPostComment([FromBody] UpdateReportCommentPostDto reportCommentPost)
     {
         var report = await _reportCommentPostDbRepository.UpdateReportCommentPostFromDb(reportCommentPost);

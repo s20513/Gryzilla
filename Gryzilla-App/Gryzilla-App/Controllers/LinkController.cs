@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTOs.Requests.Link;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -37,6 +38,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>string</returns>
     [HttpPut("discord")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutDiscordLink([FromBody] LinkDto linkDto)
     {
         var link = await _linkDbRepository.PutLinkDiscord(linkDto);
@@ -55,6 +57,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>LinkDto</returns>
     [HttpPut("steam")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutSteamLink([FromBody] LinkDto linkDto)
     {
         var link = await _linkDbRepository.PutLinkSteam(linkDto);
@@ -73,6 +76,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>string</returns>
     [HttpPut("ps")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutPsLink([FromBody] LinkDto linkDto)
     {
         var link = await _linkDbRepository.PutLinkPs(linkDto);
@@ -91,6 +95,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>LinkDto</returns>
     [HttpPut("xbox")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutXboxLink([FromBody] LinkDto linkDto)
     {
         var link = await _linkDbRepository.PutLinkXbox(linkDto);
@@ -109,6 +114,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>LinkDto</returns>
     [HttpPut("epic")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutEpicLink([FromBody] LinkDto linkDto)
     {
         var link = await _linkDbRepository.PutLinkEpic(linkDto);
@@ -127,6 +133,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>string</returns>
     [HttpDelete("discord/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteDiscordLink([FromRoute] int idUser)
     {
         var link = await _linkDbRepository.DeleteLinkDiscord(idUser);
@@ -145,6 +152,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>LinkDto</returns>
     [HttpDelete("steam/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteSteamLink([FromRoute] int idUser)
     {
         var link = await _linkDbRepository.DeleteLinkSteam(idUser);
@@ -163,6 +171,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>string</returns>
     [HttpDelete("ps/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeletePsLink([FromRoute] int idUser)
     {
         var link = await _linkDbRepository.DeleteLinkPs(idUser);
@@ -181,6 +190,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>LinkDto</returns>
     [HttpDelete("xbox/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteXboxLink([FromRoute] int idUser)
     {
         var link = await _linkDbRepository.DeleteLinkXbox(idUser);
@@ -199,6 +209,7 @@ public class LinkController : Controller
     /// <param name="idUser">User identifier</param>
     /// <returns>LinkDto</returns>
     [HttpDelete("epic/{idUser:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteEpicLink([FromRoute] int idUser)
     {
         var link = await _linkDbRepository.DeleteLinkEpic(idUser);

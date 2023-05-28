@@ -2,6 +2,7 @@
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -47,6 +48,7 @@ public class GroupUserMessageController : Controller
     /// Ok - return modified group
     /// </returns>
     [HttpPut("{idMessage:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyMessage([FromRoute] int idMessage, [FromBody] UpdateGroupUserMessageDto updateGroupUserMessage)
     {
         if (idMessage != updateGroupUserMessage.IdMessage)
@@ -73,6 +75,7 @@ public class GroupUserMessageController : Controller
     /// Ok - return body of group
     /// </returns>
     [HttpDelete("{idMessage:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteMessage([FromRoute] int idMessage)
     {
         var result = await _groupUserMessageDbRepository.DeleteMessage(idMessage);
@@ -93,6 +96,7 @@ public class GroupUserMessageController : Controller
     /// Ok - return new post
     /// </returns>
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> CreateNewMessage([FromBody] AddGroupUserMessageDto addGroupUserMessageDto)
     {
         var result = await _groupUserMessageDbRepository.AddMessage(addGroupUserMessageDto);

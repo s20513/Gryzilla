@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ReportProfileComment;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -23,6 +24,7 @@ public class ReportProfileCommentController: Controller
     /// </summary>
     /// <returns> List of reports</returns>
     [HttpGet("all")]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReports()
     {
         var reports = await _reportProfileCommentDbRepository.GetReportProfileCommentsFromDb();
@@ -36,6 +38,7 @@ public class ReportProfileCommentController: Controller
     /// <param name="reportProfileCommentIdsRequestDto">ReportProfileCommentIdsRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
     [HttpGet]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReport([FromQuery] ReportProfileCommentIdsRequestDto reportProfileCommentIdsRequestDto)
     {
         var report = await _reportProfileCommentDbRepository.GetReportProfileCommentFromDb(reportProfileCommentIdsRequestDto);
@@ -54,6 +57,7 @@ public class ReportProfileCommentController: Controller
     /// <param name="newReportProfileCommentRequestDto">NewReportProfileCommentRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddReport([FromBody] NewReportProfileCommentRequestDto newReportProfileCommentRequestDto)
     {
         ReportProfileCommentResponseDto? report;
@@ -81,6 +85,7 @@ public class ReportProfileCommentController: Controller
     /// <param name="updateReportProfileCommentRequestDto">UpdateReportProfileCommentRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
     [HttpPut]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> UpdateReport([FromBody] UpdateReportProfileCommentRequestDto updateReportProfileCommentRequestDto)
     {
         var report = await _reportProfileCommentDbRepository.UpdateReportProfileCommentFromDb(updateReportProfileCommentRequestDto);
@@ -99,6 +104,7 @@ public class ReportProfileCommentController: Controller
     /// <param name="reportProfileCommentIdsRequestDto">ReportProfileCommentIdsRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
     [HttpDelete]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> DeleteReport([FromBody] ReportProfileCommentIdsRequestDto reportProfileCommentIdsRequestDto)
     {
         var report = await _reportProfileCommentDbRepository.DeleteReportProfileCommentFromDb(reportProfileCommentIdsRequestDto);

@@ -2,6 +2,7 @@
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,6 +21,7 @@ public class ReportUserController: Controller
     
     
     [HttpGet("all")]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReports()
     {
         var reports = await _reportUserDbRepository.GetUsersReportsFromDb();
@@ -28,6 +30,7 @@ public class ReportUserController: Controller
     }
     
     [HttpGet("{idReport:int}")]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> GetReport([FromRoute] int idReport)
     {
         var report = await _reportUserDbRepository.GetUserReportFromDb(idReport);
@@ -42,6 +45,7 @@ public class ReportUserController: Controller
     
   
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddReport(NewReportUserDto reportUserDto)
     {
         ReportUserDto? report;
@@ -65,6 +69,7 @@ public class ReportUserController: Controller
     
    
     [HttpPut]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> UpdateReport(ModifyReportUser reportUser)
     {
         var report = await _reportUserDbRepository.UpdateReportUserFromDb(reportUser);
@@ -79,6 +84,7 @@ public class ReportUserController: Controller
     
     
     [HttpDelete("{idReport:int}")]
+    [Authorize(Roles = "Admin, Moderator")]
     public async Task<IActionResult> DeleteReport([FromRoute] int idReport)
     {
         var report = await _reportUserDbRepository.DeleteReportUserFromDb(idReport);

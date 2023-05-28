@@ -2,11 +2,13 @@
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/rank")]
+[Authorize(Roles = "Admin, Moderator")]
 public class RankController : Controller
 {
     private readonly IRankDbRepository _ranksDbRepository;

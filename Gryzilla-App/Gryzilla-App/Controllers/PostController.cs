@@ -308,7 +308,7 @@ public class PostController : Controller
     /// Ok - return body of post if added successfully
     /// </returns>
     [HttpPost]
-    //[Authorize(Roles = "User")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> AddPost([FromBody] AddPostDto addPostDto)
     {
         var posts = await _postsDbRepository.AddNewPostToDb(addPostDto);
@@ -330,6 +330,7 @@ public class PostController : Controller
     /// Ok - Return post if modified successfully
     /// </returns>
     [HttpPut("{idPost:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyPost([FromBody] PutPostDto putPostDto, [FromRoute] int idPost)
     {
         if (putPostDto.IdPost != idPost)
@@ -377,8 +378,8 @@ public class PostController : Controller
     /// NotFound - if tag has not been assigned or cannot delete tag from post
     /// OK - return Post
     /// </returns>
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     [HttpDelete("tag/{idPost:int}/{idTag:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
     {
         var posts = await _postsDbRepository.DeleteTagFromPost(idPost,idTag);

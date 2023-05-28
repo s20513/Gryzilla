@@ -1,11 +1,13 @@
 ﻿using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/likesPost")]
+[Authorize(Roles = "Admin, User, Moderator, Redactor")]
 public class LikesPostController : Controller
 {
     private readonly ILikesPostDbRepository _likesPostDbRepository;

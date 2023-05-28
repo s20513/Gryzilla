@@ -1,6 +1,7 @@
 ﻿using Gryzilla_App.DTOs.Requests.ProfileComment;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -30,6 +31,7 @@ public class ProfileCommentController : Controller
     }
     
     [HttpPut("{idProfileComment:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyProfileComment([FromRoute] int idProfileComment, [FromBody] ModifyProfileComment modifyProfileComment)
     {
         
@@ -44,6 +46,7 @@ public class ProfileCommentController : Controller
         
     }
     [HttpPost]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PostProfileComment([FromBody] NewProfileComment newProfileComment)
     {
         var profileComment = await _profileCommentDbRepository.AddProfileCommentToDb(newProfileComment);
@@ -59,6 +62,7 @@ public class ProfileCommentController : Controller
     
  
     [HttpDelete("{idProfileComment:int}")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteProfileComment([FromRoute] int idProfileComment)
     {
         var user = await _profileCommentDbRepository.DeleteProfileCommentFromDb(idProfileComment);

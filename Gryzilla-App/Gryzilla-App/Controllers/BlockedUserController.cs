@@ -2,12 +2,14 @@
 using Gryzilla_App.DTOs.Requests.BlockedUser;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/block")]
+[Authorize(Roles = "Admin, Moderator")]
 public class BlockedUserController: Controller
 {
     private readonly IBlockedUserDbRepository _blockedUserDbRepository;
