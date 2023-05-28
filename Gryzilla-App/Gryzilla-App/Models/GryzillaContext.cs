@@ -477,7 +477,7 @@ namespace Gryzilla_App.Models
 
             modelBuilder.Entity<ReportCommentPost>(entity =>
             {
-                entity.HasKey(e => new { e.IdUser, e.IdComment })
+                entity.HasKey(e => new { e.IdUser, e.IdComment, e.IdReason })
                     .HasName("ReportCommentPost_pk");
 
                 entity.ToTable("ReportCommentPost");
@@ -563,7 +563,7 @@ namespace Gryzilla_App.Models
             
             modelBuilder.Entity<ReportProfileComment>(entity =>
             {
-                entity.HasKey(e => new { e.IdProfileComment, e.IdUser })
+                entity.HasKey(e => new { e.IdProfileComment, e.IdUser, e.IdReason })
                     .HasName("ReportProfileComment_pk");
 
                 entity.ToTable("ReportProfileComment");
