@@ -27,6 +27,7 @@ namespace Gryzilla_App.Models
             IdPosts = new HashSet<Post>();
             IdUserFriends = new HashSet<UserDatum>();
             IdUsers = new HashSet<UserDatum>();
+            ReportProfileComments = new HashSet<ReportProfileComment>();
         }
 
         public int IdUser { get; set; }
@@ -63,6 +64,7 @@ namespace Gryzilla_App.Models
         public virtual ICollection<ReportPost> ReportPosts { get; set; }
         public virtual ICollection<ReportUser> ReportUserIdUserReportedNavigations { get; set; }
         public virtual ICollection<ReportUser> ReportUserIdUserReportingNavigations { get; set; }
+        public virtual ICollection<ReportProfileComment> ReportProfileComments { get; set; }
 
         public virtual ICollection<Article> IdArticles { get; set; }
         public virtual ICollection<Post> IdPosts { get; set; }

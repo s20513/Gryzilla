@@ -10,6 +10,7 @@ namespace Gryzilla_App.Models
             ReportCommentArticles = new HashSet<ReportCommentArticle>();
             ReportCommentPosts = new HashSet<ReportCommentPost>();
             ReportPosts = new HashSet<ReportPost>();
+            ReportProfileComments = new HashSet<ReportProfileComment>();
         }
 
         public int IdReason { get; set; }
@@ -18,5 +19,6 @@ namespace Gryzilla_App.Models
         public virtual ICollection<ReportCommentArticle> ReportCommentArticles { get; set; }
         public virtual ICollection<ReportCommentPost> ReportCommentPosts { get; set; }
         public virtual ICollection<ReportPost> ReportPosts { get; set; }
+        public virtual ICollection<ReportProfileComment> ReportProfileComments { get; set; }
     }
 }

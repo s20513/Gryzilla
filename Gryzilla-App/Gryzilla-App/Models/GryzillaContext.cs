@@ -60,6 +60,7 @@ namespace Gryzilla_App.Models
         public virtual DbSet<ReportUser> ReportUsers { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<UserDatum> UserData { get; set; } = null!;
+        public virtual DbSet<ReportProfileComment> ReportProfileComments { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -558,6 +559,49 @@ namespace Gryzilla_App.Models
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Table_20_User");
+            });
+            
+            modelBuilder.Entity<ReportProfileComment>(entity =>
+            {
+                entity.HasKey(e => new { e.IdProfileComment, e.IdUser })
+                    .HasName("ReportProfileComment_pk");
+
+                entity.ToTable("ReportProfileComment");
+
+                entity.Property(e => e.IdProfileComment).HasColumnName("idProfileComment");
+
+                entity.Property(e => e.IdUser).HasColumnName("idUser");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.IdReason).HasColumnName("idReason");
+
+                entity.Property(e => e.ReportedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("reportedAt");
+
+                entity.Property(e => e.Viewed).HasColumnName("viewed");
+
+                entity.HasOne(d => d.IdProfileCommentNavigation)
+                    .WithMany(p => p.ReportProfileComments)
+                    .HasForeignKey(d => d.IdProfileComment)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ReportProfileComment_ProfileComment");
+
+                entity.HasOne(d => d.IdReasonNavigation)
+                    .WithMany(p => p.ReportProfileComments)
+                    .HasForeignKey(d => d.IdReason)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ReportProfileComment_Reason");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.ReportProfileComments)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ReportProfileComment_UserData");
             });
 
             modelBuilder.Entity<ReportUser>(entity =>

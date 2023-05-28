@@ -1,5 +1,7 @@
 BEGIN TRAN
 
+truncate table [ReportProfileComment]
+
 TRUNCATE TABLE [GroupUserMessage]
     
 TRUNCATE TABLE [Friends]
