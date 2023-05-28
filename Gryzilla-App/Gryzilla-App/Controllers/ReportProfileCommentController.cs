@@ -49,7 +49,7 @@ public class ReportProfileCommentController: Controller
     }
     
     /// <summary>
-    /// Add Report Post
+    /// Add Report Profile Comment
     /// </summary>
     /// <param name="newReportProfileCommentRequestDto">NewReportProfileCommentRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
@@ -76,7 +76,7 @@ public class ReportProfileCommentController: Controller
     }
     
     /// <summary>
-    /// Update specific Report Post
+    /// Update specific Report Profile Comment
     /// </summary>
     /// <param name="updateReportProfileCommentRequestDto">UpdateReportProfileCommentRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
@@ -94,7 +94,7 @@ public class ReportProfileCommentController: Controller
     }
     
     /// <summary>
-    /// Deletes specific Report Post
+    /// Deletes specific Report Profile Comment
     /// </summary>
     /// <param name="reportProfileCommentIdsRequestDto">ReportProfileCommentIdsRequestDto</param>
     /// <returns>ReportProfileCommentResponseDto</returns>
