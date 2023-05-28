@@ -232,11 +232,6 @@ public class GroupDbRepository: IGroupDbRepository
         
         var newCreatedGroup = await GetGroupByName(groupRequestDto.GroupName);
 
-        if (newCreatedGroup is null)
-        {
-            return null;
-        }
-
         await _context.GroupUsers.AddAsync(new GroupUser
         {
             IdUser = user.IdUser,

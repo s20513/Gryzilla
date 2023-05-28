@@ -112,7 +112,26 @@ public class ProfileCommentRepositoryTests
         //Assert
         Assert.Null(res);
     }
-    
+    [Fact]
+    public async Task AddNewProfileCommentToDb_Returns_NullIdUserComment()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithManyUser();
+        
+        var newProfileCommentRequestDto = new NewProfileComment
+        {
+            IdUserComment = 1000,
+            IdUser = 1,
+            Content = "Komentarz"
+        };
+        
+        //Act
+        var res = await _repository.AddProfileCommentToDb(newProfileCommentRequestDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
 
     [Fact]
     public async Task AddNewProfileCommentToDb_Returns_NullUserComment()

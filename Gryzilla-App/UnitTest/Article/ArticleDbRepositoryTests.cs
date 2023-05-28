@@ -105,7 +105,30 @@ public class ArticleDbRepositoryTests
             NameTag = "Tag1"
         });
         await _context.SaveChangesAsync();
-
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
+        {
+            IdArticle = 1,
+            IdUser = 1,
+            CreatedAt = DateTime.Now,
+            DescriptionArticle = "Content"
+        });
+        await _context.SaveChangesAsync();
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
+        {
+            IdArticle = 2,
+            IdUser = 1,
+            CreatedAt = DateTime.Now,
+            DescriptionArticle = "Content"
+        });
+        await _context.SaveChangesAsync();
+        await _context.CommentArticles.AddAsync(new Gryzilla_App.Models.CommentArticle
+        {
+            IdArticle = 2,
+            IdUser = 1,
+            CreatedAt = DateTime.Now,
+            DescriptionArticle = "Content"
+        });
+        await _context.SaveChangesAsync();
         var tag = await _context.Tags.FirstAsync();
         var article = await _context.Articles.FirstAsync();
         var user = await _context.UserData.FirstAsync();
@@ -133,7 +156,15 @@ public class ArticleDbRepositoryTests
             CreatedAt = DateTime.Today
         });
         await _context.SaveChangesAsync();
-
+        await _context.UserData.AddAsync(new UserDatum
+        {
+            IdRank = 1,
+            Nick = "Nick2",
+            Password = "Pass1",
+            Email = "email1",
+            CreatedAt = DateTime.Today
+        });
+        await _context.SaveChangesAsync();
         await _context.Articles.AddAsync(new Gryzilla_App.Models.Article
         {
             IdUser = 1,
@@ -148,7 +179,11 @@ public class ArticleDbRepositoryTests
             NameTag = "Tag1"
         });
         await _context.SaveChangesAsync();
-
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        {
+            ReasonName = "ReasonName"
+        });
+        await _context.SaveChangesAsync();
         var tag = await _context.Tags.FirstAsync();
         var article = await _context.Articles.FirstAsync();
         var user = await _context.UserData.FirstAsync();
@@ -163,6 +198,15 @@ public class ArticleDbRepositoryTests
             IdArticle = 1,
             DescriptionArticle = "DescArt1",
             CreatedAt = DateTime.Now
+        });
+
+        await _context.ReportCommentArticles.AddAsync(new Gryzilla_App.Models.ReportCommentArticle
+        {
+            IdUser = 2,
+            Description = "Zła treść",
+            IdReason = 1,
+            IdCommentArticle = 1,
+            ReportedAt = DateTime.Now
         });
         await _context.SaveChangesAsync();
     }
@@ -427,7 +471,7 @@ public class ArticleDbRepositoryTests
 
         var newArticleRequestDto = new NewArticleRequestDto
         {
-            IdUser = 2,
+            IdUser = 3,
             Title = "Fun Title",
             Content = "blablabla",
             Tags = new []
@@ -681,11 +725,10 @@ public class ArticleDbRepositoryTests
     public async Task GetQtyArticlesByCommentsFromDb_Returns_IEnumerable()
     {
         //Arrange
-        DateTime time = DateTime.Now;
         await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        
         await AddTestDataWithManyArticles();
-
+        DateTime time = DateTime.Now;
+        
         //Act
         var res = await _repository.GetQtyArticlesByCommentsFromDb(5,time);
         
@@ -697,7 +740,7 @@ public class ArticleDbRepositoryTests
             .Where(x=>x.CreatedAt < time)
             .Skip(0)
             .Take(5)
-            .OrderByDescending(e => e.IdUsers.Count)
+            .OrderByDescending(e => e.CommentArticles.Count)
             .Select(e => e.IdArticle)
             .ToListAsync();
 

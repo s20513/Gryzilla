@@ -133,11 +133,6 @@ public class UserDbRepository : IUserDbRepository
             .Select(e => e.IdRank)
             .SingleOrDefaultAsync();
 
-        if (idRank == 0)
-        {
-            return null;
-        }
-        
         var newUser = new UserDatum
         {
             IdRank      = idRank, //Standard user
