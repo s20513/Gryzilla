@@ -37,7 +37,7 @@ public class ReportPostController: Controller
     /// <param name="reportPostIdsRequestDto">ReportPostIdsRequestDto</param>
     /// <returns>ReportPostIdsRequestDto</returns>
     [HttpGet]
-    public async Task<IActionResult> GetReport([FromBody] ReportPostIdsRequestDto reportPostIdsRequestDto)
+    public async Task<IActionResult> GetReport([FromQuery] ReportPostIdsRequestDto reportPostIdsRequestDto)
     {
         var report = await _reportPostDbRepository.GetReportPostFromDb(reportPostIdsRequestDto);
         

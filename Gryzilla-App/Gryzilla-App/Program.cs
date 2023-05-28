@@ -102,6 +102,7 @@ builder.Services.AddScoped<IBlockedUserDbRepository, BlockedUserDbRepository>();
 builder.Services.AddScoped<ILinkDbRepository, LinkDbRepository>();
 builder.Services.AddScoped<IReportPostDbRepository, ReportPostDbRepository>();
 builder.Services.AddScoped<IReportUserDbRepository, ReportUserDbRepository>();
+builder.Services.AddScoped<IReportProfileCommentDbRepository, ReportProfileCommentDbRepository>();
 builder.Services.AddScoped<IGroupUserMessageDbRepository, GroupUserMessageDbRepository>();
 builder.Services.AddScoped<ISearchDbRepository, SearchDbRepository>();
 

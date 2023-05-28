@@ -539,5 +539,31 @@ public class UserControllerTests
         //Assert
         Assert.IsType<OkResult>(actionResult);
     }
+    
+    [Fact]
+    public async void ExistUserNick_Returns_Ok()
+    {
+        //Arrange
+        CheckNickDto checkNickDto = new CheckNickDto
+        {
+            Nick = "nick"
+        };
+        var user = new ExistNickDto();
+        
+        _userRepositoryMock.Setup(x => x.ExistUserNick(checkNickDto.Nick)).ReturnsAsync(user);
 
+        //Act
+        var actionResult = await _usersController.NickExist(checkNickDto);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as ExistNickDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(user, resultValue);
+    }
 }
