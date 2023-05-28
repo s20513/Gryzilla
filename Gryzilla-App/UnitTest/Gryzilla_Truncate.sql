@@ -18,7 +18,8 @@ TRUNCATE TABLE [ReportUser]
 
 TRUNCATE TABLE [Notification]
 
-TRUNCATE TABLE [ProfileComment]
+DELETE FROM [ProfileComment]
+DBCC CHECKIDENT ([ProfileComment], RESEED, 0)
 
 DELETE FROM [GroupUser]
 
