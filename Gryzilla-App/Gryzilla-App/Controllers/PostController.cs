@@ -3,6 +3,7 @@ using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -353,6 +354,7 @@ public class PostController : Controller
     /// NotFound - if post doesn't exist or cannot deleted
     /// Ok - return Post - if deleted successfully
     /// </returns>
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     [HttpDelete("{idPost:int}")]
     public async Task<IActionResult> DeletePost([FromRoute] int idPost)
     {
@@ -375,6 +377,7 @@ public class PostController : Controller
     /// NotFound - if tag has not been assigned or cannot delete tag from post
     /// OK - return Post
     /// </returns>
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     [HttpDelete("tag/{idPost:int}/{idTag:int}")]
     public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
     {
