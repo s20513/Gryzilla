@@ -610,4 +610,24 @@ public class UserRepositoryTests
         //Assert
         Assert.NotNull(res);
     }
+    
+    [Fact]
+    public async Task CheckNickExist_Returns_ExistNickDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        CheckNickDto checkNickDto = new CheckNickDto
+        {
+            Nick = "Nick1"
+        };
+
+        //Act
+        var res = await _repository.ExistUserNick(checkNickDto.Nick);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
 }

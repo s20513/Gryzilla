@@ -61,6 +61,7 @@ public class ReportProfileCommentDbRepositoryTests
         await _context.ProfileComments.AddAsync(new Gryzilla_App.Models.ProfileComment
         {
             IdUser = 1,
+            IdUserComment = 2,
             CreatedAt = DateTime.Today,
             Description = "Super profil"
         });
