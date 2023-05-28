@@ -1,5 +1,7 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.PostComment;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +69,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         };
     }
 
-    public async Task<PostCommentDto?> ModifyPostCommentFromDb(PutPostCommentDto putPostCommentDto, int idComment)
+    public async Task<PostCommentDto?> ModifyPostCommentFromDb(PutPostCommentDto putPostCommentDto, int idComment, ClaimsPrincipal userClaims)
     {
         var commentPost = await _context
             .CommentPosts
@@ -76,7 +78,7 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
                 x.IdPost    == putPostCommentDto.IdPost)
             .SingleOrDefaultAsync();
         
-        if (commentPost is null)
+        if (commentPost is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, commentPost.IdUser))
         {
             return null;
         }
@@ -102,14 +104,14 @@ public class  CommentPostDbRepository : ICommentPostDbRepository
         };
     }
 
-    public async Task<PostCommentDto?> DeleteCommentFromDb(int idComment)
+    public async Task<PostCommentDto?> DeleteCommentFromDb(int idComment, ClaimsPrincipal userClaims)
     {
         var commentPost = await _context
             .CommentPosts
             .Where(x => x.IdComment == idComment)
             .SingleOrDefaultAsync();
         
-        if (commentPost is null)
+        if (commentPost is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, commentPost.IdUser))
         {
             return null;
         }

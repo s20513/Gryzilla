@@ -1,5 +1,7 @@
-﻿using Gryzilla_App.DTOs.Requests.ProfileComment;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Requests.ProfileComment;
 using Gryzilla_App.DTOs.Responses;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -94,14 +96,14 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         };
     }
 
-    public async Task<ProfileCommentDto?> DeleteProfileCommentFromDb(int idProfileComment)
+    public async Task<ProfileCommentDto?> DeleteProfileCommentFromDb(int idProfileComment, ClaimsPrincipal userClaims)
     {
         var profileComment =
             await _context
                 .ProfileComments
                 .SingleOrDefaultAsync(x => x.IdProfileComment == idProfileComment);
 
-        if (profileComment is null)
+        if (profileComment is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, profileComment.IdUser))
         {
             return null;
         }
@@ -125,14 +127,14 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
         return deleteProfileComment;
     }
 
-    public async Task<ProfileCommentDto?> ModifyProfileCommentFromDb(int idProfileComment, ModifyProfileComment modifyProfileComment)
+    public async Task<ProfileCommentDto?> ModifyProfileCommentFromDb(int idProfileComment, ModifyProfileComment modifyProfileComment, ClaimsPrincipal userClaims)
     {
         var profileComment =
             await _context
                 .ProfileComments
                 .SingleOrDefaultAsync(x => x.IdProfileComment == idProfileComment);
 
-        if (profileComment is null)
+        if (profileComment is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, profileComment.IdUser))
         {
             return null;
         }

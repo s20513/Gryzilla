@@ -6,6 +6,7 @@ using System.Text;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -72,7 +73,7 @@ public class UserDbRepository : IUserDbRepository
         return users;
     }
     
-    public async Task<UserDto?> ModifyUserFromDb(int idUser, PutUserDto putUserDto)
+    public async Task<UserDto?> ModifyUserFromDb(int idUser, PutUserDto putUserDto, ClaimsPrincipal userClaims)
     {
         var nick =  _context
             .UserData
@@ -89,7 +90,7 @@ public class UserDbRepository : IUserDbRepository
             .Include(x => x.IdRankNavigation)
             .SingleOrDefaultAsync();
         
-        if (user is not null)
+        if (user is not null && ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             user.Email       = putUserDto.Email;
             user.Password    = putUserDto.Password;
@@ -167,10 +168,10 @@ public class UserDbRepository : IUserDbRepository
        return newUserDto;
     }
     
-    public async Task<UserDto?> DeleteUserFromDb(int idUser)
+    public async Task<UserDto?> DeleteUserFromDb(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await GetUserFromDb(idUser);
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -277,14 +278,14 @@ public class UserDbRepository : IUserDbRepository
         };
     }
 
-    public async Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser)
+    public async Task<UserDto?> SetUserPhoto(IFormFile photo, int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData
             .Include(x => x.IdRankNavigation)
             .Where(x => x.IdUser == idUser)
             .SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -343,11 +344,11 @@ public class UserDbRepository : IUserDbRepository
         };
     }
 
-    public async Task<bool?> ChangePassword(ChangePasswordDto changePasswordDto, int idUser)
+    public async Task<bool?> ChangePassword(ChangePasswordDto changePasswordDto, int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.SingleOrDefaultAsync(e => e.IdUser == idUser);
         
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }

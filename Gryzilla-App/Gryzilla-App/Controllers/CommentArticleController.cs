@@ -55,7 +55,7 @@ public class CommentArticleController: Controller
         }
         
         var result = await _commentArticleDbRepository
-            .ModifyArticleCommentFromDb(putArticleCommentDto, idComment);
+            .ModifyArticleCommentFromDb(putArticleCommentDto, idComment, User);
 
         if (result is null)
         {
@@ -75,7 +75,7 @@ public class CommentArticleController: Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteArticleComment([FromRoute] int idComment)
     {
-        var result = await _commentArticleDbRepository.DeleteArticleCommentFromDb(idComment);
+        var result = await _commentArticleDbRepository.DeleteArticleCommentFromDb(idComment, User);
 
         if (result is null)
         {

@@ -69,7 +69,7 @@ public class UserController : Controller
         }
         try
         {
-            var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto);
+            var user = await _userDbRepository.ModifyUserFromDb(idUser, putUserDto, User);
         
             if (user == null)
             { 
@@ -118,7 +118,7 @@ public class UserController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteUser([FromRoute] int idUser)
     {
-        var user = await _userDbRepository.DeleteUserFromDb(idUser);
+        var user = await _userDbRepository.DeleteUserFromDb(idUser, User);
         
         if (user == null)
         { 
@@ -195,7 +195,7 @@ public class UserController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> SetUserPhoto([FromForm] IFormFile file,[FromRoute] int idUser)
     {
-        var res = await _userDbRepository.SetUserPhoto(file, idUser);
+        var res = await _userDbRepository.SetUserPhoto(file, idUser, User);
         
         return Ok(res);
     }
@@ -225,7 +225,7 @@ public class UserController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordDto changePasswordDto, [FromRoute] int idUser)
     {
-        var res = await _userDbRepository.ChangePassword(changePasswordDto, idUser);
+        var res = await _userDbRepository.ChangePassword(changePasswordDto, idUser, User);
 
         return res switch
         {

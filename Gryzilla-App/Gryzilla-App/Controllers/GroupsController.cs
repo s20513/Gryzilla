@@ -72,7 +72,7 @@ public class GroupsController: Controller
 
         try
         {
-            var result = await _groupDbRepository.ModifyGroup(idGroup, groupRequestDto);
+            var result = await _groupDbRepository.ModifyGroup(idGroup, groupRequestDto, User);
             
             if (result is null)
             {
@@ -99,7 +99,7 @@ public class GroupsController: Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteGroup([FromRoute] int idGroup)
     {
-        var result = await _groupDbRepository.DeleteGroup(idGroup);
+        var result = await _groupDbRepository.DeleteGroup(idGroup, User);
 
         if (result is null)
         {
@@ -157,7 +157,7 @@ public class GroupsController: Controller
 
         try
         {
-            var result = await _groupDbRepository.RemoveUserFromGroup(idGroup, userToGroupDto);
+            var result = await _groupDbRepository.RemoveUserFromGroup(idGroup, userToGroupDto, User);
 
             if (result is null)
             {
@@ -236,7 +236,7 @@ public class GroupsController: Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> SetGroupPhoto([FromForm] IFormFile file,[FromRoute] int idGroup)
     {
-        var res = await _groupDbRepository.SetGroupPhoto(file, idGroup);
+        var res = await _groupDbRepository.SetGroupPhoto(file, idGroup, User);
         
         return Ok(res);
     }

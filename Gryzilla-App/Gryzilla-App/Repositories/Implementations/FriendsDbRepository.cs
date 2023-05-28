@@ -1,6 +1,8 @@
-﻿using Gryzilla_App.DTO.Responses;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTO.Responses;
 using Gryzilla_App.DTO.Responses.Friends;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +40,7 @@ public class FriendsDbRepository : IFriendsDbRepository
         
         return users;
     }
-    public async Task<FriendDto?> DeleteFriendFromDb (int idUser, int idUserFriend)
+    public async Task<FriendDto?> DeleteFriendFromDb (int idUser, int idUserFriend, ClaimsPrincipal userClaims)
     {
         UserDatum? user;
         UserDatum? userFriend;
@@ -49,7 +51,7 @@ public class FriendsDbRepository : IFriendsDbRepository
             .Where(a => a.IdUser== idUser)
             .SingleOrDefaultAsync();
         
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, user.IdUser))
         {
             return null;
         }

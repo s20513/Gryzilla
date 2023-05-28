@@ -338,7 +338,7 @@ public class PostController : Controller
             return BadRequest(new StringMessageDto { Message = "Id from route and Id in body have to be same"}); 
         }
         
-        var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto, idPost);
+        var posts = await _postsDbRepository.ModifyPostFromDb(putPostDto, idPost, User);
         
         if (posts is null)
         {
@@ -359,7 +359,7 @@ public class PostController : Controller
     [HttpDelete("{idPost:int}")]
     public async Task<IActionResult> DeletePost([FromRoute] int idPost)
     {
-        var posts = await _postsDbRepository.DeletePostFromDb(idPost);
+        var posts = await _postsDbRepository.DeletePostFromDb(idPost, User);
         
         if (posts is null)
         {
@@ -382,7 +382,7 @@ public class PostController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteTagFromPost([FromRoute] int idPost,[FromRoute] int idTag)
     {
-        var posts = await _postsDbRepository.DeleteTagFromPost(idPost,idTag);
+        var posts = await _postsDbRepository.DeleteTagFromPost(idPost, idTag, User);
         
         if (posts is null)
         {

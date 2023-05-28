@@ -1,5 +1,7 @@
-﻿using Gryzilla_App.DTOs.Requests.Link;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Requests.Link;
 using Gryzilla_App.DTOs.Responses.Link;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +17,11 @@ public class LinkDbRepository : ILinkDbRepository
         _context = context;
     }
 
-    public async Task<string?> DeleteLinkSteam(int idUser)
+    public async Task<string?> DeleteLinkSteam(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -29,11 +31,11 @@ public class LinkDbRepository : ILinkDbRepository
         return "Link removed";
     }
     
-    public async Task<string?> DeleteLinkDiscord(int idUser)
+    public async Task<string?> DeleteLinkDiscord(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -44,11 +46,11 @@ public class LinkDbRepository : ILinkDbRepository
         return "Link removed";
     }
 
-    public async Task<string?> DeleteLinkXbox(int idUser)
+    public async Task<string?> DeleteLinkXbox(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -59,11 +61,11 @@ public class LinkDbRepository : ILinkDbRepository
         return "Link removed";
     }
     
-    public async Task<string?> DeleteLinkPs(int idUser)
+    public async Task<string?> DeleteLinkPs(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -73,11 +75,11 @@ public class LinkDbRepository : ILinkDbRepository
 
         return "Link removed";
     }
-    public async Task<string?> DeleteLinkEpic(int idUser)
+    public async Task<string?> DeleteLinkEpic(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }
@@ -87,11 +89,11 @@ public class LinkDbRepository : ILinkDbRepository
 
         return "Link removed";
     }
-    public async Task<string?> PutLinkDiscord(LinkDto linkDto)
+    public async Task<string?> PutLinkDiscord(LinkDto linkDto, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == linkDto.IdUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, linkDto.IdUser))
         {
             return null;
         }
@@ -105,11 +107,11 @@ public class LinkDbRepository : ILinkDbRepository
         return "Cannot change the link. Invalid link!";
     }
     
-    public async Task<string?> PutLinkSteam(LinkDto linkDto)
+    public async Task<string?> PutLinkSteam(LinkDto linkDto, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, linkDto.IdUser))
         {
             return null;
         }
@@ -124,11 +126,11 @@ public class LinkDbRepository : ILinkDbRepository
         return "Cannot change the link. Invalid link!";
     }
 
-    public async Task<string?> PutLinkXbox(LinkDto linkDto)
+    public async Task<string?> PutLinkXbox(LinkDto linkDto, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == linkDto.IdUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, linkDto.IdUser))
         {
             return null;
         }
@@ -142,11 +144,11 @@ public class LinkDbRepository : ILinkDbRepository
         return "Cannot change the link. Invalid link!";
     }
     
-    public async Task<string?> PutLinkPs(LinkDto linkDto)
+    public async Task<string?> PutLinkPs(LinkDto linkDto, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, linkDto.IdUser))
         {
             return null;
         }
@@ -156,11 +158,11 @@ public class LinkDbRepository : ILinkDbRepository
 
         return "Link changed";
     }
-    public async Task<string?> PutLinkEpic(LinkDto linkDto)
+    public async Task<string?> PutLinkEpic(LinkDto linkDto, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
 
-        if (user is null)
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, linkDto.IdUser))
         {
             return null;
         }

@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.Posts;
 
@@ -18,9 +19,9 @@ public interface IPostDbRepository
     public Task<IEnumerable<PostDto>?> GetPostsByDateFromDb();
     public Task<IEnumerable<PostDto>?> GetPostsByDateOldestFromDb();
     public Task<NewPostDto?> AddNewPostToDb(AddPostDto addPostDto);
-    public Task<DeletePostDto?> DeletePostFromDb(int idPost);
-    public Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag);
-    public Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost);
+    public Task<DeletePostDto?> DeletePostFromDb(int idPost, ClaimsPrincipal userClaims);
+    public Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag, ClaimsPrincipal userClaims);
+    public Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost, ClaimsPrincipal userClaims);
     public Task<OnePostDto?> GetOnePostFromDb(int idPost);
     public Task<IEnumerable<PostDto>> GetUserPostsFromDb(int idUser);
 }

@@ -1,5 +1,7 @@
-﻿using Gryzilla_App.DTOs.Requests.GroupUserMessage;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Requests.GroupUserMessage;
 using Gryzilla_App.DTOs.Responses.GroupUserMessageDto;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
@@ -32,12 +34,12 @@ public class GroupUserMessageDbRepository : IGroupUserMessageDbRepository
         };
     }
 
-    public async Task<GroupUserMessageDto?> DeleteMessage(int idGroupMessage)
+    public async Task<GroupUserMessageDto?> DeleteMessage(int idGroupMessage, ClaimsPrincipal userClaims)
     {
         var message = await _context.GroupUserMessages
             .SingleOrDefaultAsync(x => x.IdMessage == idGroupMessage);
         
-        if (message is null)
+        if (message is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, message.IdUser))
         {
             return null;
         }
@@ -48,12 +50,12 @@ public class GroupUserMessageDbRepository : IGroupUserMessageDbRepository
         return await GetMessageDto(message);
     }
     
-    public async Task<GroupUserMessageDto?> ModifyMessage(int idMessage, UpdateGroupUserMessageDto updateGroupUserMessage)
+    public async Task<GroupUserMessageDto?> ModifyMessage(int idMessage, UpdateGroupUserMessageDto updateGroupUserMessage, ClaimsPrincipal userClaims)
     {
         var message = await _context.GroupUserMessages
             .SingleOrDefaultAsync(x => x.IdMessage == updateGroupUserMessage.IdMessage);
         
-        if (message is null)
+        if (message is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, message.IdUser))
         {
             return null;
         }

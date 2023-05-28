@@ -75,7 +75,7 @@ public class ProfileCommentControllerTests
             .ReturnsAsync(returnedProfileComment);
 
         //Act
-        var actionResult = await _profileCommentController.PostProfileComment(newProfileCommentDto);
+        var actionResult = await _profileCommentController.AddProfileComment(newProfileCommentDto);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -101,7 +101,7 @@ public class ProfileCommentControllerTests
             .ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _profileCommentController.PostProfileComment(newProfileCommentDto);
+        var actionResult = await _profileCommentController.AddProfileComment(newProfileCommentDto);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;

@@ -52,7 +52,7 @@ public class FriendsController : Controller
             return BadRequest(new StringMessageDto{ Message = "Ids must have different values!" });
         }
         
-        var friend = await _friendsDbRepository.DeleteFriendFromDb(idUser, idUserFriend);
+        var friend = await _friendsDbRepository.DeleteFriendFromDb(idUser, idUserFriend, User);
         
         if (friend is null)
         {

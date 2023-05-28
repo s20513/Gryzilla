@@ -1,7 +1,9 @@
-﻿using Gryzilla_App.DTOs.Requests.Group;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.DTOs.Responses.Group;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -119,11 +121,11 @@ public class GroupDbRepository: IGroupDbRepository
         return groups;
     }
 
-    public async Task<GroupDto?> ModifyGroup(int idGroup, GroupRequestDto groupRequestDto)
+    public async Task<GroupDto?> ModifyGroup(int idGroup, GroupRequestDto groupRequestDto, ClaimsPrincipal userClaims)
     {
         var group = await GetGroupById(idGroup);
 
-        if (group is null)
+        if (group is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, group.IdUserCreator))
         {
             return null;
         }
@@ -146,14 +148,14 @@ public class GroupDbRepository: IGroupDbRepository
         return await GetGroup(idGroup);
     }
 
-    public async Task<GroupDto?> DeleteGroup(int idGroup)
+    public async Task<GroupDto?> DeleteGroup(int idGroup, ClaimsPrincipal userClaims)
     {
         var group = await _context
             .Groups
             .Where(e => e.IdGroup == idGroup)
             .SingleOrDefaultAsync();
 
-        if (group is null)
+        if (group is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, group.IdUserCreator))
         {
             return null;
         }
@@ -172,12 +174,14 @@ public class GroupDbRepository: IGroupDbRepository
         return groupDto;
     }
 
-    public async Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDto)
+    public async Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDto, ClaimsPrincipal userClaims)
     {
         var group = await GetGroupById(idGroup);
         var user = await GetUserById(userToGroupDto.IdUser);
         
-        if (group is null || user is null)
+        if (group is null || 
+            user is null || 
+            !ActionAuthorizer.IsTheUserToRemoveFromGroupOrAuthorOrHasRightRole(userClaims, group.IdUserCreator, userToGroupDto.IdUser))
         {
             return null;
         }
@@ -315,11 +319,11 @@ public class GroupDbRepository: IGroupDbRepository
 
         return groups;
     }
-    public async Task<GroupDto?> SetGroupPhoto(IFormFile photo, int idGroup)
+    public async Task<GroupDto?> SetGroupPhoto(IFormFile photo, int idGroup, ClaimsPrincipal userClaims)
     {
         var group = await GetGroupById(idGroup);
         
-        if (group is null)
+        if (group is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, group.IdUserCreator))
         {
             return null;
         }

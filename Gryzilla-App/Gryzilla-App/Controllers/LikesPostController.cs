@@ -53,7 +53,7 @@ public class LikesPostController : Controller
     [HttpDelete("{idUser:int}/{idPost:int}")]
     public async Task<IActionResult> DeleteLike([FromRoute] int idUser,[FromRoute] int idPost)
     {
-        var likes = await _likesPostDbRepository.DeleteLikeFromPost(idUser, idPost);
+        var likes = await _likesPostDbRepository.DeleteLikeFromPost(idUser, idPost, User);
         
         if (likes != null && !likes.Equals("Deleted like"))
         {

@@ -35,7 +35,7 @@ public class ProfileCommentController : Controller
     public async Task<IActionResult> ModifyProfileComment([FromRoute] int idProfileComment, [FromBody] ModifyProfileComment modifyProfileComment)
     {
         
-        var profileComment = await _profileCommentDbRepository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileComment);
+        var profileComment = await _profileCommentDbRepository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileComment, User);
     
         if (profileComment == null)
         { 
@@ -47,7 +47,7 @@ public class ProfileCommentController : Controller
     }
     [HttpPost]
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
-    public async Task<IActionResult> PostProfileComment([FromBody] NewProfileComment newProfileComment)
+    public async Task<IActionResult> AddProfileComment([FromBody] NewProfileComment newProfileComment)
     {
         var profileComment = await _profileCommentDbRepository.AddProfileCommentToDb(newProfileComment);
     
@@ -65,7 +65,7 @@ public class ProfileCommentController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteProfileComment([FromRoute] int idProfileComment)
     {
-        var user = await _profileCommentDbRepository.DeleteProfileCommentFromDb(idProfileComment);
+        var user = await _profileCommentDbRepository.DeleteProfileCommentFromDb(idProfileComment, User);
         
         if (user == null)
         { 

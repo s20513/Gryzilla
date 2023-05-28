@@ -1,5 +1,7 @@
-﻿using Gryzilla_App.DTOs.Responses.LikesArticle;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Responses.LikesArticle;
 using Gryzilla_App.DTOs.Responses.LikesPost;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -70,12 +72,12 @@ public class LikesPostDbRepository : ILikesPostDbRepository
         return "Added like";
     }
     
-    public async Task<string?> DeleteLikeFromPost(int idUser, int idPost)
+    public async Task<string?> DeleteLikeFromPost(int idUser, int idPost, ClaimsPrincipal userClaims)
     {
         var user = await GetUser(idUser);
         var post = await GetPost(idPost);
         
-        if (post is null || user is null)
+        if (post is null || user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return "Post or user doesn't exist";
         }

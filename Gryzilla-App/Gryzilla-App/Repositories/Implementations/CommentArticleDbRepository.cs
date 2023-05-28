@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +68,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         };
     }
     
-    public async Task<ArticleCommentDto?> ModifyArticleCommentFromDb(PutArticleCommentDto putArticleCommentDto, int idComment)
+    public async Task<ArticleCommentDto?> ModifyArticleCommentFromDb(PutArticleCommentDto putArticleCommentDto, int idComment, ClaimsPrincipal userClaims)
     {
         var comment = await _context
             .CommentArticles
@@ -74,7 +76,7 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
                 e.IdCommentArticle == putArticleCommentDto.IdComment &&
                 e.IdArticle        == putArticleCommentDto.IdArticle);
 
-        if (comment is null)
+        if (comment is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, comment.IdUser))
         {
             return null;
         }
@@ -100,13 +102,13 @@ public class CommentArticleDbRepository:ICommentArticleDbRepository
         };
     }
 
-    public async Task<ArticleCommentDto?> DeleteArticleCommentFromDb(int idComment)
+    public async Task<ArticleCommentDto?> DeleteArticleCommentFromDb(int idComment, ClaimsPrincipal userClaims)
     {
         var comment = await _context
             .CommentArticles
             .SingleOrDefaultAsync(e => e.IdCommentArticle == idComment);
         
-        if (comment is null)
+        if (comment is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, comment.IdUser))
         {
             return null;
         }

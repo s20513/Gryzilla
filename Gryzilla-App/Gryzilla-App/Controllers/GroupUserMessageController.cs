@@ -56,7 +56,7 @@ public class GroupUserMessageController : Controller
             return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
         
-        var result = await _groupUserMessageDbRepository.ModifyMessage(idMessage, updateGroupUserMessage);
+        var result = await _groupUserMessageDbRepository.ModifyMessage(idMessage, updateGroupUserMessage, User);
         
         if (result is null)
         {
@@ -78,7 +78,7 @@ public class GroupUserMessageController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteMessage([FromRoute] int idMessage)
     {
-        var result = await _groupUserMessageDbRepository.DeleteMessage(idMessage);
+        var result = await _groupUserMessageDbRepository.DeleteMessage(idMessage, User);
 
         if (result is null)
         {

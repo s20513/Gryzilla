@@ -1,4 +1,6 @@
-﻿using Gryzilla_App.DTOs.Responses.LikesArticle;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Responses.LikesArticle;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -63,12 +65,12 @@ public class LikesArticleDbRepository : ILikesArticleDbRepository
         };
     }
 
-    public async Task<string?> DeleteLikeFromArticle(int idUser, int idArticle)
+    public async Task<string?> DeleteLikeFromArticle(int idUser, int idArticle, ClaimsPrincipal userClaims)
     {
         var user = await GetUser(idUser);
         var article = await GetArticle(idArticle);
         
-        if (article is null || user is null)
+        if (article is null || user is null || ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return "Article or user doesn't exist";
         }

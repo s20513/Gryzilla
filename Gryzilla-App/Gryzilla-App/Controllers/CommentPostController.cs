@@ -55,7 +55,7 @@ public class CommentPostController : Controller
             return BadRequest(new StringMessageDto{ Message = "Id from route and Id in body have to be same" });
         }
         
-        var comment = await _commentPostDbRepository.ModifyPostCommentFromDb(putPostCommentDto, idComment);
+        var comment = await _commentPostDbRepository.ModifyPostCommentFromDb(putPostCommentDto, idComment, User);
         
         if (comment is null)
         {
@@ -74,7 +74,7 @@ public class CommentPostController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeletePostComment([FromRoute] int idComment)
     {
-        var comment = await _commentPostDbRepository.DeleteCommentFromDb(idComment);
+        var comment = await _commentPostDbRepository.DeleteCommentFromDb(idComment, User);
         
         if (comment is null)
         {

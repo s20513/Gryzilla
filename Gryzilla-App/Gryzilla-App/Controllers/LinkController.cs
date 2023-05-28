@@ -41,7 +41,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutDiscordLink([FromBody] LinkDto linkDto)
     {
-        var link = await _linkDbRepository.PutLinkDiscord(linkDto);
+        var link = await _linkDbRepository.PutLinkDiscord(linkDto, User);
         
         if (link is null)
         {
@@ -60,7 +60,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutSteamLink([FromBody] LinkDto linkDto)
     {
-        var link = await _linkDbRepository.PutLinkSteam(linkDto);
+        var link = await _linkDbRepository.PutLinkSteam(linkDto, User);
         
         if (link is null)
         {
@@ -79,7 +79,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutPsLink([FromBody] LinkDto linkDto)
     {
-        var link = await _linkDbRepository.PutLinkPs(linkDto);
+        var link = await _linkDbRepository.PutLinkPs(linkDto, User);
         
         if (link is null)
         {
@@ -98,7 +98,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutXboxLink([FromBody] LinkDto linkDto)
     {
-        var link = await _linkDbRepository.PutLinkXbox(linkDto);
+        var link = await _linkDbRepository.PutLinkXbox(linkDto, User);
         
         if (link is null)
         {
@@ -117,7 +117,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> PutEpicLink([FromBody] LinkDto linkDto)
     {
-        var link = await _linkDbRepository.PutLinkEpic(linkDto);
+        var link = await _linkDbRepository.PutLinkEpic(linkDto, User);
         
         if (link is null)
         {
@@ -136,7 +136,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteDiscordLink([FromRoute] int idUser)
     {
-        var link = await _linkDbRepository.DeleteLinkDiscord(idUser);
+        var link = await _linkDbRepository.DeleteLinkDiscord(idUser, User);
         
         if (link is null)
         {
@@ -155,7 +155,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteSteamLink([FromRoute] int idUser)
     {
-        var link = await _linkDbRepository.DeleteLinkSteam(idUser);
+        var link = await _linkDbRepository.DeleteLinkSteam(idUser, User);
         
         if (link is null)
         {
@@ -174,7 +174,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeletePsLink([FromRoute] int idUser)
     {
-        var link = await _linkDbRepository.DeleteLinkPs(idUser);
+        var link = await _linkDbRepository.DeleteLinkPs(idUser, User);
         
         if (link is null)
         {
@@ -193,7 +193,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteXboxLink([FromRoute] int idUser)
     {
-        var link = await _linkDbRepository.DeleteLinkXbox(idUser);
+        var link = await _linkDbRepository.DeleteLinkXbox(idUser, User);
         
         if (link is null)
         {
@@ -212,7 +212,7 @@ public class LinkController : Controller
     [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> DeleteEpicLink([FromRoute] int idUser)
     {
-        var link = await _linkDbRepository.DeleteLinkEpic(idUser);
+        var link = await _linkDbRepository.DeleteLinkEpic(idUser, User);
         
         if (link is null)
         {

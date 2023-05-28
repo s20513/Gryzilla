@@ -1,8 +1,10 @@
-﻿using Gryzilla_App.DTO.Responses.Posts;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
+using Gryzilla_App.Helpers;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -393,7 +395,7 @@ public class PostDbRepository : IPostDbRepository
         };
     }
 
-    public async Task<DeletePostDto?> DeletePostFromDb(int idPost)
+    public async Task<DeletePostDto?> DeletePostFromDb(int idPost, ClaimsPrincipal userClaims)
     {
         var post = await _context
             .Posts
@@ -402,7 +404,7 @@ public class PostDbRepository : IPostDbRepository
             .Include(x => x.IdUsers)
             .SingleOrDefaultAsync();
 
-        if (post is null)
+        if (post is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, post.IdUser))
         {
             return null;
         }
@@ -470,7 +472,7 @@ public class PostDbRepository : IPostDbRepository
         };
     }
 
-    public async Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag)
+    public async Task<DeleteTagDto?> DeleteTagFromPost(int idPost, int idTag, ClaimsPrincipal userClaims)
     {
         var post = await _context
             .Posts
@@ -478,7 +480,7 @@ public class PostDbRepository : IPostDbRepository
             .Include(x => x.IdTags)
             .SingleOrDefaultAsync();
 
-        if (post is null)
+        if (post is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, post.IdUser))
         {
             return null;
         }
@@ -505,7 +507,7 @@ public class PostDbRepository : IPostDbRepository
         };
     }
 
-    public async Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost)
+    public async Task<ModifyPostDto?> ModifyPostFromDb(PutPostDto putPostDto, int idPost, ClaimsPrincipal userClaims)
     {
         var post = await _context
             .Posts
@@ -514,7 +516,7 @@ public class PostDbRepository : IPostDbRepository
             .Include(x => x.IdUserNavigation)
             .SingleOrDefaultAsync();
 
-        if (post is null)
+        if (post is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, post.IdUser))
         {
             return null;
         }
