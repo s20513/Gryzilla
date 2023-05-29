@@ -1,8 +1,10 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.ProfileComment;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -12,10 +14,19 @@ public class ProfileCommentControllerTests
 {
     private readonly ProfileCommentController _profileCommentController;
     private readonly Mock<IProfileCommentDbRepository> _profileRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public ProfileCommentControllerTests()
     {
         _profileCommentController= new ProfileCommentController(_profileRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _profileCommentController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     [Fact]
     public async void GetProfileComments_Returns_Ok()
@@ -127,7 +138,7 @@ public class ProfileCommentControllerTests
         var returnedComment = new ProfileCommentDto();
         
         _profileRepositoryMock
-            .Setup(x => x.ModifyProfileCommentFromDb(1, putProfileComment))
+            .Setup(x => x.ModifyProfileCommentFromDb(1, putProfileComment, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -157,7 +168,7 @@ public class ProfileCommentControllerTests
         ProfileCommentDto? nullValue = null;
         
         _profileRepositoryMock
-            .Setup(x => x.ModifyProfileCommentFromDb(1, putProfileComment))
+            .Setup(x => x.ModifyProfileCommentFromDb(1, putProfileComment, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -182,7 +193,7 @@ public class ProfileCommentControllerTests
         var returnedComment = new ProfileCommentDto();
         
         _profileRepositoryMock
-            .Setup(x => x.DeleteProfileCommentFromDb(1))
+            .Setup(x => x.DeleteProfileCommentFromDb(1, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -207,11 +218,11 @@ public class ProfileCommentControllerTests
         ProfileCommentDto? nullValue = null;
         
         _profileRepositoryMock
-            .Setup(x => x.DeleteProfileCommentFromDb(1))
+            .Setup(x => x.DeleteProfileCommentFromDb(1, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _profileCommentController.DeleteProfileComment( 1);
+        var actionResult = await _profileCommentController.DeleteProfileComment(1);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;

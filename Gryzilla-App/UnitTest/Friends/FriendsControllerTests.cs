@@ -1,9 +1,11 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Friends;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -13,10 +15,19 @@ public class FriendsControllerTests
 {
     private readonly FriendsController _friendsController;
     private readonly Mock<IFriendsDbRepository> _friendsRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public FriendsControllerTests()
     {
         _friendsController = new FriendsController(_friendsRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _friendsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     
     [Fact]
@@ -80,7 +91,7 @@ public class FriendsControllerTests
         var friendDto = new FriendDto();
         
         _friendsRepositoryMock
-            .Setup(x => x.DeleteFriendFromDb(idUser, idUserFriend))
+            .Setup(x => x.DeleteFriendFromDb(idUser, idUserFriend, _mockClaimsPrincipal.Object))
             .ReturnsAsync(friendDto);
 
         //Act
@@ -107,7 +118,7 @@ public class FriendsControllerTests
         FriendDto? friendDto = null;
         
         _friendsRepositoryMock
-            .Setup(x => x.DeleteFriendFromDb(idUser, idUserFriend))
+            .Setup(x => x.DeleteFriendFromDb(idUser, idUserFriend, _mockClaimsPrincipal.Object))
             .ReturnsAsync(friendDto);
 
         //Act
@@ -134,7 +145,7 @@ public class FriendsControllerTests
         FriendDto? friendDto = null;
         
         _friendsRepositoryMock
-            .Setup(x => x.DeleteFriendFromDb(idUser, idUserFriend))
+            .Setup(x => x.DeleteFriendFromDb(idUser, idUserFriend, _mockClaimsPrincipal.Object))
             .ReturnsAsync(friendDto);
 
         //Act

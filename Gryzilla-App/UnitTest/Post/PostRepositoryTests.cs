@@ -1,10 +1,12 @@
-﻿using Gryzilla_App;
+﻿using System.Security.Claims;
+using Gryzilla_App;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.Post;
 
@@ -12,6 +14,7 @@ public class PostRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly PostDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public PostRepositoryTests()
     {
@@ -19,6 +22,14 @@ public class PostRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new PostDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
     
     private async Task AddTestDataToDb()
@@ -145,7 +156,7 @@ public class PostRepositoryTests
         var idPost = 1;
 
         //Act
-        var res = await _repository.DeletePostFromDb(idPost);
+        var res = await _repository.DeletePostFromDb(idPost, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.NotNull(res);
@@ -163,7 +174,7 @@ public class PostRepositoryTests
         var idPost = 3;
 
         //Act
-        var res = await _repository.DeletePostFromDb(idPost);
+        var res = await _repository.DeletePostFromDb(idPost, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.Null(res);
@@ -180,7 +191,7 @@ public class PostRepositoryTests
         var idTag  = 1;
 
         //Act
-        var res = await _repository.DeleteTagFromPost(idPost, idTag);
+        var res = await _repository.DeleteTagFromPost(idPost, idTag, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.NotNull(res);
@@ -206,7 +217,7 @@ public class PostRepositoryTests
         await _context.SaveChangesAsync();
         
         //Act
-        var res = await _repository.DeleteTagFromPost(idPost, idTag);
+        var res = await _repository.DeleteTagFromPost(idPost, idTag, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.Null(res);
@@ -222,7 +233,7 @@ public class PostRepositoryTests
         var idTag  = 1;
 
         //Act
-        var res = await _repository.DeleteTagFromPost(idPost, idTag);
+        var res = await _repository.DeleteTagFromPost(idPost, idTag, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.Null(res);
@@ -247,7 +258,7 @@ public class PostRepositoryTests
         const int idPost = 1;
         
         //Act
-        var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
+        var res = await _repository.ModifyPostFromDb(putPostDto,idPost, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.NotNull(res);
@@ -279,7 +290,7 @@ public class PostRepositoryTests
         const int idPost = 1;
         
         //Act
-        var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
+        var res = await _repository.ModifyPostFromDb(putPostDto,idPost, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.NotNull(res);
@@ -311,7 +322,7 @@ public class PostRepositoryTests
         var idPost = 1;
         
         //Act
-        var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
+        var res = await _repository.ModifyPostFromDb(putPostDto,idPost, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.NotNull(res);
@@ -342,7 +353,7 @@ public class PostRepositoryTests
         const int idPost = 1;
 
         //Act
-        var res = await _repository.ModifyPostFromDb(putPostDto,idPost);
+        var res = await _repository.ModifyPostFromDb(putPostDto,idPost, _mockClaimsPrincipal.Object);
 
         //Assert
         Assert.Null(res);

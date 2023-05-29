@@ -1,7 +1,9 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.LikesArticle;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -11,10 +13,19 @@ public class LikesArticleControllerTests
 {
     private readonly LikesArticleController _likesArticleController;
     private readonly Mock<ILikesArticleDbRepository> _likesArticleDbRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public LikesArticleControllerTests()
     {
         _likesArticleController = new LikesArticleController(_likesArticleDbRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _likesArticleController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
 
     [Fact]
@@ -80,7 +91,7 @@ public class LikesArticleControllerTests
         var objectResult = "Deleted like";
         
         _likesArticleDbRepositoryMock
-            .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle))
+            .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle, _mockClaimsPrincipal.Object))
             .ReturnsAsync(objectResult);
 
         //Act
@@ -107,7 +118,7 @@ public class LikesArticleControllerTests
         var objectResult = "Article or user doesn't exist";
         
         _likesArticleDbRepositoryMock
-            .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle))
+            .Setup(x => x.DeleteLikeFromArticle(idUser, idArticle, _mockClaimsPrincipal.Object))
             .ReturnsAsync(objectResult);
 
         //Act

@@ -1,8 +1,10 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -12,10 +14,19 @@ public class CommentPostControllerTests
 {
     private readonly CommentPostController _commentPostController;
     private readonly Mock<ICommentPostDbRepository> _commentPostRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public CommentPostControllerTests()
     {
         _commentPostController = new CommentPostController(_commentPostRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _commentPostController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     
     [Fact]
@@ -82,7 +93,7 @@ public class CommentPostControllerTests
         var returnedComment = new PostCommentDto();
         
         _commentPostRepositoryMock
-            .Setup(x => x.ModifyPostCommentFromDb(putPostCommentDto, id))
+            .Setup(x => x.ModifyPostCommentFromDb(putPostCommentDto, id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -112,7 +123,7 @@ public class CommentPostControllerTests
         PostCommentDto? nullValue = null;
         
         _commentPostRepositoryMock
-            .Setup(x => x.ModifyPostCommentFromDb(putPostCommentDto, id))
+            .Setup(x => x.ModifyPostCommentFromDb(putPostCommentDto, id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -139,7 +150,7 @@ public class CommentPostControllerTests
         PostCommentDto? nullValue = null;
         
         _commentPostRepositoryMock
-            .Setup(x => x.ModifyPostCommentFromDb(putPostCommentDto, id))
+            .Setup(x => x.ModifyPostCommentFromDb(putPostCommentDto, id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -165,7 +176,7 @@ public class CommentPostControllerTests
         var returnedComment = new PostCommentDto();
         
         _commentPostRepositoryMock
-            .Setup(x => x.DeleteCommentFromDb(id))
+            .Setup(x => x.DeleteCommentFromDb(id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -191,7 +202,7 @@ public class CommentPostControllerTests
         PostCommentDto? nullValue = null;
         
         _commentPostRepositoryMock
-            .Setup(x => x.DeleteCommentFromDb(id))
+            .Setup(x => x.DeleteCommentFromDb(id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Security.Claims;
 using Gryzilla_App;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.Exceptions;
@@ -15,6 +16,7 @@ public class UserRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly UserDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public UserRepositoryTests()
     {
@@ -25,6 +27,14 @@ public class UserRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new UserDbRepository(_context, new ConfigurationManager());
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
 
     private async Task AddTestDataWithOneUser()
@@ -127,7 +137,7 @@ public class UserRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteUserFromDb(idUser);
+        var res = await _repository.DeleteUserFromDb(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -145,7 +155,7 @@ public class UserRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteUserFromDb(idUser);
+        var res = await _repository.DeleteUserFromDb(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -171,7 +181,7 @@ public class UserRepositoryTests
             PhoneNumber = "14141515"
         };
         //Act
-        var res = await _repository.ModifyUserFromDb(idUser, putUserFromDb);
+        var res = await _repository.ModifyUserFromDb(idUser, putUserFromDb, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -200,7 +210,7 @@ public class UserRepositoryTests
         
         //Act
         //Assert
-        await Assert.ThrowsAsync<SameNameException>(() => _repository.ModifyUserFromDb(idUser, putUserFromDb));
+        await Assert.ThrowsAsync<SameNameException>(() => _repository.ModifyUserFromDb(idUser, putUserFromDb, _mockClaimsPrincipal.Object));
     }
     
     [Fact]
@@ -220,7 +230,7 @@ public class UserRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyUserFromDb(idUser, putUserFromDb);
+        var res = await _repository.ModifyUserFromDb(idUser, putUserFromDb, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -424,7 +434,7 @@ public class UserRepositoryTests
         var changePasswordDto = new ChangePasswordDto();
 
         //Act
-        var res = await _repository.ChangePassword(changePasswordDto, idUser);
+        var res = await _repository.ChangePassword(changePasswordDto, idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -445,7 +455,7 @@ public class UserRepositoryTests
         };
 
         //Act
-        var res = await _repository.ChangePassword(changePasswordDto, idUser);
+        var res = await _repository.ChangePassword(changePasswordDto, idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.False(res);
@@ -467,7 +477,7 @@ public class UserRepositoryTests
         };
 
         //Act
-        var res = await _repository.ChangePassword(changePasswordDto, idUser);
+        var res = await _repository.ChangePassword(changePasswordDto, idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.True(res);
@@ -561,7 +571,7 @@ public class UserRepositoryTests
         var fileMock = new Mock<IFormFile>();
 
         //Act
-        var res = await _repository.SetUserPhoto(fileMock.Object,idUser);
+        var res = await _repository.SetUserPhoto(fileMock.Object,idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -580,7 +590,7 @@ public class UserRepositoryTests
         var fileMock = new Mock<IFormFile>();
 
         //Act
-        var res = await _repository.SetUserPhoto(fileMock.Object,idUser);
+        var res = await _repository.SetUserPhoto(fileMock.Object,idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -603,7 +613,7 @@ public class UserRepositoryTests
         IFormFile formFile = new FormFile(fileStream, 0, fileStream.Length, null, Path.GetFileName(filePath));
 
         //Act
-        var res = await _repository.SetUserPhoto(formFile,idUser);
+        var res = await _repository.SetUserPhoto(formFile,idUser, _mockClaimsPrincipal.Object);
         
         await fileStream.DisposeAsync();
         

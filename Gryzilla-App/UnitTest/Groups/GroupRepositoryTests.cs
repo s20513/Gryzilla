@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Security.Claims;
 using Gryzilla_App;
 using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.Exceptions;
@@ -14,6 +15,7 @@ public class GroupRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly GroupDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public GroupRepositoryTests()
     {
@@ -21,6 +23,14 @@ public class GroupRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new GroupDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
 
     private async Task AddPhotoToGroup(int idGroup)
@@ -221,7 +231,7 @@ public class GroupRepositoryTests
         var idGroup = 1;
         
         //Act
-        var res = await _repository.DeleteGroup(idGroup);
+        var res = await _repository.DeleteGroup(idGroup, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -239,7 +249,7 @@ public class GroupRepositoryTests
         var idGroup = 1;
         
         //Act
-        var res = await _repository.DeleteGroup(idGroup);
+        var res = await _repository.DeleteGroup(idGroup, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -261,7 +271,7 @@ public class GroupRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyGroup(idGroup, modifyGroupRequestDto);
+        var res = await _repository.ModifyGroup(idGroup, modifyGroupRequestDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -285,7 +295,7 @@ public class GroupRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyGroup(idGroup, modifyGroupRequestDto);
+        var res = await _repository.ModifyGroup(idGroup, modifyGroupRequestDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -317,7 +327,7 @@ public class GroupRepositoryTests
         
         //Act
         //Assert
-        await Assert.ThrowsAsync<SameNameException>(() => _repository.ModifyGroup(idGroup, modifyGroupRequestDto));
+        await Assert.ThrowsAsync<SameNameException>(() => _repository.ModifyGroup(idGroup, modifyGroupRequestDto, _mockClaimsPrincipal.Object));
     }
     
     
@@ -396,7 +406,7 @@ public class GroupRepositoryTests
             IdUser = 1
         }; 
         //Act
-        var res = await _repository.RemoveUserFromGroup(idGroup, userToGroupDto);
+        var res = await _repository.RemoveUserFromGroup(idGroup, userToGroupDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -421,7 +431,7 @@ public class GroupRepositoryTests
             IdUser = 2
         }; 
         //Act
-        var res = await _repository.RemoveUserFromGroup(idUser, userToGroupDto);
+        var res = await _repository.RemoveUserFromGroup(idUser, userToGroupDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -443,7 +453,7 @@ public class GroupRepositoryTests
             IdUser = 2
         }; 
         //Act
-        var res = await _repository.RemoveUserFromGroup(idUser, userToGroupDto);
+        var res = await _repository.RemoveUserFromGroup(idUser, userToGroupDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -467,7 +477,7 @@ public class GroupRepositoryTests
         
         //Act
         //Assert
-        await Assert.ThrowsAsync<UserCreatorException>(() => _repository.RemoveUserFromGroup(idGroup, userToGroupDto));
+        await Assert.ThrowsAsync<UserCreatorException>(() => _repository.RemoveUserFromGroup(idGroup, userToGroupDto, _mockClaimsPrincipal.Object));
     }
     
     [Fact]
@@ -631,7 +641,7 @@ public class GroupRepositoryTests
         var fileMock = new Mock<IFormFile>();
 
         //Act
-        var res = await _repository.SetGroupPhoto(fileMock.Object,idGroup);
+        var res = await _repository.SetGroupPhoto(fileMock.Object, idGroup, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -650,7 +660,7 @@ public class GroupRepositoryTests
         var fileMock = new Mock<IFormFile>();
 
         //Act
-        var res = await _repository.SetGroupPhoto(fileMock.Object, idGroup);
+        var res = await _repository.SetGroupPhoto(fileMock.Object, idGroup, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -673,7 +683,7 @@ public class GroupRepositoryTests
         IFormFile formFile = new FormFile(fileStream, 0, fileStream.Length, null, Path.GetFileName(filePath));
 
         //Act
-        var res = await _repository.SetGroupPhoto(formFile,idGroup);
+        var res = await _repository.SetGroupPhoto(formFile,idGroup, _mockClaimsPrincipal.Object);
         
         await fileStream.DisposeAsync();
         

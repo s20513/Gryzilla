@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.User;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.User;
@@ -14,14 +15,21 @@ public class UserControllerTests
 {
     private readonly UserController _usersController;
     private readonly Mock<IUserDbRepository> _userRepositoryMock = new();
-    
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
     
     public UserControllerTests()
     {
         _usersController = new UserController(_userRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _usersController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
-    
-    
+
     [Fact]
     public async void GetUser_Returns_Ok()
     {
@@ -131,7 +139,7 @@ public class UserControllerTests
             IdUser = id
         };
         
-        _userRepositoryMock.Setup(x => x.ModifyUserFromDb(id, putUserDto)).ReturnsAsync(returnedUser);
+        _userRepositoryMock.Setup(x => x.ModifyUserFromDb(id, putUserDto, _mockClaimsPrincipal.Object)).ReturnsAsync(returnedUser);
 
         //Act
         var actionResult = await _usersController.ModifyUser(id, putUserDto);
@@ -160,7 +168,7 @@ public class UserControllerTests
 
         UserDto? nullValue = null;
         
-        _userRepositoryMock.Setup(x => x.ModifyUserFromDb(id, putUserDto)).ReturnsAsync(nullValue);
+        _userRepositoryMock.Setup(x => x.ModifyUserFromDb(id, putUserDto, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
         var actionResult = await _usersController.ModifyUser(id, putUserDto);
@@ -189,7 +197,7 @@ public class UserControllerTests
         var exceptionMessage = "Nick with given name already exists!";
 
         _userRepositoryMock
-            .Setup(x => x.ModifyUserFromDb(id, putUserDto))
+            .Setup(x => x.ModifyUserFromDb(id, putUserDto, _mockClaimsPrincipal.Object))
             .ThrowsAsync(new SameNameException(exceptionMessage));
 
         //Act
@@ -317,7 +325,7 @@ public class UserControllerTests
         var idUser = 1;
         var user = new UserDto();
         
-        _userRepositoryMock.Setup(x => x.DeleteUserFromDb(idUser)).ReturnsAsync(user);
+        _userRepositoryMock.Setup(x => x.DeleteUserFromDb(idUser, _mockClaimsPrincipal.Object)).ReturnsAsync(user);
 
         //Act
         var actionResult = await _usersController.DeleteUser(idUser);
@@ -341,7 +349,7 @@ public class UserControllerTests
         var idUser = 1;
         UserDto? nullValue = null;
         
-        _userRepositoryMock.Setup(x => x.DeleteUserFromDb(idUser)).ReturnsAsync(nullValue);
+        _userRepositoryMock.Setup(x => x.DeleteUserFromDb(idUser, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
         var actionResult = await _usersController.DeleteUser(idUser);
@@ -414,7 +422,7 @@ public class UserControllerTests
         var idUser = 1;
         var userDto = new UserDto();
 
-        _userRepositoryMock.Setup(x => x.SetUserPhoto(file.Object, idUser)).ReturnsAsync(userDto);
+        _userRepositoryMock.Setup(x => x.SetUserPhoto(file.Object, idUser, _mockClaimsPrincipal.Object)).ReturnsAsync(userDto);
 
         //Act
         var actionResult = await _usersController.SetUserPhoto(file.Object, idUser);
@@ -463,7 +471,7 @@ public class UserControllerTests
         var changePasswordDto = new ChangePasswordDto();
         bool? nullValue = null;
 
-        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser)).ReturnsAsync(nullValue);
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
         var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
@@ -480,7 +488,7 @@ public class UserControllerTests
         var changePasswordDto = new ChangePasswordDto();
         var res = false;
 
-        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser)).ReturnsAsync(res);
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser, _mockClaimsPrincipal.Object)).ReturnsAsync(res);
 
         //Act
         var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
@@ -497,7 +505,7 @@ public class UserControllerTests
         var changePasswordDto = new ChangePasswordDto();
         var res = true;
 
-        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser)).ReturnsAsync(res);
+        _userRepositoryMock.Setup(x => x.ChangePassword(changePasswordDto, idUser, _mockClaimsPrincipal.Object)).ReturnsAsync(res);
 
         //Act
         var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);

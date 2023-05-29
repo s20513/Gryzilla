@@ -1,7 +1,9 @@
-﻿using Gryzilla_App.DTOs.Requests.Link;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Requests.Link;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.Link;
 
@@ -9,12 +11,21 @@ public class LinkRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly LinkDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public LinkRepositoryTests()
     {
         var options = new DbContextOptions<GryzillaContext>();
         _context = new GryzillaContext(options, true);
         _repository = new LinkDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
     
     private async Task AddTestDataWithOneUser()
@@ -49,7 +60,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkEpic(idUser);
+        var res = await _repository.DeleteLinkEpic(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -65,7 +76,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkEpic(idUser);
+        var res = await _repository.DeleteLinkEpic(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -81,7 +92,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkPs(idUser);
+        var res = await _repository.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -97,7 +108,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkPs(idUser);
+        var res = await _repository.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -113,7 +124,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkXbox(idUser);
+        var res = await _repository.DeleteLinkXbox(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -129,7 +140,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkXbox(idUser);
+        var res = await _repository.DeleteLinkXbox(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -145,7 +156,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkSteam(idUser);
+        var res = await _repository.DeleteLinkSteam(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -161,7 +172,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkSteam(idUser);
+        var res = await _repository.DeleteLinkSteam(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -175,7 +186,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkDiscord(idUser);
+        var res = await _repository.DeleteLinkDiscord(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -192,7 +203,7 @@ public class LinkRepositoryTests
         var idUser = 1;
         
         //Act
-        var res = await _repository.DeleteLinkDiscord(idUser);
+        var res = await _repository.DeleteLinkDiscord(idUser, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -212,7 +223,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkDiscord(linkDto);
+        var res = await _repository.PutLinkDiscord(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -232,7 +243,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkDiscord(linkDto);
+        var res = await _repository.PutLinkDiscord(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -253,7 +264,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkDiscord(linkDto);
+        var res = await _repository.PutLinkDiscord(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -273,7 +284,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkSteam(linkDto);
+        var res = await _repository.PutLinkSteam(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -293,7 +304,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkSteam(linkDto);
+        var res = await _repository.PutLinkSteam(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -314,7 +325,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkSteam(linkDto);
+        var res = await _repository.PutLinkSteam(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -365,7 +376,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkEpic(linkDto);
+        var res = await _repository.PutLinkEpic(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -385,7 +396,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkEpic(linkDto);
+        var res = await _repository.PutLinkEpic(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -406,7 +417,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkEpic(linkDto);
+        var res = await _repository.PutLinkEpic(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -428,7 +439,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkXbox(linkDto);
+        var res = await _repository.PutLinkXbox(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -446,7 +457,7 @@ public class LinkRepositoryTests
             Link = "https://account.xbox.com/pl-pl/Profile?xr=mebarnav&rtc=1&csrf=eNX57RWU3bPJbnFgQUCMtkUZTq0Mtvg"
         };
         //Act
-        var res = await _repository.PutLinkXbox(linkDto);
+        var res = await _repository.PutLinkXbox(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -466,7 +477,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkXbox(linkDto);
+        var res = await _repository.PutLinkXbox(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -487,7 +498,7 @@ public class LinkRepositoryTests
         };
         
         //Act
-        var res = await _repository.PutLinkPs(linkDto);
+        var res = await _repository.PutLinkPs(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -505,7 +516,7 @@ public class LinkRepositoryTests
             Link = "PsLink"
         };
         //Act
-        var res = await _repository.PutLinkPs(linkDto);
+        var res = await _repository.PutLinkPs(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);

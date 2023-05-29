@@ -1,8 +1,10 @@
-﻿using Gryzilla_App;
+﻿using System.Security.Claims;
+using Gryzilla_App;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.Friends;
 
@@ -10,6 +12,7 @@ public class FriendsRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly FriendsDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public FriendsRepositoryTests()
     {
@@ -17,6 +20,14 @@ public class FriendsRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new FriendsDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
 
     private async Task AddTestDataWithManyUser()
@@ -151,7 +162,7 @@ public class FriendsRepositoryTests
         
         //Act
         var res = await _repository
-            .DeleteFriendFromDb(idUser1, idUser2);
+            .DeleteFriendFromDb(idUser1, idUser2, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -169,7 +180,7 @@ public class FriendsRepositoryTests
         
         //Act
         var res = await _repository
-            .DeleteFriendFromDb(idUser1, idUser2);
+            .DeleteFriendFromDb(idUser1, idUser2, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -197,7 +208,7 @@ public class FriendsRepositoryTests
         await _context.SaveChangesAsync();
         
         //Act
-        var res = await _repository.DeleteFriendFromDb(idUser1, idUser2);
+        var res = await _repository.DeleteFriendFromDb(idUser1, idUser2, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);

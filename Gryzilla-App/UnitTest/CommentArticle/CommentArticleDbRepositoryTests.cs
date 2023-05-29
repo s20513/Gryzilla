@@ -1,8 +1,10 @@
-﻿using Gryzilla_App;
+﻿using System.Security.Claims;
+using Gryzilla_App;
 using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.CommentArticle;
 
@@ -10,6 +12,7 @@ public class CommentArticleDbRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly CommentArticleDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public CommentArticleDbRepositoryTests()
     {
@@ -17,6 +20,14 @@ public class CommentArticleDbRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new CommentArticleDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
 
     private async Task CreateTestData()
@@ -151,7 +162,7 @@ public class CommentArticleDbRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyArticleCommentFromDb(putArticleCommentDto, idComment);
+        var res = await _repository.ModifyArticleCommentFromDb(putArticleCommentDto, idComment, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -185,7 +196,7 @@ public class CommentArticleDbRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyArticleCommentFromDb(putArticleCommentDto, idComment);
+        var res = await _repository.ModifyArticleCommentFromDb(putArticleCommentDto, idComment, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -202,7 +213,7 @@ public class CommentArticleDbRepositoryTests
         var id = 1;
         
         //Act
-        var res = await _repository.DeleteArticleCommentFromDb(id);
+        var res = await _repository.DeleteArticleCommentFromDb(id, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -222,7 +233,7 @@ public class CommentArticleDbRepositoryTests
         var id = 2;
         
         //Act
-        var res = await _repository.DeleteArticleCommentFromDb(id);
+        var res = await _repository.DeleteArticleCommentFromDb(id, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);

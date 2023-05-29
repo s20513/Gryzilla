@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTO.Responses.Posts;
 using Gryzilla_App.DTOs.Requests.Post;
 using Gryzilla_App.DTOs.Responses;
@@ -6,6 +7,7 @@ using Gryzilla_App.DTOs.Responses.PostComment;
 using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -15,11 +17,19 @@ public class PostControllerTests
 {
     private readonly PostController _postsController;
     private readonly Mock<IPostDbRepository> _postRepositoryMock = new();
-    
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
     
     public PostControllerTests()
     {
         _postsController = new PostController(_postRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _postsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
 
     private readonly IEnumerable<OnePostDto> _fakePost = new List<OnePostDto>
@@ -906,7 +916,7 @@ public class PostControllerTests
         };
         
         _postRepositoryMock
-            .Setup(x => x.ModifyPostFromDb(putPostRequestDto, idPost))
+            .Setup(x => x.ModifyPostFromDb(putPostRequestDto, idPost, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedPost);
 
         //Act
@@ -936,7 +946,7 @@ public class PostControllerTests
         ModifyPostDto? nullValue = null;
 
         _postRepositoryMock
-            .Setup(x => x.ModifyPostFromDb(putPostRequestDto, idPost))
+            .Setup(x => x.ModifyPostFromDb(putPostRequestDto, idPost, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -989,7 +999,7 @@ public class PostControllerTests
         };
         
         _postRepositoryMock
-            .Setup(x => x.DeletePostFromDb(idPost))
+            .Setup(x => x.DeletePostFromDb(idPost, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedPost);
 
         //Act
@@ -1015,7 +1025,7 @@ public class PostControllerTests
         DeletePostDto? nullValue = null;
 
         _postRepositoryMock
-            .Setup(x => x.DeletePostFromDb(idPost))
+            .Setup(x => x.DeletePostFromDb(idPost, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -1045,7 +1055,7 @@ public class PostControllerTests
         };
         
         _postRepositoryMock
-            .Setup(x => x.DeleteTagFromPost(idPost, idTag))
+            .Setup(x => x.DeleteTagFromPost(idPost, idTag, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedPost);
 
         //Act
@@ -1072,7 +1082,7 @@ public class PostControllerTests
         DeleteTagDto? nullValue = null;
 
         _postRepositoryMock
-            .Setup(x => x.DeleteTagFromPost(idPost, idTag))
+            .Setup(x => x.DeleteTagFromPost(idPost, idTag, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act

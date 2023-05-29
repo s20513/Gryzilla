@@ -1,7 +1,9 @@
-﻿using Gryzilla_App.DTOs.Requests.GroupUserMessage;
+﻿using System.Security.Claims;
+using Gryzilla_App.DTOs.Requests.GroupUserMessage;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.GroupUserMessage;
 
@@ -9,6 +11,7 @@ public class GroupUserMessageRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly GroupUserMessageDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public GroupUserMessageRepositoryTests()
     {
@@ -16,6 +19,14 @@ public class GroupUserMessageRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new GroupUserMessageDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
     
     private async Task AddTestDataWithOneGroup()
@@ -117,7 +128,7 @@ public class GroupUserMessageRepositoryTests
         var idMessage = 1;
         
         //Act
-        var res = await _repository.DeleteMessage(idMessage);
+        var res = await _repository.DeleteMessage(idMessage, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -135,7 +146,7 @@ public class GroupUserMessageRepositoryTests
         var idMessage = 1;
         
         //Act
-        var res = await _repository.DeleteMessage(idMessage);
+        var res = await _repository.DeleteMessage(idMessage, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -155,7 +166,7 @@ public class GroupUserMessageRepositoryTests
              Content = "testowa wiadomosc1"
         };
         //Act
-        var res = await _repository.ModifyMessage(idMessage, modifyGroupRequestDto);
+        var res = await _repository.ModifyMessage(idMessage, modifyGroupRequestDto, _mockClaimsPrincipal.Object);
         //Assert
         Assert.Null(res);
     }
@@ -177,7 +188,7 @@ public class GroupUserMessageRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyMessage(idMessage, modifyGroupRequestDto);
+        var res = await _repository.ModifyMessage(idMessage, modifyGroupRequestDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);

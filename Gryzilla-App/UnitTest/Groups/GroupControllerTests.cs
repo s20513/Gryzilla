@@ -1,4 +1,5 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.Group;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Group;
@@ -15,10 +16,19 @@ public class GroupsControllerTests
 {
     private readonly GroupsController _groupsController;
     private readonly Mock<IGroupDbRepository> _groupRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public GroupsControllerTests()
     {
         _groupsController = new GroupsController(_groupRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _groupsController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     
     [Fact]
@@ -104,7 +114,7 @@ public class GroupsControllerTests
         };
         var group = new GroupDto();
         
-        _groupRepositoryMock.Setup(x => x.ModifyGroup(id, groupRequestDto)).ReturnsAsync(group);
+        _groupRepositoryMock.Setup(x => x.ModifyGroup(id, groupRequestDto, _mockClaimsPrincipal.Object)).ReturnsAsync(group);
 
         //Act
         var actionResult = await _groupsController.ModifyGroup(id, groupRequestDto);
@@ -132,7 +142,7 @@ public class GroupsControllerTests
         };
         GroupDto? nullValue = null;
         
-        _groupRepositoryMock.Setup(x => x.ModifyGroup(id, groupRequestDto)).ReturnsAsync(nullValue);
+        _groupRepositoryMock.Setup(x => x.ModifyGroup(id, groupRequestDto, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
         var actionResult = await _groupsController.ModifyGroup(id, groupRequestDto);
@@ -157,7 +167,7 @@ public class GroupsControllerTests
         var groupRequestDto = new GroupRequestDto();
         var group = new GroupDto();
         
-        _groupRepositoryMock.Setup(x => x.ModifyGroup(id, groupRequestDto)).ReturnsAsync(group);
+        _groupRepositoryMock.Setup(x => x.ModifyGroup(id, groupRequestDto, _mockClaimsPrincipal.Object)).ReturnsAsync(group);
 
         //Act
         var actionResult = await _groupsController.ModifyGroup(id, groupRequestDto);
@@ -185,7 +195,7 @@ public class GroupsControllerTests
         };
 
         _groupRepositoryMock
-            .Setup(x => x.ModifyGroup(id, groupRequestDto))
+            .Setup(x => x.ModifyGroup(id, groupRequestDto, _mockClaimsPrincipal.Object))
             .Throws(new SameNameException("This name of group is already taken"));
 
         //Act
@@ -210,7 +220,7 @@ public class GroupsControllerTests
         var id = 1;
         var group = new GroupDto();
         
-        _groupRepositoryMock.Setup(x => x.DeleteGroup(id)).ReturnsAsync(group);
+        _groupRepositoryMock.Setup(x => x.DeleteGroup(id, _mockClaimsPrincipal.Object)).ReturnsAsync(group);
 
         //Act
         var actionResult = await _groupsController.DeleteGroup(id);
@@ -234,7 +244,7 @@ public class GroupsControllerTests
         var id = 1;
         GroupDto? nullValue = null;
         
-        _groupRepositoryMock.Setup(x => x.DeleteGroup(id)).ReturnsAsync(nullValue);
+        _groupRepositoryMock.Setup(x => x.DeleteGroup(id, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
         var actionResult = await _groupsController.DeleteGroup(id);
@@ -340,7 +350,7 @@ public class GroupsControllerTests
         var group = new GroupDto();
         
         _groupRepositoryMock
-            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto))
+            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(group);
 
         //Act
@@ -370,7 +380,7 @@ public class GroupsControllerTests
         GroupDto? nullValue = null;
         
         _groupRepositoryMock
-            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto))
+            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -397,7 +407,7 @@ public class GroupsControllerTests
         GroupDto? nullValue = null;
         
         _groupRepositoryMock
-            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto))
+            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -426,7 +436,7 @@ public class GroupsControllerTests
         };
 
         _groupRepositoryMock
-            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto))
+            .Setup(x => x.RemoveUserFromGroup(id, userToGroupDto, _mockClaimsPrincipal.Object))
             .Throws(new UserCreatorException("The creator of the group cannot be removed"));
 
         //Act
@@ -594,7 +604,7 @@ public class GroupsControllerTests
         var idGroup = 1;
         var groupDto = new GroupDto();
 
-        _groupRepositoryMock.Setup(x => x.SetGroupPhoto(file.Object, idGroup)).ReturnsAsync(groupDto);
+        _groupRepositoryMock.Setup(x => x.SetGroupPhoto(file.Object, idGroup, _mockClaimsPrincipal.Object)).ReturnsAsync(groupDto);
 
         //Act
         var actionResult = await _groupsController.SetGroupPhoto(file.Object, idGroup);

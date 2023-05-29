@@ -1,8 +1,10 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.GroupUserMessage;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.GroupUserMessageDto;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -10,12 +12,21 @@ namespace UnitTest.GroupUserMessage;
 
 public class GroupUserMessageControllerTests
 {
-    private readonly GroupUserMessageController _groupsController;
+    private readonly GroupUserMessageController _groupUserController;
     private readonly Mock<IGroupUserMessageDbRepository> _groupRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public GroupUserMessageControllerTests()
     {
-        _groupsController = new GroupUserMessageController(_groupRepositoryMock.Object);
+        _groupUserController = new GroupUserMessageController(_groupRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _groupUserController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     
     [Fact]
@@ -27,7 +38,7 @@ public class GroupUserMessageControllerTests
         _groupRepositoryMock.Setup(x => x.GetMessages(idGroup)).ReturnsAsync(messages);
 
         //Act
-        var actionResult = await _groupsController.GetMessages(idGroup);
+        var actionResult = await _groupUserController.GetMessages(idGroup);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -51,7 +62,7 @@ public class GroupUserMessageControllerTests
         _groupRepositoryMock.Setup(x => x.GetMessages(idGroup)).ReturnsAsync(messages);
 
         //Act
-        var actionResult = await _groupsController.GetMessages(idGroup);
+        var actionResult = await _groupUserController.GetMessages(idGroup);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -78,10 +89,10 @@ public class GroupUserMessageControllerTests
         
         var message = new GroupUserMessageDto();
         
-        _groupRepositoryMock.Setup(x => x.ModifyMessage(idMessage, messageRequestDto)).ReturnsAsync(message);
+        _groupRepositoryMock.Setup(x => x.ModifyMessage(idMessage, messageRequestDto, _mockClaimsPrincipal.Object)).ReturnsAsync(message);
 
         //Act
-        var actionResult = await _groupsController.ModifyMessage(idMessage, messageRequestDto);
+        var actionResult = await _groupUserController.ModifyMessage(idMessage, messageRequestDto);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -108,10 +119,10 @@ public class GroupUserMessageControllerTests
         
         GroupUserMessageDto? nullValue = null;
         
-        _groupRepositoryMock.Setup(x => x.ModifyMessage(idMessage, messageRequestDto)).ReturnsAsync(nullValue);
+        _groupRepositoryMock.Setup(x => x.ModifyMessage(idMessage, messageRequestDto, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _groupsController.ModifyMessage(idMessage, messageRequestDto);
+        var actionResult = await _groupUserController.ModifyMessage(idMessage, messageRequestDto);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -137,10 +148,10 @@ public class GroupUserMessageControllerTests
         };
         var message = new GroupUserMessageDto();
         
-        _groupRepositoryMock.Setup(x => x.ModifyMessage(idMessage, messageRequestDto)).ReturnsAsync(message);
+        _groupRepositoryMock.Setup(x => x.ModifyMessage(idMessage, messageRequestDto, _mockClaimsPrincipal.Object)).ReturnsAsync(message);
 
         //Act
-        var actionResult = await _groupsController.ModifyMessage(idMessage, messageRequestDto);
+        var actionResult = await _groupUserController.ModifyMessage(idMessage, messageRequestDto);
 
         
         //Assert
@@ -164,10 +175,10 @@ public class GroupUserMessageControllerTests
         
         var message = new GroupUserMessageDto();
         
-        _groupRepositoryMock.Setup(x => x.DeleteMessage(idMessage)).ReturnsAsync(message);
+        _groupRepositoryMock.Setup(x => x.DeleteMessage(idMessage, _mockClaimsPrincipal.Object)).ReturnsAsync(message);
 
         //Act
-        var actionResult = await _groupsController.DeleteMessage(idMessage);
+        var actionResult = await _groupUserController.DeleteMessage(idMessage);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -188,10 +199,10 @@ public class GroupUserMessageControllerTests
         var idMessage = 1;
         GroupUserMessageDto? nullValue = null;
         
-        _groupRepositoryMock.Setup(x => x.DeleteMessage(idMessage)).ReturnsAsync(nullValue);
+        _groupRepositoryMock.Setup(x => x.DeleteMessage(idMessage, _mockClaimsPrincipal.Object)).ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _groupsController.DeleteMessage(idMessage);
+        var actionResult = await _groupUserController.DeleteMessage(idMessage);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;
@@ -217,7 +228,7 @@ public class GroupUserMessageControllerTests
             .ReturnsAsync(message);
 
         //Act
-        var actionResult = await _groupsController.CreateNewMessage(newGroupUserMessageDto);
+        var actionResult = await _groupUserController.CreateNewMessage(newGroupUserMessageDto);
         
         //Assert
         var result = actionResult as OkObjectResult;
@@ -243,7 +254,7 @@ public class GroupUserMessageControllerTests
             .ReturnsAsync(nullValue);
 
         //Act
-        var actionResult = await _groupsController.CreateNewMessage(newGroupUserMessageDto);
+        var actionResult = await _groupUserController.CreateNewMessage(newGroupUserMessageDto);
         
         //Assert
         var result = actionResult as NotFoundObjectResult;

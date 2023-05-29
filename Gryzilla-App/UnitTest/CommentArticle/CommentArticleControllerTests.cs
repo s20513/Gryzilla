@@ -1,8 +1,10 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.ArticleComment;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.ArticleComment;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -12,10 +14,19 @@ public class CommentArticleControllerTests
 {
     private readonly CommentArticleController _commentArticleController;
     private readonly Mock<ICommentArticleDbRepository> _commentArticleRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public CommentArticleControllerTests()
     {
         _commentArticleController = new CommentArticleController(_commentArticleRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _commentArticleController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     
     [Fact]
@@ -82,7 +93,7 @@ public class CommentArticleControllerTests
         var returnedComment = new ArticleCommentDto();
         
         _commentArticleRepositoryMock
-            .Setup(x => x.ModifyArticleCommentFromDb(putArticleCommentDto, id))
+            .Setup(x => x.ModifyArticleCommentFromDb(putArticleCommentDto, id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -112,7 +123,7 @@ public class CommentArticleControllerTests
         ArticleCommentDto? nullValue = null;
         
         _commentArticleRepositoryMock
-            .Setup(x => x.ModifyArticleCommentFromDb(putArticleCommentDto, id))
+            .Setup(x => x.ModifyArticleCommentFromDb(putArticleCommentDto, id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -139,7 +150,7 @@ public class CommentArticleControllerTests
         ArticleCommentDto? nullValue = null;
         
         _commentArticleRepositoryMock
-            .Setup(x => x.ModifyArticleCommentFromDb(putArticleCommentDto, id))
+            .Setup(x => x.ModifyArticleCommentFromDb(putArticleCommentDto, id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act
@@ -165,7 +176,7 @@ public class CommentArticleControllerTests
         var returnedComment = new ArticleCommentDto();
         
         _commentArticleRepositoryMock
-            .Setup(x => x.DeleteArticleCommentFromDb(id))
+            .Setup(x => x.DeleteArticleCommentFromDb(id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(returnedComment);
 
         //Act
@@ -191,7 +202,7 @@ public class CommentArticleControllerTests
         ArticleCommentDto? nullValue = null;
         
         _commentArticleRepositoryMock
-            .Setup(x => x.DeleteArticleCommentFromDb(id))
+            .Setup(x => x.DeleteArticleCommentFromDb(id, _mockClaimsPrincipal.Object))
             .ReturnsAsync(nullValue);
 
         //Act

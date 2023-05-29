@@ -1,7 +1,9 @@
-﻿using Gryzilla_App;
+﻿using System.Security.Claims;
+using Gryzilla_App;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.LikesArticle;
 
@@ -9,6 +11,7 @@ public class LikesArticleRepositoryTest
 {
     private readonly GryzillaContext _context;
     private readonly LikesArticleDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public  LikesArticleRepositoryTest()
     {
@@ -16,6 +19,14 @@ public class LikesArticleRepositoryTest
         
         _context = new GryzillaContext(options, true);
         _repository = new LikesArticleDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
     
     private async Task AddTestDataWithOneLike()
@@ -125,7 +136,7 @@ public class LikesArticleRepositoryTest
         await _context.SaveChangesAsync();
         
         //Act
-        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle);
+        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -144,7 +155,7 @@ public class LikesArticleRepositoryTest
         var idArticle = 1;
         
         //Act
-        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle);
+        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -161,7 +172,7 @@ public class LikesArticleRepositoryTest
         var idArticle = 1;
         
         //Act
-        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle);
+        var res = await _repository.DeleteLikeFromArticle(idUser, idArticle, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);

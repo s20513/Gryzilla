@@ -1,8 +1,10 @@
-﻿using Gryzilla_App.Controllers;
+﻿using System.Security.Claims;
+using Gryzilla_App.Controllers;
 using Gryzilla_App.DTOs.Requests.Link;
 using Gryzilla_App.DTOs.Responses;
 using Gryzilla_App.DTOs.Responses.Link;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -12,10 +14,19 @@ public class LinkControllerTests
 {
     private readonly LinkController _linkController;
     private readonly Mock<ILinkDbRepository> _linkDbRepositoryMock = new();
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public LinkControllerTests()
     {
         _linkController = new LinkController(_linkDbRepositoryMock.Object);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(new List<Claim>());
+
+        _linkController.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext { User = _mockClaimsPrincipal.Object }
+        };
     }
     
     [Fact]
@@ -31,7 +42,7 @@ public class LinkControllerTests
         var info = "Link changed";
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkSteam(linkDto))
+            .Setup(x => x.PutLinkSteam(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -63,7 +74,7 @@ public class LinkControllerTests
         };
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkSteam(linkDto))
+            .Setup(x => x.PutLinkSteam(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -94,7 +105,7 @@ public class LinkControllerTests
         var info = "Link changed";
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkDiscord(linkDto))
+            .Setup(x => x.PutLinkDiscord(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -125,7 +136,7 @@ public class LinkControllerTests
         };
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkDiscord(linkDto))
+            .Setup(x => x.PutLinkDiscord(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -156,7 +167,7 @@ public class LinkControllerTests
         var info = "Link changed";
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkXbox(linkDto))
+            .Setup(x => x.PutLinkXbox(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -188,7 +199,7 @@ public class LinkControllerTests
         };
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkXbox(linkDto))
+            .Setup(x => x.PutLinkXbox(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -218,7 +229,7 @@ public class LinkControllerTests
         var info = "Link changed";
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkPs(linkDto))
+            .Setup(x => x.PutLinkPs(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -250,7 +261,7 @@ public class LinkControllerTests
         };
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkPs(linkDto))
+            .Setup(x => x.PutLinkPs(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -281,7 +292,7 @@ public class LinkControllerTests
         var info = "Link changed";
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkEpic(linkDto))
+            .Setup(x => x.PutLinkEpic(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -313,7 +324,7 @@ public class LinkControllerTests
         };
         
         _linkDbRepositoryMock
-            .Setup(x => x.PutLinkEpic(linkDto))
+            .Setup(x => x.PutLinkEpic(linkDto, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -337,7 +348,7 @@ public class LinkControllerTests
         var info = "Link removed";
 
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkDiscord(idUser))
+            .Setup(x => x.DeleteLinkDiscord(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -364,7 +375,7 @@ public class LinkControllerTests
         var info = "User doesn't exist";
         
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkDiscord(idUser))
+            .Setup(x => x.DeleteLinkDiscord(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -388,7 +399,7 @@ public class LinkControllerTests
         var info = "Link removed";
 
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkSteam(idUser))
+            .Setup(x => x.DeleteLinkSteam(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -415,7 +426,7 @@ public class LinkControllerTests
         var info = "User doesn't exist";
         
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkSteam(idUser))
+            .Setup(x => x.DeleteLinkSteam(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -439,7 +450,7 @@ public class LinkControllerTests
         var info = "Link removed";
 
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkEpic(idUser))
+            .Setup(x => x.DeleteLinkEpic(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -466,7 +477,7 @@ public class LinkControllerTests
         var info = "User doesn't exist";
         
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkEpic(idUser))
+            .Setup(x => x.DeleteLinkEpic(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -491,7 +502,7 @@ public class LinkControllerTests
         var info = "Link removed";
 
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkXbox(idUser))
+            .Setup(x => x.DeleteLinkXbox(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -518,7 +529,7 @@ public class LinkControllerTests
         var info = "User doesn't exist";
         
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkXbox(idUser))
+            .Setup(x => x.DeleteLinkXbox(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act
@@ -542,7 +553,7 @@ public class LinkControllerTests
         var info = "Link removed";
 
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkPs(idUser))
+            .Setup(x => x.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(info);
 
         //Act
@@ -569,7 +580,7 @@ public class LinkControllerTests
         var info = "User doesn't exist";
         
         _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkPs(idUser))
+            .Setup(x => x.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object))
             .ReturnsAsync(stringResult);
 
         //Act

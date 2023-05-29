@@ -1,7 +1,9 @@
-﻿using Gryzilla_App;
+﻿using System.Security.Claims;
+using Gryzilla_App;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.LikesPost;
 
@@ -9,6 +11,7 @@ public class LikesPostRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly LikesPostDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public  LikesPostRepositoryTests()
     {
@@ -16,6 +19,14 @@ public class LikesPostRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new LikesPostDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
     
     private async Task AddTestDataWithOneLike()
@@ -124,7 +135,7 @@ public class LikesPostRepositoryTests
         await _context.SaveChangesAsync();
         
         //Act
-        var res = await _repository.DeleteLikeFromPost(idUser, idPost);
+        var res = await _repository.DeleteLikeFromPost(idUser, idPost, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -143,7 +154,7 @@ public class LikesPostRepositoryTests
         var idPost = 1;
         
         //Act
-        var res = await _repository.DeleteLikeFromPost(idUser, idPost);
+        var res = await _repository.DeleteLikeFromPost(idUser, idPost, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -160,7 +171,7 @@ public class LikesPostRepositoryTests
         var idPost = 1;
         
         //Act
-        var res = await _repository.DeleteLikeFromPost(idUser, idPost);
+        var res = await _repository.DeleteLikeFromPost(idUser, idPost, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);

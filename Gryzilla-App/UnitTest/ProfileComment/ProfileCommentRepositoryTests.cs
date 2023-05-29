@@ -1,8 +1,10 @@
-﻿using Gryzilla_App;
+﻿using System.Security.Claims;
+using Gryzilla_App;
 using Gryzilla_App.DTOs.Requests.ProfileComment;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace UnitTest.ProfileComment;
 
@@ -10,6 +12,7 @@ public class ProfileCommentRepositoryTests
 {
     private readonly GryzillaContext _context;
     private readonly ProfileCommentDbRepository _repository;
+    private readonly Mock<ClaimsPrincipal> _mockClaimsPrincipal;
 
     public ProfileCommentRepositoryTests()
     {
@@ -17,6 +20,14 @@ public class ProfileCommentRepositoryTests
         
         _context = new GryzillaContext(options, true);
         _repository = new ProfileCommentDbRepository(_context);
+        
+        _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "1"),
+            new(ClaimTypes.Role, "User"),
+        };
+        _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
     }
 
     private async Task AddTestDataWithManyUser()
@@ -164,7 +175,7 @@ public class ProfileCommentRepositoryTests
         var idProfileComment = 1;
         
         //Act
-        var res = await _repository.DeleteProfileCommentFromDb(idProfileComment);
+        var res = await _repository.DeleteProfileCommentFromDb(idProfileComment, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
@@ -182,7 +193,7 @@ public class ProfileCommentRepositoryTests
         var idProfileComment = 1;
         
         //Act
-        var res = await _repository.DeleteProfileCommentFromDb(idProfileComment);
+        var res = await _repository.DeleteProfileCommentFromDb(idProfileComment, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -202,7 +213,7 @@ public class ProfileCommentRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileCommentRequestDto);
+        var res = await _repository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileCommentRequestDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.Null(res);
@@ -224,7 +235,7 @@ public class ProfileCommentRepositoryTests
         };
         
         //Act
-        var res = await _repository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileCommentRequestDto);
+        var res = await _repository.ModifyProfileCommentFromDb(idProfileComment, modifyProfileCommentRequestDto, _mockClaimsPrincipal.Object);
         
         //Assert
         Assert.NotNull(res);
