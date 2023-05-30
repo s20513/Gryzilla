@@ -418,6 +418,8 @@ public class UserDbRepository : IUserDbRepository
     {
         var hash = SHA256.Create();
 
+        var t = _configuration["JWT:Salt"];
+
         var passwordBytes = Encoding.Default.GetBytes(password + _configuration["JWT:Salt"]);
 
         var hashedPassword = hash.ComputeHash(passwordBytes);

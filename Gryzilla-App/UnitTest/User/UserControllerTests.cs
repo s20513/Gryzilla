@@ -574,4 +574,94 @@ public class UserControllerTests
         if (resultValue is null) return;
         Assert.Equal(user, resultValue);
     }
+    
+    [Fact]
+    public async void RefreshToken_Returns_Forbid()
+    {
+        //Arrange
+        var refreshTokenDto = new RefreshTokenDto();
+        TokenResponseDto tokenResponseDto = null;
+        
+        _userRepositoryMock
+            .Setup(x => x.RefreshToken(refreshTokenDto))
+            .ReturnsAsync(tokenResponseDto);
+        
+        //Act
+        var actionResult = await _usersController.RefreshToken(refreshTokenDto);
+        
+        //Assert
+        var result = actionResult as ForbidResult;
+        Assert.NotNull(result);
+    }
+    
+    [Fact]
+    public async void RefreshToken_Returns_Ok()
+    {
+        //Arrange
+        var refreshTokenDto = new RefreshTokenDto();
+        var tokenResponseDto = new TokenResponseDto();
+        
+        _userRepositoryMock
+            .Setup(x => x.RefreshToken(refreshTokenDto))
+            .ReturnsAsync(tokenResponseDto);
+        
+        //Act
+        var actionResult = await _usersController.RefreshToken(refreshTokenDto);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+        
+        if (result is null) return;
+        var resultValue = result.Value as TokenResponseDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(tokenResponseDto, resultValue);
+    }
+    
+    [Fact]
+    public async void Login_Returns_Forbid()
+    {
+        //Arrange
+        var loginRequestDto = new LoginRequestDto();
+        TokenResponseDto tokenResponseDto = null;
+        
+        _userRepositoryMock
+            .Setup(x => x.Login(loginRequestDto))
+            .ReturnsAsync(tokenResponseDto);
+        
+        //Act
+        var actionResult = await _usersController.Login(loginRequestDto);
+        
+        //Assert
+        var result = actionResult as ForbidResult;
+        Assert.NotNull(result);
+    }
+    
+    [Fact]
+    public async void Login_Returns_Ok()
+    {
+        //Arrange
+        var loginRequestDto = new LoginRequestDto();
+        var tokenResponseDto = new TokenResponseDto();
+        
+        _userRepositoryMock
+            .Setup(x => x.Login(loginRequestDto))
+            .ReturnsAsync(tokenResponseDto);
+        
+        //Act
+        var actionResult = await _usersController.Login(loginRequestDto);
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+        
+        if (result is null) return;
+        var resultValue = result.Value as TokenResponseDto;
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(tokenResponseDto, resultValue);
+    }
 }

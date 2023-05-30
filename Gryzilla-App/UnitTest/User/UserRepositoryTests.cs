@@ -25,7 +25,7 @@ public class UserRepositoryTests
         configuration["JWT:Key"] = "9fXc7R2GhJ1tLz3Q";
 
         _context = new GryzillaContext(options, true);
-        _repository = new UserDbRepository(_context, new ConfigurationManager());
+        _repository = new UserDbRepository(_context, configuration);
         
         _mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
         var claims = new List<Claim>
@@ -75,7 +75,9 @@ public class UserRepositoryTests
             Nick = "Nick1",
             Password = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
             Email = "email1",
-            CreatedAt = DateTime.Today
+            CreatedAt = DateTime.Today,
+            RefreshToken = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            TokenExpire = new DateTime(3000, 1, 1)
         });
         await _context.SaveChangesAsync();
     }
@@ -631,13 +633,115 @@ public class UserRepositoryTests
 
         await AddTestDataWithOneUser();
         
-        CheckNickDto checkNickDto = new CheckNickDto
+        var checkNickDto = new CheckNickDto
         {
             Nick = "Nick1"
         };
 
         //Act
         var res = await _repository.ExistUserNick(checkNickDto.Nick);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
+    
+    [Fact]
+    public async Task Login_WithNotExistingUser_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var loginRequestDto = new LoginRequestDto
+        {
+            Nick = "IDontExist"
+        };
+
+        //Act
+        var res = await _repository.Login(loginRequestDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task Login_WithIncorrectPassword_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var loginRequestDto = new LoginRequestDto
+        {
+            Nick = "Nick1",
+            Password = "WrongPassword"
+        };
+
+        //Act
+        var res = await _repository.Login(loginRequestDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task Login_Returns_TokenResponseDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var loginRequestDto = new LoginRequestDto
+        {
+            Nick = "Nick1",
+            Password = "123"
+        };
+
+        //Act
+        var res = await _repository.Login(loginRequestDto);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
+    
+    [Fact]
+    public async Task RefreshToken_Returns_Null()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var refreshTokenDto = new RefreshTokenDto
+        {
+            RefreshToken = "NotExistingRefreshToken"
+        };
+
+        //Act
+        var res = await _repository.RefreshToken(refreshTokenDto);
+        
+        //Assert
+        Assert.Null(res);
+    }
+    
+    [Fact]
+    public async Task RefreshToken_Returns_TokenResponseDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+
+        await AddTestDataWithOneUser();
+        
+        var refreshTokenDto = new RefreshTokenDto
+        {
+            RefreshToken = "11111111-1111-1111-1111-111111111111"
+        };
+
+        //Act
+        var res = await _repository.RefreshToken(refreshTokenDto);
         
         //Assert
         Assert.NotNull(res);
