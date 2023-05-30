@@ -70,7 +70,7 @@ public class LikesArticleDbRepository : ILikesArticleDbRepository
         var user = await GetUser(idUser);
         var article = await GetArticle(idArticle);
         
-        if (article is null || user is null || ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
+        if (article is null || user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return "Article or user doesn't exist";
         }

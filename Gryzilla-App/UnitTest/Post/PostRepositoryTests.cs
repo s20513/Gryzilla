@@ -30,6 +30,9 @@ public class PostRepositoryTests
             new(ClaimTypes.Role, "User"),
         };
         _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
+        _mockClaimsPrincipal
+            .Setup(x => x.FindFirst(It.IsAny<string>()))
+            .Returns<string>(claimType => claims.FirstOrDefault(c => c.Type == claimType));
     }
     
     private async Task AddTestDataToDb()

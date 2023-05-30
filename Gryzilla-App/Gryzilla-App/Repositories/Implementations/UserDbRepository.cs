@@ -285,7 +285,7 @@ public class UserDbRepository : IUserDbRepository
             .Where(x => x.IdUser == idUser)
             .SingleOrDefaultAsync();
 
-        if (user is null || ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
+        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             return null;
         }

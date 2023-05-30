@@ -31,6 +31,9 @@ public class GroupRepositoryTests
             new(ClaimTypes.Role, "User"),
         };
         _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
+        _mockClaimsPrincipal
+            .Setup(x => x.FindFirst(It.IsAny<string>()))
+            .Returns<string>(claimType => claims.FirstOrDefault(c => c.Type == claimType));
     }
 
     private async Task AddPhotoToGroup(int idGroup)
@@ -228,7 +231,7 @@ public class GroupRepositoryTests
 
         await AddTestDataWithManyGroup();
 
-        var idGroup = 1;
+        var idGroup = 2;
         
         //Act
         var res = await _repository.DeleteGroup(idGroup, _mockClaimsPrincipal.Object);
@@ -475,9 +478,20 @@ public class GroupRepositoryTests
             IdUser = 2
         }; 
         
+        var mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, "2"),
+            new(ClaimTypes.Role, "User"),
+        };
+        mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
+        mockClaimsPrincipal
+            .Setup(x => x.FindFirst(It.IsAny<string>()))
+            .Returns<string>(claimType => claims.FirstOrDefault(c => c.Type == claimType));
+        
         //Act
         //Assert
-        await Assert.ThrowsAsync<UserCreatorException>(() => _repository.RemoveUserFromGroup(idGroup, userToGroupDto, _mockClaimsPrincipal.Object));
+        await Assert.ThrowsAsync<UserCreatorException>(() => _repository.RemoveUserFromGroup(idGroup, userToGroupDto, mockClaimsPrincipal.Object));
     }
     
     [Fact]

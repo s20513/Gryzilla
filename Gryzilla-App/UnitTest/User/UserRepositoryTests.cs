@@ -22,9 +22,8 @@ public class UserRepositoryTests
     {
         var options = new DbContextOptions<GryzillaContext>();
         var configuration = new ConfigurationManager();
-        configuration["JWT:Key"] = "3Zd75xqq5HtGPsjbVanrxgFPZG5FOnNDXmGXW0F7Q7Wng9vT3bIjOSj5M9KyZweyFCzufpUt7JZw0cdF";
-        //to trzeba jakoś lepiej otentegować
-        
+        configuration["JWT:Key"] = "9fXc7R2GhJ1tLz3Q";
+
         _context = new GryzillaContext(options, true);
         _repository = new UserDbRepository(_context, new ConfigurationManager());
         
@@ -35,6 +34,9 @@ public class UserRepositoryTests
             new(ClaimTypes.Role, "User"),
         };
         _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
+        _mockClaimsPrincipal
+            .Setup(x => x.FindFirst(It.IsAny<string>()))
+            .Returns<string>(claimType => claims.FirstOrDefault(c => c.Type == claimType));
     }
 
     private async Task AddTestDataWithOneUser()

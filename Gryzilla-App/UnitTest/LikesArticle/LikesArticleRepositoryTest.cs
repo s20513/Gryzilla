@@ -27,6 +27,9 @@ public class LikesArticleRepositoryTest
             new(ClaimTypes.Role, "User"),
         };
         _mockClaimsPrincipal.Setup(x => x.Claims).Returns(claims);
+        _mockClaimsPrincipal
+            .Setup(x => x.FindFirst(It.IsAny<string>()))
+            .Returns<string>(claimType => claims.FirstOrDefault(c => c.Type == claimType));
     }
     
     private async Task AddTestDataWithOneLike()
@@ -140,7 +143,7 @@ public class LikesArticleRepositoryTest
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Deleted like");
+        Assert.True(res == "Deleted like");
     }
     
     [Fact]
@@ -159,7 +162,7 @@ public class LikesArticleRepositoryTest
         
         //Assert
         Assert.NotNull(res);
-        Assert.True(res.ToString() == "Like has not been assigned");
+        Assert.True(res == "Like has not been assigned");
     }
     
     [Fact]
