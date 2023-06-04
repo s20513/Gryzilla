@@ -477,7 +477,7 @@ public class UserControllerTests
         var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
         
         //Assert
-        Assert.IsType<NotFoundResult>(actionResult);
+        Assert.IsType<NotFoundObjectResult>(actionResult);
     }
     
     [Fact]
@@ -494,7 +494,7 @@ public class UserControllerTests
         var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
         
         //Assert
-        Assert.IsType<BadRequestResult>(actionResult);
+        Assert.IsType<BadRequestObjectResult>(actionResult);
     }
     
     [Fact]
@@ -511,7 +511,7 @@ public class UserControllerTests
         var actionResult = await _usersController.ChangeUserPassword(changePasswordDto, idUser);
         
         //Assert
-        Assert.IsType<OkResult>(actionResult);
+        Assert.IsType<OkObjectResult>(actionResult);
     }
     
     [Fact]
@@ -528,7 +528,7 @@ public class UserControllerTests
         var actionResult = await _usersController.ChangeUserPassword(changePasswordShortDto, idUser);
         
         //Assert
-        Assert.IsType<NotFoundResult>(actionResult);
+        Assert.IsType<NotFoundObjectResult>(actionResult);
     }
     
     [Fact]
@@ -545,7 +545,7 @@ public class UserControllerTests
         var actionResult = await _usersController.ChangeUserPassword(changePasswordShortDto, idUser);
         
         //Assert
-        Assert.IsType<OkResult>(actionResult);
+        Assert.IsType<OkObjectResult>(actionResult);
     }
     
     [Fact]
