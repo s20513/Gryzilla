@@ -181,7 +181,6 @@ public class UserRepositoryTests
             IdUser = 1,
             Nick = "Poziomka",
             Email = "email@gmail.com",
-            Password = "2222",
             PhoneNumber = "14141515"
         };
         //Act
@@ -208,7 +207,6 @@ public class UserRepositoryTests
             IdUser = 1,
             Nick = "Nick2",
             Email = "email@gmail.com",
-            Password = "2222",
             PhoneNumber = "14141515"
         };
         
@@ -229,7 +227,6 @@ public class UserRepositoryTests
             IdUser = 1,
             Nick = "Poziomka",
             Email = "email@gmail.com",
-            Password = "2222",
             PhoneNumber = "14141515"
         };
         

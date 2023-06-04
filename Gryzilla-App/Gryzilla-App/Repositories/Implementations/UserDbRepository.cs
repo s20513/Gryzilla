@@ -93,7 +93,6 @@ public class UserDbRepository : IUserDbRepository
         if (user is not null && ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
         {
             user.Email       = putUserDto.Email;
-            user.Password    = putUserDto.Password;
             user.Nick        = putUserDto.Nick;
             user.PhoneNumber = putUserDto.PhoneNumber;
             
