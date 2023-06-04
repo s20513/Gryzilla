@@ -12,7 +12,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var includeSwaggerInPublish = true;
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy  =>
@@ -20,7 +20,18 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("http://localhost:3000",
                 "https://localhost:3000", "http://localhost");
         });
+});*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
 });
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
