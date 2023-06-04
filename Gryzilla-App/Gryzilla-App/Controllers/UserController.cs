@@ -229,9 +229,9 @@ public class UserController : Controller
 
         return res switch
         {
-            null => NotFound(),
-            false => BadRequest(),
-            _ => Ok()
+            null => NotFound("User does not exist"),
+            false => BadRequest("Old password is wrong"),
+            _ => Ok("Password changed successfully")
         };
     }
     
@@ -250,10 +250,10 @@ public class UserController : Controller
 
         if (res)
         {
-            return Ok();
+            return Ok("Password changed successfully");
         }
 
-        return NotFound();
+        return NotFound("User does not exist");
     }
     
     
