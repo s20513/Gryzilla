@@ -9,4 +9,5 @@ public interface IRankDbRepository
     
     public Task<RankDto?> ModifyRank(PutRankDto putRankDto, int idRank);
     public Task<RankDto?> DeleteRank(int idRank);
+    public Task<RankDto[]> GetRanks();
 }

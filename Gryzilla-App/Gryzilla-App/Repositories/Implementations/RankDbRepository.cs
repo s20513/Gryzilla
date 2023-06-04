@@ -113,4 +113,17 @@ public class RankDbRepository : IRankDbRepository
             Name      = rank.Name
         };
     }
+
+    public async Task<RankDto[]> GetRanks()
+    {
+        var ranks =  await _context.Ranks
+            .Select(e => new RankDto
+            {
+                IdRank    = e.IdRank,
+                RankLevel = e.RankLevel,
+                Name      = e.Name
+            }).ToArrayAsync();
+        
+        return ranks;
+    }
 }

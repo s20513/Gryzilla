@@ -107,4 +107,16 @@ public class RankController : Controller
             return BadRequest(new StringMessageDto{ Message =e.Message});
         }
     }
+    
+    /// <summary>
+    /// Get ranks
+    /// </summary>
+    /// <returns>ranks</returns>
+    [HttpGet]
+    public async Task<IActionResult> GetRanks()
+    {
+        var group = await _ranksDbRepository.GetRanks();
+
+        return Ok(group);
+    }
 }

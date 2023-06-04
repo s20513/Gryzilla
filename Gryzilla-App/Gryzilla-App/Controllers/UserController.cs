@@ -171,7 +171,7 @@ public class UserController : Controller
     /// <param name="userRank"> UserRank - user and new rank id </param>
     /// <returns> Return Status OK - User has new rank</returns>
     /// <returns> Return Status NotFound - Rank or user does not exists</returns>
-    [HttpPost("rank")]
+    [HttpPut("rank")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ChangeUserRank([FromBody] UserRank userRank)
     {
