@@ -205,7 +205,7 @@ public class UserDbRepository : IUserDbRepository
 
         var refreshToken = Guid.NewGuid();
         user.RefreshToken = refreshToken;
-        user.TokenExpire = DateTime.Now.AddMinutes(30);
+        user.TokenExpire = DateTime.Now.AddMonths(1);
 
         await _context.SaveChangesAsync();
 
@@ -233,7 +233,7 @@ public class UserDbRepository : IUserDbRepository
         
         var newRefreshToken = Guid.NewGuid();
         user.RefreshToken = newRefreshToken;
-        user.TokenExpire = DateTime.Now.AddMinutes(30);
+        user.TokenExpire = DateTime.Now.AddMonths(1);
 
         await _context.SaveChangesAsync();
 
@@ -405,7 +405,7 @@ public class UserDbRepository : IUserDbRepository
                     new(ClaimTypes.Name, user.Nick),
                     new(ClaimTypes.Role, user.IdRankNavigation.Name),
                 }),
-            Expires = DateTime.UtcNow.AddMonths(1),
+            Expires = DateTime.UtcNow.AddHours(3),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
