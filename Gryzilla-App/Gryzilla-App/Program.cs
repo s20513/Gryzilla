@@ -12,6 +12,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var includeSwaggerInPublish = true;
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
