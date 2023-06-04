@@ -293,4 +293,27 @@ public class RankControllerTests
         if (resultValue is null) return;
         Assert.Equal("Id from route and Id in body have to be same", resultValue.Message);
     }
+    
+    [Fact]
+    public async void GetRanksReturns_Ok()
+    {
+        //Arrange
+        var ranks = new RankDto[5];
+        
+        _rankRepositoryMock.Setup(x => x.GetRanks()).ReturnsAsync(ranks);
+
+        //Act
+        var actionResult = await _ranksController.GetRanks();
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as RankDto[];
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(ranks, resultValue);
+    }
 }

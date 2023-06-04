@@ -56,6 +56,13 @@ public class ReportPostDbRepository: IReportPostDbRepository
         return new ReportPostResponseDto
         {
             IdUser = newReportPostRequestDto.IdUser,
+            IdUserReported = _context.Posts
+                .Where(x=>x.IdPost ==  newReportPostRequestDto.IdPost)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.Posts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdPost ==  newReportPostRequestDto.IdPost)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdPost = newReportPostRequestDto.IdPost,
             IdReason = newReportPostRequestDto.IdReason,
             ReasonName =  _context.Reasons
@@ -88,6 +95,13 @@ public class ReportPostDbRepository: IReportPostDbRepository
         return new ReportPostResponseDto
         {
             IdUser = reportPost.IdUser,
+            IdUserReported = _context.Posts
+                .Where(x=>x.IdPost ==  reportPost.IdPost)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.Posts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdPost ==  reportPost.IdPost)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
             ReasonName =  _context.Reasons
@@ -121,6 +135,13 @@ public class ReportPostDbRepository: IReportPostDbRepository
         return new ReportPostResponseDto
         {
             IdUser = reportPost.IdUser,
+            IdUserReported = _context.Posts
+                .Where(x=>x.IdPost ==  reportPost.IdPost)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.Posts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdPost ==  reportPost.IdPost)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
             ReasonName =  _context.Reasons
@@ -150,6 +171,13 @@ public class ReportPostDbRepository: IReportPostDbRepository
         return new ReportPostResponseDto
         {
             IdUser = reportPost.IdUser,
+            IdUserReported = _context.Posts
+                .Where(x=>x.IdPost ==  reportPost.IdPost)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.Posts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdPost ==  reportPost.IdPost)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdPost = reportPost.IdPost,
             IdReason = reportPost.IdReason,
             ReasonName =  _context.Reasons
@@ -169,6 +197,13 @@ public class ReportPostDbRepository: IReportPostDbRepository
             .Select(e => new ReportPostResponseDto
             {
                 IdUser = e.IdUser,
+                IdUserReported = _context.Posts
+                    .Where(x=>x.IdPost ==  e.IdPost)
+                    .Select(x=>x.IdUser).SingleOrDefault(),
+                NickReported  = _context.Posts
+                    .Include(x=>x.IdUserNavigation)
+                    .Where(x=>x.IdPost ==  e.IdPost)
+                    .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
                 IdPost = e.IdPost,
                 IdReason = e.IdReason,
                 ReasonName =  _context.Reasons

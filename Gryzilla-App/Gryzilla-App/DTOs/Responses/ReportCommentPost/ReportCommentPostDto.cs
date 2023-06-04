@@ -3,6 +3,8 @@
 public class ReportCommentPostDto
 {
     public int IdUser { get; set; }
+    public string? NickReported { get; set; }
+    public int IdUserReported { get; set; }
     
     public int IdComment{ get; set; }
     

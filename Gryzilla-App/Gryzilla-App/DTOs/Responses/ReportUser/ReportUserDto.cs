@@ -6,6 +6,7 @@ public class ReportUserDto
     public int IdUserReported { get; set; }
     
     public int IdUser{ get; set; }
+    public string? NickReportd { get; set; }
     
     public int IdReason { get; set; }
     public string? ReasonName { get; set; }

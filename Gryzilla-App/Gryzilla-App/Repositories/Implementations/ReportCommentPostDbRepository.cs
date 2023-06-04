@@ -62,6 +62,13 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
         return new ReportCommentPostDto
         {
             IdUser      = newReportCommentDto.IdUser,
+            IdUserReported = _context.CommentPosts
+                .Where(x=>x.IdComment== newReportCommentDto.IdComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentPosts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdComment == newReportCommentDto.IdComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdComment   = newReportCommentDto.IdComment,
             IdReason    = newReportCommentDto.IdReason,
             IdPost      =  _context.CommentPosts
@@ -119,6 +126,13 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
         return new ReportCommentPostDto
         {
             IdUser      = deleteReportCommentDto.IdUser,
+            IdUserReported = _context.CommentPosts
+                .Where(x=>x.IdComment == deleteReportCommentDto.IdComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentPosts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdComment == deleteReportCommentDto.IdComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdComment   = deleteReportCommentDto.IdComment,
             IdReason    = deleteReportCommentDto.IdReason,
             IdPost      =  _context.CommentPosts
@@ -177,6 +191,13 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
         return new ReportCommentPostDto
         {
             IdUser      = updateReportCommentDto.IdUser,
+            IdUserReported = _context.CommentPosts
+                .Where(x=>x.IdComment == updateReportCommentDto.IdComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentPosts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdComment == updateReportCommentDto.IdComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdComment   = updateReportCommentDto.IdComment,
             IdReason    = updateReportCommentDto.IdReason,
             IdPost   =  _context.CommentPosts
@@ -216,6 +237,13 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
         return new ReportCommentPostDto
         {
             IdUser      = reportCommentDto.IdUser,
+            IdUserReported = _context.CommentPosts
+                .Where(x=>x.IdComment ==  reportCommentDto.IdComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentPosts
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdComment ==  reportCommentDto.IdComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdComment   = reportCommentDto.IdComment,
             IdReason    = reportCommentDto.IdReason,
             IdPost   =  _context.CommentPosts
@@ -242,6 +270,13 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             .Select(e => new ReportCommentPostDto
             {
                 IdUser      = e.IdUser,
+                IdUserReported = _context.CommentPosts
+                    .Where(x=>x.IdComment ==  e.IdComment)
+                    .Select(x=>x.IdUser).SingleOrDefault(),
+                NickReported  = _context.CommentPosts
+                    .Include(x=>x.IdUserNavigation)
+                    .Where(x=>x.IdComment ==  e.IdComment)
+                    .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
                 IdComment   = e.IdComment,
                 IdReason    = e.IdReason,
                 IdPost      =  _context.CommentPosts

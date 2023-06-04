@@ -214,4 +214,22 @@ public class RankDbRepositoryTests
         //Assert
         await Assert.ThrowsAsync<ReferenceException>(() => _repository.DeleteRank(idRank));
     }
+    
+    [Fact]
+    public async Task GetGroupsFromDb_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithOneRank();
+
+        //Act
+        var res = await _repository.GetRanks();
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var ranks = await _context.Ranks.Select(e => e.IdRank).ToListAsync();
+        Assert.Equal(ranks, res.Select(e => e.IdRank));
+    }
 }

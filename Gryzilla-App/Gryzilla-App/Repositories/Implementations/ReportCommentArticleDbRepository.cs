@@ -56,7 +56,14 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
 
         return new ReportCommentArticleDto
         {
-            IdUser      = newReportCommentDto.IdUser,
+            IdUser        = newReportCommentDto.IdUser,
+            IdUserReported = _context.CommentArticles
+                .Where(x=>x.IdCommentArticle == newReportCommentDto.IdComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentArticles
+            .Include(x=>x.IdUserNavigation)
+            .Where(x=>x.IdCommentArticle == newReportCommentDto.IdComment)
+            .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdArticle   =  _context.CommentArticles
                 .Where(x => x.IdCommentArticle == newReportCommentDto.IdComment)
                 .Select(x => x.IdArticle)
@@ -110,6 +117,13 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         var newReportCommentPost = new ReportCommentArticleDto
         {
             IdUser             = deleteReportCommentDto.IdUser,
+            IdUserReported = _context.CommentArticles
+                .Where(x=>x.IdCommentArticle == deleteReportCommentDto.IdComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentArticles
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdCommentArticle == deleteReportCommentDto.IdComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdArticle          =  _context.CommentArticles
                 .Where(x => x.IdCommentArticle == deleteReportCommentDto.IdComment)
                 .Select(x => x.IdArticle)
@@ -166,6 +180,13 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         return new ReportCommentArticleDto
         {
             IdUser      = updateReportCommentDto.IdUser,
+            IdUserReported = _context.CommentArticles
+                .Where(x=>x.IdCommentArticle == reportCommentDto.IdCommentArticle)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentArticles
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdCommentArticle == reportCommentDto.IdCommentArticle)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdArticle   =  _context.CommentArticles
                 .Where(x => x.IdCommentArticle == reportCommentDto.IdCommentArticle)
                 .Select(x => x.IdArticle)
@@ -203,6 +224,13 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
         return new ReportCommentArticleDto
         {
             IdUser      = reportCommentDto.IdUser,
+            IdUserReported = _context.CommentArticles
+                .Where(x=>x.IdCommentArticle == reportCommentDto.IdCommentArticle)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.CommentArticles
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdCommentArticle == reportCommentDto.IdCommentArticle)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdArticle   =  _context.CommentArticles
                 .Where(x => x.IdCommentArticle == reportCommentDto.IdCommentArticle)
                 .Select(x => x.IdArticle)
@@ -225,6 +253,13 @@ public class ReportCommentArticleDbRepository:IReportCommentArticleDbRepository
             .Select(e => new ReportCommentArticleDto
             {
                 IdUser      = e.IdUser,
+                IdUserReported = _context.CommentArticles
+                    .Where(x=>x.IdCommentArticle ==  e.IdCommentArticle)
+                    .Select(x=>x.IdUser).SingleOrDefault(),
+                NickReported  = _context.CommentArticles
+                    .Include(x=>x.IdUserNavigation)
+                    .Where(x=>x.IdCommentArticle ==  e.IdCommentArticle)
+                    .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
                 IdComment   = e.IdCommentArticle,
                 IdArticle   =  _context.CommentArticles
                     .Where(x => x.IdCommentArticle == e.IdCommentArticle)

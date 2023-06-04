@@ -3,6 +3,8 @@
 public class ReportPostResponseDto
 {
     public int IdUser { get; set; }
+    public string? NickReported { get; set; }
+    public int IdUserReported { get; set; }
     
     public int IdPost{ get; set; }
     

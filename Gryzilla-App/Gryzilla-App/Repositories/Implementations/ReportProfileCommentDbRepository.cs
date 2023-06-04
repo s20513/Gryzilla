@@ -55,6 +55,13 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         return new ReportProfileCommentResponseDto
         {
             IdUser = newReportProfileCommentRequestDto.IdUser,
+            IdUserReported = _context.ProfileComments
+                .Where(x=>x.IdProfileComment ==  newReportProfileCommentRequestDto.IdProfileComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.ProfileComments
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdProfileComment ==  newReportProfileCommentRequestDto.IdProfileComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdProfileComment = newReportProfileCommentRequestDto.IdProfileComment,
             IdReason = newReportProfileCommentRequestDto.IdReason,
             ReasonName =  _context.Reasons
@@ -87,6 +94,13 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         return new ReportProfileCommentResponseDto
         {
             IdUser = reportProfileComment.IdUser,
+            IdUserReported = _context.ProfileComments
+                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.ProfileComments
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -120,6 +134,13 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         return new ReportProfileCommentResponseDto
         {
             IdUser = reportProfileComment.IdUser,
+            IdUserReported = _context.ProfileComments
+                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.ProfileComments
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -149,6 +170,13 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         return new ReportProfileCommentResponseDto
         {
             IdUser = reportProfileComment.IdUser,
+            IdUserReported = _context.ProfileComments
+                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
+                .Select(x=>x.IdUser).SingleOrDefault(),
+            NickReported  = _context.ProfileComments
+                .Include(x=>x.IdUserNavigation)
+                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
+                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -168,6 +196,13 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
             .Select(e => new ReportProfileCommentResponseDto
             {
                 IdUser = e.IdUser,
+                IdUserReported = _context.ProfileComments
+                    .Where(x=>x.IdProfileComment ==  e.IdProfileComment)
+                    .Select(x=>x.IdUser).SingleOrDefault(),
+                NickReported  = _context.ProfileComments
+                    .Include(x=>x.IdUserNavigation)
+                    .Where(x=>x.IdProfileComment ==  e.IdProfileComment)
+                    .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
                 IdProfileComment= e.IdProfileComment,
                 IdReason = e.IdReason,
                 ReasonName =  _context.Reasons
