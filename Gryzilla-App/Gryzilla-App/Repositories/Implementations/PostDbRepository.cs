@@ -43,19 +43,9 @@ public class PostDbRepository : IPostDbRepository
             {
                 idPost = a.IdPost,
                 idUser = a.IdUser,
-                Likes = _context
-                    .Posts
-                    .Where(c => c.IdPost == a.IdPost)
-                    .SelectMany(b => b.IdUsers)
-                    .Count(),
-                CommentsNumber = _context
-                    .Posts
-                    .Where(c => c.IdPost == a.IdPost)
-                    .SelectMany(b => b.CommentPosts)
-                    .Count(),
-                CommentsDtos = _context.CommentPosts
-                    .Where(x => x.IdPost == a.IdPost)
-                    .Include(x => x.IdUserNavigation)
+                Likes = a.IdUsers.Count,
+                CommentsNumber = a.CommentPosts.Count,
+                CommentsDtos = a.CommentPosts
                     .OrderByDescending(c => c.CreatedAt)
                     .Select(x => new PostCommentDto
                     {
@@ -75,10 +65,7 @@ public class PostDbRepository : IPostDbRepository
                 Nick = a.IdUserNavigation.Nick,
                 Type = a.IdUserNavigation.PhotoType,
                 base64PhotoData = Convert.ToBase64String(a.IdUserNavigation.Photo ?? Array.Empty<byte>()),
-                Tags = _context
-                    .Posts
-                    .Where(x => x.IdPost == a.IdPost)
-                    .SelectMany(x => x.IdTags)
+                Tags = a.IdTags
                     .Select(x => x.NameTag)
                     .ToArray()
             }).ToListAsync();
@@ -135,16 +122,12 @@ public class PostDbRepository : IPostDbRepository
 
     public async Task<IEnumerable<PostDto>?> GetTopPosts()
     {
-        var allPosts = await _context
-            .Posts
-            .ToArrayAsync();
-
-        if (allPosts.Length == 0)
+        var postDtos = await GetTableSort();
+        
+        if (postDtos.Count == 0)
         {
             return null;
         }
-
-        var postDtos = await GetTableSort();
 
         var filteredPostDtos = postDtos
             .OrderByDescending(order => order.Likes)
