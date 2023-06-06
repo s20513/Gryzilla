@@ -130,17 +130,15 @@ if (app.Environment.IsDevelopment() || includeSwaggerInPublish)
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gryzilla v1"));
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
 
 //app.Urls.Add("https://192.168.0.221:1337");
 //app.Urls.Add("https://localhost:1337");
 
+app.UseCors(MyAllowSpecificOrigins);
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors(MyAllowSpecificOrigins);
 
 app.UseEndpoints(endpoints =>
 {
