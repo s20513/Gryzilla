@@ -133,6 +133,7 @@ public class UserController : Controller
     /// </summary>
     /// <param name="loginRequestDto"> LoginRequestDto - Nick and password given by user </param>
     /// <returns> Return Status OK - New token created. Return Status Forbid - given credentials are wrong</returns>
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {

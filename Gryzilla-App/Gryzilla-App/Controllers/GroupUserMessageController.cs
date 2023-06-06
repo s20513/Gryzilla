@@ -30,11 +30,6 @@ public class GroupUserMessageController : Controller
     {
         var group = await _groupUserMessageDbRepository.GetMessages(idGroup);
 
-        if (group.Length < 1)
-        {
-            return NotFound(new StringMessageDto{ Message = "There is no messages for this group" });
-        }
-        
         return Ok(group);
     }
     /// <summary>

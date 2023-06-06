@@ -51,31 +51,7 @@ public class GroupUserMessageControllerTests
         if (resultValue is null) return;
         Assert.Equal(messages, resultValue);
     }
-    
-    [Fact]
-    public async void GetMessages_Returns_Not_Found()
-    {
-        //Arrange
-        int idGroup = 1;
-        var messages = Array.Empty<GroupUserMessageDto>();
-        
-        _groupRepositoryMock.Setup(x => x.GetMessages(idGroup)).ReturnsAsync(messages);
 
-        //Act
-        var actionResult = await _groupUserController.GetMessages(idGroup);
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal("There is no messages for this group", resultValue.Message);
-    }
-    
     [Fact]
     public async void ModifyMessage_Returns_Ok()
     {

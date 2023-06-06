@@ -67,7 +67,7 @@ public class BlockedUserController: Controller
             return NotFound(new StringMessageDto{ Message = "Users does not exist" });
         }
 
-        return Ok(blockedUser);
+        return Ok(new StringMessageDto{Message = blockedUser});
     }
     
     /// <summary>
@@ -105,7 +105,7 @@ public class BlockedUserController: Controller
             return NotFound(new StringMessageDto{ Message = "Users does not exist" });
         }
 
-        return Ok(blockedUser);
+        return Ok(new BoolMessageDto{Message = blockedUser});
     }
     
 }

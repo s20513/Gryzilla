@@ -55,7 +55,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
         return new ReportUserDto
         {
             IdReason        = newReportUserDto.IdReason,
-            NickReportd     =  _context.UserData.
+            NickReported     =  _context.UserData.
                 Where(x=>x.IdUser == newReportUserDto.IdUserReported).Select(x=>x.Nick).SingleOrDefault(),
             IdUserReported  = newReportUserDto.IdUserReported,
             IdUser = newReportUserDto.IdUser,
@@ -92,7 +92,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = modifyReportUser.IdReason,
             IdUserReported  = reportUser.IdUserReported,
             IdUser = reportUser.IdUserReporting,
-            NickReportd     =  _context.UserData.
+            NickReported     =  _context.UserData.
                 Where(x=>x.IdUser == reportUser.IdUserReported).Select(x=>x.Nick).SingleOrDefault(),
             ReasonName =  _context.Reasons
                 .Where(x=>x.IdReason== modifyReportUser.IdReason)
@@ -114,7 +114,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
                 IdReason        = e.IdReason,
                 IdUserReported  = e.IdUserReported,
                 IdUser          = e.IdUserReporting,
-                NickReportd     =  _context.UserData.
+                NickReported     =  _context.UserData.
                     Where(x=>x.IdUser == e.IdUserReported).Select(x=>x.Nick).SingleOrDefault(),
                 ReasonName =  _context.Reasons
                     .Where(x=>x.IdReason== e.IdReason)
@@ -146,7 +146,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = report.IdReason,
             IdUserReported  = report.IdUserReported,
             IdUser = report.IdUserReporting,
-            NickReportd     =  _context.UserData.
+            NickReported     =  _context.UserData.
                 Where(x=>x.IdUser ==report.IdUserReported).Select(x=>x.Nick).SingleOrDefault(),
             ReasonName =  _context.Reasons
                 .Where(x=>x.IdReason== report.IdReason)
@@ -178,7 +178,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
             IdReason        = report.IdReason,
             IdUserReported  = report.IdUserReported,
             IdUser = report.IdUserReporting,
-            NickReportd     =  _context.UserData.
+            NickReported     =  _context.UserData.
                 Where(x=>x.IdUser ==report.IdUserReported).Select(x=>x.Nick).SingleOrDefault(),
             ReasonName =  _context.Reasons
                             .Where(x=>x.IdReason== report.IdReason)
