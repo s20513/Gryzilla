@@ -48,11 +48,35 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             .Include(e => e.IdRankNavigation)
             .Where(e => e.IdUser == blockedUserRequestDto.IdUserBlocked)
             .SingleOrDefaultAsync();
-        
-        
+
         if (blockedUserData is null || blockedUserData.IdRankNavigation.Name == "Admin")
         {
             return null;
+        }
+
+        var userBlock = await _context.BlockedUsers
+            .Where(e => e.IdUserBlocked == blockedUserRequestDto.IdUserBlocked)
+            .Select(e => new
+            {
+                e.IdUser,
+                Start = EF.Property<DateTime>(e, "StartTime"),
+                e.Comment
+            })
+            .SingleOrDefaultAsync();
+
+        if (userBlock is not null)
+        {
+            return new BlockedUserDto
+            {
+                IdUserBlocked = blockedUserRequestDto.IdUserBlocked,
+                Nick = blockedUserData.Nick,
+                IdRank = blockedUserData.IdRank,
+                RankName = blockedUserData.IdRankNavigation.Name,
+                IdUserBlocking = userBlock.IdUser,
+                Start = userBlock.Start,
+                End = null,
+                Comment = userBlock.Comment
+            };
         }
 
         var blockedRankId = await _context.Ranks

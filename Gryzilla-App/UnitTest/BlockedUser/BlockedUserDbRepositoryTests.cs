@@ -230,6 +230,27 @@ public class BlockedUserDbRepositoryTests
     }
     
     [Fact]
+    public async Task BlockUser_WithUserAlreadyBlocked_Returns_BlockedUserDto()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        await AddTestDataWithBlockedAndPreviousBlocked();
+
+        var blockedUserRequestDto = new BlockedUserRequestDto
+        {
+            IdUserBlocking = 1,
+            IdUserBlocked = 2,
+            Comment = "Test"
+        };
+        
+        //Act
+        var res = await _repository.BlockUser(blockedUserRequestDto);
+        
+        //Assert
+        Assert.NotNull(res);
+    }
+    
+    [Fact]
     public async Task UnlockUser_WithBlockedUserNotExisting_Returns_Null()
     {
         //Arrange
