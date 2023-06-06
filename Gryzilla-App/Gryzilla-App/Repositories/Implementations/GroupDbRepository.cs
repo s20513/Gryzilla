@@ -291,7 +291,7 @@ public class GroupDbRepository: IGroupDbRepository
         };
     }
 
-    public async Task<UserGroupDto[]?> GetUserGroups(int idUser)
+    public async Task<GroupDto[]?> GetUserGroups(int idUser)
     {
         var user = await GetUserById(idUser);
 
@@ -304,17 +304,34 @@ public class GroupDbRepository: IGroupDbRepository
                      .GroupUsers
                      .Where(x => x.IdUser == idUser)
                      .Include(e => e.IdGroupNavigation)
-                     .Select(x => new UserGroupDto
-                     { 
-                         IdGroup       = x.IdGroup,
-                         IdUserCreator = x.IdGroupNavigation.IdUserCreator,
-                         Nick          = _context.UserData
-                             .Where(e => e.IdUser == x.IdGroupNavigation.IdUserCreator)
-                             .Select(e=>e.Nick)
-                             .SingleOrDefault(),
-                         GroupName     = x.IdGroupNavigation.GroupName,
-                         Content   = x.IdGroupNavigation.Description,
-                         CreatedAt     = x.IdGroupNavigation.CreatedAt
+                     .Select(x => new GroupDto
+                     {
+                            IdGroup       = x.IdGroup,
+                            IdUserCreator = x.IdGroupNavigation.IdUserCreator,
+                            Nick          = _context.UserData
+                                .Where(e => e.IdUser == x.IdGroupNavigation.IdUserCreator)
+                                .Select(e=>e.Nick)
+                                .SingleOrDefault(),
+                            GroupName     = x.IdGroupNavigation.GroupName,
+                            Content       = x.IdGroupNavigation.Description,
+                            CreatedAt     = x.IdGroupNavigation.CreatedAt,
+                            Type          = x.IdGroupNavigation.PhotoType,
+                            base64PhotoData = Convert.ToBase64String(x.IdGroupNavigation.Photo ?? Array.Empty<byte>()),
+                            Users         = _context.Groups
+                                .Where(g => g.IdGroup == x.IdGroup)
+                                .SelectMany(g => g.GroupUsers)
+                                .Include(g => g.IdUserNavigation)
+                                .Include(g => g.IdUserNavigation.IdRankNavigation)
+                                .Select(g => new UserDto
+                                {
+                                    IdUser      = g.IdUser,
+                                    IdRank      = g.IdUserNavigation.IdRank,
+                                    Nick        = g.IdUserNavigation.Nick,
+                                    Email       = g.IdUserNavigation.Email,
+                                    PhoneNumber = g.IdUserNavigation.PhoneNumber,
+                                    CreatedAt   = g.IdUserNavigation.CreatedAt,
+                                    RankName    = g.IdUserNavigation.IdRankNavigation.Name
+                                }).ToList()
                      }).ToArrayAsync();
 
         return groups;
