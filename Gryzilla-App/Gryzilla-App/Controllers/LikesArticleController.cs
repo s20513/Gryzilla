@@ -7,7 +7,6 @@ namespace Gryzilla_App.Controllers;
 
 [ApiController]
 [Route("api/likesArticle")]
-[Authorize(Roles = "Admin, User, Moderator, Redactor")]
 
 public class LikesArticleController : Controller
 {
@@ -27,6 +26,7 @@ public class LikesArticleController : Controller
     /// NotFound if like has been assigned
     /// Ok - if created successfully
     /// </returns>
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     [HttpPost("{idUser:int}/{idArticle:int}")]
     public async Task<IActionResult> AddNewLike([FromRoute] int idUser,[FromRoute] int idArticle)
     {
@@ -50,6 +50,7 @@ public class LikesArticleController : Controller
     /// NotFound if like has not been assigned
     /// Ok - if deleted successfully
     /// </returns>
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     [HttpDelete("{idUser:int}/{idArticle:int}")]
     public async Task<IActionResult> DeleteLike([FromRoute] int idUser,[FromRoute] int idArticle)
     {
@@ -72,6 +73,7 @@ public class LikesArticleController : Controller
     /// NotFound if article or user doesn't exist
     /// return true - if exist
     /// </returns>
+    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
     [HttpGet("{idUser:int}/{idArticle:int}")]
     public async Task<IActionResult> ExistLike([FromRoute] int idUser,[FromRoute] int idArticle)
     {
