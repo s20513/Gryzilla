@@ -95,7 +95,7 @@ public class UserDbRepository : IUserDbRepository
             user.Email       = putUserDto.Email;
             user.Nick        = putUserDto.Nick;
             user.PhoneNumber = putUserDto.PhoneNumber;
-            
+            user = AddLinks(putUserDto, user);
             await _context.SaveChangesAsync();
             
             return new UserDto() {
@@ -115,6 +115,34 @@ public class UserDbRepository : IUserDbRepository
         }
 
         return null;
+    }
+
+    public UserDatum AddLinks(PutUserDto putUserDto, UserDatum user)
+    {
+        if (putUserDto.LinkSteam != "")
+        {
+            user.SteamLink = putUserDto.LinkSteam;
+        }
+
+        if (putUserDto.LinkDiscord != "")
+        {
+            user.DiscordLink = putUserDto.LinkDiscord; 
+        }
+        if (putUserDto.LinkEpic != "")
+        {
+            user.EpicLink = putUserDto.LinkEpic;    
+        }
+
+        if (putUserDto.LinkXbox != "")
+        {
+            user.XboxLink = putUserDto.LinkXbox;
+        }
+        if (putUserDto.LinkPs != "")
+        {
+            user.PsLink = putUserDto.LinkPs;
+        }
+
+        return user;
     }
     
     public async Task<UserDto?> AddUserToDb(AddUserDto addUserDto)

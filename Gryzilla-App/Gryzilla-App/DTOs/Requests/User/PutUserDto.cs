@@ -18,4 +18,20 @@ public class PutUserDto
 
     [Phone]
     public string PhoneNumber { get; set; } = null!;
+    
+    [MaxLength(100, ErrorMessage = "Max length : 100")]
+    public string? LinkDiscord { get; set; }
+    
+    [MaxLength(100, ErrorMessage = "Max length : 100")]
+    public string? LinkSteam { get; set; }
+    
+    [MaxLength(100, ErrorMessage = "Max length : 100")]
+    public string? LinkEpic { get; set; }
+    
+    [MaxLength(100, ErrorMessage = "Max length : 100")]
+    public string? LinkXbox { get; set; }
+    
+    [MaxLength(100, ErrorMessage = "Max length : 100")]
+    public string? LinkPs { get; set; }
+    
 }
