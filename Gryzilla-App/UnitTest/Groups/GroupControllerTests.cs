@@ -575,7 +575,7 @@ public class GroupsControllerTests
     {
         //Arrange
         var id = 1;
-        var groups = new UserGroupDto[5];
+        var groups = new GroupDto[5];
         
         _groupRepositoryMock
             .Setup(x => x.GetUserGroups(id))
@@ -589,7 +589,7 @@ public class GroupsControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as UserGroupDto[];
+        var resultValue = result.Value as GroupDto[];
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;

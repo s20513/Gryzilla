@@ -14,7 +14,7 @@ public interface IGroupDbRepository
     public Task<GroupDto?> RemoveUserFromGroup(int idGroup, UserToGroupDto userToGroupDto, ClaimsPrincipal userClaims);
     public Task<GroupDto?> AddUserToGroup(int idGroup, UserToGroupDto userToGroupDtoDto);
     public Task<ExistUserGroupDto> UserIsInGroup(int idGroup, int idUser);
-    public Task<UserGroupDto[]?> GetUserGroups(int idUser);
+    public Task<GroupDto[]?> GetUserGroups(int idUser);
     public Task<GroupDto?> SetGroupPhoto(IFormFile photo, int idGroup, ClaimsPrincipal userClaims);
     public Task<GroupPhotoResponseDto?> GetGroupPhoto(int idGroup);
 }
