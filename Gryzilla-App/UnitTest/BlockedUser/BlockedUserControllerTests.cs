@@ -114,11 +114,11 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as string;
+        var resultValue = result.Value as StringMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(info, resultValue);
+        Assert.Equal(info, resultValue.Message);
     }
     
     [Fact]
@@ -218,11 +218,11 @@ public class BlockedUserControllerTests
         Assert.NotNull(result);
 
         if (result is null) return;
-        var resultValue = result.Value as bool?;
+        var resultValue = result.Value as BoolMessageDto;
         Assert.NotNull(resultValue);
         
         if (resultValue is null) return;
-        Assert.Equal(blocked, resultValue);
+        Assert.Equal(blocked, resultValue.Message);
     }
     
     [Fact]
