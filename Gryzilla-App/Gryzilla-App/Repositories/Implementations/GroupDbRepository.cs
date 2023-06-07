@@ -190,6 +190,12 @@ public class GroupDbRepository: IGroupDbRepository
         {
             throw new UserCreatorException("The creator of the group cannot be removed");
         }
+
+        var groupUserMessages = await _context.GroupUserMessages
+            .Where(e => e.IdUser == userToGroupDto.IdUser)
+            .ToListAsync();
+        
+        _context.GroupUserMessages.RemoveRange(groupUserMessages);
         
         var groupUser = await _context.GroupUsers
             .Where(e => e.IdGroup == idGroup
