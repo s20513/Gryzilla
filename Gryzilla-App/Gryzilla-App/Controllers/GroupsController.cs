@@ -208,7 +208,7 @@ public class GroupsController: Controller
     /// return true - if exist
     /// </returns>
     [HttpGet("{idUser:int}/{idGroup:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
     public async Task<IActionResult>ExistUserInTheGroup([FromRoute] int idGroup, [FromRoute] int idUser)
     {
         var result = await _groupDbRepository.UserIsInGroup(idGroup, idUser);

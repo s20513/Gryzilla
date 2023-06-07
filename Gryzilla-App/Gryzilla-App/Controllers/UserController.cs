@@ -60,7 +60,7 @@ public class UserController : Controller
     /// <param name="putUserDto">Dto to store new user information</param>
     /// <returns>Return Status Ok - information about user modified correctly, return user body, Not Found - User doesn't exist</returns>
     [HttpPut("{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
     public async Task<IActionResult> ModifyUser([FromRoute] int idUser, [FromBody] PutUserDto putUserDto)
     {
         if (idUser != putUserDto.IdUser)
@@ -115,7 +115,7 @@ public class UserController : Controller
     /// <param name="idUser"> int - User Identifier </param>
     /// <returns> Return Status OK - User deleted correctly - return user body. Return Status Not Found - if user doesn't exist</returns>
     [HttpDelete("{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
     public async Task<IActionResult> DeleteUser([FromRoute] int idUser)
     {
         var user = await _userDbRepository.DeleteUserFromDb(idUser, User);
@@ -192,7 +192,7 @@ public class UserController : Controller
     /// <param name="idUser"> int - user id </param>
     /// <returns> Return Status OK - UseDto - data of the user</returns>
     [HttpPost("photo/{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
     public async Task<IActionResult> SetUserPhoto([FromForm] IFormFile file,[FromRoute] int idUser)
     {
         var res = await _userDbRepository.SetUserPhoto(file, idUser, User);
@@ -222,7 +222,7 @@ public class UserController : Controller
     /// <returns> Return Status BadRequest - Wrong old password</returns>
     /// <returns> Return Status OK - new password was set</returns>
     [HttpPut("password/{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
     public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordDto changePasswordDto, [FromRoute] int idUser)
     {
         var res = await _userDbRepository.ChangePassword(changePasswordDto, idUser, User);
