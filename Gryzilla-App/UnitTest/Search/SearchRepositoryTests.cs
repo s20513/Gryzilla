@@ -399,6 +399,31 @@ public class SearchRepositoryTests
     }
     
     [Fact]
+    public async Task GetQtyUserByNick_Returns_IEnumerable()
+    {
+        //Arrange
+        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
+        
+        await AddTestDataWithOneUser();
+        
+
+        //Act
+        var res = await _repository.GetUsersByName("Nick1");
+        
+        //Assert
+        Assert.NotNull(res);
+        
+        var users = await _context
+            .UserData
+            .Where(x=>x.Nick.ToLower().Contains("Nick1"))
+            .Select(e => e.IdUser)
+            .ToListAsync();
+
+
+        if (res != null) Assert.Equal(users, res.Select(e => e.IdUser));
+    }
+    
+    [Fact]
     public async Task GetQtyArticlesByTagFromDb_Returns_WrongNumberException()
     {
         //Arrange

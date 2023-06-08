@@ -182,6 +182,14 @@ public class SearchControllerTests
         },
         IsNext = false
     };
+    private readonly SearchUserDto _fakeUsers = new SearchUserDto
+    {
+        IdUser = 1,
+        Nick = "Name name",
+        IdRank = 1,
+        RankName = "Admin"
+    };
+    
     private readonly ArticleQtySearchDto _fakeQtyArticles = new ArticleQtySearchDto
     {
         Articles = new ArticleSearchDto []
@@ -405,6 +413,28 @@ public class SearchControllerTests
         Assert.Equal(_fakeQtyUsers, resultValue);
     }
     
+    [Fact]
+    public async void GetUsersByNick_Returns_Ok()
+    {
+        //Arrange
+        var users = new SearchUserDto[5];
+        
+        _searchRepositoryMock.Setup(x => x.GetUsersByName("nick")).ReturnsAsync(users);
+
+        //Act
+        var actionResult = await _searchController.GetUsers("nick");
+        
+        //Assert
+        var result = actionResult as OkObjectResult;
+        Assert.NotNull(result);
+
+        if (result is null) return;
+        var resultValue = result.Value as SearchUserDto[];
+        Assert.NotNull(resultValue);
+        
+        if (resultValue is null) return;
+        Assert.Equal(users, resultValue);
+    }
     
     [Fact]
     public async void GetQtyUsersByNameFromDb_Returns_WrongNumberException_Bad_Request()

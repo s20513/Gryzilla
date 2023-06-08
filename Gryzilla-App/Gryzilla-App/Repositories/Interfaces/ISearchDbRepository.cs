@@ -13,4 +13,5 @@ public interface ISearchDbRepository
     public Task<ArticleQtyDto?> GetArticlesByTagFromDb(int qtyArticles, DateTime time, string word);
     public Task<PostQtyDto?> GetPostsByTagFromDb(int qtyPosts, DateTime time,  string word);
     public Task<GroupsQtySearchDto?> GetGroupsByWordFromDb(int qtyGroups, DateTime time, string word);
+    public  Task<IEnumerable<SearchUserDto?>> GetUsersByName(string nickName);
 }

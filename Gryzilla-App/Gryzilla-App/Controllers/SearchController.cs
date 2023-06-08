@@ -5,6 +5,7 @@ using Gryzilla_App.DTOs.Responses.Posts;
 using Gryzilla_App.DTOs.Responses.User;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gryzilla_App.Controllers;
@@ -38,6 +39,21 @@ public class SearchController : Controller
         {
             return BadRequest(new StringMessageDto{ Message = e.Message});
         }
+        return Ok(users);
+    }
+    
+    /// <summary>
+    /// Get users by name
+    /// </summary>
+    /// <returns>
+    /// Return users list
+    /// </returns>
+    [HttpGet("getUsersByName")]
+    [Authorize(Roles = "Admin, Moderator")]
+    public async Task<IActionResult> GetUsers([FromQuery] string nick)
+    {
+        var users = await _searchDbRepository.GetUsersByName(nick);
+        
         return Ok(users);
     }
     

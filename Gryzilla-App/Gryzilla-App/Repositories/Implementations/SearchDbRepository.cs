@@ -62,6 +62,23 @@ public class SearchDbRepository : ISearchDbRepository
         };
     }
     
+    public async Task<IEnumerable<SearchUserDto?>> GetUsersByName(string nickName)
+    {
+        var users = await _context.UserData
+            .Where(x=>x.Nick.ToLower().Contains(nickName))
+            .Include(x => x.IdRankNavigation)
+            .Select(x => new SearchUserDto
+            {
+                IdUser      = x.IdUser,
+                Nick        = x.Nick,
+                IdRank      = x.IdRank,
+                RankName    = x.IdRankNavigation.Name
+            })
+            .ToArrayAsync();
+
+        return users;
+    }
+    
     public async Task<PostQtySearchDto?> GetPostByWordFromDb(int qtyPosts, DateTime time,string word)
     {
         var idPostsTable = new List<int>();
