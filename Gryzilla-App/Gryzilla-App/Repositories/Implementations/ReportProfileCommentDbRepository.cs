@@ -214,6 +214,6 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
                 ReportedAt = e.ReportedAt
             }).ToListAsync();
 
-        return reportProfileComments;
+        return reportProfileComments.OrderByDescending(x => x.ReportedAt);
     }
 }

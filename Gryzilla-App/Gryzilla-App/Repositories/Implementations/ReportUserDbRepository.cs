@@ -125,7 +125,7 @@ public class ReportUserDbRepository : IReportUserDbRepository
                 ReportedAt      = e.ReportedAt
             }).ToListAsync();
 
-        return reportUsers;
+        return reportUsers.OrderByDescending(x=>x.ReportedAt);
     }
 
     public async Task<ReportUserDto?> GetUserReportFromDb(int idReport)

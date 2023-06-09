@@ -215,8 +215,6 @@ public class ReportPostDbRepository: IReportPostDbRepository
                 ReportedAt = e.ReportedAt
             }).ToListAsync();
 
-        return reportPosts;
+        return reportPosts.OrderByDescending(x=>x.ReportedAt);
     }
-
-
 }

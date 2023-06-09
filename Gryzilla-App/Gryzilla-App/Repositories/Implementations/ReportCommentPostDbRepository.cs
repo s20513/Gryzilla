@@ -292,7 +292,7 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
                 ReportedAt  = e.ReportedAt
             }).ToListAsync();
 
-        return reportCommentPost;
+        return reportCommentPost.OrderByDescending(x=>x.ReportedAt);
     }
     
 }
