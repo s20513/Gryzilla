@@ -451,7 +451,7 @@ namespace Gryzilla_App.Models
                     .HasColumnName("description");
 
                 entity.Property(e => e.ReportedAt)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("reportedAt");
 
                 entity.Property(e => e.Viewed).HasColumnName("viewed");
@@ -494,7 +494,7 @@ namespace Gryzilla_App.Models
                 entity.Property(e => e.IdReason).HasColumnName("idReason");
 
                 entity.Property(e => e.ReportedAt)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("reportedAt");
 
                 entity.Property(e => e.Viewed).HasColumnName("viewed");
@@ -537,7 +537,7 @@ namespace Gryzilla_App.Models
                     .HasColumnName("description");
 
                 entity.Property(e => e.ReportedAt)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("reportedAt");
 
                 entity.Property(e => e.Viewed).HasColumnName("viewed");

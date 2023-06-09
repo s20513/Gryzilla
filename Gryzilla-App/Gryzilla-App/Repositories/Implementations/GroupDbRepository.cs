@@ -160,6 +160,12 @@ public class GroupDbRepository: IGroupDbRepository
             return null;
         }
 
+        var groupMessage = await _context.GroupUserMessages
+            .Where(x => x.IdGroup == idGroup)
+            .ToListAsync();
+        
+        _context.GroupUserMessages.RemoveRange(groupMessage);
+        
         var groupUsers = await _context.GroupUsers
             .Where(e => e.IdGroup == idGroup)
             .ToListAsync();

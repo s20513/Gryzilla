@@ -1,5 +1,4 @@
-﻿using Gryzilla_App;
-using Gryzilla_App.DTOs.Requests.ReportPost;
+﻿using Gryzilla_App.DTOs.Requests.ReportPost;
 using Gryzilla_App.Exceptions;
 using Gryzilla_App.Models;
 using Gryzilla_App.Repositories.Implementations;
@@ -95,7 +94,7 @@ public class RepostPostDbRepositoryTests
             IdPost = 1,
             IdReason = 2,
             Description = "test",
-            ReportedAt = DateTime.Now,
+            ReportedAt = DateTime.Now.AddHours(1),
             Viewed = false
         });
         await _context.SaveChangesAsync();

@@ -93,7 +93,21 @@ public class ReportProfileCommentDbRepositoryTests
             IdProfileComment= 1,
             IdReason = 2,
             Description = "test",
-            ReportedAt = DateTime.Now,
+            ReportedAt = DateTime.Now.AddHours(2),
+            Viewed = false
+        });
+        await _context.SaveChangesAsync();
+        await _context.Reasons.AddAsync(new Gryzilla_App.Models.Reason
+        {
+            ReasonName = "Test4"
+        });
+        await _context.ReportProfileComments.AddAsync(new Gryzilla_App.Models.ReportProfileComment
+        {
+            IdUser = 2,
+            IdProfileComment= 1,
+            IdReason = 3,
+            Description = "test",
+            ReportedAt = DateTime.Now.AddHours(1),
             Viewed = false
         });
         await _context.SaveChangesAsync();
