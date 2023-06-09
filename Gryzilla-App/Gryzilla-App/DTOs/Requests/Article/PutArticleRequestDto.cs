@@ -9,7 +9,7 @@ public class PutArticleRequestDto
     public int IdArticle { get; set; }
     
     [Required]
-    [MaxLength(30, ErrorMessage = "Max length : 30")]
+    [MaxLength(100, ErrorMessage = "Max length : 30")]
     public string Title { get; set; }
     
     public string Content { get; set; }
