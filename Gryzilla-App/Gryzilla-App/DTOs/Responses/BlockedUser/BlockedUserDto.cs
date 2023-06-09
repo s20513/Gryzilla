@@ -5,7 +5,7 @@ public class BlockedUserDto
     public int IdUserBlocked {get; set;}
     public string Nick {get; set;} = null!;
     public int IdRank {get; set;}
-    public string RankName {get; set;} = null!;
+    public string? RankName {get; set;} = null!;
     public int IdUserBlocking { get; set; }
     public DateTime Start { get; set; }
     public string? End { get; set; }

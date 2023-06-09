@@ -102,7 +102,8 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
             IdUserBlocked = blockedUserRequestDto.IdUserBlocked,
             Nick = blockedUserData.Nick,
             IdRank = blockedUserData.IdRank,
-            RankName = blockedUserData.IdRankNavigation.Name,
+            RankName = _context.Ranks
+                .Where(x=>x.IdRank ==blockedUserData.IdRank).Select(x=>x.Name).SingleOrDefault(),
             IdUserBlocking = blockedUserRequestDto.IdUserBlocking,
             Start = DateTime.Now,
             End = null,
