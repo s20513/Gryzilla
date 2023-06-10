@@ -270,8 +270,7 @@ public class LinkRepositoryTests
         var res = await _repository.PutLinkDiscord(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
-        Assert.NotNull(res);
-        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+        Assert.Null(res);
     }
     
     [Fact]
@@ -331,9 +330,9 @@ public class LinkRepositoryTests
         var res = await _repository.PutLinkSteam(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
-        Assert.NotNull(res);
-        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+        Assert.Null(res);
     }
+    
     [Fact]
     public async Task GetUsersLinkFromDb_Returns_String()
     {
@@ -423,8 +422,7 @@ public class LinkRepositoryTests
         var res = await _repository.PutLinkEpic(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
-        Assert.NotNull(res);
-        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+        Assert.Null(res);
     }
     
     
@@ -483,8 +481,7 @@ public class LinkRepositoryTests
         var res = await _repository.PutLinkXbox(linkDto, _mockClaimsPrincipal.Object);
         
         //Assert
-        Assert.NotNull(res);
-        Assert.True(res != null && res.Equals("Cannot change the link. Invalid link!"));
+        Assert.Null(res);
     }
 
     [Fact]
