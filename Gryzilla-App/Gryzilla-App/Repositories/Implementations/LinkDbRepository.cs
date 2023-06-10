@@ -104,7 +104,7 @@ public class LinkDbRepository : ILinkDbRepository
             return "Link changed";
         }
 
-        return "Cannot change the link. Invalid link!";
+        return null;
     }
     
     public async Task<string?> PutLinkSteam(LinkDto linkDto, ClaimsPrincipal userClaims)
@@ -123,7 +123,7 @@ public class LinkDbRepository : ILinkDbRepository
             return "Link changed";
         }
         
-        return "Cannot change the link. Invalid link!";
+        return null;
     }
 
     public async Task<string?> PutLinkXbox(LinkDto linkDto, ClaimsPrincipal userClaims)
@@ -141,7 +141,7 @@ public class LinkDbRepository : ILinkDbRepository
             return "Link changed";
         }
         
-        return "Cannot change the link. Invalid link!";
+        return null;
     }
     
     public async Task<string?> PutLinkPs(LinkDto linkDto, ClaimsPrincipal userClaims)
@@ -174,7 +174,7 @@ public class LinkDbRepository : ILinkDbRepository
             return "Link changed";
         }
         
-        return "Cannot change the link. Invalid link!";
+        return null;
     }
     
     public async Task<LinksDto?> GetUserLinks(int idUser)
