@@ -59,10 +59,10 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         
         return new ReportProfileCommentResponseDto
         {
-            IdProfile = profComment.IdUser,
+            IdProfile = profComment.IdUserComment,
             IdUser = newReportProfileCommentRequestDto.IdUser,
-            IdUserReported = profComment.IdUserComment,
-            NickReported  = profComment.IdUserCommentNavigation.Nick,
+            IdUserReported = profComment.IdUser,
+            NickReported  = profComment.IdUserNavigation.Nick,
             IdProfileComment = newReportProfileCommentRequestDto.IdProfileComment,
             IdReason = newReportProfileCommentRequestDto.IdReason,
             ReasonName =  _context.Reasons
@@ -99,10 +99,10 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
 
         return new ReportProfileCommentResponseDto
         {
-            IdProfile = profComment.IdUser,
+            IdProfile = profComment.IdUserComment,
             IdUser = reportProfileComment.IdUser,
-            IdUserReported = profComment.IdUserComment,
-            NickReported  = profComment.IdUserCommentNavigation.Nick,
+            IdUserReported = profComment.IdUser,
+            NickReported  = profComment.IdUserNavigation.Nick,
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -140,10 +140,10 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
 
         return new ReportProfileCommentResponseDto
         {
-            IdProfile = profComment.IdUser,
+            IdProfile = profComment.IdUserComment,
             IdUser = reportProfileComment.IdUser,
-            IdUserReported = profComment.IdUserComment,
-            NickReported  = profComment.IdUserCommentNavigation.Nick,
+            IdUserReported = profComment.IdUser,
+            NickReported  = profComment.IdUserNavigation.Nick,
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -177,10 +177,10 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         
         return new ReportProfileCommentResponseDto
         {
-            IdProfile = profComment.IdUser,
+            IdProfile = profComment.IdUserComment,
             IdUser = reportProfileComment.IdUser,
-            IdUserReported = profComment.IdUserComment,
-            NickReported  = profComment.IdUserCommentNavigation.Nick,
+            IdUserReported = profComment.IdUser,
+            NickReported  = profComment.IdUserNavigation.Nick,
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -199,10 +199,10 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
             .ReportProfileComments
             .Select(e => new ReportProfileCommentResponseDto
             {
-                IdProfile = e.IdProfileCommentNavigation.IdUser,
+                IdProfile = e.IdProfileCommentNavigation.IdUserComment,
                 IdUser = e.IdUser,
-                IdUserReported = e.IdProfileCommentNavigation.IdUserComment,
-                NickReported  = e.IdProfileCommentNavigation.IdUserCommentNavigation.Nick,
+                IdUserReported = e.IdProfileCommentNavigation.IdUser,
+                NickReported  = e.IdProfileCommentNavigation.IdUserNavigation.Nick,
                 IdProfileComment= e.IdProfileComment,
                 IdReason = e.IdReason,
                 ReasonName =  _context.Reasons
