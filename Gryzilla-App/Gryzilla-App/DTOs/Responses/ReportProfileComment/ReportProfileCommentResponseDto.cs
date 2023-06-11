@@ -3,6 +3,7 @@
 public class ReportProfileCommentResponseDto
 {
     public int IdUser { get; set; }
+    public int IdProfile { get; set; }
     public string? NickReported { get; set; }
     public int IdUserReported { get; set; }
     

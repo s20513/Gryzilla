@@ -51,17 +51,18 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
 
         await _context.ReportProfileComments.AddAsync(newReport);
         await _context.SaveChangesAsync();
+
+        var profComment = await _context.ProfileComments
+            .Include(e => e.IdUserCommentNavigation)
+            .Where(x => x.IdProfileComment == newReportProfileCommentRequestDto.IdProfileComment)
+            .SingleOrDefaultAsync();
         
         return new ReportProfileCommentResponseDto
         {
+            IdProfile = profComment.IdUser,
             IdUser = newReportProfileCommentRequestDto.IdUser,
-            IdUserReported = _context.ProfileComments
-                .Where(x=>x.IdProfileComment ==  newReportProfileCommentRequestDto.IdProfileComment)
-                .Select(x=>x.IdUser).SingleOrDefault(),
-            NickReported  = _context.ProfileComments
-                .Include(x=>x.IdUserNavigation)
-                .Where(x=>x.IdProfileComment ==  newReportProfileCommentRequestDto.IdProfileComment)
-                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
+            IdUserReported = profComment.IdUserComment,
+            NickReported  = profComment.IdUserCommentNavigation.Nick,
             IdProfileComment = newReportProfileCommentRequestDto.IdProfileComment,
             IdReason = newReportProfileCommentRequestDto.IdReason,
             ReasonName =  _context.Reasons
@@ -90,17 +91,18 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
 
         _context.ReportProfileComments.Remove(reportProfileComment);
         await _context.SaveChangesAsync();
+        
+        var profComment = await _context.ProfileComments
+            .Include(e => e.IdUserCommentNavigation)
+            .Where(x => x.IdProfileComment == reportProfileCommentIdsRequestDto.IdProfileComment)
+            .SingleOrDefaultAsync();
 
         return new ReportProfileCommentResponseDto
         {
+            IdProfile = profComment.IdUser,
             IdUser = reportProfileComment.IdUser,
-            IdUserReported = _context.ProfileComments
-                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
-                .Select(x=>x.IdUser).SingleOrDefault(),
-            NickReported  = _context.ProfileComments
-                .Include(x=>x.IdUserNavigation)
-                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
-                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
+            IdUserReported = profComment.IdUserComment,
+            NickReported  = profComment.IdUserCommentNavigation.Nick,
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -130,17 +132,18 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         reportProfileComment.Description = updateReportProfileCommentRequestDto.Content;
         reportProfileComment.Viewed = updateReportProfileCommentRequestDto.Viewed;
         await _context.SaveChangesAsync();
+        
+        var profComment = await _context.ProfileComments
+            .Include(e => e.IdUserCommentNavigation)
+            .Where(x => x.IdProfileComment == updateReportProfileCommentRequestDto.IdProfileComment)
+            .SingleOrDefaultAsync();
 
         return new ReportProfileCommentResponseDto
         {
+            IdProfile = profComment.IdUser,
             IdUser = reportProfileComment.IdUser,
-            IdUserReported = _context.ProfileComments
-                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
-                .Select(x=>x.IdUser).SingleOrDefault(),
-            NickReported  = _context.ProfileComments
-                .Include(x=>x.IdUserNavigation)
-                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
-                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
+            IdUserReported = profComment.IdUserComment,
+            NickReported  = profComment.IdUserCommentNavigation.Nick,
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -167,16 +170,17 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
             return null;
         }
         
+        var profComment = await _context.ProfileComments
+            .Include(e => e.IdUserCommentNavigation)
+            .Where(x => x.IdProfileComment == reportProfileCommentIdsRequestDto.IdProfileComment)
+            .SingleOrDefaultAsync();
+        
         return new ReportProfileCommentResponseDto
         {
+            IdProfile = profComment.IdUser,
             IdUser = reportProfileComment.IdUser,
-            IdUserReported = _context.ProfileComments
-                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
-                .Select(x=>x.IdUser).SingleOrDefault(),
-            NickReported  = _context.ProfileComments
-                .Include(x=>x.IdUserNavigation)
-                .Where(x=>x.IdProfileComment ==  reportProfileComment.IdProfileComment)
-                .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
+            IdUserReported = profComment.IdUserComment,
+            NickReported  = profComment.IdUserCommentNavigation.Nick,
             IdProfileComment = reportProfileComment.IdProfileComment,
             IdReason = reportProfileComment.IdReason,
             ReasonName =  _context.Reasons
@@ -195,14 +199,10 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
             .ReportProfileComments
             .Select(e => new ReportProfileCommentResponseDto
             {
+                IdProfile = e.IdProfileCommentNavigation.IdUser,
                 IdUser = e.IdUser,
-                IdUserReported = _context.ProfileComments
-                    .Where(x=>x.IdProfileComment ==  e.IdProfileComment)
-                    .Select(x=>x.IdUser).SingleOrDefault(),
-                NickReported  = _context.ProfileComments
-                    .Include(x=>x.IdUserNavigation)
-                    .Where(x=>x.IdProfileComment ==  e.IdProfileComment)
-                    .Select(x=>x.IdUserNavigation.Nick).SingleOrDefault(),
+                IdUserReported = e.IdProfileCommentNavigation.IdUserComment,
+                NickReported  = e.IdProfileCommentNavigation.IdUserCommentNavigation.Nick,
                 IdProfileComment= e.IdProfileComment,
                 IdReason = e.IdReason,
                 ReasonName =  _context.Reasons
