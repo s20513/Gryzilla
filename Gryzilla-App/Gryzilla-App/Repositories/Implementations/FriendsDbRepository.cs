@@ -28,14 +28,14 @@ public class FriendsDbRepository : IFriendsDbRepository
         {
             return null;
         }
-        
+
         var users = await _context
             .UserData.Where(x => x.IdUser == idUser)
-            .SelectMany(c => c.IdUserFriends)
-            .Select(x => new FriendDto
+            .SelectMany(y => y.IdUsers)
+            .Select(y => new FriendDto
             {
-                IdUser = x.IdUser,
-                Nick = x.Nick
+                IdUser = y.IdUser,
+                Nick = y.Nick
             }).ToArrayAsync();
         
         return users;
@@ -67,7 +67,6 @@ public class FriendsDbRepository : IFriendsDbRepository
             return null;
         }
         
-        user.IdUserFriends.Remove(userFriend);
         userFriend.IdUserFriends.Remove(user);
         
         await _context.SaveChangesAsync();
@@ -111,7 +110,6 @@ public class FriendsDbRepository : IFriendsDbRepository
             throw new ReferenceException($"{userFriend.Nick} is already {user.Nick} friend!");
         }
         
-        user.IdUserFriends.Add(userFriend);
         userFriend.IdUserFriends.Add(user);
         
         await _context.SaveChangesAsync();
