@@ -659,7 +659,7 @@ namespace Gryzilla_App.Models
                     .HasColumnName("createdAt");
 
                 entity.Property(e => e.DiscordLink)
-                    .HasMaxLength(100)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("discordLink");
 
@@ -694,7 +694,7 @@ namespace Gryzilla_App.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.SteamLink)
-                    .HasMaxLength(100)
+                    .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("steamLink");
 

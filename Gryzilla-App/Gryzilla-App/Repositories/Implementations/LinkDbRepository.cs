@@ -60,21 +60,6 @@ public class LinkDbRepository : ILinkDbRepository
 
         return "Link removed";
     }
-    
-    public async Task<string?> DeleteLinkPs(int idUser, ClaimsPrincipal userClaims)
-    {
-        var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
-
-        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, idUser))
-        {
-            return null;
-        }
-        
-        user.PsLink = null;
-        await _context.SaveChangesAsync();
-
-        return "Link removed";
-    }
     public async Task<string?> DeleteLinkEpic(int idUser, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser == idUser).SingleOrDefaultAsync();
@@ -144,20 +129,6 @@ public class LinkDbRepository : ILinkDbRepository
         return null;
     }
     
-    public async Task<string?> PutLinkPs(LinkDto linkDto, ClaimsPrincipal userClaims)
-    {
-        var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
-
-        if (user is null || !ActionAuthorizer.IsAuthorOrAdmin(userClaims, linkDto.IdUser))
-        {
-            return null;
-        }
-        
-        user.PsLink = linkDto.Link;
-        await _context.SaveChangesAsync();
-
-        return "Link changed";
-    }
     public async Task<string?> PutLinkEpic(LinkDto linkDto, ClaimsPrincipal userClaims)
     {
         var user = await _context.UserData.Where(x=>x.IdUser==linkDto.IdUser).SingleOrDefaultAsync();
@@ -191,8 +162,7 @@ public class LinkDbRepository : ILinkDbRepository
             SteamLink   = user.SteamLink,
             DiscordLink = user.DiscordLink,
             EpicLink    = user.EpicLink,
-            XboxLink    = user.XboxLink,
-            PsLink      = user.PsLink
+            XboxLink    = user.XboxLink
         };
     }
 }

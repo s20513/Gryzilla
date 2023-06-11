@@ -42,7 +42,6 @@ public class UserDbRepository : IUserDbRepository
                 LinkSteam   = x.SteamLink,
                 LinkEpic    = x.EpicLink,
                 LinkXbox    = x.XboxLink,
-                LinkPs      = x.PsLink
             })
             .SingleOrDefaultAsync();
         
@@ -66,7 +65,6 @@ public class UserDbRepository : IUserDbRepository
                 LinkSteam   = x.SteamLink,
                 LinkEpic    = x.EpicLink,
                 LinkXbox    = x.XboxLink,
-                LinkPs      = x.PsLink
             })
             .ToArrayAsync();
 
@@ -110,7 +108,6 @@ public class UserDbRepository : IUserDbRepository
                 LinkSteam    = user.SteamLink,
                 LinkEpic     = user.EpicLink,
                 LinkXbox     = user.XboxLink,
-                LinkPs       = user.PsLink
             };
         }
 
@@ -136,10 +133,6 @@ public class UserDbRepository : IUserDbRepository
         if (putUserDto.LinkXbox != "")
         {
             user.XboxLink = putUserDto.LinkXbox;
-        }
-        if (putUserDto.LinkPs != "")
-        {
-            user.PsLink = putUserDto.LinkPs;
         }
 
         return user;

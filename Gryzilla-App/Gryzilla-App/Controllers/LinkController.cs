@@ -69,26 +69,7 @@ public class LinkController : Controller
         
         return Ok(new StringMessageDto{ Message = link });
     }
-    
-    /// <summary>
-    /// Enter playstation link
-    /// </summary>
-    /// <param name="idUser">User identifier</param>
-    /// <returns>string</returns>
-    [HttpPut("ps")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
-    public async Task<IActionResult> PutPsLink([FromBody] LinkDto linkDto)
-    {
-        var link = await _linkDbRepository.PutLinkPs(linkDto, User);
-        
-        if (link is null)
-        {
-            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
-        }
-        
-        return Ok(new StringMessageDto{ Message = link });
-    }
-    
+
     /// <summary>
     /// Enter xbox link
     /// </summary>
@@ -164,26 +145,7 @@ public class LinkController : Controller
         
         return Ok(new StringMessageDto{ Message = link });
     }
-    
-    /// <summary>
-    /// Delete playstation link
-    /// </summary>
-    /// <param name="idUser">User identifier</param>
-    /// <returns>string</returns>
-    [HttpDelete("ps/{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
-    public async Task<IActionResult> DeletePsLink([FromRoute] int idUser)
-    {
-        var link = await _linkDbRepository.DeleteLinkPs(idUser, User);
-        
-        if (link is null)
-        {
-            return NotFound(new StringMessageDto{ Message = "User doesn't exist" }); 
-        }
-        
-        return Ok(new StringMessageDto{ Message = link });
-    }
-    
+
     /// <summary>
     /// Delete xbox link
     /// </summary>

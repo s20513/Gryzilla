@@ -84,38 +84,7 @@ public class LinkRepositoryTests
         //Assert
         Assert.Null(res);
     }
-    [Fact]
-    public async Task DeletePsLinkFromDb_Returns_String()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        await AddTestDataWithOneUser();
-
-        var idUser = 1;
-        
-        //Act
-        var res = await _repository.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object);
-        
-        //Assert
-        Assert.NotNull(res);
-        Assert.True(res != null && res.Equals("Link removed"));
-    }
     
-    [Fact]
-    public async Task DeleteLinkPs_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        var idUser = 1;
-        
-        //Act
-        var res = await _repository.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object);
-        
-        //Assert
-        Assert.Null(res);
-    }
     [Fact]
     public async Task DeleteXboxLinkFromDb_Returns_String()
     {
@@ -483,42 +452,5 @@ public class LinkRepositoryTests
         //Assert
         Assert.Null(res);
     }
-
-    [Fact]
-    public async Task ModifyPsLinkFromDb_Returns_String()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-
-        await AddTestDataWithOneUser();
-        var linkDto = new LinkDto
-        {
-            IdUser = 1,
-            Link = "PsLink"
-        };
-        
-        //Act
-        var res = await _repository.PutLinkPs(linkDto, _mockClaimsPrincipal.Object);
-        
-        //Assert
-        Assert.NotNull(res);
-        Assert.True(res != null && res.Equals("Link changed"));
-    }
     
-    [Fact]
-    public async Task ModifyPsLinkFromDb_Returns_Null()
-    {
-        //Arrange
-        await _context.Database.ExecuteSqlRawAsync(DatabaseSql.GetTruncateSql());
-        var linkDto = new LinkDto
-        {
-            IdUser = 1,
-            Link = "PsLink"
-        };
-        //Act
-        var res = await _repository.PutLinkPs(linkDto, _mockClaimsPrincipal.Object);
-        
-        //Assert
-        Assert.Null(res);
-    }
 }

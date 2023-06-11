@@ -216,69 +216,7 @@ public class LinkControllerTests
         if (resultValue is null) return;
         Assert.Equal(info, resultValue.Message);
     }
-    [Fact]
-    public async void ModifyPsLink_Returns_Ok()
-    {
-        //Arrange
-        var linkDto = new LinkDto
-        {
-            IdUser = 1,
-            Link = "psLink"
-        };
-        
-        var info = "Link changed";
-        
-        _linkDbRepositoryMock
-            .Setup(x => x.PutLinkPs(linkDto, _mockClaimsPrincipal.Object))
-            .ReturnsAsync(info);
 
-        //Act
-        var actionResult = await _linkController.PutPsLink(linkDto);
-        
-        //Assert
-        var result = actionResult as OkObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal(info, resultValue.Message);
-    }
-    
-    [Fact]
-    public async void ModifyPsLink_Returns_Not_Found()
-    {
-        //Arrange
-        var idUser = 1;
-        string ?stringResult = null;
-        var info = "User doesn't exist";
-        var linkDto = new LinkDto
-        {
-            IdUser = 1,
-            Link = "psLink"
-        };
-        
-        _linkDbRepositoryMock
-            .Setup(x => x.PutLinkPs(linkDto, _mockClaimsPrincipal.Object))
-            .ReturnsAsync(stringResult);
-
-        //Act
-        var actionResult = await _linkController.PutPsLink(linkDto);
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal(info, resultValue.Message);
-    }
-    
     [Fact]
     public async void ModifyEpicLink_Returns_Ok()
     {
@@ -546,57 +484,7 @@ public class LinkControllerTests
         if (resultValue is null) return;
         Assert.Equal(info, resultValue.Message);
     }
-    [Fact]
-    public async void DeletePsLink_Returns_Ok()
-    {
-        var idUser = 1;
-        var info = "Link removed";
-
-        _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object))
-            .ReturnsAsync(info);
-
-        //Act
-        var actionResult = await _linkController.DeletePsLink(idUser);
-        
-        //Assert
-        var result = actionResult as OkObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal(info, resultValue.Message);
-    }
     
-    [Fact]
-    public async void DeletePsLink_Returns_Not_Found()
-    {
-        //Arrange
-        var idUser = 1;
-        string ?stringResult = null;
-        var info = "User doesn't exist";
-        
-        _linkDbRepositoryMock
-            .Setup(x => x.DeleteLinkPs(idUser, _mockClaimsPrincipal.Object))
-            .ReturnsAsync(stringResult);
-
-        //Act
-        var actionResult = await _linkController.DeletePsLink(idUser);
-        
-        //Assert
-        var result = actionResult as NotFoundObjectResult;
-        Assert.NotNull(result);
-
-        if (result is null) return;
-        var resultValue = result.Value as StringMessageDto;
-        Assert.NotNull(resultValue);
-        
-        if (resultValue is null) return;
-        Assert.Equal(info, resultValue.Message);
-    }
     [Fact]
     public async void GetUserLinks_Returns_Ok()
     {

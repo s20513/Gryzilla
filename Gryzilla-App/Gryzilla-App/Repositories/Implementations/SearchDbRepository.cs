@@ -45,7 +45,6 @@ public class SearchDbRepository : ISearchDbRepository
                 LinkSteam   = x.SteamLink,
                 LinkEpic    = x.EpicLink,
                 LinkXbox    = x.XboxLink,
-                LinkPs      = x.PsLink
             })
             .ToArrayAsync();
 
