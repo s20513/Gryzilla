@@ -49,7 +49,6 @@ namespace Gryzilla_App.Models
         public virtual DbSet<Group> Groups { get; set; } = null!;
         public virtual DbSet<GroupUser> GroupUsers { get; set; } = null!;
         public virtual DbSet<GroupUserMessage> GroupUserMessages { get; set; } = null!;
-        public virtual DbSet<Notification> Notifications { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<ProfileComment> ProfileComments { get; set; } = null!;
         public virtual DbSet<Rank> Ranks { get; set; } = null!;
@@ -311,33 +310,6 @@ namespace Gryzilla_App.Models
                     .WithMany(p => p.GroupUserMessages)
                     .HasForeignKey(d => new { d.IdGroup, d.IdUser })
                     .HasConstraintName("GroupUserMessage_GroupUser");
-            });
-
-            modelBuilder.Entity<Notification>(entity =>
-            {
-                entity.HasKey(e => e.IdNotification)
-                    .HasName("Notification_pk");
-
-                entity.ToTable("Notification");
-
-                entity.Property(e => e.IdNotification).HasColumnName("idNotification");
-
-                entity.Property(e => e.Content)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("content");
-
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
-
-                entity.Property(e => e.IdUser).HasColumnName("idUser");
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Notifications)
-                    .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Notification_User");
             });
 
             modelBuilder.Entity<Post>(entity =>

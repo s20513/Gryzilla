@@ -14,7 +14,6 @@ namespace Gryzilla_App.Models
             CommentPosts = new HashSet<CommentPost>();
             GroupUsers = new HashSet<GroupUser>();
             Groups = new HashSet<Group>();
-            Notifications = new HashSet<Notification>();
             Posts = new HashSet<Post>();
             ProfileCommentIdUserCommentNavigations = new HashSet<ProfileComment>();
             ProfileCommentIdUserNavigations = new HashSet<ProfileComment>();
@@ -55,7 +54,6 @@ namespace Gryzilla_App.Models
         public virtual ICollection<CommentPost> CommentPosts { get; set; }
         public virtual ICollection<GroupUser> GroupUsers { get; set; }
         public virtual ICollection<Group> Groups { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<ProfileComment> ProfileCommentIdUserCommentNavigations { get; set; }
         public virtual ICollection<ProfileComment> ProfileCommentIdUserNavigations { get; set; }

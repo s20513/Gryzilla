@@ -16,8 +16,6 @@ SET(SYSTEM_VERSIONING = ON (HISTORY_TABLE = dbo.BlockedUser_History, DATA_CONSIS
 
 TRUNCATE TABLE [ReportUser]
 
-TRUNCATE TABLE [Notification]
-
 DELETE FROM [ProfileComment]
 DBCC CHECKIDENT ([ProfileComment], RESEED, 0)
 

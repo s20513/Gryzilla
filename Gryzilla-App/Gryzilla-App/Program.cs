@@ -8,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-//ustrawić na true żeby mieć swaggera w publishu
 var includeSwaggerInPublish = true;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +16,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            /*policy.WithOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost")
-                .AllowAnyHeader() // Add this line to allow any header
-                .AllowAnyMethod(); // Add this line to allow any HTTP method*/
             policy
                 .AllowAnyOrigin()
                 .AllowAnyHeader() // Add this line to allow any header
@@ -28,10 +24,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-
-
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -86,10 +78,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-//builder.Services.AddAuthorization();
-
-//Adding controllers in .net 6
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserDbRepository, UserDbRepository>();
@@ -107,7 +95,6 @@ builder.Services.AddScoped<IReportCommentPostDbRepository, ReportCommentPostDbRe
 builder.Services.AddScoped<IReportCommentArticleDbRepository, ReportCommentArticleDbRepository>();
 builder.Services.AddScoped<IReasonDbRepository, ReasonDbRepository>();
 builder.Services.AddScoped<IProfileCommentDbRepository, ProfileCommentDbRepository>();
-builder.Services.AddScoped<INotificationDbRepository, NotificationDbRepository>();
 builder.Services.AddScoped<IBlockedUserDbRepository, BlockedUserDbRepository>();
 builder.Services.AddScoped<ILinkDbRepository, LinkDbRepository>();
 builder.Services.AddScoped<IReportPostDbRepository, ReportPostDbRepository>();
@@ -129,7 +116,6 @@ if (app.Environment.IsDevelopment() || includeSwaggerInPublish)
     app.UseSwaggerUI();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gryzilla v1"));
 }
-
 
 //app.Urls.Add("https://192.168.0.221:1337");
 //app.Urls.Add("https://localhost:1337");
