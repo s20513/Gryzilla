@@ -33,8 +33,13 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         {
             return null;
         }
+        
+        var reportCommentProfileCommentExists = await _context.ReportProfileComments
+            .AnyAsync(e => e.IdReason == newReportProfileCommentRequestDto.IdReason
+                           && e.IdUser == newReportProfileCommentRequestDto.IdUser
+                           && e.IdProfileComment == newReportProfileCommentRequestDto.IdProfileComment);
 
-        if (profileComment.IdUser == user.IdUser)
+        if (profileComment.IdUser == user.IdUser || reportCommentProfileCommentExists)
         {
             throw new UserCreatorException("You can't report your own comment");
         }
@@ -54,6 +59,7 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
 
         var profComment = await _context.ProfileComments
             .Include(e => e.IdUserCommentNavigation)
+            .Include(e => e.IdUserNavigation)
             .Where(x => x.IdProfileComment == newReportProfileCommentRequestDto.IdProfileComment)
             .SingleOrDefaultAsync();
         

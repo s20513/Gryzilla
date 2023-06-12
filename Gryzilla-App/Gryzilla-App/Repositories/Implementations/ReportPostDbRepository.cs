@@ -34,8 +34,13 @@ public class ReportPostDbRepository: IReportPostDbRepository
         {
             return null;
         }
+        
+        var reporttPostExists = await _context.ReportPosts
+            .AnyAsync(e => e.IdReason == newReportPostRequestDto.IdReason
+                           && e.IdUser == newReportPostRequestDto.IdUser
+                           && e.IdPost == newReportPostRequestDto.IdPost);
 
-        if (post.IdUser == user.IdUser)
+        if (post.IdUser == user.IdUser || reporttPostExists)
         {
             throw new UserCreatorException("You can't report your own post");
         }

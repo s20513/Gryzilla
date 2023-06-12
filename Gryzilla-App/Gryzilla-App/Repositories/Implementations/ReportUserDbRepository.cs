@@ -33,8 +33,13 @@ public class ReportUserDbRepository : IReportUserDbRepository
         {
             return null;
         }
+        
+        var reportUserExists = await _context.ReportUsers
+            .AnyAsync(e => e.IdReason == newReportUserDto.IdReason
+                           && e.IdUserReported == newReportUserDto.IdUserReported
+                           && e.IdUserReporting == newReportUserDto.IdUser);
 
-        if (userReporting.IdUser == userReported.IdUser)
+        if (userReporting.IdUser == userReported.IdUser || reportUserExists)
         {
             throw new UserCreatorException("You can't report yourself");
         }

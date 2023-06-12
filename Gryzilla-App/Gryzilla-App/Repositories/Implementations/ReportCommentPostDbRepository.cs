@@ -41,7 +41,12 @@ public class ReportCommentPostDbRepository:IReportCommentPostDbRepository
             return null;
         }
         
-        if (comment.IdUser == user.IdUser)
+        var reportCommentPostExists = await _context.ReportCommentPosts
+            .AnyAsync(e => e.IdReason == newReportCommentDto.IdReason
+                           && e.IdUser == newReportCommentDto.IdUser
+                           && e.IdComment == newReportCommentDto.IdComment);
+        
+        if (comment.IdUser == user.IdUser || reportCommentPostExists)
         {
             throw new UserCreatorException("The creator of the comment cannot report");
         }
