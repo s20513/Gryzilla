@@ -60,7 +60,7 @@ public class UserController : Controller
     /// <param name="putUserDto">Dto to store new user information</param>
     /// <returns>Return Status Ok - information about user modified correctly, return user body, Not Found - User doesn't exist</returns>
     [HttpPut("{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> ModifyUser([FromRoute] int idUser, [FromBody] PutUserDto putUserDto)
     {
         if (idUser != putUserDto.IdUser)
@@ -192,7 +192,7 @@ public class UserController : Controller
     /// <param name="idUser"> int - user id </param>
     /// <returns> Return Status OK - UseDto - data of the user</returns>
     [HttpPost("photo/{idUser:int}")]
-    [Authorize(Roles = "Admin, User, Moderator, Redactor, Blocked")]
+    [Authorize(Roles = "Admin, User, Moderator, Redactor")]
     public async Task<IActionResult> SetUserPhoto([FromForm] IFormFile file,[FromRoute] int idUser)
     {
         var res = await _userDbRepository.SetUserPhoto(file, idUser, User);
