@@ -122,6 +122,12 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
             base64PhotoData  = Convert.ToBase64String(creator.Photo ?? Array.Empty<byte>()),
             Content          = profileComment.Description
         };
+
+        var reports = await _context.ReportProfileComments
+            .Where(e => e.IdProfileComment == idProfileComment)
+            .ToListAsync();
+        
+        _context.ReportProfileComments.RemoveRange(reports);
         
         _context.ProfileComments.Remove(profileComment);
         await _context.SaveChangesAsync();
