@@ -103,7 +103,8 @@ public class ProfileCommentDbRepository : IProfileCommentDbRepository
                 .ProfileComments
                 .SingleOrDefaultAsync(x => x.IdProfileComment == idProfileComment);
 
-        if (profileComment is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, profileComment.IdUser))
+        if (profileComment is null || 
+            !ActionAuthorizer.IsAuthorOrHasRightRoleOrIsProfileOrGroupOwner(userClaims, profileComment.IdUser, profileComment.IdUserComment))
         {
             return null;
         }

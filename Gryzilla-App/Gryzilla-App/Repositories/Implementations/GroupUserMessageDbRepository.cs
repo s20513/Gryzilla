@@ -37,9 +37,11 @@ public class GroupUserMessageDbRepository : IGroupUserMessageDbRepository
     public async Task<GroupUserMessageDto?> DeleteMessage(int idGroupMessage, ClaimsPrincipal userClaims)
     {
         var message = await _context.GroupUserMessages
+            .Include(e => e.Id)
+            .Include(e => e.Id!.IdGroupNavigation)
             .SingleOrDefaultAsync(x => x.IdMessage == idGroupMessage);
-        
-        if (message is null || !ActionAuthorizer.IsAuthorOrHasRightRole(userClaims, message.IdUser))
+
+        if (message is null || !ActionAuthorizer.IsAuthorOrHasRightRoleOrIsProfileOrGroupOwner(userClaims, message.IdUser, message.Id.IdGroupNavigation.IdUserCreator))
         {
             return null;
         }
