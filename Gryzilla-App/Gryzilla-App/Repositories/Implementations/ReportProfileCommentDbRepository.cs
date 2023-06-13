@@ -100,6 +100,7 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         
         var profComment = await _context.ProfileComments
             .Include(e => e.IdUserCommentNavigation)
+            .Include(e => e.IdUserNavigation)
             .Where(x => x.IdProfileComment == reportProfileCommentIdsRequestDto.IdProfileComment)
             .SingleOrDefaultAsync();
 
@@ -141,6 +142,7 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         
         var profComment = await _context.ProfileComments
             .Include(e => e.IdUserCommentNavigation)
+            .Include(e => e.IdUserNavigation)
             .Where(x => x.IdProfileComment == updateReportProfileCommentRequestDto.IdProfileComment)
             .SingleOrDefaultAsync();
 
@@ -178,6 +180,7 @@ public class ReportProfileCommentDbRepository: IReportProfileCommentDbRepository
         
         var profComment = await _context.ProfileComments
             .Include(e => e.IdUserCommentNavigation)
+            .Include(e => e.IdUserNavigation)
             .Where(x => x.IdProfileComment == reportProfileCommentIdsRequestDto.IdProfileComment)
             .SingleOrDefaultAsync();
         
