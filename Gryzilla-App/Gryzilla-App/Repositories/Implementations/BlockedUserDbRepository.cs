@@ -27,7 +27,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
                 IdRank = e.IdUserBlockedNavigation.IdRank,
                 RankName = e.IdUserBlockedNavigation.IdRankNavigation.Name,
                 IdUserBlocking = e.IdUser,
-                Start = EF.Property<DateTime>(e, "StartTime"),
+                Start = EF.Property<DateTime>(e, "StartTime").AddHours(2),
                 End = null,
                 Comment = e.Comment
             })
@@ -73,7 +73,7 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
                 IdRank = blockedUserData.IdRank,
                 RankName = blockedUserData.IdRankNavigation.Name,
                 IdUserBlocking = userBlock.IdUser,
-                Start = userBlock.Start,
+                Start = userBlock.Start.AddHours(2),
                 End = null,
                 Comment = userBlock.Comment
             };
@@ -171,8 +171,8 @@ public class BlockedUserDbRepository: IBlockedUserDbRepository
                     UserBlockingNick = arg.UserBlockingNick,
                     UserBlockingIdRank = arg.UserBlockingIdRank,
                     UserBlockingRankName = rank.Name,
-                    Start = arg.Start,
-                    End = arg.End.Date.Year == 9999 ? null : arg.End,
+                    Start = arg.Start.AddHours(2),
+                    End = arg.End.Date.Year == 9999 ? null : arg.End.AddHours(2),
                     Comment = arg.Comment
                 })
             .ToListAsync();
