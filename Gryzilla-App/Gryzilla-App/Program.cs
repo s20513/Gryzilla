@@ -18,9 +18,9 @@ builder.Services.AddCors(options =>
         {
             policy
                 .AllowAnyOrigin()
-                .AllowAnyHeader() // Add this line to allow any header
-                .AllowAnyMethod(); // Add this line to allow any HTTP method
-                
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            
         });
 });
 
@@ -65,7 +65,7 @@ builder.Services.AddAuthentication(options =>
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        //te 2 zakeomentować jak jesteś frontasiem
+        
         ValidateIssuer = false,
         ValidateAudience = false,
 
@@ -116,9 +116,6 @@ if (app.Environment.IsDevelopment() || includeSwaggerInPublish)
     app.UseSwaggerUI();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gryzilla v1"));
 }
-
-//app.Urls.Add("https://192.168.0.221:5001");
-//app.Urls.Add("https://localhost:1337");
 
 app.UseCors(MyAllowSpecificOrigins);
 app.UseHttpsRedirection();
