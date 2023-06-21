@@ -101,6 +101,8 @@ public class GroupUserMessageDbRepository : IGroupUserMessageDbRepository
         {
             IdMessage = groupMessageId,
             IdUser    = newMessage.IdUser,
+            Type      = user.PhotoType,
+            base64PhotoData = Convert.ToBase64String(user.Photo ?? Array.Empty<byte>()),
             IdGroup   = newMessage.IdGroup,
             Nick      = user.Nick,
             Content   = newMessage.Message,
